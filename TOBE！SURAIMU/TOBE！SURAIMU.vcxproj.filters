@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Project">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Project\Summury">
+      <UniqueIdentifier>{5866395f-2a8a-483f-990f-4aa1ddc1014d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Summury\Scene">
+      <UniqueIdentifier>{6cda7968-8104-473d-bc1e-7c45ea93d7b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Summury\Object">
+      <UniqueIdentifier>{10e175df-893e-4c40-afa3-5bcf3c5263fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\System">
+      <UniqueIdentifier>{4087bcb2-c529-4cb8-ba8c-120fb16ac092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\System\Texture">
+      <UniqueIdentifier>{90c6daaa-814b-4473-b248-05b8759e17e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\System\DirectX">
+      <UniqueIdentifier>{541d9bfd-82fa-4e97-a57b-8330d50981cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\System\DirectX\Input">
+      <UniqueIdentifier>{267af59c-f58a-45d4-bbfc-77a2a474b724}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Project\System</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Project\System</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>Project\System\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="textureLoder.cpp">
+      <Filter>Project\System\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="commonstates.cpp">
+      <Filter>Project\System\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="direct3d.cpp">
+      <Filter>Project\System\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>Project\System\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="pad.cpp">
+      <Filter>Project\System\DirectX\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="key.cpp">
+      <Filter>Project\System\DirectX\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="container.cpp">
+      <Filter>Project\System\Texture</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="texture.h">
+      <Filter>Project\System\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="textureLoder.h">
+      <Filter>Project\System\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="commonstates.h">
+      <Filter>Project\System\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="direct3d.h">
+      <Filter>Project\System\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>Project\System\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="pad.h">
+      <Filter>Project\System\DirectX\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="key.h">
+      <Filter>Project\System\DirectX\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Project\System</Filter>
+    </ClInclude>
+    <ClInclude Include="container.h">
+      <Filter>Project\System\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="release.h">
+      <Filter>Project\System</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
