@@ -28,4 +28,3 @@ public:
 private:
 	SceneID id_;
 };
-

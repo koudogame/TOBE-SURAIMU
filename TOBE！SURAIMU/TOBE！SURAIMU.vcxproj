@@ -162,6 +162,7 @@
     <ClInclude Include="object_container_base.h" />
     <ClInclude Include="pad.h" />
     <ClInclude Include="release.h" />
+    <ClInclude Include="result.h" />
     <ClInclude Include="scene_base.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="star_container.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="task_manager.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="textureLoder.h" />
+    <ClInclude Include="title.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="collision.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="object_container_base.cpp" />
     <ClCompile Include="pad.cpp" />
+    <ClCompile Include="result.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="star_container.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -191,6 +194,7 @@
     <ClCompile Include="task_manager.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="textureLoder.cpp" />
+    <ClCompile Include="title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

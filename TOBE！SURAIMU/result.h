@@ -2,18 +2,15 @@
 
 #include "scene_base.h"
 
-class TaskManager;
-class StarContainer;
-
 //-----------------------------------------------------------------------------
-// プレイ部
+// リザルト
 //-----------------------------------------------------------------------------
-class Play :
+class Result :
 	public SceneBase
 {
 public:
-	Play();
-	~Play();
+	Result();
+	~Result();
 public:
 	bool init() override;
 	void destroy() override;
@@ -21,15 +18,5 @@ public:
 	void draw() override;
 
 private:
-	bool is_create_ = true;
-	bool create();
 
-	SceneBase*(Play::*update_)() = nullptr;
-	SceneBase* start();
-	SceneBase* play();
-	SceneBase* pause();
-
-private:
-	TaskManager* task_manager_ = nullptr;
-	StarContainer* star_container_ = nullptr;
 };

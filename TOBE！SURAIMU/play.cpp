@@ -2,6 +2,8 @@
 #include "play.h"
 
 #include "release.h"
+#include "key.h"
+#include "pad.h"
 #include "task_manager.h"
 #include "star_container.h"
 
@@ -77,23 +79,36 @@ void Play::draw()
 
 /*===========================================================================*/
 // スタート
-bool Play::start()
+SceneBase* Play::start()
 {
 	update_ = &Play::play;
-	return true;
+	return this;
 }
 
 /*===========================================================================*/
 // プレイ
-bool Play::play()
+SceneBase* Play::play()
 {
-	task_manager_->allExecuteUpdate();
-	return true;
+	if (Key::getInstance()->getTracker().pressed.P ||
+		Pad::getInstance()->getTracker().menu == GamePad::ButtonStateTracker::PRESSED)
+	{
+		update_ = &Play::pause;
+	}
+	else
+	{
+		task_manager_->allExecuteUpdate();
+	}
+	return this;
 }
 
 /*===========================================================================*/
 // ポーズ
-bool Play::pause()
+SceneBase* Play::pause()
 {
-	return true;
+	if (Key::getInstance()->getTracker().pressed.P ||
+		Pad::getInstance()->getTracker().menu == GamePad::ButtonStateTracker::PRESSED)
+	{
+		update_ = &Play::play;
+	}
+	return this;
 }
