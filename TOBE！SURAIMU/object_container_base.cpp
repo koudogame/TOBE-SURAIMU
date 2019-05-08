@@ -8,6 +8,7 @@
 void deleteAllElement(std::list<ObjectBase*>& List);
 void deleteAllElement(std::vector<ObjectBase*>& List);
 
+
 /*===========================================================================*/
 // I—¹ˆ—
 void ObjectContainerBase::destroy()
@@ -57,15 +58,19 @@ ObjectBase* ObjectContainerBase::getFreeObj()
 
 void deleteAllElement(std::list<ObjectBase*>& List)
 {
-	for (auto& object : List)
+	for (auto itr = List.begin(), end = List.end();
+		itr != end;)
 	{
-		safe_delete(object);
+		safe_delete(*itr);
+		itr = List.erase(itr);
 	}
 }
 void deleteAllElement(std::vector<ObjectBase*>& List)
 {
-	for (auto& object : List)
+	for (auto itr = List.begin(), end = List.end();
+		itr != end;)
 	{
-		safe_delete(object);
+		safe_delete(*itr);
+		itr = List.erase(itr);
 	}
 }
