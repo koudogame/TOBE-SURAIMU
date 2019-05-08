@@ -5,6 +5,16 @@
 
 
 /*===========================================================================*/
+TaskManager::TaskManager()
+{
+}
+
+TaskManager::~TaskManager()
+{
+}
+
+
+/*===========================================================================*/
 // 更新タスクの登録
 void TaskManager::registerTask(ObjectBase* const Object, const TaskUpdate TaskID)
 {

@@ -1,5 +1,6 @@
 
 class ObjectBase;
+class TaskManager;
 
 //-----------------------------------------------------------------------------
 // オブジェクトコンテナの基底
@@ -10,7 +11,9 @@ class ObjectBase;
 class ObjectContainerBase
 {
 public:
-	ObjectContainerBase() = default;
+	ObjectContainerBase(TaskManager* const TaskManager) :
+		task_manager_(TaskManager)
+	{}
 	virtual ~ObjectContainerBase() = default;
 public:
 	virtual void destroy();
@@ -21,6 +24,7 @@ protected:
 
 
 private:
+	TaskManager* task_manager_ = nullptr;
 	std::list<ObjectBase*> active_list_;
 	std::vector<ObjectBase*> free_list_;
 };

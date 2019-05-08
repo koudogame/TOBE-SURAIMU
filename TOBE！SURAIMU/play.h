@@ -2,6 +2,7 @@
 
 #include "scene_base.h"
 
+class TaskManager;
 class StarContainer;
 
 //-----------------------------------------------------------------------------
@@ -29,6 +30,6 @@ private:
 	bool pause();
 
 private:
-	StarContainer* star_ = nullptr;
+	TaskManager* task_manager_ = nullptr;
+	StarContainer* star_container_ = nullptr;
 };
-

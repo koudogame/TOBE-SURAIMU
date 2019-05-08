@@ -26,11 +26,11 @@ enum TaskDraw
 // タスクの登録解除はunregisterTask関数を使用
 // 各タスクIDは列挙体「TaskUpdate」か「TaskDraw」に定義されている
 // タスクはIDにより昇順に実行される
-class TaskManager final
+class TaskManager
 {
 public:
-	TaskManager() = default;
-	~TaskManager() = default;
+	TaskManager();
+	~TaskManager();
 
 public:
 	void registerTask(ObjectBase* const, const TaskDraw);

@@ -2,6 +2,7 @@
 #include "play.h"
 
 #include "release.h"
+#include "task_manager.h"
 #include "star_container.h"
 
 
@@ -10,6 +11,7 @@ Play::Play() :
 	SceneBase(SceneID::kPlay)
 {
 }
+
 Play::~Play()
 {
 }
@@ -31,12 +33,30 @@ bool Play::init()
 
 	return true;
 }
+// オブジェクトの生成
+bool Play::create()
+{
+	is_create_ = false;
+
+	// タスクマネージャーを生成
+	task_manager_ = new (std::nothrow) TaskManager();
+	if (task_manager_ == nullptr) return false;
+
+	// 星のコンテナを生成
+	star_container_ = new (std::nothrow) StarContainer(task_manager_);
+	if (star_container_ == nullptr) return false;
+
+	return true;
+}
 
 /*===========================================================================*/
 // 終了処理
 void Play::destroy()
 {
-	star_->destroy();
+	star_container_->destroy();
+	safe_delete(star_container_);
+
+	safe_delete(task_manager_);
 }
 
 /*===========================================================================*/
@@ -51,23 +71,9 @@ SceneBase* Play::update()
 // 描画処理
 void Play::draw()
 {
-
+	task_manager_->allExecuteDraw();
 }
 
-
-
-/*===========================================================================*/
-// オブジェクトの生成
-bool Play::create()
-{
-	is_create_ = false;
-
-	// 星のコンテナを生成
-	star_ = new (std::nothrow) StarContainer;
-	if (star_ == nullptr) return false;
-
-	return true;
-}
 
 /*===========================================================================*/
 // スタート
@@ -81,6 +87,7 @@ bool Play::start()
 // プレイ
 bool Play::play()
 {
+	task_manager_->allExecuteUpdate();
 	return true;
 }
 

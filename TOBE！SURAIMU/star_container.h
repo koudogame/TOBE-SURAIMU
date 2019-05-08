@@ -2,6 +2,7 @@
 
 #include "object_container_base.h"
 
+
 //-----------------------------------------------------------------------------
 // スターコンテナ
 //-----------------------------------------------------------------------------
@@ -9,7 +10,7 @@ class StarContainer :
 	public ObjectContainerBase
 {
 public:
-	StarContainer();
+	StarContainer(TaskManager* const TaskManager );
 	~StarContainer();
 public:
 	// 星の追加
@@ -21,6 +22,4 @@ public:
 		const float SpinRate,
 		const float Size
 	);
-
-private:
 };
