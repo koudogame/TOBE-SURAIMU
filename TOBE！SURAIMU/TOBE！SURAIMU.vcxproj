@@ -166,6 +166,7 @@
     <ClInclude Include="result.h" />
     <ClInclude Include="scene_base.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="star.h" />
     <ClInclude Include="star_container.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="task_manager.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="pad.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="star.cpp" />
     <ClCompile Include="star_container.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

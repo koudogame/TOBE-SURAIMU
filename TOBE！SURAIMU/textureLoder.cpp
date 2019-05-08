@@ -17,7 +17,7 @@ TextureLoder::~TextureLoder()
 //テクスチャの解放
 void TextureLoder::release(ID3D11ShaderResourceView* Texture)
 {
-	for (auto itr = container_.begin(); itr != container_.end(); itr++)
+	for (auto itr = container_.begin(),end = container_.end(); itr != end; itr++)
 		//テクスチャハンドルが存在した場合
 		if ((*itr).second.get()->getTexture() == Texture)
 			//参照数の減少 ( 0以下の場合 )
