@@ -154,6 +154,7 @@
     <ClInclude Include="commonstates.h" />
     <ClInclude Include="container.h" />
     <ClInclude Include="direct3d.h" />
+    <ClInclude Include="play.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="object_base.h" />
     <ClInclude Include="object_container_base.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="sprite.h" />
     <ClInclude Include="star_container.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="task_manager.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="textureLoder.h" />
   </ItemGroup>
@@ -170,6 +172,7 @@
     <ClCompile Include="commonstates.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="direct3d.cpp" />
+    <ClCompile Include="play.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="object_container_base.cpp" />
@@ -182,6 +185,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="task_manager.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="textureLoder.cpp" />
   </ItemGroup>

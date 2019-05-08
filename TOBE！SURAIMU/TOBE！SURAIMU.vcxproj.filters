@@ -48,6 +48,9 @@
     <Filter Include="Project\Element\Object\Container\StarContainer">
       <UniqueIdentifier>{a043bb7c-3c25-4034-9c05-97a5c785ddb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Element\Object\Task">
+      <UniqueIdentifier>{f11f552b-e0df-4b26-993c-f716098789ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -84,7 +87,13 @@
       <Filter>Project\Element\Object\Container</Filter>
     </ClCompile>
     <ClCompile Include="star_container.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\Element\Object\Container\StarContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="play.cpp">
+      <Filter>Project\Element\Scene\Play</Filter>
+    </ClCompile>
+    <ClCompile Include="task_manager.cpp">
+      <Filter>Project\Element\Object\Task</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,7 +136,15 @@
     <ClInclude Include="object_container_base.h">
       <Filter>Project\Element\Object\Container</Filter>
     </ClInclude>
-    <ClInclude Include="star_container.h" />
+    <ClInclude Include="star_container.h">
+      <Filter>Project\Element\Object\Container\StarContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="play.h">
+      <Filter>Project\Element\Scene\Play</Filter>
+    </ClInclude>
+    <ClInclude Include="task_manager.h">
+      <Filter>Project\Element\Object\Task</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
