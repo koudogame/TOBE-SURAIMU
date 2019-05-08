@@ -51,7 +51,7 @@
     <Filter Include="Project\Game\Object\Collision">
       <UniqueIdentifier>{d79af6f7-4414-4c49-99c2-63e7f80ab6f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Scene\Play\Game">
+    <Filter Include="Project\Game\Scene\Game">
       <UniqueIdentifier>{6aee0cd5-190f-4049-b852-646871b1283e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -108,7 +108,7 @@
       <Filter>Project</Filter>
     </ClCompile>
     <ClCompile Include="game.cpp">
-      <Filter>Project\Game\Scene\Play\Game</Filter>
+      <Filter>Project\Game\Scene\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -168,7 +168,7 @@
     </ClInclude>
     <ClInclude Include="star_container.h" />
     <ClInclude Include="game.h">
-      <Filter>Project\Game\Scene\Play\Game</Filter>
+      <Filter>Project\Game\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="title.h">
       <Filter>Project\Game\Scene\Title</Filter>
