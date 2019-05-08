@@ -51,6 +51,9 @@
     <Filter Include="Project\Game\Object\Collision">
       <UniqueIdentifier>{d79af6f7-4414-4c49-99c2-63e7f80ab6f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Scene\Play\Game">
+      <UniqueIdentifier>{6aee0cd5-190f-4049-b852-646871b1283e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -97,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="collision.cpp">
       <Filter>Project\Game\Object\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Project\Game\Scene\Play\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +151,6 @@
     <ClInclude Include="calc.h">
       <Filter>Project\System</Filter>
     </ClInclude>
-    <ClInclude Include="star_container.h">
-      <Filter>Project\Element\Object\Container\StarContainer</Filter>
-    </ClInclude>
     <ClInclude Include="play.h">
       <Filter>Project\Game\Scene\Play</Filter>
     </ClInclude>
@@ -156,6 +159,10 @@
     </ClInclude>
     <ClInclude Include="star_container.h">
       <Filter>Project\Game\Object\Container\StarContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="star_container.h" />
+    <ClInclude Include="game.h">
+      <Filter>Project\Game\Scene\Play\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

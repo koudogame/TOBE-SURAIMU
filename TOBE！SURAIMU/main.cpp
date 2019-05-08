@@ -3,7 +3,7 @@
 #include "commonstates.h"
 #include "key.h"
 
-//#include "summary.h"
+#include "game.h"
 #include "pad.h"
 
 //  プロトタイプ宣言
@@ -115,7 +115,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	/***********************************/
 
-	/*Summary game;
+	Game game;
 	if (!game.init())
 		return 0;
 
@@ -147,15 +147,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				// ゲーム処理
 				Direct3D::getInstance()->clear();
 
-				/*if (!game.update())
+				if (!game.update())
 				{
 					break;
-				}*/
+				}
 				// スプライト描画開始
 				Sprite::getInstance()->begin();
 
 				// ゲーム画面描画
-				//game.draw();
+				game.draw();
 
 				// スプライト描画終了
 				Sprite::getInstance()->end();
@@ -169,7 +169,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// COMライブラリの開放.
 	CoUninitialize();
 	// インターフェイスの開放
-	//game.destroy();
+	game.destroy();
 	Direct3D::getInstance()->destroy();
 
 	return 0;
