@@ -2,11 +2,9 @@
 #include "sprite.h"
 #include "commonstates.h"
 #include "key.h"
+
+//#include "summary.h"
 #include "pad.h"
-
-const long kScrWidth = 1280L;	//ウィンドウサイズ( 横 )
-const long kScrHeight = 720L;	//ウィンドウサイズ( 縦 )
-
 
 //  プロトタイプ宣言
 LRESULT CALLBACK WinProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
@@ -52,8 +50,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//  ウィンドウサイズを決定
 	RECT rect;
 	rect.left = rect.top = 0L;
-	rect.right = kScrWidth;
-	rect.bottom = kScrHeight;
+	rect.right = getWindowWidth<long>();
+	rect.bottom = getWindowHeight<long>();
 
 	const DWORD style = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX;
 	const DWORD ex_style = WS_EX_OVERLAPPEDWINDOW;
@@ -117,6 +115,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	/***********************************/
 
+	/*Summary game;
+	if (!game.init())
+		return 0;
 
 	/***************************************/
 
@@ -146,10 +147,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				// ゲーム処理
 				Direct3D::getInstance()->clear();
 
-				if (false)
+				/*if (!game.update())
 				{
 					break;
-				}
+				}*/
 				// スプライト描画開始
 				Sprite::getInstance()->begin();
 

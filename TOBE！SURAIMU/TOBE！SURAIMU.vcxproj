@@ -155,9 +155,13 @@
     <ClInclude Include="container.h" />
     <ClInclude Include="direct3d.h" />
     <ClInclude Include="key.h" />
+    <ClInclude Include="object_base.h" />
+    <ClInclude Include="object_container_base.h" />
     <ClInclude Include="pad.h" />
     <ClInclude Include="release.h" />
+    <ClInclude Include="scene_base.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="star_container.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="textureLoder.h" />
@@ -168,8 +172,10 @@
     <ClCompile Include="direct3d.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="object_container_base.cpp" />
     <ClCompile Include="pad.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="star_container.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

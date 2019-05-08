@@ -9,15 +9,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Project\Summury">
-      <UniqueIdentifier>{5866395f-2a8a-483f-990f-4aa1ddc1014d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Summury\Scene">
-      <UniqueIdentifier>{6cda7968-8104-473d-bc1e-7c45ea93d7b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Summury\Object">
-      <UniqueIdentifier>{10e175df-893e-4c40-afa3-5bcf3c5263fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\System">
       <UniqueIdentifier>{4087bcb2-c529-4cb8-ba8c-120fb16ac092}</UniqueIdentifier>
     </Filter>
@@ -29,6 +20,33 @@
     </Filter>
     <Filter Include="Project\System\DirectX\Input">
       <UniqueIdentifier>{267af59c-f58a-45d4-bbfc-77a2a474b724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Element">
+      <UniqueIdentifier>{5866395f-2a8a-483f-990f-4aa1ddc1014d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Element\Scene">
+      <UniqueIdentifier>{6cda7968-8104-473d-bc1e-7c45ea93d7b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Element\Object">
+      <UniqueIdentifier>{10e175df-893e-4c40-afa3-5bcf3c5263fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Element\Scene\Result">
+      <UniqueIdentifier>{69320312-d4af-44f1-ab7f-01dd9c64468c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Element\Scene\Play">
+      <UniqueIdentifier>{c8a74af1-e0c3-4137-bdbe-0db01a778c18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Element\Scene\Title">
+      <UniqueIdentifier>{656fe80d-9a73-4a4b-97ad-4eb84e97b625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Element\Scene\Manager">
+      <UniqueIdentifier>{86e8cf0a-c5d2-4522-8bb7-7b35d7a444b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Element\Object\Container">
+      <UniqueIdentifier>{088ae080-abff-41aa-bc8d-904a4376e57b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Element\Object\Container\StarContainer">
+      <UniqueIdentifier>{a043bb7c-3c25-4034-9c05-97a5c785ddb7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +80,12 @@
     <ClCompile Include="container.cpp">
       <Filter>Project\System\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="object_container_base.cpp">
+      <Filter>Project\Element\Object\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="star_container.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -94,6 +118,16 @@
     <ClInclude Include="release.h">
       <Filter>Project\System</Filter>
     </ClInclude>
+    <ClInclude Include="object_base.h">
+      <Filter>Project\Element\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="scene_base.h">
+      <Filter>Project\Element\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="object_container_base.h">
+      <Filter>Project\Element\Object\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="star_container.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

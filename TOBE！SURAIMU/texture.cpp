@@ -21,8 +21,9 @@ ID3D11ShaderResourceView* Texture::load( const wstring& FileName )
     {
         //  エラー
         char file_name[ 256 ], str[ 256 ];
-        wcstombs( file_name, FileName.c_str(), 256 );
-        sprintf( str, "テクスチャの読み込みに失敗(%s)", file_name );
+		unsigned int num;
+		wcstombs_s(&num, file_name, FileName.c_str(), 255);
+        sprintf_s( str, "テクスチャの読み込みに失敗(%s)", file_name );
         Error::showDialog(str);
         return NULL;
     }
