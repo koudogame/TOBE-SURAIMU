@@ -104,11 +104,11 @@
     <ClCompile Include="title.cpp">
       <Filter>Project\Game\Scene\Title</Filter>
     </ClCompile>
-    <ClCompile Include="result.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
     <ClCompile Include="game.cpp">
       <Filter>Project\Game\Scene\Play\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="result.cpp">
+      <Filter>Project\Game\Scene\Result</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,7 +173,9 @@
     <ClInclude Include="title.h">
       <Filter>Project\Game\Scene\Title</Filter>
     </ClInclude>
-    <ClInclude Include="result.h" />
+    <ClInclude Include="result.h">
+      <Filter>Project\Game\Scene\Result</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
