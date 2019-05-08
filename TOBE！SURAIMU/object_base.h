@@ -1,5 +1,7 @@
 #pragma once
 
+class TaskManager;
+
 // 各オブジェクトID
 enum class ObjectID
 {
@@ -17,7 +19,10 @@ enum class ObjectID
 class ObjectBase
 {
 public:
-	ObjectBase(const ObjectID ID) : id_(ID) {}
+	ObjectBase(const ObjectID ID, TaskManager* const TaskManager) :
+		id_(ID),
+		task_manager_(TaskManager)
+	{}
 	virtual ~ObjectBase() = default;
 public:
 	virtual bool init() { return true; }
@@ -35,5 +40,6 @@ protected:
 
 private:
 	ObjectID id_;
+	TaskManager* task_manager_;
 };
 
