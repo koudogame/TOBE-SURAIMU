@@ -21,8 +21,7 @@ Game::~Game()
 bool Game::init()
 {
 	scene_ = new Play;
-
-	if( scene_ == nullptr )
+	if (scene_->init() == false)
 		return false;
 
 	return true;
