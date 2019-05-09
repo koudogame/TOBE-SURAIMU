@@ -3,7 +3,8 @@
 
 //-----------------------
 //最初のシーン
-#include "play.h"
+#include "title.h"
+//#include "play.h"
 
 //コンストラクタ
 Game::Game()
@@ -20,7 +21,7 @@ Game::~Game()
 //初期化
 bool Game::init()
 {
-	scene_ = new Play;
+	scene_ = new Title;
 	if (scene_->init() == false)
 		return false;
 

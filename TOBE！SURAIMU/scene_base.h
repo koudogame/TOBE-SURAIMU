@@ -25,6 +25,9 @@ public:
 	virtual SceneBase* update() = 0;
 	virtual void draw() = 0;
 
+protected:
+	ID3D11ShaderResourceView* texture_ = nullptr;
+
 private:
 	SceneID id_;
 };

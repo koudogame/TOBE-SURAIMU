@@ -32,7 +32,6 @@ protected:
 		return free_obj;
 	}
 
-
 protected:
 	TaskManager* task_manager_ = nullptr;
 	std::list<T*> active_list_;
