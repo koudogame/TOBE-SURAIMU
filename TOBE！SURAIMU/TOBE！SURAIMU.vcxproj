@@ -162,9 +162,11 @@
     <ClInclude Include="object_base.h" />
     <ClInclude Include="object_container_base.h" />
     <ClInclude Include="pad.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="release.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="scene_base.h" />
+    <ClInclude Include="shape.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="star.h" />
     <ClInclude Include="star_container.h" />
@@ -185,6 +187,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="object_container_base.cpp" />
     <ClCompile Include="pad.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="star.cpp" />
