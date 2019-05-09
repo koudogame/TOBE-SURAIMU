@@ -21,8 +21,12 @@ public:
 	void draw() override;
 
 private:
-	bool is_create_ = true;
+	bool do_create_ = true;
 	bool create();
+
+	FILE* star_pattern_file_ = nullptr;
+	bool setStarPattern();
+	bool createStar();
 
 	SceneBase*(Play::*update_)() = nullptr;
 	SceneBase* start();

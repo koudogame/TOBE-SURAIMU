@@ -1,6 +1,11 @@
 
 #include "result.h"
 
+#include "release.h"
+#include "textureLoder.h"
+#include "sprite.h"
+#include "key.h"
+#include "pad.h"
 
 /*===========================================================================*/
 Result::Result() :
@@ -17,6 +22,9 @@ Result::~Result()
 // ‰Šú‰»ˆ—
 bool Result::init()
 {
+	texture_ = TextureLoder::getInstance()->load(L"Texture/ƒŠƒUƒ‹ƒg.png");
+	if (texture_ == nullptr)	return false;
+
 	return true;
 }
 
@@ -24,7 +32,7 @@ bool Result::init()
 // I—¹ˆ—
 void Result::destroy()
 {
-
+	TextureLoder::getInstance()->release(texture_);
 }
 
 /*===========================================================================*/
@@ -38,5 +46,7 @@ SceneBase* Result::update()
 // •`‰æˆ—
 void Result::draw()
 {
-
+	Sprite::getInstance()->draw(
+		texture_, Vector2::Zero
+	);
 }

@@ -89,9 +89,6 @@
     <ClCompile Include="container.cpp">
       <Filter>Project\System\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="object_container_base.cpp">
-      <Filter>Project\Game\Object\Container</Filter>
-    </ClCompile>
     <ClCompile Include="star_container.cpp">
       <Filter>Project\Game\Object\Container\StarContainer</Filter>
     </ClCompile>

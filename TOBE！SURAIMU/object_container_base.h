@@ -1,13 +1,13 @@
 
-class ObjectBase;
 class TaskManager;
 
 //-----------------------------------------------------------------------------
 // オブジェクトコンテナの基底
 //-----------------------------------------------------------------------------
 // --説明--
-// オブジェクトをdeleteせずに使いまわすことでnewのコストを抑える
-// 派生クラスは、各々オブジェクトの追加関数を実装する
+// 派生クラスは各々、要素の追加関数を実装する
+// destroy関数は、呼び出されたら全要素の開放処理を行う
+template <class T>
 class ObjectContainerBase
 {
 public:
@@ -15,16 +15,25 @@ public:
 		task_manager_(TaskManager)
 	{}
 	virtual ~ObjectContainerBase() = default;
+
 public:
-	virtual void destroy();
-	virtual void update();
+	virtual void update() = 0;
+	virtual void destroy() = 0;
 
 protected:
-	ObjectBase* getFreeObj();
+	T* popFreeObj()
+	{
+		T* free_obj = nullptr;
+		if (free_list_.size())
+		{
+			free_obj = free_list_.back();
+			free_list_.pop_back();
+		}
+		return free_obj;
+	}
 
-
-private:
+protected:
 	TaskManager* task_manager_ = nullptr;
-	std::list<ObjectBase*> active_list_;
-	std::vector<ObjectBase*> free_list_;
+	std::list<T*> active_list_;
+	std::vector<T*> free_list_;
 };

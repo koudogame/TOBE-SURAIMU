@@ -2,18 +2,23 @@
 
 #include "object_container_base.h"
 
+class Star;
 
 //-----------------------------------------------------------------------------
 // スターコンテナ
 //-----------------------------------------------------------------------------
+// --説明--
+// スターの追加はaddStar関数を使用する
 class StarContainer :
-	public ObjectContainerBase
+	public ObjectContainerBase<Star>
 {
 public:
 	StarContainer(TaskManager* const TaskManager );
 	~StarContainer();
 public:
-	// 星の追加
+	void update() override;
+	void destroy() override;
+
 	void addStar(
 		const Vector2& Position,
 		const float Angle,

@@ -1,6 +1,14 @@
 
 #include "title.h"
 
+#include "textureLoder.h"
+#include "sprite.h"
+#include "key.h"
+#include "pad.h"
+#include "play.h"
+
+using PadState = GamePad::State;
+using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
 Title::Title() :
@@ -17,6 +25,8 @@ Title::~Title()
 // 初期化処理
 bool Title::init()
 {
+	texture_ = TextureLoder::getInstance()->load(L"Texture/タイトル.png");
+
 	return true;
 }
 
@@ -24,13 +34,19 @@ bool Title::init()
 // 終了処理
 void Title::destroy()
 {
-
+	TextureLoder::getInstance()->release(texture_);
 }
 
 /*===========================================================================*/
 // 更新処理
 SceneBase* Title::update()
 {
+	if (Key::getInstance()->getTracker().pressed.Enter ||
+		Pad::getInstance()->getTracker().b == PadTracker::PRESSED)
+	{
+		return new Play();
+	}
+
 	return this;
 }
 
@@ -38,5 +54,8 @@ SceneBase* Title::update()
 // 描画処理
 void Title::draw()
 {
-
+	Sprite::getInstance()->draw(
+		texture_,
+		Vector2::Zero
+	);
 }
