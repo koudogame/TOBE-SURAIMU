@@ -183,7 +183,6 @@
     <ClCompile Include="play.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="object_container_base.cpp" />
     <ClCompile Include="pad.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="sprite.cpp" />

@@ -7,6 +7,8 @@
 #include "task_manager.h"
 #include "star_container.h"
 
+using ButtonState = GamePad::ButtonStateTracker;
+
 
 /*===========================================================================*/
 Play::Play() :
@@ -65,8 +67,7 @@ void Play::destroy()
 // XVˆ—
 SceneBase* Play::update()
 {
-	(this->*update_)();
-	return this;
+	return (this->*update_)();
 }
 
 /*===========================================================================*/
@@ -90,7 +91,7 @@ SceneBase* Play::start()
 SceneBase* Play::play()
 {
 	if (Key::getInstance()->getTracker().pressed.P ||
-		Pad::getInstance()->getTracker().menu == GamePad::ButtonStateTracker::PRESSED)
+		Pad::getInstance()->getTracker().menu == ButtonState::PRESSED)
 	{
 		update_ = &Play::pause;
 	}
@@ -106,7 +107,7 @@ SceneBase* Play::play()
 SceneBase* Play::pause()
 {
 	if (Key::getInstance()->getTracker().pressed.P ||
-		Pad::getInstance()->getTracker().menu == GamePad::ButtonStateTracker::PRESSED)
+		Pad::getInstance()->getTracker().menu == ButtonState::PRESSED)
 	{
 		update_ = &Play::play;
 	}
