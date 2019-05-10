@@ -29,10 +29,10 @@ private:
 	FILE* star_pattern_ = nullptr;
 	bool createStar();
 
+	SceneBase*(Play::*update_)() = nullptr;
 	SceneBase* start();
 	SceneBase* play();
 	SceneBase* pause();
-	SceneBase*(Play::*update_)() = nullptr;
 
 private:
 	TaskManager* task_manager_ = nullptr;

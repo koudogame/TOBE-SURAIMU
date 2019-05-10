@@ -54,6 +54,31 @@ bool Play::init()
 	if (createStar() == false) { return false; }
 
 
+	// プレイヤー初期化
+	Vector2 position;
+	float jump;
+	float decay;
+	float gravity;
+	float speed;
+	float boost;
+	FILE* player_state = nullptr;
+	error = fopen_s(&player_state, "State/player_state.txt", "r");
+	if (error != 0) { return false; }
+	fscanf_s(player_state,
+		"%f %f %f %f %f %f %f",
+		&position.x, &position.y,
+		&jump,
+		&decay,
+		&gravity,
+		&speed,
+		&boost);
+	fclose(player_state);
+	if (player_->init(position, jump, decay, gravity, speed, boost) == false)
+	{
+		return false;
+	}
+
+
 	// 更新関数をstartに
 	update_ = &Play::start;
 
@@ -79,8 +104,7 @@ bool Play::create()
 
 	// プレイヤー
 	player_ = new (std::nothrow) Player(task_manager_);
-	if (player_ == nullptr || player_->init(Vector2{ 640.0F,360.0F }) == false)
-		return false;
+	if (player_ == nullptr) { return false; }
 
 	return true;
 }
