@@ -253,6 +253,7 @@ bool Play::createStar()
 	float size;
 	while (true)
 	{
+		// ƒtƒ@ƒCƒ‹‚©‚ç¶¬î•ñ‚ğæ“¾
 		if (fscanf_s(star_pattern_,
 			"%f %f %f %f %f %f %f",
 			&position.x, &position.y,
@@ -265,6 +266,7 @@ bool Play::createStar()
 			return true;
 		}
 
+		// 
 		position.y -= getWindowHeight<float>();
 		star_container_->addStar(
 			position, angle, fall_speed, spin_speed, spin_rate, size);
