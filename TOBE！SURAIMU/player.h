@@ -23,6 +23,7 @@ public:
 	//ŠO•”—˜—pŠÖ”
 	inline const Circle& getShape() { return myshape_; }
 	inline const Line& getMove() { return move_vector_; }
+	void revision( const Vector2& CrossPoint );
 
 
 private:

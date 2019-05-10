@@ -4,6 +4,7 @@
 //”»’è‘ÎÛ
 #include "player.h"
 #include "star.h"
+#include "wall.h"
 
 
 Collision::Collision()
@@ -23,23 +24,39 @@ void Collision::collision( Player * P, Star * S)
 		if( judgment( P->getShape() , S->getShape( i ) ) )
 		{
 			//‰~‚Æü‚Ì“–‚½‚è”»’è
-			crossPoint( P->getShape() , S->getShape( i ) );
+			P->revision( crossPoint( P->getShape() , S->getShape( i ) ));
 			break;
 		}
 
 		if( judgment( P->getMove() , S->getShape( i ) ) )
 		{
 			//ü‚Æü‚Ì“–‚½‚è”»’è
-			crossPoint( P->getMove() , S->getShape( i ) );
+			P->revision(crossPoint( P->getMove() , S->getShape( i ) ));
 
 			break;
 		}
 	}
 }
 
-void Collision::collision( Player * P, Wall * W)
+void Collision::collision( Player * P , Wall * W )
 {
+	for( int i = 0; i < 5; i++ )
+	{
+		if( judgment( P->getShape() , W->getShape( i ) ) )
+		{
+			//‰~‚Æü‚Ì“–‚½‚è”»’è
+			P->revision( crossPoint( P->getShape() , W->getShape( i ) ) );
+			break;
+		}
 
+		if( judgment( P->getMove() , W->getShape( i ) ) )
+		{
+			//ü‚Æü‚Ì“–‚½‚è”»’è
+			P->revision(crossPoint( P->getMove() , W->getShape( i ) ));
+
+			break;
+		}
+	}
 }
 
 
