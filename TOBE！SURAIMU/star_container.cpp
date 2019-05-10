@@ -56,7 +56,6 @@ void StarContainer::destroy()
 	{
 		star = free_list_.back();
 
-		star->destroy();
 		safe_delete(star);
 		free_list_.pop_back();
 	}
@@ -72,8 +71,8 @@ void StarContainer::addStar(
 	if (star == nullptr)
 	{
 		star = new Star(task_manager_);
-		active_list_.push_back(star);
 	}
+	active_list_.push_back(star);
 
 	star->init(
 		Position,
@@ -83,4 +82,14 @@ void StarContainer::addStar(
 		Rate,
 		Size
 	);
+}
+
+/*===========================================================================*/
+// ƒXƒ^[‚É—Ž‰º‚ð’Ç‰Á
+void StarContainer::setFall()
+{
+	for (auto& star : active_list_)
+	{
+		star->setFall();
+	}
 }

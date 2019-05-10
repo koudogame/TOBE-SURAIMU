@@ -20,6 +20,8 @@ public:
 	virtual void update() = 0;
 	virtual void destroy() = 0;
 
+	virtual const std::list<T*>& active() { return active_list_; }
+
 protected:
 	T* popFreeObj()
 	{
