@@ -46,7 +46,7 @@ bool Star::init( const Vector2 & Position , const float Angle , const float Fall
 
 void Star::destroy()
 {
-	task_manager_->unregisterTask( this );
+	task_manager_->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
 
