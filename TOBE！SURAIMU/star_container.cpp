@@ -26,6 +26,7 @@ void StarContainer::update()
 		(*itr)->update();
 		if ((*itr)->isLife() == false)		// 死んだらフリーリストに追加
 		{
+			(*itr)->destroy();
 			free_list_.push_back((*itr));
 			itr = active_list_.erase(itr);
 		}

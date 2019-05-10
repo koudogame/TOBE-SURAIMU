@@ -35,11 +35,11 @@ public:
 
 protected:
 	ID3D11ShaderResourceView* texture_ = nullptr;
+	TaskManager* task_manager_;
 	Vector2 position_;
 
 
 private:
 	ObjectID id_;
-	TaskManager* task_manager_;
 };
 

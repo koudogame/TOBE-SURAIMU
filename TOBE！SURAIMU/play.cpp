@@ -6,9 +6,10 @@
 #include "sprite.h"
 #include "key.h"
 #include "pad.h"
+#include "result.h"
 #include "task_manager.h"
 #include "star_container.h"
-#include "result.h"
+#include "player.h"
 
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -67,6 +68,11 @@ bool Play::create()
 	star_container_ = new (std::nothrow) StarContainer(task_manager_);
 	if (star_container_ == nullptr) return false;
 
+	// プレイヤー
+	player_ = new (std::nothrow) Player(task_manager_);
+	if (player_ == nullptr || player_->init(Vector2{ 640.0F,360.0F }) == false)
+		return false;
+
 	return true;
 }
 
@@ -77,6 +83,8 @@ void Play::destroy()
 	do_create_ = true;
 
 	TextureLoder::getInstance()->release(texture_);
+
+	safe_delete(player_);
 
 	star_container_->destroy();
 	safe_delete(star_container_);
@@ -89,6 +97,7 @@ void Play::destroy()
 SceneBase* Play::update()
 {
 	return (this->*update_)();
+	return this;
 }
 
 /*===========================================================================*/
@@ -154,7 +163,7 @@ SceneBase* Play::pause()
 // 星の生成パターンを選択
 bool Play::setStarPattern()
 {
-
+	return true;
 }
 // 星の生成
 bool Play::createStar()
@@ -165,7 +174,7 @@ bool Play::createStar()
 	float spin_speed;
 	float spin_rate;
 	float size;
-
+/*
 	while (true)
 	{
 		if (fscanf_s(star_pattern_file_,
@@ -182,5 +191,8 @@ bool Play::createStar()
 
 		star_container_->addStar(
 			position, angle, fall_speed, spin_speed, spin_rate, size);
-	}
+	}*/
+
+
+	return true;
 }
