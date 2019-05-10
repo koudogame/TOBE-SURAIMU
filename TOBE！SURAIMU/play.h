@@ -4,6 +4,7 @@
 
 class TaskManager;
 class StarContainer;
+class Player;
 
 //-----------------------------------------------------------------------------
 // ƒvƒŒƒC•”
@@ -36,4 +37,5 @@ private:
 private:
 	TaskManager* task_manager_ = nullptr;
 	StarContainer* star_container_ = nullptr;
+	Player* player_ = nullptr;
 };
