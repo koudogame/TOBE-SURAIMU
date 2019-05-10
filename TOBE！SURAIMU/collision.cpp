@@ -22,12 +22,17 @@ void Collision::collision( Player * P, Star * S)
 	{
 		if( judgment( P->getShape() , S->getShape( i ) ) )
 		{
-			//‰~‚Æü‚Ì“–‚½‚èˆÀ’è
+			//‰~‚Æü‚Ì“–‚½‚è”»’è
+			crossPoint( P->getShape() , S->getShape( i ) );
+			break;
 		}
 
 		if( judgment( P->getMove() , S->getShape( i ) ) )
 		{
 			//ü‚Æü‚Ì“–‚½‚è”»’è
+			crossPoint( P->getMove() , S->getShape( i ) );
+
+			break;
 		}
 	}
 }
@@ -148,10 +153,51 @@ Vector2 Collision::crossPoint( const Circle & C , const Line & L )
 	return L.start + checker[ 1 ] * k;
 }
 
-Vector2 Collision::crossPoint( const Line & , const Line & )
+Vector2 Collision::crossPoint( const Line & L1, const Line & L2)
 {
+	//•ªq
 	float mol[ 2 ];
-	return Vector2();
+	//•ª•ê
+	float deno[ 2 ];
+
+	//x‚Ì•Ï‰»—Ê( •ª•ê )
+	deno[ 0 ] = L1.end.x - L1.start.x;
+	deno[ 1 ] = L2.end.x - L2.start.x;
+
+	//y‚Ì•Ï‰»—Ê( •ªq )
+	mol[0] = L1.end.y - L1.start.y;
+	mol[1] = L2.end.y - L2.start.y;
+
+	//x‚Ì•Ï‰»—Ê‚ª‚È‚¢ê‡
+	if( deno[ 0 ] == 0 )
+	{
+		float tilt = mol[ 1 ] / deno[ 1 ];
+
+		float y = tilt * ( L1.start.x - L2.start.x ) + L2.start.y;
+
+		return Vector2( L1.start.x , y );
+	}
+	else if( deno[ 1 ] == 0 )
+	{
+		float tilt = mol[ 0 ] / deno[ 0 ];
+
+		float y = tilt * ( L2.start.x - L1.start.x ) + L1.start.y;
+
+		return Vector2( L2.start.x , y );
+	}
+
+	//Œğ“_‚ğ‹‚ß‚é
+	float tilt[ 2 ] = {
+		mol[ 0 ] / deno[ 0 ],
+		mol[ 1 ] / deno[ 1 ]
+	};
+
+	Vector2 cross_point;
+
+	cross_point.x = ( tilt[ 1 ] * L2.start.x - L2.start.y - tilt[ 0 ] * L1.start.x + L1.start.y ) / ( tilt[ 1 ] - tilt[ 0 ] );
+	cross_point.y = tilt[ 0 ] * ( cross_point.x - L1.start.x ) + L1.start.y;
+
+	return cross_point;
 }
 
 //PriveteŠÖ” End
