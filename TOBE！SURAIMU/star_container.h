@@ -9,6 +9,7 @@ class Star;
 //-----------------------------------------------------------------------------
 // --説明--
 // スターの追加はaddStar関数を使用する
+// setFall関数ですべてのスターに落下を追加する
 class StarContainer :
 	public ObjectContainerBase<Star>
 {
@@ -27,4 +28,5 @@ public:
 		const float SpinRate,
 		const float Size
 	);
+	void setFall();
 };

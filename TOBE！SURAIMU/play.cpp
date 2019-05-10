@@ -10,6 +10,7 @@
 #include "task_manager.h"
 #include "star_container.h"
 #include "player.h"
+#include "star.h"
 
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -44,13 +45,13 @@ bool Play::init()
 	errno_t error = fopen_s(&file_name_list, "State/pattern_list.txt", "r");
 	if (error != 0) { return false; }
 	char file_name[FILENAME_MAX];
-	while (fscanf_s(file_name_list, "%s", &file_name, FILENAME_MAX - 1) != EOF)
+	while (fscanf_s(file_name_list, "%s", &file_name, FILENAME_MAX) != EOF)
 	{
 		star_pattern_list_.push_back(file_name);
 	}
 	fclose(file_name_list);
-
-	createStar();	// スターを生成
+	// スターを生成
+	if (createStar() == false) { return false; }
 
 
 	// 更新関数をstartに
@@ -125,7 +126,15 @@ void Play::draw()
 // スタート
 SceneBase* Play::start()
 {
-	update_ = &Play::play;
+	if (Key::getInstance()->getTracker().pressed.Enter ||
+		Pad::getInstance()->getTracker().b == PadTracker::PRESSED)
+	{
+		update_ = &Play::play;
+		star_container_->setFall();
+	}
+
+	task_manager_->allExecuteUpdate();
+
 	return this;
 }
 
@@ -140,6 +149,24 @@ SceneBase* Play::play()
 	}
 	else
 	{
+		star_container_->update();
+
+		// 画面外にあるスターが無くなったらスターを新規生成
+		const std::list<Star*> kStarList = star_container_->active();
+		auto itr = kStarList.begin();
+		auto end = kStarList.end();
+		for (; itr != end; ++itr)
+		{
+			if ((*itr)->getposition().y < 0.0F)
+				break;
+		}
+		if (itr == end && createStar() == false)
+		{
+			// 生成に失敗
+			return nullptr;
+		}
+		star_container_->setFall();
+
 		task_manager_->allExecuteUpdate();
 	}
 	return this;
@@ -183,7 +210,6 @@ bool Play::createStar()
 	float spin_speed;
 	float spin_rate;
 	float size;
-
 	while (true)
 	{
 		if (fscanf_s(star_pattern_,
@@ -198,6 +224,7 @@ bool Play::createStar()
 			return true;
 		}
 
+		position.y -= getWindowHeight<float>();
 		star_container_->addStar(
 			position, angle, fall_speed, spin_speed, spin_rate, size);
 	}
