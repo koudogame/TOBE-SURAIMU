@@ -8,6 +8,7 @@
 #include "pad.h"
 #include "result.h"
 #include "task_manager.h"
+#include "collision.h"
 #include "star_container.h"
 #include "star.h"
 #include "player.h"
@@ -209,6 +210,15 @@ SceneBase* Play::play()
 		star_container_->setFall();
 
 		task_manager_->allExecuteUpdate();
+
+
+		// Õ“Ë”»’è
+		Collision* const collision = Collision::getInstance();
+		for (auto& star : star_container_->active())
+		{
+			collision->collision(player_, star);
+		}
+		collision->collision(player_, wall_);
 	}
 	return this;
 }

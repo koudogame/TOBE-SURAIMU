@@ -8,6 +8,7 @@
 #include "shape.h"
 
 constexpr float kWallWidth = 40.0F;
+constexpr float kWallWidthHarf = kWallWidth / 2.0F;
 constexpr float kDistanceToCenter = 320.0F;
 const float kCenterX = getWindowWidth<float>() / 2.0F;
 const float kPositionXLeft  = kCenterX - kDistanceToCenter;
@@ -19,8 +20,10 @@ const Line kCollisionLeftWall{
 const Line kCollisionRightWall{
 	Vector2(kPositionXRight, 0.0F), Vector2(kPositionXRight, 720.0F) };
 
-const Vector2 kDrawPositionLeft{ kCollisionLeftWall.end.x - kWallWidth, 0.0F };
-const Vector2 kDrawPositionRight{kCollisionRightWall.end.x - kWallWidth,0.0F };
+const Vector2 kDrawPositionLeft{
+	kCollisionLeftWall.end.x - kWallWidthHarf , 0.0F };
+const Vector2 kDrawPositionRight{
+	kCollisionRightWall.end.x - kWallWidthHarf, 0.0F };
 
 const RECT kTrimmingLeftWall { 1280L, 0L, 1310L, 720L };
 const RECT kTrimmingRightWall{ 1310L, 0L, 1340L, 720L };
