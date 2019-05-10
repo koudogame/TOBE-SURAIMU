@@ -27,6 +27,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float Decay 
 	kGravity = Gravity;
 	kSpeed = Speed;
 	kBoostPower = Boost;
+	ground_ = &kGround;
 
 	texture_ = TextureLoder::getInstance()->load( L"Texture/motion dummy.png" );
 	if( texture_ == nullptr )
