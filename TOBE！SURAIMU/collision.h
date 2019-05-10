@@ -8,12 +8,15 @@ class Wall;
 class Collision
 {
 public:
-	Collision();
 	~Collision();
+private:
+	//singleton
+	Collision();
 
 public:
 //============================
 //ŠO•”ŒöŠJŠÖ”
+	static Collision* getInstance() { static Collision instance; return &instance; }
 	void collision( Player* , Star* );
 	void collision( Player* , Wall* );
 
