@@ -63,11 +63,16 @@ void Player::update()
 	//ブースト力の減少
 	boost_power_ = boost_power_ > kSpeed ? jump_power_ - kDecay : kSpeed;
 
+	movement_ += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * jump_power_;
+
 	//座標更新
 	myshape_.position += movement_;
 
 	if( myshape_.position.y > 720.0F - 30.0F )
+	{
+		flag_.reset( Flag::kJump );
 		myshape_.position.y = 720.0F - 30.0F;
+	}
 
 	move_vector_.end = myshape_.position;
 }
@@ -91,6 +96,16 @@ bool Player::isLife()
 	return true;
 }
 
+void Player::revision(const Vector2& CrossPoint)
+{
+	myshape_.position = CrossPoint;
+	setGravityAngle();
+
+	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) )*myshape_.radius;
+	jump_power_ = 0;
+	flag_.reset( Flag::kJump );
+}
+
 
 //----------------------------------------------
 //内部利用関数
@@ -108,15 +123,15 @@ void Player::input()
 
 	if( flag_.test( Flag::kJump ) )
 	{
-		//移動方向に対して入力が左側の場合( 左入力時 )
-		if( cross > 0 || key.lastState.Left )
-		{
-			movement_ = Vector2( std::cos( jumping_angle_ - XM_PI / 2.0F ) , -std::sin( jumping_angle_ - XM_PI / 2.0F ) ) * boost_power_;
-		}
 		//移動方向に対して入力が右の場合( 右入力時 )
-		else if( cross < 0 || key.lastState.Right )
+		if( cross < 0 || key.lastState.Right )
 		{
-			movement_ = Vector2( std::cos( jumping_angle_ + XM_PI / 2.0F ) , -std::sin( jumping_angle_ + XM_PI / 2.0F ) ) * boost_power_;
+			movement_ += Vector2( std::cos( jumping_angle_ - XM_PI / 2.0F ) , -std::sin( jumping_angle_ - XM_PI / 2.0F ) ) * boost_power_;
+		}
+		//移動方向に対して入力が左の場合( 左入力時 )
+		else if( cross > 0 || key.lastState.Left )
+		{
+			movement_ += Vector2( std::cos( jumping_angle_ + XM_PI / 2.0F ) , -std::sin( jumping_angle_ + XM_PI / 2.0F ) ) * boost_power_;
 		}
 		//ブースト入力
 		if(( pad_tracker.a == pad_tracker.PRESSED || key.pressed.Space) &&
