@@ -9,8 +9,9 @@
 #include "result.h"
 #include "task_manager.h"
 #include "star_container.h"
-#include "player.h"
 #include "star.h"
+#include "player.h"
+#include "wall.h"
 
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -79,6 +80,10 @@ bool Play::init()
 	}
 
 
+	// 壁の初期化
+	if (wall_->init() == false) { return false; }
+
+
 	// 更新関数をstartに
 	update_ = &Play::start;
 
@@ -91,20 +96,23 @@ bool Play::create()
 {
 	do_create_ = false;
 
-	// 画像の読み込み
 	texture_ = TextureLoder::getInstance()->load(L"Texture/プレイ画面.png");
 
 	// タスクマネージャー
-	task_manager_ = new (std::nothrow) TaskManager();
-	if (task_manager_ == nullptr) return false;
+	task_manager_   = new (std::nothrow) TaskManager();
+	if (task_manager_ == nullptr)   { return false; }
 
-	// 星のコンテナ
+	// スターコンテナ
 	star_container_ = new (std::nothrow) StarContainer(task_manager_);
-	if (star_container_ == nullptr) return false;
+	if (star_container_ == nullptr) { return false; }
 
 	// プレイヤー
-	player_ = new (std::nothrow) Player(task_manager_);
-	if (player_ == nullptr) { return false; }
+	player_         = new (std::nothrow) Player(task_manager_);
+	if (player_ == nullptr)         { return false; }
+
+	// 壁
+	wall_           = new (std::nothrow) Wall(task_manager_);
+	if (wall_ == nullptr)           { return false; }
 
 	return true;
 }
@@ -115,14 +123,23 @@ void Play::destroy()
 {
 	do_create_ = true;
 
-	TextureLoder::getInstance()->release(texture_);
+	// 壁
+	wall_->destroy();
+	safe_delete(wall_);
 
+	// プレイヤー
+	player_->destroy();
 	safe_delete(player_);
 
+	// 星々
 	star_container_->destroy();
 	safe_delete(star_container_);
 
+	// タスクマネージャー
 	safe_delete(task_manager_);
+
+	// テクスチャ
+	TextureLoder::getInstance()->release(texture_);
 }
 
 /*===========================================================================*/

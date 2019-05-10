@@ -29,7 +29,7 @@ public:
 	virtual void destroy() = 0;
 	virtual void update() = 0;
 	virtual void draw() = 0;
-	virtual bool isLife() = 0;
+	virtual bool isLife() { return true; }
 
 	virtual ObjectID getId() { return id_; }
 

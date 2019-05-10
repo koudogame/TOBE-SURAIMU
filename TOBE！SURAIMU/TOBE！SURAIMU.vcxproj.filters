@@ -60,6 +60,9 @@
     <Filter Include="Project\Game\Object\Player">
       <UniqueIdentifier>{bdc47e3a-dc83-430b-bfef-3d4be8a2fc4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\Wall">
+      <UniqueIdentifier>{cef62833-c4f3-4115-a77e-4bf76353b882}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>Project\Game\Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="wall.cpp">
+      <Filter>Project\Game\Object\Wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +197,9 @@
     <ClInclude Include="shape.h" />
     <ClInclude Include="player.h">
       <Filter>Project\Game\Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="wall.h">
+      <Filter>Project\Game\Object\Wall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
