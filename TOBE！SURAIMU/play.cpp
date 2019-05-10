@@ -266,7 +266,6 @@ bool Play::createStar()
 			return true;
 		}
 
-		// 
 		position.y -= getWindowHeight<float>();
 		star_container_->addStar(
 			position, angle, fall_speed, spin_speed, spin_rate, size);

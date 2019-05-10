@@ -7,28 +7,23 @@
 #include "task_manager.h"
 #include "shape.h"
 
-const float kWallWidth = 40.0F;
-
+constexpr float kWallWidth = 40.0F;
+constexpr float kDistanceToCenter = 320.0F;
 const float kCenterX = getWindowWidth<float>() / 2.0F;
-const float kDistanceToCenter = 320.0F;
 const float kPositionXLeft  = kCenterX - kDistanceToCenter;
 const float kPositionXRight = kCenterX + kDistanceToCenter;
 
 
-const Line kPositionLeft{
-	Vector2(kPositionXLeft, 0.0F), Vector2(kPositionXLeft, 720.0F)
-};
-const Line kPositionRight{
-	Vector2(kPositionXRight, 0.0F), Vector2(kPositionXRight, 720.0F)
-};
+const Line kCollisionLeftWall{
+	Vector2(kPositionXLeft, 0.0F), Vector2(kPositionXLeft, 720.0F) };
+const Line kCollisionRightWall{
+	Vector2(kPositionXRight, 0.0F), Vector2(kPositionXRight, 720.0F) };
 
+const Vector2 kDrawPositionLeft{ kCollisionLeftWall.end.x - kWallWidth, 0.0F };
+const Vector2 kDrawPositionRight{kCollisionRightWall.end.x - kWallWidth,0.0F };
 
-const RECT kTrimmingLeftWall{
-	1280L, 0L, 1310L, 720L
-};
-const RECT kTrimmingRightWall{
-	1310L, 0L, 1340L, 720L
-};
+const RECT kTrimmingLeftWall { 1280L, 0L, 1310L, 720L };
+const RECT kTrimmingRightWall{ 1310L, 0L, 1340L, 720L };
 
 /*===========================================================================*/
 Wall::Wall(TaskManager* const TaskManager) :
@@ -53,8 +48,8 @@ bool Wall::init()
 	task_manager_->registerTask(this, TaskDraw::kWallDraw);
 
 	// å`ÇÃê›íË
-	myshape_[0] = kPositionLeft;
-	myshape_[1] = kPositionRight;
+	myshape_[0] = kCollisionLeftWall;
+	myshape_[1] = kCollisionRightWall;
 
 
 	return true;
@@ -102,8 +97,6 @@ void Wall::update()
 
 /*===========================================================================*/
 // ï`âÊèàóù
-const Vector2 kDrawPositionLeft{kPositionLeft.start.x - kWallWidth, 0.0F};
-const Vector2 kDrawPositionRight{kPositionRight.start.x - kWallWidth, 0.0F};
 void Wall::draw()
 {
 	Sprite* const kSprite = Sprite::getInstance();
