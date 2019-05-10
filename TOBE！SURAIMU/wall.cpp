@@ -7,7 +7,7 @@
 #include "task_manager.h"
 #include "shape.h"
 
-constexpr float kWallWidth = 40.0F;
+constexpr float kWallWidth = 30.0F;
 constexpr float kWallWidthHarf = kWallWidth / 2.0F;
 constexpr float kDistanceToCenter = 320.0F;
 const float kCenterX = getWindowWidth<float>() / 2.0F;
