@@ -28,14 +28,10 @@ void TaskManager::registerTask(ObjectBase* const Object, const TaskDraw TaskID)
 
 /*===========================================================================*/
 // 更新タスクの削除
-void TaskManager::unregisterTask(ObjectBase* const Object, const TaskUpdate TaskID)
+void TaskManager::unregisterObject(ObjectBase* const Object)
 {
-	removeTask(&update_list_, Object, TaskID);
-}
-// 描画タスクの削除
-void TaskManager::unregisterTask(ObjectBase* const Object, const TaskDraw TaskID)
-{
-	removeTask(&draw_list_, Object, TaskID);
+	removeTask(&update_list_, Object);
+	removeTask(&draw_list_, Object);
 }
 
 /*===========================================================================*/
@@ -77,11 +73,11 @@ void TaskManager::insertTask(
 template <typename T>
 void TaskManager::removeTask(
 	std::list<std::pair<T, ObjectBase*>>* List,
-	ObjectBase* const Object, const T& TaskID)
+	ObjectBase* const Object)
 {
 	for (auto itr = List->begin(), end = List->end();
 		itr != end; ++itr) {
-		if (itr->first == TaskID && itr->second == Object)
+		if (itr->second == Object)
 		{
 			List->erase(itr);
 			return;

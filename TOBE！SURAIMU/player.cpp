@@ -41,7 +41,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float Decay 
 
 void Player::destroy()
 {
-	task_manager_->unregisterTask( this );
+	task_manager_->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
 

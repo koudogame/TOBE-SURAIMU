@@ -36,8 +36,7 @@ public:
 	void registerTask(ObjectBase* const, const TaskDraw);
 	void registerTask(ObjectBase* const, const TaskUpdate);
 
-	void unregisterTask(ObjectBase* const, const TaskDraw);
-	void unregisterTask(ObjectBase* const, const TaskUpdate);
+	void unregisterObject(ObjectBase* const);
 
 	void allExecuteUpdate();
 
@@ -49,7 +48,7 @@ private:
 	void insertTask(std::list<std::pair<T, ObjectBase*>>* const, ObjectBase* const, const T&);
 
 	template <typename T>
-	void removeTask(std::list<std::pair<T, ObjectBase*>>* const, ObjectBase* const, const T&);
+	void removeTask(std::list<std::pair<T, ObjectBase*>>* const, ObjectBase* const);
 
 	template <typename T>
 	void execute(std::list<std::pair<T, ObjectBase*>>* const, void(ObjectBase::*)());
