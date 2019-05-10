@@ -12,6 +12,8 @@ const int kPlayerSize = 30;
 Player::Player( TaskManager* const Manager ) :
 	ObjectBase( ObjectID::kPlayer , Manager )
 {
+	kGround.start = Vector2( 0.0F , getWindowHeight<float>() );
+	kGround.end = Vector2( getWindowWidth<float>() , getWindowHeight<float>() );
 }
 
 
@@ -24,14 +26,13 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float Decay 
 {
 	task_manager_->registerTask( this , TaskUpdate::kPlayerUpdate );
 	task_manager_->registerTask( this , TaskDraw::kPlayerDraw );
-	position_ = Posit;
+	myshape_ = Circle( Posit , 7.5F );
 	kJumpPower = Jump;
 	kDecay = Decay;
 	kGravity = Gravity;
 	kSpeed = Speed;
 	kBoostPower = Boost;
 	ground_ = &kGround;
-
 	texture_ = TextureLoder::getInstance()->load( L"Texture/motion dummy.png" );
 	if( texture_ == nullptr )
 		return false;
@@ -47,7 +48,7 @@ void Player::destroy()
 
 void Player::update()
 {
-	move_vector.start = position_;
+	move_vector_.start = myshape_.position;
 	movement_ = Vector2::Zero;
 
 	//重力をかける
@@ -63,12 +64,12 @@ void Player::update()
 	boost_power_ = boost_power_ > kSpeed ? jump_power_ - kDecay : kSpeed;
 
 	//座標更新
-	position_ += movement_;
+	myshape_.position += movement_;
 
-	if( position_.y > 720.0F - 30.0F )
-		position_.y = 720.0F - 30.0F;
+	if( myshape_.position.y > 720.0F - 30.0F )
+		myshape_.position.y = 720.0F - 30.0F;
 
-	move_vector.end = position_;
+	move_vector_.end = myshape_.position;
 }
 
 void Player::draw()
@@ -79,12 +80,12 @@ void Player::draw()
 	trim.bottom = trim.top + kPlayerSize;
 	trim.right = trim.left + kPlayerSize;
 
-	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2( kPlayerSize / 2.0F , kPlayerSize - kPlayerSize / 4.0F ) );
+	Sprite::getInstance()->draw( texture_ , myshape_.position , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2( kPlayerSize / 2.0F , kPlayerSize - kPlayerSize / 4.0F ) );
 }
 
 bool Player::isLife()
 {
-	if( position_.y > 1200.0F )
+	if( myshape_.position.y > 1200.0F )
 		return false;
 
 	return true;
@@ -158,17 +159,21 @@ void Player::setGravityAngle()
 		std::atan2( -vect_stop.y,vect_stop.x ) - ( XM_PI / 2.0F ),
 		std::atan2( -vect_stop.y,vect_stop.x ) + ( XM_PI / 2.0F )
 	};
+
+	temp_angle[ 0 ] = static_cast<float>(static_cast<int>(temp_angle[ 0 ] * 100)) / 100.0F;
+	temp_angle[ 1 ] = static_cast<float>(static_cast<int>(temp_angle[ 1 ] * 100)) / 100.0F;
 	//線分に対して±90度方向に半径分移動する
 	Vector2 temp_posit[ 2 ] =
 	{
-		( vect_stop + Vector2( std:: cos( temp_angle[ 0 ] ) ,-std::sin( temp_angle[ 0 ] ) ) * 10.0F ),
+		( vect_stop + Vector2( std::cos( temp_angle[ 0 ] ) ,-std::sin( temp_angle[ 0 ] ) ) * 10.0F ),
 		( vect_stop + Vector2( std::cos( temp_angle[ 1 ] ) ,-std::sin( temp_angle[ 1 ] ) ) * 10.0F )
 	};
 
 	//作成した各線分に対して外積を取り負の方向の角度を重力方向として採用
 	vect_stop.Normalize();
 	temp_posit[ 0 ].Normalize();
-	if( Calc::cross( vect_stop , temp_posit[ 0 ] ) < 0 )
+	temp_posit[ 1 ].Normalize();
+	if( Calc::cross( vect_stop , temp_posit[ 0 ] ) > 0 )
 	{
 		gravity_angle_ = temp_angle[ 0 ];
 		return;

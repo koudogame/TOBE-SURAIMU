@@ -1,5 +1,6 @@
 #pragma once
 #include "object_base.h"
+#include "shape.h"
 
 class Star :
 	public ObjectBase
@@ -22,6 +23,8 @@ public:
 	//ŠO•”—˜—pŠÖ”
 	//—‰º‚Ì‘¬‚³‚Ì“K—p
 	inline void setFall() { fall_ = temp_fall_; }
+	inline const Line& getShape( const int GetNum ) { return myshape_[ GetNum ]; }
+	inline const Vector2 getposition() { return position_; }
 
 private:
 	//“à•”—˜—pŠÖ”
@@ -36,5 +39,6 @@ private:
 	int turn_;		        //‰ñ“]•ûŒü
 	float size_;	        //‘å‚«‚³
 	float rate_;	        //‰ñ“]”{—¦
+	Line myshape_[ 5 ];
 };
 

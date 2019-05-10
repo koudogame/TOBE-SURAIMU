@@ -59,12 +59,13 @@ void Star::update()
 
 void Star::draw()
 {
-	long edge[ 4 ] = { 0, kStarMin, kStarMin * 3, kStarMin * 5 };
-	RECT trim = {
-		edge[ static_cast< int >( size_ ) / 50 - 1 ],
-		0,
-		trim.left + edge[ static_cast< int >( size_ ) / 50 ],
-		trim.top + edge[ static_cast< int >( size_ ) / 50 ] };
+	RECT trim;
+	trim.left = 0;
+	for( int i = 0; i < ( size_ / 50L - 1L ); i++ )
+		trim.left += ( i + 1 ) * kStarMin;
+	trim.top = 0L;
+	trim.right = trim.left + static_cast< long >( size_ / 50L ) * kStarMin;
+	trim.bottom = trim.top + static_cast< long >( size_ / 50L ) * kStarMin;
 
 	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.0F , Vector2( 1.0F , 1.0F ) , angle_[ 0 ] - 90 , Vector2( ( size_ / 50 * kStarMin ) / 2.0F , ( size_ / 50 * kStarMin ) / 2.0F ) );
 }
@@ -83,4 +84,12 @@ void Star::setAngle()
 	//他の角度の指定
 	for( int i = 0; i < 5; i++ )
 		angle_[ i ] = angle_[ 0 ] + 72 * ( i * 2 );
+
+	for( int i = 0; i < 5; i++ )
+	{
+		//線分の始点設定
+		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i ] ) ) , -sin( XMConvertToRadians( angle_[ i ] ) ) );
+		//線分の終点設定
+		myshape_[ i ].end = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) );
+	}
 }

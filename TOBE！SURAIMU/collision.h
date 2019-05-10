@@ -14,12 +14,17 @@ public:
 public:
 //============================
 //ŠO•”ŒöŠJŠÖ”
-	bool collision( const Player& , const Star& );
-	bool collision( const Player& , const Wall& );
+	void collision( Player* , Star* );
+	void collision( Player* , Wall* );
 
 private:
+	//“–‚½‚è”»’è
 	bool judgment( const Circle& , const Circle& );
 	bool judgment( const Circle& , const Line& );
 	bool judgment( const Line& , const Line& );
+
+	//Œğ“_‚ğ‹‚ß‚é
+	Vector2 crossPoint( const Circle& , const Line& );
+	Vector2 crossPoint( const Line& , const Line& );
 };
 

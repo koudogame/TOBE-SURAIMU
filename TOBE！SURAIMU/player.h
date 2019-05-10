@@ -19,6 +19,11 @@ public:
 	void draw();
 	bool isLife();
 
+public:
+	//外部利用関数
+	inline const Circle& getShape() { return myshape_; }
+	inline const Line& getMove() { return move_vector_; }
+
 
 private:
 	//定数化変数
@@ -31,7 +36,7 @@ private:
 
 private:
 	//メンバ変数
-	Line move_vector;
+	Line move_vector_;
 
 	enum Flag
 	{
@@ -47,6 +52,7 @@ private:
 	float ditrection_angle_;
 	Line* ground_;
 	ObjectBase* owner_;
+	Circle myshape_;
 
 private:
 	//内部利用関数

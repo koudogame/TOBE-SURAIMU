@@ -57,6 +57,9 @@
     <Filter Include="Project\Game\Object\Star">
       <UniqueIdentifier>{6077d559-fc44-4455-8c90-88003bb4b2ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\Player">
+      <UniqueIdentifier>{bdc47e3a-dc83-430b-bfef-3d4be8a2fc4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -114,7 +117,7 @@
       <Filter>Project\Game\Object\Star</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\Game\Object\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,8 +188,10 @@
     <ClInclude Include="star.h">
       <Filter>Project\Game\Object\Star</Filter>
     </ClInclude>
-    <ClInclude Include="player.h" />
     <ClInclude Include="shape.h" />
+    <ClInclude Include="player.h">
+      <Filter>Project\Game\Object\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

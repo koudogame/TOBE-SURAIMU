@@ -1,6 +1,10 @@
 #include "collision.h"
 #include "calc.h"
 
+//判定対象
+#include "player.h"
+#include "star.h"
+
 
 Collision::Collision()
 {}
@@ -12,7 +16,26 @@ Collision::~Collision()
 //----------------------------------------------------------------------------------------
 //外部公開関数
 
+void Collision::collision( Player * P, Star * S)
+{
+	for( int i = 0; i < 5; i++ )
+	{
+		if( judgment( P->getShape() , S->getShape( i ) ) )
+		{
+			//円と線の当たり安定
+		}
 
+		if( judgment( P->getMove() , S->getShape( i ) ) )
+		{
+			//線と線の当たり判定
+		}
+	}
+}
+
+void Collision::collision( Player * P, Wall * W)
+{
+
+}
 
 
 //外部公開関数 End
@@ -21,6 +44,8 @@ Collision::~Collision()
 
 //----------------------------------------------------------------------------------------
 //Privete関数
+
+//---当たり判定---
 
 //円と円の当たり判定
 bool Collision::judgment( const Circle & C1, const Circle & C2)
@@ -96,6 +121,37 @@ bool Collision::judgment( const Line & L1, const Line & L2)
 		return true;
 
 	return false;
+}
+
+
+//---交点を求める---
+
+Vector2 Collision::crossPoint( const Circle & C , const Line & L )
+{
+	//円と辺の始点と終点の判定
+	if( judgment( C , Circle( L.start , 0.0F ) ) )
+		return L.start;
+	else if( judgment( C , Circle( L.end , 0.0F ) ) )
+		return L.end;
+
+	//円と線分
+	//判定用のベクトルを生成
+	Vector2 checker[ 2 ] =
+	{
+		C.position - L.start,
+		L.end - L.start
+	};
+
+	float innr = Calc::inner( checker[ 0 ] , checker[ 1 ] );
+	float k = ( innr / Calc::magnitude( checker[ 1 ] ) ) / Calc::magnitude( checker[ 1 ] );
+
+	return L.start + checker[ 1 ] * k;
+}
+
+Vector2 Collision::crossPoint( const Line & , const Line & )
+{
+	float mol[ 2 ];
+	return Vector2();
 }
 
 //Privete関数 End
