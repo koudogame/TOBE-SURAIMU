@@ -36,14 +36,22 @@ Play::~Play()
 bool Play::init()
 {
 	// 必要オブジェクトの生成
-	if (do_create_ && create() == false)
-	{
-		return false;
-	}
+	if (do_create_ && create() == false) { return false; }
 
-	// スターの生成
-	setStarPattern();
-	createStar();
+
+	// スター生成パターンファイルをリスト化
+	FILE* file_name_list;
+	errno_t error = fopen_s(&file_name_list, "State/pattern_list.txt", "r");
+	if (error != 0) { return false; }
+	char file_name[FILENAME_MAX];
+	while (fscanf_s(file_name_list, "%s", &file_name, FILENAME_MAX - 1) != EOF)
+	{
+		star_pattern_list_.push_back(file_name);
+	}
+	fclose(file_name_list);
+
+	createStar();	// スターを生成
+
 
 	// 更新関数をstartに
 	update_ = &Play::start;
@@ -97,7 +105,6 @@ void Play::destroy()
 SceneBase* Play::update()
 {
 	return (this->*update_)();
-	return this;
 }
 
 /*===========================================================================*/
@@ -160,24 +167,26 @@ SceneBase* Play::pause()
 
 
 /*===========================================================================*/
-// 星の生成パターンを選択
-bool Play::setStarPattern()
-{
-	return true;
-}
 // 星の生成
 bool Play::createStar()
 {
+	// 生成パターンファイルを選択
+	errno_t error = fopen_s(
+		&star_pattern_, star_pattern_list_[0].c_str(), "r");
+	if (error != 0) { return false; }
+
+
+	// 星の生成
 	Vector2 position;
 	float angle;
 	float fall_speed;
 	float spin_speed;
 	float spin_rate;
 	float size;
-/*
+
 	while (true)
 	{
-		if (fscanf_s(star_pattern_file_,
+		if (fscanf_s(star_pattern_,
 			"%f %f %f %f %f %f %f",
 			&position.x, &position.y,
 			&angle,
@@ -191,8 +200,9 @@ bool Play::createStar()
 
 		star_container_->addStar(
 			position, angle, fall_speed, spin_speed, spin_rate, size);
-	}*/
+	}
 
+	fclose(star_pattern_);
 
 	return true;
 }

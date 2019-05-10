@@ -25,14 +25,14 @@ private:
 	bool do_create_ = true;
 	bool create();
 
-	FILE* star_pattern_file_ = nullptr;
-	bool setStarPattern();
+	std::deque<std::string> star_pattern_list_;
+	FILE* star_pattern_ = nullptr;
 	bool createStar();
 
-	SceneBase*(Play::*update_)() = nullptr;
 	SceneBase* start();
 	SceneBase* play();
 	SceneBase* pause();
+	SceneBase*(Play::*update_)() = nullptr;
 
 private:
 	TaskManager* task_manager_ = nullptr;
