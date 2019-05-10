@@ -1,12 +1,13 @@
 #include "star.h"
 #include "textureLoder.h"
 #include "sprite.h"
+#include "task_manager.h"
 
 //’è”
 const int kStarMin = 134;
 
-Star::Star( TaskManager * const Maneger ) :
-	ObjectBase( ObjectID::kStar , Maneger )
+Star::Star( TaskManager * const Manager ) :
+	ObjectBase( ObjectID::kStar , Manager )
 {
 	for( float& itr : angle_ )
 		itr = 0;
@@ -24,6 +25,9 @@ Star::~Star()
 
 bool Star::init( const Vector2 & Position , const float Angle , const float Fall , const float Spin , const float Rate , const float Size )
 {
+	task_manager_->registerTask( this , TaskUpdate::kStarUpdate );
+	task_manager_->registerTask( this , TaskDraw::kStarDraw );
+
 	texture_ = TextureLoder::getInstance()->load( L"Texture/™.png" );
 	if( texture_ == nullptr )
 		return false;
@@ -42,6 +46,7 @@ bool Star::init( const Vector2 & Position , const float Angle , const float Fall
 
 void Star::destroy()
 {
+	task_manager_->unregisterTask( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
 

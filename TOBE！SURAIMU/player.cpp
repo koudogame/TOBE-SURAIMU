@@ -11,7 +11,8 @@ const int kPlayerSize = 30;
 
 Player::Player( TaskManager* const Manager ) :
 	ObjectBase( ObjectID::kPlayer , Manager )
-{}
+{
+}
 
 
 Player::~Player()
@@ -21,6 +22,8 @@ Player::~Player()
 
 bool Player::init( const Vector2 & Posit , const float Jump , const float Decay , const float Gravity , const float Speed , const float Boost )
 {
+	task_manager_->registerTask( this , TaskUpdate::kPlayerUpdate );
+	task_manager_->registerTask( this , TaskDraw::kPlayerDraw );
 	position_ = Posit;
 	kJumpPower = Jump;
 	kDecay = Decay;
@@ -38,6 +41,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float Decay 
 
 void Player::destroy()
 {
+	task_manager_->unregisterTask( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
 
