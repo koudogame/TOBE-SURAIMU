@@ -40,7 +40,7 @@ void Collision::collision( Player * P, Star * S)
 
 void Collision::collision( Player * P , Wall * W )
 {
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < 2; i++ )
 	{
 		if( judgment( P->getShape() , W->getShape( i ) ) )
 		{
