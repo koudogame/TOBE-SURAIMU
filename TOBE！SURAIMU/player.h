@@ -54,7 +54,6 @@ private:
 	std::bitset<3> flag_;
 	float jump_power_;
 	float boost_power_;
-	Vector2 movement_;
 	float gravity_angle_;
 	float jumping_angle_;
 	float ditrection_angle_;

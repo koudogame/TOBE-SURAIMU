@@ -19,33 +19,27 @@ Collision::~Collision()
 
 void Collision::collision( Player * P , Star * S )
 {
-	if( !P->isCollision() )
+	for( int i = 0; i < 5; i++ )
 	{
-		for( int i = 0; i < 5; i++ )
+		//‰~‚Æü‚Ì“–‚½‚è”»’è
+		if( judgment( P->getShape() , S->getShape( i ) ) || judgment( P->getMove() , S->getShape( i ) ) )
 		{
-			if( judgment( P->getShape() , S->getShape( i ) ) )
+			if( P->getOwner() != S )
 			{
-				//‰~‚Æü‚Ì“–‚½‚è”»’è
 				P->setGround( S->getShape( i ) );
 				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
-				if( P->getOwner() != S )
-				{
-					P->collision( S );
-					S->collision( P );
-				}
-
+				P->collision( S );
+				S->collision( P );
 			}
-
-			if( judgment( P->getMove() , S->getShape( i ) ) )
+			else
 			{
-				//ü‚Æü‚Ì“–‚½‚è”»’è
-				P->setGround( S->getShape( i ) );
-				P->revision( crossPoint( P->getMove() , S->getShape( i ) ) );
-				if( P->getOwner() != S )
+				if( !P->isCollision() )
 				{
+					P->setGround( S->getShape( i ) );
+					P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
 					P->collision( S );
-					S->collision( P );
 				}
+
 			}
 		}
 	}
@@ -55,20 +49,11 @@ void Collision::collision( Player * P , Wall * W )
 {
 	for( int i = 0; i < 2; i++ )
 	{
-		if( judgment( P->getShape() , W->getShape( i ) ) )
+		if( judgment( P->getShape() , W->getShape( i ) ) || judgment( P->getMove() , W->getShape( i ) ))
 		{
 			//‰~‚Æü‚Ì“–‚½‚è”»’è
 			P->setGround( W->getShape( i ) );
 			P->revision( crossPoint( P->getShape() , W->getShape( i ) ) );
-			P->collision( W );
-			break;
-		}
-
-		if( judgment( P->getMove() , W->getShape( i ) ) )
-		{
-			//ü‚Æü‚Ì“–‚½‚è”»’è
-			P->setGround( W->getShape( i ) );
-			P->revision(crossPoint( P->getMove() , W->getShape( i ) ));
 			P->collision( W );
 			break;
 		}

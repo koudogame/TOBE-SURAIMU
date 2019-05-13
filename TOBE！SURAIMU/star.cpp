@@ -9,7 +9,7 @@
 
 //’è”
 const int kStarMin = 134;
-const float kMinSpin = 0.1F;
+const float kMinSpin = 0.F;
 
 Star::Star( TaskManager * const Manager ) :
 	ObjectBase( ObjectID::kStar , Manager )

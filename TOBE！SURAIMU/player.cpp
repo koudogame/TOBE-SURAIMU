@@ -53,10 +53,6 @@ void Player::destroy()
 void Player::update()
 {
 	move_vector_.start = myshape_.position;
-	movement_ = Vector2::Zero;
-
-	//重力をかける
-	gravity();
 
 	//入力時処理
 	input();
@@ -75,10 +71,10 @@ void Player::update()
 	//ブースト力の減少
 	boost_power_ = boost_power_ > kSpeed ? jump_power_ - kDecay : kSpeed;
 
-	movement_ += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * jump_power_;
+	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * jump_power_;
 
-	//座標更新
-	myshape_.position += movement_;
+	//重力をかける
+	gravity();
 
 	if( myshape_.position.y > 720.0F - 30.0F )
 	{
@@ -112,15 +108,14 @@ void Player::revision(const Vector2& CrossPoint)
 {
 	myshape_.position = CrossPoint;
 	setGravityAngle();
-	dis_ = ( CrossPoint - ground_.start ).Length() / ( ground_.end - ground_.start ).Length();
+	dis_ = Calc::magnitude( CrossPoint , ground_.start ) / Calc::magnitude( ground_.end , ground_.start );
 	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
+	move_vector_.end = myshape_.position;
 }
 
 void Player::collision( Star * StarObj)
 {
-	if( owner_ != StarObj )
-		owner_ = StarObj;
-
+	owner_ = StarObj;
 	jump_power_ = 0;
 	flag_.reset( Flag::kJump );
 }
@@ -147,7 +142,7 @@ void Player::input()
 	GamePad::ButtonStateTracker pad_tracker = Pad::getInstance()->getTracker();
 	Keyboard::KeyboardStateTracker key = Key::getInstance()->getTracker();
 	Vector2 stick( pad.thumbSticks.leftX , pad.thumbSticks.leftY );
-	Vector2 move = movement_;
+	Vector2 move = myshape_.position - move_vector_.start;
 	//正規化
 	stick.Normalize();
 	move.Normalize();
@@ -158,12 +153,12 @@ void Player::input()
 		//移動方向に対して入力が右の場合( 右入力時 )
 		if( cross < 0 || key.lastState.Right )
 		{
-			movement_ += Vector2( std::cos( jumping_angle_ - XM_PI / 2.0F ) , -std::sin( jumping_angle_ - XM_PI / 2.0F ) ) * boost_power_;
+			myshape_.position += Vector2( std::cos( jumping_angle_ - XM_PI / 2.0F ) , -std::sin( jumping_angle_ - XM_PI / 2.0F ) ) * boost_power_;
 		}
 		//移動方向に対して入力が左の場合( 左入力時 )
 		else if( cross > 0 || key.lastState.Left )
 		{
-			movement_ += Vector2( std::cos( jumping_angle_ + XM_PI / 2.0F ) , -std::sin( jumping_angle_ + XM_PI / 2.0F ) ) * boost_power_;
+			myshape_.position += Vector2( std::cos( jumping_angle_ + XM_PI / 2.0F ) , -std::sin( jumping_angle_ + XM_PI / 2.0F ) ) * boost_power_;
 		}
 		//ブースト入力
 		if(( pad_tracker.a == pad_tracker.PRESSED || key.pressed.Space) &&
@@ -183,12 +178,13 @@ void Player::input()
 		//ジャンプ
 		if( pad_tracker.a == pad_tracker.RELEASED || key.released.Space )
 		{
-			flag_.set( Flag::kJump );
+ 			flag_.set( Flag::kJump );
 			flag_.set( Flag::kCollision );
 			jump_power_ = kJumpPower;
 			jumping_angle_ = gravity_angle_ + XM_PI;
 			ground_ = kGround;
 		}
+		flag_.reset( Flag::kBoost );
 	}
 }
 
@@ -197,24 +193,30 @@ void Player::gravity()
 	if( ground_ == kGround )
 	{
 		setGravityAngle();
-		movement_ += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * kGravity;
+		myshape_.position += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * kGravity;
 	}
 	else
-		revision( ground_.start + ( ground_.end - ground_.start ) * dis_ );
+	{
+		myshape_.position = ground_.start + ( ground_.end - ground_.start ) * dis_;;
+		setGravityAngle();
+		myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
+	}
+
 }
 
 void Player::setGravityAngle()
 {
+	Vector2 vect_stop;
 	//線分に対して±90度方向の角度を求める
-	Vector2 vect_stop = ground_.end - ground_.start;
+	vect_stop = ground_.end - ground_.start;
+
 	float temp_angle[ 2 ] =
 	{
 		std::atan2( -vect_stop.y,vect_stop.x ) - ( XM_PI / 2.0F ),
 		std::atan2( -vect_stop.y,vect_stop.x ) + ( XM_PI / 2.0F )
 	};
-
-	temp_angle[ 0 ] = static_cast<float>(static_cast<int>(temp_angle[ 0 ] * 100)) / 100.0F;
-	temp_angle[ 1 ] = static_cast<float>(static_cast<int>(temp_angle[ 1 ] * 100)) / 100.0F;
+	temp_angle[ 0 ] = static_cast< float >( static_cast< int >( temp_angle[ 0 ] * 100 ) ) / 100.0F;
+	temp_angle[ 1 ] = static_cast< float >( static_cast< int >( temp_angle[ 1 ] * 100 ) ) / 100.0F;
 	//線分に対して±90度方向に半径分移動する
 	Vector2 temp_posit[ 2 ] =
 	{
