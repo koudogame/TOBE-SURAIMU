@@ -25,6 +25,7 @@ public:
 	inline void setFall() { fall_ = temp_fall_; }
 	inline const Line& getShape( const int GetNum ) { return myshape_[ GetNum ]; }
 	inline const Vector2 getposition() { return position_; }
+	void collision( class Player* P );
 
 private:
 	//“à•”—˜—pŠÖ”

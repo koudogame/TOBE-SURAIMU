@@ -2,9 +2,14 @@
 #include "textureLoder.h"
 #include "sprite.h"
 #include "task_manager.h"
+#include "calc.h"
+
+//Õ“Ë‘ÎÛƒNƒ‰ƒX
+#include "player.h"
 
 //’è”
 const int kStarMin = 134;
+const float kMinSpin = 0.1F;
 
 Star::Star( TaskManager * const Manager ) :
 	ObjectBase( ObjectID::kStar , Manager )
@@ -77,6 +82,18 @@ bool Star::isLife()
 		return false;
 
 	return true;
+}
+
+void Star::collision(Player* P)
+{
+	float old_angle = atan2( -( P->getMove().start.y - position_.y ) , ( P->getMove().start.x - position_.x ) );
+	float new_angle = atan2( -( P->getMove().end.y - position_.y ) , ( P->getMove().end.x - position_.x ) );
+	int signal = ( int ) copysign( 1.0F , new_angle - old_angle );
+	turn_ = signal;
+
+	spin_ += turn_ * rate_ * abs( Calc::cross( P->getMove().end - P->getMove().start , P->getShape().position - position_ ) );
+	if( std::abs( spin_ ) < kMinSpin )
+		spin_ = kMinSpin * turn_;
 }
 
 void Star::setAngle()

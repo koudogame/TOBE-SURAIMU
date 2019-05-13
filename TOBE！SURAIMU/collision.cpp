@@ -29,7 +29,11 @@ void Collision::collision( Player * P , Star * S )
 				P->setGround( S->getShape( i ) );
 				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
 				if( P->getOwner() != S )
+				{
 					P->collision( S );
+					S->collision( P );
+				}
+
 			}
 
 			if( judgment( P->getMove() , S->getShape( i ) ) )
@@ -38,7 +42,10 @@ void Collision::collision( Player * P , Star * S )
 				P->setGround( S->getShape( i ) );
 				P->revision( crossPoint( P->getMove() , S->getShape( i ) ) );
 				if( P->getOwner() != S )
+				{
 					P->collision( S );
+					S->collision( P );
+				}
 			}
 		}
 	}
