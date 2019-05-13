@@ -23,6 +23,7 @@ public:
 	SceneBase* update() override;
 	void draw() override;
 
+
 private:
 	bool do_create_ = true;
 	bool create();
@@ -48,5 +49,4 @@ private:
 	StarContainer* star_container_ = nullptr;
 	Player* player_ = nullptr;
 	Wall* wall_ = nullptr;
-
 };

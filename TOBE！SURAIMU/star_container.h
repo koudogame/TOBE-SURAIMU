@@ -17,9 +17,6 @@ public:
 	StarContainer(TaskManager* const TaskManager );
 	~StarContainer();
 public:
-	void update() override;
-	void destroy() override;
-
 	Star* addStar(
 		const Vector2& Position,
 		const float Angle,

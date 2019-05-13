@@ -1,6 +1,7 @@
 
 #include "time_attack.h"
 
+#include <direct.h>
 #include "release.h"
 #include "textureLoder.h"
 #include "sprite.h"
@@ -19,7 +20,10 @@ using namespace std::chrono;
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
 
+
 /*===========================================================================*/
+const long long kLimitTimeSec = 60LL; // 制限時間( 秒 )
+
 const RECT kTrimmingBackground{       // 背景切り取り範囲
 	0L, 720L, 1280L, 1440L
 };
@@ -92,7 +96,7 @@ bool TimeAttack::init()
 
 	// その他メンバ
 	update_ = &TimeAttack::start;
-	remaining_time_sec_ = 10LL;   // 制限時間1分
+	remaining_time_sec_ = kLimitTimeSec;   // 制限時間1分
 
 	return true;
 }
@@ -105,6 +109,7 @@ bool TimeAttack::create()
 	if (texture_ == nullptr) { return false; }
 	texture_numbers_ = TextureLoder::getInstance()->load(L"Texture/数字.png");
 	if (texture_ == nullptr) { return false; }
+
 
 	// タスクマネージャー
 	task_manager_   = new (std::nothrow) TaskManager();
@@ -165,8 +170,7 @@ void TimeAttack::draw()
 	Sprite::getInstance()->draw(
 		texture_, Vector2::Zero, &kTrimmingBackground);
 	Sprite::getInstance()->draw(
-		texture_, Vector2::Zero, &kTrimmingEffect
-	);
+		texture_, Vector2::Zero, &kTrimmingEffect);
 
 	task_manager_->allExecuteDraw();
 
@@ -281,14 +285,16 @@ SceneBase* TimeAttack::pause()
 	return this;
 }
 
-
 /*===========================================================================*/
 // 星の生成
 bool TimeAttack::createStar()
 {
 	// 生成パターンファイルを選択
+	_chdir("State");
+	unsigned file_num = rand() % star_pattern_list_.size();
 	errno_t error = fopen_s(
-		&star_pattern_, star_pattern_list_[0].c_str(), "r");
+		&star_pattern_, star_pattern_list_[file_num].c_str(), "r");
+	_chdir("../");
 	if (error != 0) { return false; }
 
 
@@ -324,7 +330,6 @@ bool TimeAttack::createStar()
 		}
 	}
 	fclose(star_pattern_);
-
 
 	return true;
 }

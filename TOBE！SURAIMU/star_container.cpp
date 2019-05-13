@@ -14,53 +14,6 @@ StarContainer::~StarContainer()
 {
 }
 
-
-/*===========================================================================*/
-// 更新処理
-void StarContainer::update()
-{
-	for (auto itr = active_list_.begin(), end = active_list_.end();
-		itr != end;)
-	{
-		// 星の更新
-		(*itr)->update();
-		if ((*itr)->isLife() == false)		// 死んだらフリーリストに追加
-		{
-			(*itr)->destroy();
-			free_list_.push_back((*itr));
-			itr = active_list_.erase(itr);
-		}
-		else
-		{
-			++itr;
-		}
-	}
-}
-
-/*===========================================================================*/
-// 終了処理
-void StarContainer::destroy()
-{
-	// アクティブなスターの開放処理
-	for (auto itr = active_list_.begin(), end = active_list_.end();
-		itr != end;)
-	{
-		(*itr)->destroy();
-		safe_delete(*itr);
-		itr = active_list_.erase(itr);
-	}
-	
-	// フリーリストなスターの開放処理
-	Star* star = nullptr;
-	while (free_list_.size())
-	{
-		star = free_list_.back();
-
-		safe_delete(star);
-		free_list_.pop_back();
-	}
-}
-
 /*===========================================================================*/
 // スターの追加
 Star* StarContainer::addStar(
@@ -68,12 +21,8 @@ Star* StarContainer::addStar(
 	const float Spin, const float Rate, const float Size)
 {
 	// フリーなスターを取得
-	Star* star = popFreeObj();
-	if (star == nullptr)
-	{
-		star = new (std::nothrow) Star(task_manager_);
-	}
-	active_list_.push_back(star);
+	Star* star = getFreeObjAndInsert();
+	if (star == nullptr) { return nullptr; }
 
 	// スターの初期化処理
 	star->init(
