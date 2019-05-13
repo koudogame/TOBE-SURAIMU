@@ -27,7 +27,7 @@ void TaskManager::registerTask(ObjectBase* const Object, const TaskDraw TaskID)
 }
 
 /*===========================================================================*/
-// 更新タスクの削除
+// オブジェクトごとタスクを削除
 void TaskManager::unregisterObject(ObjectBase* const Object)
 {
 	removeTask(&update_list_, Object);

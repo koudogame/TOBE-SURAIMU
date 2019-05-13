@@ -167,13 +167,16 @@ SceneBase* TimeAttack::update()
 // 描画処理
 void TimeAttack::draw()
 {
+	// 背景の描画
 	Sprite::getInstance()->draw(
 		texture_, Vector2::Zero, &kTrimmingBackground);
 	Sprite::getInstance()->draw(
 		texture_, Vector2::Zero, &kTrimmingEffect);
 
+	// オブジェクトの描画
 	task_manager_->allExecuteDraw();
 
+	// 残り時間描画
 	remaining_time_sec_.draw(
 		texture_numbers_,
 		Vector2(1280.0F, 0.0F),
@@ -186,7 +189,7 @@ void TimeAttack::draw()
 // スタート
 SceneBase* TimeAttack::start()
 {
-	if ( true ) //player_->isJump())
+	if (player_->isJump())
 	{
 		update_ = &TimeAttack::play;
 		star_container_->setFall();
@@ -203,17 +206,18 @@ SceneBase* TimeAttack::start()
 SceneBase* TimeAttack::play()
 {
 	// タイム管理
+	// 秒で管理しているため、時間の変化があるまで更新をしない
 	auto now = high_resolution_clock::now();
 	auto delta_sec = duration_cast<seconds>(now - prev_time_).count();
 	if (delta_sec > 0)
 	{
 		remaining_time_sec_ -= delta_sec;
 		prev_time_ = now;
-	}
-	if (remaining_time_sec_ <= 0)
-	{
-		// ゲーム終了
-		return new Result;
+		if (remaining_time_sec_ <= 0)
+		{
+			// ゲーム終了
+			return new Result;
+		}
 	}
 
 
@@ -272,12 +276,14 @@ SceneBase* TimeAttack::pause()
 	if (Key::getInstance()->getTracker().pressed.Enter ||
 		Pad::getInstance()->getTracker().b == PadTracker::PRESSED)
 	{
+		// ゲーム終了
 		return new Result;
 	}
 
 	if (Key::getInstance()->getTracker().pressed.P ||
 		Pad::getInstance()->getTracker().menu == PadTracker::PRESSED)
 	{
+		// プレイ続行
 		update_ = &TimeAttack::play;
 	}
 
