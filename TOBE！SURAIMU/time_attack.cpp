@@ -96,7 +96,7 @@ bool TimeAttack::init()
 
 	// ‚»‚Ì‘¼ƒƒ“ƒo
 	update_ = &TimeAttack::start;
-	remaining_time_sec_ = kLimitTimeSec;   // §ŒÀŠÔ1•ª
+	remaining_time_sec_ = 999LL;   // §ŒÀŠÔ1•ª
 
 	return true;
 }
