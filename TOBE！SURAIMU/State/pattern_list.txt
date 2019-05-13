@@ -1,1 +1,1 @@
-State/star_pattern_1.txt
+star_pattern_1.txt

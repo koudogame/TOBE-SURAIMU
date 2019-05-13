@@ -1,6 +1,7 @@
 
 #include "time_attack.h"
 
+#include <direct.h>
 #include "release.h"
 #include "textureLoder.h"
 #include "sprite.h"
@@ -19,7 +20,10 @@ using namespace std::chrono;
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
 
+
 /*===========================================================================*/
+const long long kLimitTimeSec = 60LL; // 制限時間( 秒 )
+
 const RECT kTrimmingBackground{       // 背景切り取り範囲
 	0L, 720L, 1280L, 1440L
 };
@@ -106,6 +110,7 @@ bool TimeAttack::create()
 	texture_numbers_ = TextureLoder::getInstance()->load(L"Texture/数字.png");
 	if (texture_ == nullptr) { return false; }
 
+
 	// タスクマネージャー
 	task_manager_   = new (std::nothrow) TaskManager();
 	if (task_manager_ == nullptr)   { return false; }
@@ -162,14 +167,16 @@ SceneBase* TimeAttack::update()
 // 描画処理
 void TimeAttack::draw()
 {
+	// 背景の描画
 	Sprite::getInstance()->draw(
 		texture_, Vector2::Zero, &kTrimmingBackground);
 	Sprite::getInstance()->draw(
-		texture_, Vector2::Zero, &kTrimmingEffect
-	);
+		texture_, Vector2::Zero, &kTrimmingEffect);
 
+	// オブジェクトの描画
 	task_manager_->allExecuteDraw();
 
+	// 残り時間描画
 	remaining_time_sec_.draw(
 		texture_numbers_,
 		Vector2(1280.0F, 0.0F),
@@ -182,7 +189,7 @@ void TimeAttack::draw()
 // スタート
 SceneBase* TimeAttack::start()
 {
-	if ( true ) //player_->isJump())
+	if (player_->isJump())
 	{
 		update_ = &TimeAttack::play;
 		star_container_->setFall();
@@ -199,17 +206,18 @@ SceneBase* TimeAttack::start()
 SceneBase* TimeAttack::play()
 {
 	// タイム管理
+	// 秒で管理しているため、時間の変化があるまで更新をしない
 	auto now = high_resolution_clock::now();
 	auto delta_sec = duration_cast<seconds>(now - prev_time_).count();
 	if (delta_sec > 0)
 	{
 		remaining_time_sec_ -= delta_sec;
 		prev_time_ = now;
-	}
-	if (remaining_time_sec_ <= 0)
-	{
-		// ゲーム終了
-		return new Result;
+		if (remaining_time_sec_ <= 0)
+		{
+			// ゲーム終了
+			return new Result;
+		}
 	}
 
 
@@ -268,12 +276,14 @@ SceneBase* TimeAttack::pause()
 	if (Key::getInstance()->getTracker().pressed.Enter ||
 		Pad::getInstance()->getTracker().b == PadTracker::PRESSED)
 	{
+		// ゲーム終了
 		return new Result;
 	}
 
 	if (Key::getInstance()->getTracker().pressed.P ||
 		Pad::getInstance()->getTracker().menu == PadTracker::PRESSED)
 	{
+		// プレイ続行
 		update_ = &TimeAttack::play;
 	}
 
@@ -281,14 +291,16 @@ SceneBase* TimeAttack::pause()
 	return this;
 }
 
-
 /*===========================================================================*/
 // 星の生成
 bool TimeAttack::createStar()
 {
 	// 生成パターンファイルを選択
+	_chdir("State");
+	unsigned file_num = rand() % star_pattern_list_.size();
 	errno_t error = fopen_s(
-		&star_pattern_, star_pattern_list_[0].c_str(), "r");
+		&star_pattern_, star_pattern_list_[file_num].c_str(), "r");
+	_chdir("../");
 	if (error != 0) { return false; }
 
 
@@ -324,7 +336,6 @@ bool TimeAttack::createStar()
 		}
 	}
 	fclose(star_pattern_);
-
 
 	return true;
 }

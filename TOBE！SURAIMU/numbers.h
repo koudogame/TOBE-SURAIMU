@@ -1,8 +1,12 @@
 #pragma once
 
 //-----------------------------------------------------------------------------
-// 数字を扱うクラス
+// 数クラス
 //-----------------------------------------------------------------------------
+// --説明--
+// draw関数で値の描画を行うことができる
+// 対応している型 : int, long, long long
+// *各符号有り、無し両対応
 template <typename T>
 class Numbers
 {
@@ -11,7 +15,8 @@ public:
 	~Numbers();
 
 public:
-	void draw(ID3D11ShaderResourceView* const Texture,
+	void draw(
+		ID3D11ShaderResourceView* const Texture,
 		const Vector2& MostTopRightPosition,
 		const long NumberWidth,
 		const long NumberHeight,

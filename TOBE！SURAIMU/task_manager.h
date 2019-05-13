@@ -23,7 +23,7 @@ enum TaskDraw
 //-----------------------------------------------------------------------------
 // --説明--
 // タスクの登録はregisterTask関数を使用
-// タスクの登録解除はunregisterTask関数を使用
+// オブジェクトごとタスクを削除する場合unregisterObject関数を使用
 // 各タスクIDは列挙体「TaskUpdate」か「TaskDraw」に定義されている
 // タスクはIDにより昇順に実行される
 class TaskManager
@@ -33,8 +33,8 @@ public:
 	~TaskManager();
 
 public:
-	void registerTask(ObjectBase* const, const TaskDraw);
 	void registerTask(ObjectBase* const, const TaskUpdate);
+	void registerTask(ObjectBase* const, const TaskDraw);
 
 	void unregisterObject(ObjectBase* const);
 
