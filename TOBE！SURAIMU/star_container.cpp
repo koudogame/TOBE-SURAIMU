@@ -63,17 +63,19 @@ void StarContainer::destroy()
 
 /*===========================================================================*/
 // スターの追加
-void StarContainer::addStar(
+Star* StarContainer::addStar(
 	const Vector2& Position, const float Angle, const float Fall,
 	const float Spin, const float Rate, const float Size)
 {
+	// フリーなスターを取得
 	Star* star = popFreeObj();
 	if (star == nullptr)
 	{
-		star = new Star(task_manager_);
+		star = new (std::nothrow) Star(task_manager_);
 	}
 	active_list_.push_back(star);
 
+	// スターの初期化処理
 	star->init(
 		Position,
 		Angle,
@@ -82,6 +84,8 @@ void StarContainer::addStar(
 		Rate,
 		Size
 	);
+
+	return star;
 }
 
 /*===========================================================================*/

@@ -1,5 +1,5 @@
 
-#include "play.h"
+#include "time_attack.h"
 
 #include "release.h"
 #include "textureLoder.h"
@@ -14,29 +14,34 @@
 #include "player.h"
 #include "wall.h"
 
+using namespace std::chrono;
+
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
 
-const RECT kTrimmingEffect{
-	0L, 0L, 1280L, 720L
-};
-const RECT kTrimmingBackground{
+/*===========================================================================*/
+const RECT kTrimmingBackground{       // 背景切り取り範囲
 	0L, 720L, 1280L, 1440L
 };
+const RECT kTrimmingEffect{           // 背景エフェクト切り取り範囲
+	0L, 0L, 1280L, 720L
+};
+
+
 
 /*===========================================================================*/
-Play::Play() :
+TimeAttack::TimeAttack() :
 	SceneBase(SceneID::kPlay)
 {
 }
 
-Play::~Play()
+TimeAttack::~TimeAttack()
 {
 }
 
 /*===========================================================================*/
 // 初期化処理
-bool Play::init()
+bool TimeAttack::init()
 {
 	// 必要オブジェクトの生成
 	if (do_create_ && create() == false) { return false; }
@@ -85,19 +90,21 @@ bool Play::init()
 	if (wall_->init() == false) { return false; }
 
 
-	// 更新関数をstartに
-	update_ = &Play::start;
-
-
+	// その他メンバ
+	update_ = &TimeAttack::start;
+	remaining_time_sec_ = 10LL;   // 制限時間1分
 
 	return true;
 }
 // 生成処理
-bool Play::create()
+bool TimeAttack::create()
 {
 	do_create_ = false;
 
 	texture_ = TextureLoder::getInstance()->load(L"Texture/プレイ画面.png");
+	if (texture_ == nullptr) { return false; }
+	texture_numbers_ = TextureLoder::getInstance()->load(L"Texture/数字.png");
+	if (texture_ == nullptr) { return false; }
 
 	// タスクマネージャー
 	task_manager_   = new (std::nothrow) TaskManager();
@@ -120,7 +127,7 @@ bool Play::create()
 
 /*===========================================================================*/
 // 終了処理
-void Play::destroy()
+void TimeAttack::destroy()
 {
 	do_create_ = true;
 
@@ -140,19 +147,20 @@ void Play::destroy()
 	safe_delete(task_manager_);
 
 	// テクスチャ
+	TextureLoder::getInstance()->release(texture_numbers_);
 	TextureLoder::getInstance()->release(texture_);
 }
 
 /*===========================================================================*/
 // 更新処理
-SceneBase* Play::update()
+SceneBase* TimeAttack::update()
 {
 	return (this->*update_)();
 }
 
 /*===========================================================================*/
 // 描画処理
-void Play::draw()
+void TimeAttack::draw()
 {
 	Sprite::getInstance()->draw(
 		texture_, Vector2::Zero, &kTrimmingBackground);
@@ -161,18 +169,24 @@ void Play::draw()
 	);
 
 	task_manager_->allExecuteDraw();
+
+	remaining_time_sec_.draw(
+		texture_numbers_,
+		Vector2(1280.0F, 0.0F),
+		64L, 128L
+	);
 }
 
 
 /*===========================================================================*/
 // スタート
-SceneBase* Play::start()
+SceneBase* TimeAttack::start()
 {
-	if (Key::getInstance()->getTracker().pressed.Enter ||
-		Pad::getInstance()->getTracker().b == PadTracker::PRESSED)
+	if ( true ) //player_->isJump())
 	{
-		update_ = &Play::play;
+		update_ = &TimeAttack::play;
 		star_container_->setFall();
+		prev_time_ = high_resolution_clock::now();
 	}
 
 	task_manager_->allExecuteUpdate();
@@ -182,12 +196,28 @@ SceneBase* Play::start()
 
 /*===========================================================================*/
 // プレイ
-SceneBase* Play::play()
+SceneBase* TimeAttack::play()
 {
+	// タイム管理
+	auto now = high_resolution_clock::now();
+	auto delta_sec = duration_cast<seconds>(now - prev_time_).count();
+	if (delta_sec > 0)
+	{
+		remaining_time_sec_ -= delta_sec;
+		prev_time_ = now;
+	}
+	if (remaining_time_sec_ <= 0)
+	{
+		// ゲーム終了
+		return new Result;
+	}
+
+
 	if (Key::getInstance()->getTracker().pressed.P ||
 		Pad::getInstance()->getTracker().menu == PadTracker::PRESSED)
 	{
-		update_ = &Play::pause;
+		// ポーズ画面へ
+		update_ = &TimeAttack::pause;
 	}
 	else
 	{
@@ -202,30 +232,38 @@ SceneBase* Play::play()
 			if ((*itr)->getposition().y < 0.0F)
 				break;
 		}
-		if (itr == end && createStar() == false)
-		{
-			// 生成に失敗
-			return nullptr;
+		if (itr == end)	{
+			if (createStar() == false)
+			{
+			// 生成失敗
+				return nullptr; 
+			}
+			else
+			{
+			// 生成成功->落下を付与
+				star_container_->setFall(); 
+			}
 		}
-		star_container_->setFall();
 
+
+		// オブジェクトの更新処理
 		task_manager_->allExecuteUpdate();
 
 
 		// 衝突判定
-		Collision* const collision = Collision::getInstance();
+		Collision* const kCollision = Collision::getInstance();
 		for (auto& star : star_container_->active())
 		{
-			collision->collision(player_, star);
+			kCollision->collision(player_, star);
 		}
-		collision->collision(player_, wall_);
+		kCollision->collision(player_, wall_);
 	}
 	return this;
 }
 
 /*===========================================================================*/
 // ポーズ
-SceneBase* Play::pause()
+SceneBase* TimeAttack::pause()
 {
 	if (Key::getInstance()->getTracker().pressed.Enter ||
 		Pad::getInstance()->getTracker().b == PadTracker::PRESSED)
@@ -236,7 +274,7 @@ SceneBase* Play::pause()
 	if (Key::getInstance()->getTracker().pressed.P ||
 		Pad::getInstance()->getTracker().menu == PadTracker::PRESSED)
 	{
-		update_ = &Play::play;
+		update_ = &TimeAttack::play;
 	}
 
 
@@ -246,7 +284,7 @@ SceneBase* Play::pause()
 
 /*===========================================================================*/
 // 星の生成
-bool Play::createStar()
+bool TimeAttack::createStar()
 {
 	// 生成パターンファイルを選択
 	errno_t error = fopen_s(
@@ -273,15 +311,20 @@ bool Play::createStar()
 			&spin_rate,
 			&size) == EOF)
 		{
+			// ファイル終端に到達
 			return true;
 		}
 
 		position.y -= getWindowHeight<float>();
-		star_container_->addStar(
-			position, angle, fall_speed, spin_speed, spin_rate, size);
+		if (star_container_->addStar(
+			position, angle, fall_speed, spin_speed, spin_rate, size) == nullptr)
+		{
+			// 生成に失敗
+			return false;
+		}
 	}
-
 	fclose(star_pattern_);
+
 
 	return true;
 }
