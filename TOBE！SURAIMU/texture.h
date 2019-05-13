@@ -11,5 +11,5 @@ public:
 	//テクスチャの読み込み
 	//引数:読み込むファイルの名前( ワイド文字 )
 	//戻り値:テクスチャハンドル
-    ID3D11ShaderResourceView* load( const wstring& FileName );
+    ID3D11ShaderResourceView* load( const std::wstring& FileName );
 };

@@ -6,7 +6,7 @@ class Sprite
 private:
 	Sprite() = default;
     //  Sprite�̍쐬
-    unique_ptr<SpriteBatch> sprite_;
+    std::unique_ptr<SpriteBatch> sprite_;
 
 public:
 	static Sprite* getInstance() { static Sprite instance; return &instance; }

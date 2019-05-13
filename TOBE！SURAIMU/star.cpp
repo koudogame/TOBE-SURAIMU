@@ -107,6 +107,6 @@ void Star::setAngle()
 		//線分の始点設定
 		myshape_[ i ].end = position_ + Vector2( cos( XMConvertToRadians( angle_[ i ] ) ) , -sin( XMConvertToRadians( angle_[ i ] ) ) ) * size_;
 		//線分の終点設定
-		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) )*size_;
+		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) ) * size_;
 	}
 }

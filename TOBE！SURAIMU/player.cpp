@@ -12,7 +12,7 @@
 
 const int kPlayerSize = 30;
 
-
+//コンストラクタ
 Player::Player( TaskManager* const Manager ) :
 	ObjectBase( ObjectID::kPlayer , Manager )
 {
@@ -20,17 +20,20 @@ Player::Player( TaskManager* const Manager ) :
 	kGround.end = Vector2( getWindowWidth<float>() , getWindowHeight<float>() );
 }
 
-
+//デストラクタ
 Player::~Player()
 {
 	TextureLoder::getInstance()->release( texture_ );
 }
 
+
+//初期化
 bool Player::init( const Vector2 & Posit , const float Jump , const float Decay , const float Gravity , const float Speed , const float Boost )
 {
 	task_manager_->registerTask( this , TaskUpdate::kPlayerUpdate );
 	task_manager_->registerTask( this , TaskDraw::kPlayerDraw );
 	myshape_ = Circle( Posit , 7.5F );
+	//定数の定義
 	kJumpPower = Jump;
 	kDecay = Decay;
 	kGravity = Gravity;
@@ -38,21 +41,32 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float Decay 
 	kBoostPower = Boost;
 	ground_ = kGround;
 	texture_ = TextureLoder::getInstance()->load( L"Texture/motion dummy.png" );
+	Num = TextureLoder::getInstance()->load( L"Texture/数字.png" );
+
 	if( texture_ == nullptr )
 		return false;
+
+	//各変数の初期化
+	setGravityAngle();
+	jumping_angle_ = gravity_angle_ + XM_PI;
+	jump_power_ = 0;
+
+	owner_ = nullptr;
 
 	return true;
 }
 
+//破棄
 void Player::destroy()
 {
 	task_manager_->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
 
+//更新
 void Player::update()
 {
-	move_vector_.start = myshape_.position;
+wo 	move_vector_.start = myshape_.position;
 
 	//入力時処理
 	input();
@@ -85,6 +99,7 @@ void Player::update()
 	move_vector_.end = myshape_.position;
 }
 
+//描画
 void Player::draw()
 {
 	RECT trim;
@@ -94,8 +109,10 @@ void Player::draw()
 	trim.right = trim.left + kPlayerSize;
 
 	Sprite::getInstance()->draw( texture_ , myshape_.position , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2( kPlayerSize / 2.0F , kPlayerSize - kPlayerSize / 4.0F ) );
+	num.draw( Num , Vector2( 1280 , 720.0F - 128.0F ) , 64L , 128L );
 }
 
+//生存フラグの返却
 bool Player::isLife()
 {
 	if( myshape_.position.y > 1200.0F )
@@ -104,15 +121,17 @@ bool Player::isLife()
 	return true;
 }
 
+//座標の補正
 void Player::revision(const Vector2& CrossPoint)
 {
 	myshape_.position = CrossPoint;
-	setGravityAngle();
 	dis_ = Calc::magnitude( CrossPoint , ground_.start ) / Calc::magnitude( ground_.end , ground_.start );
+	setGravityAngle();
 	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
 	move_vector_.end = myshape_.position;
 }
 
+//星との当たり判定後の処理
 void Player::collision( Star * StarObj)
 {
 	owner_ = StarObj;
@@ -120,6 +139,7 @@ void Player::collision( Star * StarObj)
 	flag_.reset( Flag::kJump );
 }
 
+//壁との当たり判定後の処理
 void Player::collision( Wall * WallObj)
 {
 	setGround( kGround );
@@ -133,9 +153,19 @@ void Player::collision( Wall * WallObj)
 	flag_.reset( Flag::kCollision );
 }
 
+//回転角を返却
+float Player::getRotate()
+{
+	if( owner_ == nullptr || ground_ == kGround )
+		return false;
+
+	return abs( Calc::angle( move_vector_.start - dynamic_cast< Star* >( owner_ )->getposition() , move_vector_.end - dynamic_cast< Star* >( owner_ )->getposition() ) );
+}
+
 
 //----------------------------------------------
 //内部利用関数
+//入力処理
 void Player::input()
 {
 	GamePad::State pad = Pad::getInstance()->getState();
@@ -148,6 +178,7 @@ void Player::input()
 	move.Normalize();
 	float cross = Calc::cross( move , stick );
 
+	//ジャンプ中
 	if( flag_.test( Flag::kJump ) )
 	{
 		//移動方向に対して入力が右の場合( 右入力時 )
@@ -168,6 +199,7 @@ void Player::input()
 			boost_power_ = kBoostPower;
 		}
 	}
+	//接地中
 	else
 	{
 		//ジャンプ入力
@@ -188,6 +220,7 @@ void Player::input()
 	}
 }
 
+//重力をかける
 void Player::gravity()
 {
 	if( ground_ == kGround )
@@ -197,38 +230,38 @@ void Player::gravity()
 	}
 	else
 	{
-		myshape_.position = ground_.start + ( ground_.end - ground_.start ) * dis_;;
-		setGravityAngle();
-		myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
+		revision( ground_.start + ( ground_.end - ground_.start ) * dis_ );
 	}
 
 }
 
+//地面の方向を求める
 void Player::setGravityAngle()
 {
-	Vector2 vect_stop;
+	Vector2 vect_ground;
 	//線分に対して±90度方向の角度を求める
-	vect_stop = ground_.end - ground_.start;
+	vect_ground = ground_.end - ground_.start;
 
 	float temp_angle[ 2 ] =
 	{
-		std::atan2( -vect_stop.y,vect_stop.x ) - ( XM_PI / 2.0F ),
-		std::atan2( -vect_stop.y,vect_stop.x ) + ( XM_PI / 2.0F )
+		std::atan2( -vect_ground.y,vect_ground.x ) - ( XM_PI / 2.0F ),
+		std::atan2( -vect_ground.y,vect_ground.x ) + ( XM_PI / 2.0F )
 	};
 	temp_angle[ 0 ] = static_cast< float >( static_cast< int >( temp_angle[ 0 ] * 100 ) ) / 100.0F;
 	temp_angle[ 1 ] = static_cast< float >( static_cast< int >( temp_angle[ 1 ] * 100 ) ) / 100.0F;
 	//線分に対して±90度方向に半径分移動する
 	Vector2 temp_posit[ 2 ] =
 	{
-		( vect_stop + Vector2( std::cos( temp_angle[ 0 ] ) ,-std::sin( temp_angle[ 0 ] ) ) * 10.0F ),
-		( vect_stop + Vector2( std::cos( temp_angle[ 1 ] ) ,-std::sin( temp_angle[ 1 ] ) ) * 10.0F )
+		( vect_ground + Vector2( std::cos( temp_angle[ 0 ] ) ,-std::sin( temp_angle[ 0 ] ) ) * 10.0F ),
+		( vect_ground + Vector2( std::cos( temp_angle[ 1 ] ) ,-std::sin( temp_angle[ 1 ] ) ) * 10.0F )
 	};
 
 	//作成した各線分に対して外積を取り負の方向の角度を重力方向として採用
-	vect_stop.Normalize();
+	vect_ground.Normalize();
 	temp_posit[ 0 ].Normalize();
 	temp_posit[ 1 ].Normalize();
-	if( Calc::cross( vect_stop , temp_posit[ 0 ] ) > 0 )
+	num = std::abs( static_cast< long >( XMConvertToDegrees( temp_angle[ 0 ] ) ) );
+	if( Calc::cross( vect_ground , temp_posit[ 0 ] ) > 0 )
 	{
 		gravity_angle_ = temp_angle[ 0 ];
 		return;

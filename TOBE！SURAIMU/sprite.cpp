@@ -7,7 +7,7 @@
 bool Sprite::init()
 {
     //  SpriteBatchクラスのメモリを確保
-	sprite_ = make_unique<SpriteBatch>(Direct3D::getInstance()->getContext());
+	sprite_ = std::make_unique<SpriteBatch>(Direct3D::getInstance()->getContext());
     //  メモリ確保チェック
     if( !sprite_ )
         //  エラー

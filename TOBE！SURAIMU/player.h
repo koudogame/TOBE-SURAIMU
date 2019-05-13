@@ -1,6 +1,7 @@
 #pragma once
 #include "object_base.h"
 #include "shape.h"
+#include "numbers.h"
 
 class TaskManager;
 
@@ -30,6 +31,7 @@ public:
 	void revision( const Vector2& CrossPoint );
 	void collision( class Star* );
 	void collision( class Wall* );
+	float getRotate();
 
 
 private:
@@ -62,6 +64,9 @@ private:
 	Circle myshape_;
 	float dis_;
 
+	Numbers<long> num;
+	ID3D11ShaderResourceView* Num;
+
 private:
 	//“à•”—˜—pŠÖ”
 	void input();
@@ -69,4 +74,3 @@ private:
 	void setGravityAngle();
 
 };
-
