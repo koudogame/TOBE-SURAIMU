@@ -18,7 +18,7 @@ const float kPositionXRight = kCenterX + kDistanceToCenter;
 const Line kCollisionLeftWall{
 	Vector2(kPositionXLeft, 0.0F), Vector2(kPositionXLeft, 720.0F) };
 const Line kCollisionRightWall{
-	Vector2(kPositionXRight, 0.0F), Vector2(kPositionXRight, 720.0F) };
+	Vector2( kPositionXRight, 720.0F ),Vector2( kPositionXRight, 0.0F ) };
 
 const Vector2 kDrawPositionLeft{
 	kCollisionLeftWall.end.x - kWallWidthHarf , 0.0F };
@@ -42,7 +42,7 @@ Wall::~Wall()
 /*===========================================================================*/
 // èâä˙âªèàóù
 bool Wall::init()
-{	
+{
 	// ê∂ê¨
 	if (do_create_ && create() == false) { return false; }
 

@@ -18,4 +18,6 @@ struct Line
 	Line() = default;
 	Line( const Vector2& V1 , const Vector2& V2 ) { start = V1; end = V2; }
 	Line( const float X1 , const float Y1 , const float X2 , const float Y2 ) { start = Vector2( X1 , Y1 ); end = Vector2( X2 , Y2 ); }
+
+	bool operator== ( const Line& L ) const { return L.start == start && L.end == end; }
 };

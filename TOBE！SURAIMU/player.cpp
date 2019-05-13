@@ -6,6 +6,10 @@
 #include "key.h"
 #include "calc.h"
 
+//判定対象クラス
+#include "star.h"
+#include "wall.h"
+
 const int kPlayerSize = 30;
 
 
@@ -32,7 +36,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float Decay 
 	kGravity = Gravity;
 	kSpeed = Speed;
 	kBoostPower = Boost;
-	ground_ = &kGround;
+	ground_ = kGround;
 	texture_ = TextureLoder::getInstance()->load( L"Texture/motion dummy.png" );
 	if( texture_ == nullptr )
 		return false;
@@ -58,7 +62,15 @@ void Player::update()
 	input();
 
 	//ジャンプ力の減少
-	jump_power_ = jump_power_ > 0 ? jump_power_ - kDecay : 0;
+	if( jump_power_ > 0 )
+	{
+		jump_power_ = jump_power_ - kDecay;
+	}
+	else
+	{
+		jump_power_ = 0;
+		flag_.reset( Flag::kCollision );
+	}
 
 	//ブースト力の減少
 	boost_power_ = boost_power_ > kSpeed ? jump_power_ - kDecay : kSpeed;
@@ -100,10 +112,30 @@ void Player::revision(const Vector2& CrossPoint)
 {
 	myshape_.position = CrossPoint;
 	setGravityAngle();
+	dis_ = ( CrossPoint - ground_.start ).Length() / ( ground_.end - ground_.start ).Length();
+	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
+}
 
-	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) )*myshape_.radius;
+void Player::collision( Star * StarObj)
+{
+	if( owner_ != StarObj )
+		owner_ = StarObj;
+
 	jump_power_ = 0;
 	flag_.reset( Flag::kJump );
+}
+
+void Player::collision( Wall * WallObj)
+{
+	setGround( kGround );
+
+	//角度変更( 今は90度加減算 )
+	if( myshape_.position.x < getWindowWidth<float>() / 2 )
+		jumping_angle_ -= XM_PI / 2.0F;
+	else if( myshape_.position.x > getWindowWidth<float>() / 2 )
+		jumping_angle_ += XM_PI / 2.0F;
+
+	flag_.reset( Flag::kCollision );
 }
 
 
@@ -152,23 +184,29 @@ void Player::input()
 		if( pad_tracker.a == pad_tracker.RELEASED || key.released.Space )
 		{
 			flag_.set( Flag::kJump );
+			flag_.set( Flag::kCollision );
 			jump_power_ = kJumpPower;
 			jumping_angle_ = gravity_angle_ + XM_PI;
-			ground_ = &kGround;
+			ground_ = kGround;
 		}
 	}
 }
 
 void Player::gravity()
 {
-	setGravityAngle();
-	movement_ += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * kGravity;
+	if( ground_ == kGround )
+	{
+		setGravityAngle();
+		movement_ += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * kGravity;
+	}
+	else
+		revision( ground_.start + ( ground_.end - ground_.start ) * dis_ );
 }
 
 void Player::setGravityAngle()
 {
 	//線分に対して±90度方向の角度を求める
-	Vector2 vect_stop = ( *ground_ ).end - ( *ground_ ).start;
+	Vector2 vect_stop = ground_.end - ground_.start;
 	float temp_angle[ 2 ] =
 	{
 		std::atan2( -vect_stop.y,vect_stop.x ) - ( XM_PI / 2.0F ),

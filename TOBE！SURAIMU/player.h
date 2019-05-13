@@ -23,7 +23,13 @@ public:
 	//ŠO•”—˜—pŠÖ”
 	inline const Circle& getShape() { return myshape_; }
 	inline const Line& getMove() { return move_vector_; }
+	inline void setGround( const Line& Ground ) { ground_ = Ground; }
+	inline bool isCollision() { return flag_.test( Flag::kCollision ); }
+	inline bool isJump() { return flag_.test( Flag::kJump ); }
+	inline ObjectBase* getOwner() { return owner_; }
 	void revision( const Vector2& CrossPoint );
+	void collision( class Star* );
+	void collision( class Wall* );
 
 
 private:
@@ -42,18 +48,20 @@ private:
 	enum Flag
 	{
 		kJump,
-		kBoost
+		kBoost,
+		kCollision
 	};
-	std::bitset<2> flag_;
+	std::bitset<3> flag_;
 	float jump_power_;
 	float boost_power_;
 	Vector2 movement_;
 	float gravity_angle_;
 	float jumping_angle_;
 	float ditrection_angle_;
-	Line* ground_;
+	Line ground_;
 	ObjectBase* owner_;
 	Circle myshape_;
+	float dis_;
 
 private:
 	//“à•”—˜—pŠÖ”

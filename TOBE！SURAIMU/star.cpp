@@ -67,7 +67,7 @@ void Star::draw()
 	trim.right = trim.left + static_cast< long >( size_ / 50L ) * kStarMin;
 	trim.bottom = trim.top + static_cast< long >( size_ / 50L ) * kStarMin;
 
-	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.0F , Vector2( 1.0F , 1.0F ) , angle_[ 0 ] - 90 , Vector2( ( size_ / 50 * kStarMin ) / 2.0F , ( size_ / 50 * kStarMin ) / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.0F , Vector2( 1.0F , 1.0F ) , -(angle_[ 0 ] - 90.0F) , Vector2( ( size_ / 50 * kStarMin ) / 2.0F , ( size_ / 50 * kStarMin ) / 2.0F ) );
 }
 
 bool Star::isLife()
@@ -88,8 +88,8 @@ void Star::setAngle()
 	for( int i = 0; i < 5; i++ )
 	{
 		//線分の始点設定
-		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i ] ) ) , -sin( XMConvertToRadians( angle_[ i ] ) ) );
+		myshape_[ i ].end = position_ + Vector2( cos( XMConvertToRadians( angle_[ i ] ) ) , -sin( XMConvertToRadians( angle_[ i ] ) ) ) * size_;
 		//線分の終点設定
-		myshape_[ i ].end = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) );
+		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) )*size_;
 	}
 }

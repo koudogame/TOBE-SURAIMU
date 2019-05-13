@@ -17,23 +17,29 @@ Collision::~Collision()
 //----------------------------------------------------------------------------------------
 //ŠO•”ŒöŠJŠÖ”
 
-void Collision::collision( Player * P, Star * S)
+void Collision::collision( Player * P , Star * S )
 {
-	for( int i = 0; i < 5; i++ )
+	if( !P->isCollision() )
 	{
-		if( judgment( P->getShape() , S->getShape( i ) ) )
+		for( int i = 0; i < 5; i++ )
 		{
-			//‰~‚Æü‚Ì“–‚½‚è”»’è
-			P->revision( crossPoint( P->getShape() , S->getShape( i ) ));
-			break;
-		}
+			if( judgment( P->getShape() , S->getShape( i ) ) )
+			{
+				//‰~‚Æü‚Ì“–‚½‚è”»’è
+				P->setGround( S->getShape( i ) );
+				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
+				if( P->getOwner() != S )
+					P->collision( S );
+			}
 
-		if( judgment( P->getMove() , S->getShape( i ) ) )
-		{
-			//ü‚Æü‚Ì“–‚½‚è”»’è
-			P->revision(crossPoint( P->getMove() , S->getShape( i ) ));
-
-			break;
+			if( judgment( P->getMove() , S->getShape( i ) ) )
+			{
+				//ü‚Æü‚Ì“–‚½‚è”»’è
+				P->setGround( S->getShape( i ) );
+				P->revision( crossPoint( P->getMove() , S->getShape( i ) ) );
+				if( P->getOwner() != S )
+					P->collision( S );
+			}
 		}
 	}
 }
@@ -45,15 +51,18 @@ void Collision::collision( Player * P , Wall * W )
 		if( judgment( P->getShape() , W->getShape( i ) ) )
 		{
 			//‰~‚Æü‚Ì“–‚½‚è”»’è
+			P->setGround( W->getShape( i ) );
 			P->revision( crossPoint( P->getShape() , W->getShape( i ) ) );
+			P->collision( W );
 			break;
 		}
 
 		if( judgment( P->getMove() , W->getShape( i ) ) )
 		{
 			//ü‚Æü‚Ì“–‚½‚è”»’è
+			P->setGround( W->getShape( i ) );
 			P->revision(crossPoint( P->getMove() , W->getShape( i ) ));
-
+			P->collision( W );
 			break;
 		}
 	}
