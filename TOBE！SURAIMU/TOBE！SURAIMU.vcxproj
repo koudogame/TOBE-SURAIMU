@@ -157,7 +157,8 @@
     <ClInclude Include="container.h" />
     <ClInclude Include="direct3d.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="play.h" />
+    <ClInclude Include="numbers.h" />
+    <ClInclude Include="time_attack.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="object_base.h" />
     <ClInclude Include="object_container_base.h" />
@@ -183,7 +184,8 @@
     <ClCompile Include="container.cpp" />
     <ClCompile Include="direct3d.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="play.cpp" />
+    <ClCompile Include="numbers.cpp" />
+    <ClCompile Include="time_attack.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pad.cpp" />

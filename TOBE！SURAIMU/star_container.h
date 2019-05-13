@@ -20,7 +20,7 @@ public:
 	void update() override;
 	void destroy() override;
 
-	void addStar(
+	Star* addStar(
 		const Vector2& Position,
 		const float Angle,
 		const float FallSpeed,

@@ -30,9 +30,6 @@
     <Filter Include="Project\Game\Scene\Result">
       <UniqueIdentifier>{69320312-d4af-44f1-ab7f-01dd9c64468c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Scene\Play">
-      <UniqueIdentifier>{c8a74af1-e0c3-4137-bdbe-0db01a778c18}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Scene\Title">
       <UniqueIdentifier>{656fe80d-9a73-4a4b-97ad-4eb84e97b625}</UniqueIdentifier>
     </Filter>
@@ -62,6 +59,12 @@
     </Filter>
     <Filter Include="Project\Game\Object\Wall">
       <UniqueIdentifier>{cef62833-c4f3-4115-a77e-4bf76353b882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Scene\TimeAttack">
+      <UniqueIdentifier>{c8a74af1-e0c3-4137-bdbe-0db01a778c18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others">
+      <UniqueIdentifier>{583b3209-771a-4518-a699-11345f16cc1f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -98,9 +101,6 @@
     <ClCompile Include="star_container.cpp">
       <Filter>Project\Game\Object\Container\StarContainer</Filter>
     </ClCompile>
-    <ClCompile Include="play.cpp">
-      <Filter>Project\Game\Scene\Play</Filter>
-    </ClCompile>
     <ClCompile Include="task_manager.cpp">
       <Filter>Project\Game\Object\Task</Filter>
     </ClCompile>
@@ -124,6 +124,12 @@
     </ClCompile>
     <ClCompile Include="wall.cpp">
       <Filter>Project\Game\Object\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="time_attack.cpp">
+      <Filter>Project\Game\Scene\TimeAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="numbers.cpp">
+      <Filter>Project\Game\Others</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,9 +178,6 @@
     <ClInclude Include="calc.h">
       <Filter>Project\System</Filter>
     </ClInclude>
-    <ClInclude Include="play.h">
-      <Filter>Project\Game\Scene\Play</Filter>
-    </ClInclude>
     <ClInclude Include="task_manager.h">
       <Filter>Project\Game\Object\Task</Filter>
     </ClInclude>
@@ -200,6 +203,12 @@
     </ClInclude>
     <ClInclude Include="wall.h">
       <Filter>Project\Game\Object\Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="time_attack.h">
+      <Filter>Project\Game\Scene\TimeAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="numbers.h">
+      <Filter>Project\Game\Others</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

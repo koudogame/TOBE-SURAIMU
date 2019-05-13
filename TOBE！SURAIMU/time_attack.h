@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scene_base.h"
+#include "numbers.h"
 
 class TaskManager;
 class StarContainer;
@@ -8,14 +9,14 @@ class Player;
 class Wall;
 
 //-----------------------------------------------------------------------------
-// プレイ部
+// タイムアタック
 //-----------------------------------------------------------------------------
-class Play :
+class TimeAttack :
 	public SceneBase
 {
 public:
-	Play();
-	~Play();
+	TimeAttack();
+	~TimeAttack();
 public:
 	bool init() override;
 	void destroy() override;
@@ -30,10 +31,17 @@ private:
 	FILE* star_pattern_ = nullptr;
 	bool createStar();
 
-	SceneBase*(Play::*update_)() = nullptr;
+	SceneBase*(TimeAttack::*update_)() = nullptr;
 	SceneBase* start();
 	SceneBase* play();
 	SceneBase* pause();
+
+	Numbers<int> score_;
+
+
+	ID3D11ShaderResourceView* texture_numbers_;
+	std::chrono::high_resolution_clock::time_point prev_time_;
+	Numbers<long long> remaining_time_sec_;
 
 private:
 	TaskManager* task_manager_ = nullptr;

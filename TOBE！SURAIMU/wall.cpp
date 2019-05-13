@@ -7,26 +7,28 @@
 #include "task_manager.h"
 #include "shape.h"
 
+/*===========================================================================*/
 constexpr float kWallWidth = 30.0F;
 constexpr float kWallWidthHarf = kWallWidth / 2.0F;
 constexpr float kDistanceToCenter = 320.0F;
 const float kCenterX = getWindowWidth<float>() / 2.0F;
-const float kPositionXLeft  = kCenterX - kDistanceToCenter;
-const float kPositionXRight = kCenterX + kDistanceToCenter;
+const float kPositionXLeft  = kCenterX - kDistanceToCenter; // 左の壁X座標
+const float kPositionXRight = kCenterX + kDistanceToCenter; // 右の壁X座標
 
-
-const Line kCollisionLeftWall{
+const Line kCollisionLeftWall{                              // 左の壁衝突判定範囲
 	Vector2(kPositionXLeft, 0.0F), Vector2(kPositionXLeft, 720.0F) };
 const Line kCollisionRightWall{
 	Vector2( kPositionXRight, 720.0F ),Vector2( kPositionXRight, 0.0F ) };
 
-const Vector2 kDrawPositionLeft{
-	kCollisionLeftWall.end.x - kWallWidthHarf , 0.0F };
-const Vector2 kDrawPositionRight{
-	kCollisionRightWall.end.x - kWallWidthHarf, 0.0F };
+const Vector2 kDrawPositionLeft{                            // 左の壁描画位置
+	kCollisionLeftWall.start.x - kWallWidthHarf , 0.0F };
+const Vector2 kDrawPositionRight{                           // 右の壁描画位置
+	kCollisionRightWall.start.x - kWallWidthHarf, 0.0F };
 
-const RECT kTrimmingLeftWall { 1280L, 0L, 1310L, 720L };
-const RECT kTrimmingRightWall{ 1310L, 0L, 1340L, 720L };
+const RECT kTrimmingLeftWall { 1280L, 0L, 1310L, 720L };    // 左の壁切り取り範囲
+const RECT kTrimmingRightWall{ 1310L, 0L, 1340L, 720L };    // 右の壁切り取り範囲
+
+
 
 /*===========================================================================*/
 Wall::Wall(TaskManager* const TaskManager) :
@@ -37,7 +39,6 @@ Wall::Wall(TaskManager* const TaskManager) :
 Wall::~Wall()
 {
 }
-
 
 /*===========================================================================*/
 // 初期化処理
