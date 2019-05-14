@@ -66,7 +66,7 @@ void Player::destroy()
 //XV
 void Player::update()
 {
-wo 	move_vector_.start = myshape_.position;
+ 	move_vector_.start = myshape_.position;
 
 	//“ü—Íˆ—
 	input();
