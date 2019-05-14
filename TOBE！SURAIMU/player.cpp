@@ -52,6 +52,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	setGravityAngle();
 	jumping_angle_ = gravity_angle_ + XM_PI;
 	now_amount_ = 0.0F;
+	jump_power_ = kJumpAmount;
 
 	owner_ = nullptr;
 
@@ -76,6 +77,9 @@ void Player::update()
 	//ƒWƒƒƒ“ƒv—Ê‚ð‘‚â‚·
 	if( flag_.test( Flag::kJump ) )
 		now_amount_ += kAddVolume;
+
+	if( now_amount_ >= 1.0F )
+		flag_.reset( Flag::kCollision );
 
 	//ƒu[ƒXƒg—Í‚ÌŒ¸­
 	boost_power_ = boost_power_ > kSpeed ? boost_power_ - kDecay : kSpeed;
@@ -143,6 +147,7 @@ void Player::collision( Wall * WallObj)
 	jumping_angle_ = XM_PI - jumping_angle_;
 
 	flag_.reset( Flag::kCollision );
+	owner_ = nullptr;
 }
 
 //‰ñ“]Šp‚ð•Ô‹p
@@ -188,6 +193,7 @@ void Player::input()
 			!flag_.test(Flag::kBoost))
 		{
 			flag_.set( Flag::kBoost );
+			jump_power_ += kUPBoostPower;
 			boost_power_ = kRLBoostPower;
 		}
 	}
@@ -205,6 +211,7 @@ void Player::input()
  			flag_.set( Flag::kJump );
 			flag_.set( Flag::kCollision );
 			now_amount_ = 0.0F;
+			jump_power_ = kJumpAmount;
 			jumping_angle_ = gravity_angle_ + XM_PI;
 			ground_ = &kGround;
 		}
@@ -266,7 +273,7 @@ void Player::setGravityAngle()
 float Player::CalcjampAmount()
 {
 	if(now_amount_ < 1.0)
-		return kJumpAmount * ( -std::pow( 2.0F , -10 * now_amount_ ) + 1.0F );
+		return jump_power_ * ( -std::pow( 2.0F , -10 * now_amount_ ) + 1.0F );
 
 	return 0.0F;
 }

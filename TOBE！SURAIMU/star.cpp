@@ -9,7 +9,8 @@
 
 //’è”
 const int kStarMin = 134;
-const float kMinSpin = 0.F;
+const float kMinSpin = 0.5F;
+const float kMaxSpin = 5.0F;
 
 Star::Star( TaskManager * const Manager ) :
 	ObjectBase( ObjectID::kStar , Manager )
@@ -96,6 +97,8 @@ void Star::collision(Player* P)
 	spin_ += turn_ * rate_ * abs( Calc::cross( P->getMove()->end - P->getMove()->start , P->getShape()->position - position_ ) );
 	if( std::abs( spin_ ) < kMinSpin )
 		spin_ = kMinSpin * turn_;
+	else if( std::abs( spin_ ) > kMaxSpin )
+		spin_ = kMaxSpin * turn_;
 }
 
 void Star::setAngle()
