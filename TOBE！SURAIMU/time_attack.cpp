@@ -22,14 +22,17 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 
 /*===========================================================================*/
-const long long kLimitTimeSec = 60LL; // 制限時間( 秒 )
+// 難易度に関係
+constexpr long long kLimitTimeSec = 60LL; // 制限時間( 秒 )
+constexpr float kScoringAngle = 3.6F;     // スコアリング角度( 度数法 )
 
-const RECT kTrimmingBackground{       // 背景切り取り範囲
-	0L, 720L, 1280L, 1440L
-};
-const RECT kTrimmingEffect{           // 背景エフェクト切り取り範囲
-	0L, 0L, 1280L, 720L
-};
+// 処理に関係
+constexpr RECT kTrimmingBackground{       // 背景切り取り範囲
+	0L, 720L, 1280L, 1440L};
+constexpr RECT kTrimmingEffect{           // 背景エフェクト切り取り範囲
+	0L,   0L, 1280L,  720L};
+constexpr long kNumberWidth = 64L;        // 数字横幅
+constexpr long kNumberHeight = 128L;      // 数字縦幅
 
 
 
@@ -55,17 +58,6 @@ bool TimeAttack::init()
 	// 必要オブジェクトの生成
 	if (do_create_ && create() == false) { return false; }
 
-
-	// スター生成パターンファイルをリスト化
-	FILE* file_name_list;
-	errno_t error = fopen_s(&file_name_list, "State/pattern_list.txt", "r");
-	if (error != 0) { return false; }
-	char file_name[FILENAME_MAX];
-	while (fscanf_s(file_name_list, "%s", &file_name, FILENAME_MAX) != EOF)
-	{
-		star_pattern_list_.push_back(file_name);
-	}
-	fclose(file_name_list);
 	// スターを生成
 	if (createStar() == false) { return false; }
 
@@ -73,23 +65,26 @@ bool TimeAttack::init()
 	// プレイヤー初期化
 	Vector2 position;
 	float jump;
+	float add_vol;
 	float decay;
 	float gravity;
 	float speed;
-	float boost;
+	float up_boost;
+	float rl_boost;
 	FILE* player_state = nullptr;
-	error = fopen_s(&player_state, "State/player_state.txt", "r");
+	errno_t error = fopen_s(&player_state, "State/player_state.txt", "r");
 	if (error != 0) { return false; }
 	fscanf_s(player_state,
-		"%f %f %f %f %f %f %f",
+		"%f %f %f %f %f %f %f %f %f",
 		&position.x, &position.y,
 		&jump,
+		&add_vol,
 		&decay,
 		&gravity,
 		&speed,
-		&boost);
+		&up_boost, &rl_boost);
 	fclose(player_state);
-	if (player_->init(position, jump, decay, gravity, speed, boost) == false)
+	if (player_->init(position, jump, add_vol, decay, gravity, speed, up_boost, rl_boost) == false)
 	{
 		return false;
 	}
@@ -101,7 +96,9 @@ bool TimeAttack::init()
 
 	// その他メンバ
 	update_ = &TimeAttack::start;
-	remaining_time_sec_ = 999LL;   // 制限時間1分
+	remaining_time_sec_ = kLimitTimeSec;
+	score_ = 0;
+	player_rotate_sum_ = 0.0F;
 
 	return true;
 }
@@ -110,6 +107,18 @@ bool TimeAttack::create()
 {
 	do_create_ = false;
 
+	// スター生成パターンファイルをリスト化
+	FILE* file_name_list;
+	errno_t error = fopen_s(&file_name_list, "State/pattern_list.txt", "r");
+	if (error != 0) { return false; }
+	char file_name[FILENAME_MAX];
+	while (fscanf_s(file_name_list, "%s", &file_name, FILENAME_MAX) != EOF)
+	{
+		star_pattern_list_.push_back(file_name);
+	}
+	fclose(file_name_list);
+
+	// テクスチャ
 	texture_ = TextureLoder::getInstance()->load(L"Texture/プレイ画面.png");
 	if (texture_ == nullptr) { return false; }
 	texture_numbers_ = TextureLoder::getInstance()->load(L"Texture/数字.png");
@@ -185,7 +194,14 @@ void TimeAttack::draw()
 	remaining_time_sec_.draw(
 		texture_numbers_,
 		Vector2(1280.0F, 0.0F),
-		64L, 128L
+		kNumberWidth, kNumberHeight
+	);
+
+	// スコア描画
+	score_.draw(
+		texture_numbers_,
+		Vector2(320.0F, 0.0F),
+		kNumberWidth, kNumberHeight
 	);
 }
 
@@ -260,6 +276,7 @@ SceneBase* TimeAttack::play()
 
 		// オブジェクトの更新処理
 		task_manager_->allExecuteUpdate();
+		scoring();
 
 
 		// 衝突判定
@@ -344,4 +361,28 @@ bool TimeAttack::createStar()
 	fclose(star_pattern_);
 
 	return true;
+}
+
+/*===========================================================================*/
+// スコアリング
+void TimeAttack::scoring()
+{
+	const float kPlayerRotate = player_->getRotate() * 180.0F / XM_PI;
+
+	// 回転が止まったら加算終了
+	if (kPlayerRotate == 0.0F)
+	{
+		player_rotate_sum_ = 0.0F;
+	}
+	// 回転中はスコア加算
+	else
+	{
+		player_rotate_sum_ += kPlayerRotate;
+		const int kScore = static_cast<int>(player_rotate_sum_ / kScoringAngle);
+		if (kScore > 0)
+		{
+			score_ += kScore;
+			player_rotate_sum_ = 0.0F;
+		}
+	}
 }

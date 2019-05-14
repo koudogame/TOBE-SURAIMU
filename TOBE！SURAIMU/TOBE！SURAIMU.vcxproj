@@ -160,6 +160,7 @@
     <ClInclude Include="numbers.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="particle_containerr.h" />
+    <ClInclude Include="timer.h" />
     <ClInclude Include="time_attack.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="object_base.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="numbers.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="particle_container.cpp" />
+    <ClCompile Include="timer.cpp" />
     <ClCompile Include="time_attack.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="main.cpp" />

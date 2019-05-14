@@ -38,6 +38,11 @@ Wall::Wall(TaskManager* const TaskManager) :
 
 Wall::~Wall()
 {
+	// ŠJ•ú–Y‚ê‘Îˆ
+	if (do_create_ == false)
+	{
+		destroy();
+	}
 }
 
 /*===========================================================================*/

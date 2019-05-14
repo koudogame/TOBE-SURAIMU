@@ -143,6 +143,9 @@
     <ClCompile Include="particle_container.cpp">
       <Filter>Project\Game\Object\Container\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Project\Game\Others</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -227,6 +230,9 @@
     </ClInclude>
     <ClInclude Include="particle_containerr.h">
       <Filter>Project\Game\Object\Container\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Project\Game\Others</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

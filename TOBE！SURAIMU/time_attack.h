@@ -38,6 +38,8 @@ private:
 	SceneBase* pause();
 
 	Numbers<int> score_;
+	float player_rotate_sum_;
+	void scoring();
 
 
 	ID3D11ShaderResourceView* texture_numbers_;

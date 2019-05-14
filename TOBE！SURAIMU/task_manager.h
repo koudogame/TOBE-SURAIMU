@@ -3,14 +3,14 @@
 class ObjectBase;
 
 // 更新タスクID
-enum TaskUpdate
+enum class TaskUpdate
 {
 	kStarUpdate,
 	kPlayerUpdate,
 	kWallUpdate,
 };
 // 描画タスクID
-enum TaskDraw
+enum class TaskDraw
 {
 	kStarDraw,
 	kPlayerDraw,
