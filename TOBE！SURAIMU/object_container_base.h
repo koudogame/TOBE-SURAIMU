@@ -20,7 +20,10 @@ public:
 	ObjectContainerBase(TaskManager* const TaskManager) :
 		task_manager_(TaskManager)
 	{}
-	virtual ~ObjectContainerBase() = default;
+	virtual ~ObjectContainerBase()
+	{
+		destory();
+	}
 
 public:
 	virtual void update()

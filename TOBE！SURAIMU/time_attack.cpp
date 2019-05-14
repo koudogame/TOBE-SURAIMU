@@ -41,6 +41,11 @@ TimeAttack::TimeAttack() :
 
 TimeAttack::~TimeAttack()
 {
+	// ŠJ•ú–Y‚ê‘Îˆ
+	if (do_create_ == false)
+	{
+		destroy();
+	}
 }
 
 /*===========================================================================*/
