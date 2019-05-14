@@ -17,7 +17,7 @@ public:
 	void destroy() override;
 	void update() override;
 	void draw() override;
-	bool isLife() override;
+	bool isAlive() override;
 
 public:
 	//ŠO•”—˜—pŠÖ”

@@ -75,7 +75,7 @@ void Star::draw()
 	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.0F , Vector2( 1.0F , 1.0F ) , -(angle_[ 0 ] - 90.0F) , Vector2( ( size_ / 50 * kStarMin ) / 2.0F , ( size_ / 50 * kStarMin ) / 2.0F ) );
 }
 
-bool Star::isLife()
+bool Star::isAlive()
 {
 	//‰æ–ÊŠO‚ÅŽ€–S
 	if( position_.y > 1200.0F )

@@ -30,7 +30,7 @@ public:
 	virtual void destroy() = 0;
 	virtual void update() = 0;
 	virtual void draw() = 0;
-	virtual bool isLife() { return true; }
+	virtual bool isAlive() { return true; }
 
 	virtual ObjectID getId() { return id_; }
 
