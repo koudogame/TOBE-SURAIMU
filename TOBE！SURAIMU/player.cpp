@@ -39,7 +39,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float Decay 
 	kGravity = Gravity;
 	kSpeed = Speed;
 	kBoostPower = Boost;
-	ground_ = kGround;
+	ground_ = &kGround;
 	texture_ = TextureLoder::getInstance()->load( L"Texture/motion dummy.png" );
 	Num = TextureLoder::getInstance()->load( L"Texture/”š.png" );
 
@@ -125,7 +125,7 @@ bool Player::isLife()
 void Player::revision(const Vector2& CrossPoint)
 {
 	myshape_.position = CrossPoint;
-	dis_ = Calc::magnitude( CrossPoint , ground_.start ) / Calc::magnitude( ground_.end , ground_.start );
+	dis_ = Calc::magnitude( CrossPoint , ground_->start ) / Calc::magnitude( ground_->end , ground_->start );
 	setGravityAngle();
 	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
 	move_vector_.end = myshape_.position;
@@ -142,7 +142,7 @@ void Player::collision( Star * StarObj)
 //•Ç‚Æ‚Ì“–‚½‚è”»’èŒã‚Ìˆ—
 void Player::collision( Wall * WallObj)
 {
-	setGround( kGround );
+	setGround( &kGround );
 
 	//Šp“x•ÏX( ¡‚Í90“x‰ÁŒ¸Z )
 	if( myshape_.position.x < getWindowWidth<float>() / 2 )
@@ -156,7 +156,7 @@ void Player::collision( Wall * WallObj)
 //‰ñ“]Šp‚ğ•Ô‹p
 float Player::getRotate()
 {
-	if( owner_ == nullptr || ground_ == kGround )
+	if( owner_ == nullptr || ground_ == &kGround )
 		return false;
 
 	return abs( Calc::angle( move_vector_.start - dynamic_cast< Star* >( owner_ )->getposition() , move_vector_.end - dynamic_cast< Star* >( owner_ )->getposition() ) );
@@ -214,7 +214,7 @@ void Player::input()
 			flag_.set( Flag::kCollision );
 			jump_power_ = kJumpPower;
 			jumping_angle_ = gravity_angle_ + XM_PI;
-			ground_ = kGround;
+			ground_ = &kGround;
 		}
 		flag_.reset( Flag::kBoost );
 	}
@@ -223,14 +223,14 @@ void Player::input()
 //d—Í‚ğ‚©‚¯‚é
 void Player::gravity()
 {
-	if( ground_ == kGround )
+	if( ground_ == &kGround )
 	{
 		setGravityAngle();
 		myshape_.position += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * kGravity;
 	}
 	else
 	{
-		revision( ground_.start + ( ground_.end - ground_.start ) * dis_ );
+		revision( ground_->start + ( ground_->end - ground_->start ) * dis_ );
 	}
 
 }
@@ -240,7 +240,7 @@ void Player::setGravityAngle()
 {
 	Vector2 vect_ground;
 	//ü•ª‚É‘Î‚µ‚Ä}90“x•ûŒü‚ÌŠp“x‚ğ‹‚ß‚é
-	vect_ground = ground_.end - ground_.start;
+	vect_ground = ground_->end - ground_->start;
 
 	float temp_angle[ 2 ] =
 	{

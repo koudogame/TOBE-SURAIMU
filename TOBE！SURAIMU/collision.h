@@ -22,12 +22,12 @@ public:
 
 private:
 	//“–‚½‚è”»’è
-	bool judgment( const Circle& , const Circle& );
-	bool judgment( const Circle& , const Line& );
-	bool judgment( const Line& , const Line& );
+	bool judgment( Circle* , Circle* );
+	bool judgment( Circle* , Line* );
+	bool judgment( Line* , Line* );
 
 	//Œğ“_‚ğ‹‚ß‚é
-	Vector2 crossPoint( const Circle& , const Line& );
-	Vector2 crossPoint( const Line& , const Line& );
+	Vector2 crossPoint( Circle* , Line* );
+	Vector2 crossPoint( Line* , Line* );
 };
 

@@ -86,12 +86,12 @@ bool Star::isLife()
 
 void Star::collision(Player* P)
 {
-	float old_angle = atan2( -( P->getMove().start.y - position_.y ) , ( P->getMove().start.x - position_.x ) );
-	float new_angle = atan2( -( P->getMove().end.y - position_.y ) , ( P->getMove().end.x - position_.x ) );
+	float old_angle = atan2( -( P->getMove()->start.y - position_.y ) , ( P->getMove()->start.x - position_.x ) );
+	float new_angle = atan2( -( P->getMove()->end.y - position_.y ) , ( P->getMove()->end.x - position_.x ) );
 	int signal = ( int ) copysign( 1.0F , new_angle - old_angle );
 	turn_ = signal;
 
-	spin_ += turn_ * rate_ * abs( Calc::cross( P->getMove().end - P->getMove().start , P->getShape().position - position_ ) );
+	spin_ += turn_ * rate_ * abs( Calc::cross( P->getMove()->end - P->getMove()->start , P->getShape()->position - position_ ) );
 	if( std::abs( spin_ ) < kMinSpin )
 		spin_ = kMinSpin * turn_;
 }

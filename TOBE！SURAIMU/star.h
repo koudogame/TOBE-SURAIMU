@@ -23,7 +23,7 @@ public:
 	//外部利用関数
 	//落下の速さの適用
 	inline void setFall() { fall_ = temp_fall_; }
-	inline const Line& getShape( const int GetNum ) { return myshape_[ GetNum ]; }
+	inline Line* getShape( const int GetNum ) { return &myshape_[ GetNum ]; }
 	inline const Vector2 getposition() { return position_; }
 	void collision( class Player* P );
 

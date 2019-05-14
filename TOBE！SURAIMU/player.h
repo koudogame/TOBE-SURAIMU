@@ -22,9 +22,9 @@ public:
 
 public:
 	//ŠO•”—˜—pŠÖ”
-	inline const Circle& getShape() { return myshape_; }
-	inline const Line& getMove() { return move_vector_; }
-	inline void setGround( const Line& Ground ) { ground_ = Ground; }
+	inline Circle* getShape() { return &myshape_; }
+	inline Line* getMove() { return &move_vector_; }
+	inline void setGround( Line* const Ground ) { ground_ = Ground; }
 	inline bool isCollision() { return flag_.test( Flag::kCollision ); }
 	inline bool isJump() { return flag_.test( Flag::kJump ); }
 	inline ObjectBase* getOwner() { return owner_; }
@@ -59,7 +59,7 @@ private:
 	float gravity_angle_;
 	float jumping_angle_;
 	float ditrection_angle_;
-	Line ground_;
+	Line* ground_;
 	ObjectBase* owner_;
 	Circle myshape_;
 	float dis_;
