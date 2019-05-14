@@ -96,8 +96,9 @@ bool TimeAttack::init()
 
 
 	// その他メンバ
+	timer_->start();
+	timer_->stop();
 	update_ = &TimeAttack::start;
-	remaining_time_sec_ = kLimitTimeSec;
 	score_ = 0;
 	player_rotate_sum_ = 0.0F;
 
@@ -127,8 +128,9 @@ bool TimeAttack::create()
 
 
 	// タイマー
-	timer_          = new (std::nothrow) Timer();
+	timer_          = new (std::nothrow) Timer<Seconds>();
 	if (timer_ == nullptr)          { return false; }
+
 	// タスクマネージャー
 	task_manager_   = new (std::nothrow) TaskManager();
 	if (task_manager_ == nullptr)   { return false; }
@@ -198,7 +200,8 @@ void TimeAttack::draw()
 	task_manager_->allExecuteDraw();
 
 	// 残り時間描画
-	remaining_time_sec_.draw(
+	Numbers<long long> remaining_time_sec(kLimitTimeSec - timer_->getCount());
+	remaining_time_sec.draw(
 		texture_numbers_,
 		Vector2(1280.0F, 0.0F),
 		kNumberWidth, kNumberHeight
@@ -220,7 +223,7 @@ SceneBase* TimeAttack::start()
 	{
 		update_ = &TimeAttack::play;
 		star_container_->setFall();
-		timer_->start();
+		timer_->restart();
 	}
 
 	task_manager_->allExecuteUpdate();
@@ -233,17 +236,9 @@ SceneBase* TimeAttack::start()
 SceneBase* TimeAttack::play()
 {
 	// タイム管理
-	// 秒で管理しているため、時間の変化があるまで更新をしない
-	auto delta_sec = timer_->getElapsedTime<Seconds>();
-	if (delta_sec > 0)
+	if (timer_->getCount() >= kLimitTimeSec)
 	{
-		remaining_time_sec_ -= delta_sec;
-		timer_->start();
-		if (remaining_time_sec_ <= 0)
-		{
-			// ゲーム終了
-			return new Result;
-		}
+		return new Result;
 	}
 
 

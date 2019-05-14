@@ -4,76 +4,75 @@
 using namespace std::chrono;
 using Clock = high_resolution_clock;
 
+
 /*===========================================================================*/
-Timer::Timer()
+template <typename T>
+Timer<T>::Timer()
+{}
+
+template <typename T>
+Timer<T>::~Timer()
+{}
+
+/*===========================================================================*/
+// 計測開始
+template <typename T>
+void Timer<T>::start()
 {
 	start_ = Clock::now();
 }
 
-Timer::~Timer()
+/*===========================================================================*/
+// 計測一時停止
+template <>
+void Timer<Seconds>::stop()
 {
+	if (stop_ == false)
+	{
+		count_ += duration_cast<seconds>(getElapsedTime()).count();
+		stop_ = true;
+	}
+}
+template <>
+void Timer<Milliseconds>::stop()
+{
+	if (stop_ == false)
+	{
+		count_ += duration_cast<milliseconds>(getElapsedTime()).count();
+		stop_ = true;
+	}
 }
 
 /*===========================================================================*/
-// 計測スタート
-void Timer::start()
-{
-	start_ = Clock::now();
-}
-
-/*===========================================================================*/
-// 計測ストップ
-void Timer::stop()
-{
-	stop_ = true;
-	middle_ = Clock::now();
-}
-
-/*===========================================================================*/
-// 計測再スタート
-void Timer::restart()
+// 計測再開始
+template <typename T>
+void Timer<T>::restart()
 {
 	stop_ = false;
+	start_ = Clock::now();
 }
 
 /*===========================================================================*/
-// 経過時間の取得( 秒 )
+// 計測時間返却
 template <>
-long long Timer::getElapsedTime<Seconds>()
+long long Timer<Seconds>::getCount()
 {
-	long long elapsed;
-	if (stop_)
-	{
-		elapsed = duration_cast<seconds>(
-			middle_ - start_
-			).count();
-	}
-	else
-	{
-		elapsed = duration_cast<seconds>(
-			Clock::now() - start_
-			).count();
-	}
-
-	return elapsed;
+	return count_ + duration_cast<seconds>(getElapsedTime()).count();
 }
-// 経過時間の取得( ミリ秒 )
 template <>
-long long Timer::getElapsedTime<Milliseconds>()
+long long Timer<Milliseconds>::getCount()
 {
-	long long elapsed;
-	if (stop_)
-	{
-		elapsed = duration_cast<milliseconds>(
-			middle_ - start_
-			).count();
-	}
-	else
-	{
-		elapsed = duration_cast<milliseconds>(
-			Clock::now() - start_
-			).count();
-	}
-
-	return elapsed;
+	return count_ + duration_cast<milliseconds>(getElapsedTime()).count();
 }
+
+
+/*===========================================================================*/
+// 経過時間の取得
+template <typename T>
+std::common_type_t<Clock::duration, Clock::duration> Timer<T>::getElapsedTime()
+{
+	return (stop_ ? start_ : Clock::now()) - start_;
+}
+
+template Timer<Seconds>;
+template Timer<Milliseconds>;

@@ -11,6 +11,11 @@ Numbers<T>::Numbers() :
 {}
 
 template <typename T>
+Numbers<T>::Numbers(const T& Value) :
+	number_(Value)
+{}
+
+template <typename T>
 Numbers<T>::~Numbers()
 {}
 

@@ -12,6 +12,7 @@ class Numbers
 {
 public:
 	Numbers();
+	Numbers(const T&);
 	~Numbers();
 
 public:

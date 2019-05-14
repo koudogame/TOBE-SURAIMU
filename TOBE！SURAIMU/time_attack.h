@@ -3,7 +3,10 @@
 #include "scene_base.h"
 #include "numbers.h"
 
+struct Seconds;
+template <typename T>
 class Timer;
+
 class TaskManager;
 class StarContainer;
 class Player;
@@ -41,13 +44,9 @@ private:
 	Numbers<int> score_;
 	float player_rotate_sum_;
 	void scoring();
-
-
-	ID3D11ShaderResourceView* texture_numbers_;
-	Timer* timer_ = nullptr;
-	Numbers<long long> remaining_time_sec_;
-
 private:
+	ID3D11ShaderResourceView* texture_numbers_;
+	Timer<Seconds>* timer_ = nullptr;
 	TaskManager* task_manager_ = nullptr;
 	StarContainer* star_container_ = nullptr;
 	Player* player_ = nullptr;
