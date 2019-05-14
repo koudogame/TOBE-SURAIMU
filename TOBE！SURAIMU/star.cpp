@@ -26,7 +26,9 @@ Star::Star( TaskManager * const Manager ) :
 }
 
 Star::~Star()
-{}
+{
+	TextureLoder::getInstance()->release( texture_ );
+}
 
 bool Star::init( const Vector2 & Position , const float Angle , const float Fall , const float Spin , const float Rate , const float Size )
 {
