@@ -14,7 +14,7 @@ public:
 
 public:
 	//åpè≥ä÷êî
-	bool init(const Vector2& Posit,const float Jump = 30.0F,const float Decay = 0.5F,const float Gravity = 0.5F,const float Speed = 5.0F , const float UpBoost = 10.0F , const float RLBoost = 0.0F );
+	bool init(const Vector2& Posit,const float Jump = 30.0F,const float AddVol = 0.001F,const float Decay = 0.5F,const float Gravity = 0.5F,const float Speed = 5.0F , const float UpBoost = 10.0F , const float RLBoost = 0.0F );
 	void destroy();
 	void update();
 	void draw();
@@ -36,7 +36,8 @@ public:
 
 private:
 	//íËêîâªïœêî
-	float kJumpPower;
+	float kJumpAmount;
+	float kAddVolume;
 	float kDecay;
 	float kGravity;
 	float kSpeed;
@@ -55,7 +56,7 @@ private:
 		kCollision
 	};
 	std::bitset<3> flag_;
-	float jump_power_;
+	float now_amount_;
 	float boost_power_;
 	float gravity_angle_;
 	float jumping_angle_;
@@ -73,5 +74,5 @@ private:
 	void input();
 	void gravity();
 	void setGravityAngle();
-
+	float CalcjampAmount();
 };

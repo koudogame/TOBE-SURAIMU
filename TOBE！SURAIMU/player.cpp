@@ -28,13 +28,14 @@ Player::~Player()
 
 
 //初期化
-bool Player::init( const Vector2 & Posit , const float Jump , const float Decay , const float Gravity , const float Speed , const float UpBoost,const float RLBoost )
+bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol , const float Decay , const float Gravity , const float Speed , const float UpBoost,const float RLBoost )
 {
 	task_manager_->registerTask( this , TaskUpdate::kPlayerUpdate );
 	task_manager_->registerTask( this , TaskDraw::kPlayerDraw );
 	myshape_ = Circle( Posit , 7.5F );
 	//定数の定義
-	kJumpPower = Jump;
+	kJumpAmount = Jump;
+	kAddVolume = AddVol;
 	kDecay = Decay;
 	kGravity = Gravity;
 	kSpeed = Speed;
@@ -50,7 +51,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float Decay 
 	//各変数の初期化
 	setGravityAngle();
 	jumping_angle_ = gravity_angle_ + XM_PI;
-	jump_power_ = 0;
+	now_amount_ = 0.0F;
 
 	owner_ = nullptr;
 
@@ -72,21 +73,14 @@ void Player::update()
 	//入力時処理
 	input();
 
-	//ジャンプ力の減少
-	if( jump_power_ > 0 )
-	{
-		jump_power_ = jump_power_ - kDecay;
-	}
-	else
-	{
-		jump_power_ = 0;
-		flag_.reset( Flag::kCollision );
-	}
+	//ジャンプ量を増やす
+	if( flag_.test( Flag::kJump ) )
+		now_amount_ += kAddVolume;
 
 	//ブースト力の減少
 	boost_power_ = boost_power_ > kSpeed ? boost_power_ - kDecay : kSpeed;
 
-	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * jump_power_;
+	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * CalcjampAmount();
 
 	//重力をかける
 	gravity();
@@ -136,7 +130,7 @@ void Player::revision(const Vector2& CrossPoint)
 void Player::collision( Star * StarObj)
 {
 	owner_ = StarObj;
-	jump_power_ = 0;
+	now_amount_ = 0.0F;
 	flag_.reset( Flag::kJump );
 }
 
@@ -194,7 +188,6 @@ void Player::input()
 			!flag_.test(Flag::kBoost))
 		{
 			flag_.set( Flag::kBoost );
-			jump_power_ += kUPBoostPower;
 			boost_power_ = kRLBoostPower;
 		}
 	}
@@ -211,7 +204,7 @@ void Player::input()
 		{
  			flag_.set( Flag::kJump );
 			flag_.set( Flag::kCollision );
-			jump_power_ = kJumpPower;
+			now_amount_ = 0.0F;
 			jumping_angle_ = gravity_angle_ + XM_PI;
 			ground_ = &kGround;
 		}
@@ -267,4 +260,13 @@ void Player::setGravityAngle()
 	}
 
 	gravity_angle_ = temp_angle[ 1 ];
+}
+
+//ジャンプ量を算出
+float Player::CalcjampAmount()
+{
+	if(now_amount_ < 1.0)
+		return kJumpAmount * ( -std::pow( 2.0F , -10 * now_amount_ ) + 1.0F );
+
+	return 0.0F;
 }
