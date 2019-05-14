@@ -3,6 +3,7 @@
 #include "scene_base.h"
 #include "numbers.h"
 
+class Timer;
 class TaskManager;
 class StarContainer;
 class Player;
@@ -43,7 +44,7 @@ private:
 
 
 	ID3D11ShaderResourceView* texture_numbers_;
-	std::chrono::high_resolution_clock::time_point prev_time_;
+	Timer* timer_ = nullptr;
 	Numbers<long long> remaining_time_sec_;
 
 private:

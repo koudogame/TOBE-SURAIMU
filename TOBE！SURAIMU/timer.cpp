@@ -23,9 +23,57 @@ void Timer::start()
 
 /*===========================================================================*/
 // 計測ストップ
-long long Timer::stop()
+void Timer::stop()
 {
-	return duration_cast<milliseconds>(
-		Clock::now() - start_
-		).count();
+	stop_ = true;
+	middle_ = Clock::now();
+}
+
+/*===========================================================================*/
+// 計測再スタート
+void Timer::restart()
+{
+	stop_ = false;
+}
+
+/*===========================================================================*/
+// 経過時間の取得( 秒 )
+template <>
+long long Timer::getElapsedTime<Seconds>()
+{
+	long long elapsed;
+	if (stop_)
+	{
+		elapsed = duration_cast<seconds>(
+			middle_ - start_
+			).count();
+	}
+	else
+	{
+		elapsed = duration_cast<seconds>(
+			Clock::now() - start_
+			).count();
+	}
+
+	return elapsed;
+}
+// 経過時間の取得( ミリ秒 )
+template <>
+long long Timer::getElapsedTime<Milliseconds>()
+{
+	long long elapsed;
+	if (stop_)
+	{
+		elapsed = duration_cast<milliseconds>(
+			middle_ - start_
+			).count();
+	}
+	else
+	{
+		elapsed = duration_cast<milliseconds>(
+			Clock::now() - start_
+			).count();
+	}
+
+	return elapsed;
 }

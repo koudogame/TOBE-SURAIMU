@@ -8,6 +8,7 @@
 #include "key.h"
 #include "pad.h"
 #include "result.h"
+#include "timer.h"
 #include "task_manager.h"
 #include "collision.h"
 #include "star_container.h"
@@ -125,6 +126,9 @@ bool TimeAttack::create()
 	if (texture_ == nullptr) { return false; }
 
 
+	// タイマー
+	timer_          = new (std::nothrow) Timer();
+	if (timer_ == nullptr)          { return false; }
 	// タスクマネージャー
 	task_manager_   = new (std::nothrow) TaskManager();
 	if (task_manager_ == nullptr)   { return false; }
@@ -164,6 +168,9 @@ void TimeAttack::destroy()
 
 	// タスクマネージャー
 	safe_delete(task_manager_);
+
+	// タイマー
+	safe_delete(timer_);
 
 	// テクスチャ
 	TextureLoder::getInstance()->release(texture_numbers_);
@@ -213,7 +220,7 @@ SceneBase* TimeAttack::start()
 	{
 		update_ = &TimeAttack::play;
 		star_container_->setFall();
-		prev_time_ = high_resolution_clock::now();
+		timer_->start();
 	}
 
 	task_manager_->allExecuteUpdate();
@@ -227,12 +234,11 @@ SceneBase* TimeAttack::play()
 {
 	// タイム管理
 	// 秒で管理しているため、時間の変化があるまで更新をしない
-	auto now = high_resolution_clock::now();
-	auto delta_sec = duration_cast<seconds>(now - prev_time_).count();
+	auto delta_sec = timer_->getElapsedTime<Seconds>();
 	if (delta_sec > 0)
 	{
 		remaining_time_sec_ -= delta_sec;
-		prev_time_ = now;
+		timer_->start();
 		if (remaining_time_sec_ <= 0)
 		{
 			// ゲーム終了
