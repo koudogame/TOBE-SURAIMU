@@ -22,7 +22,7 @@ public:
 	{}
 	virtual ~ObjectContainerBase()
 	{
-		destory();
+		destroy();
 	}
 
 public:
