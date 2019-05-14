@@ -10,7 +10,8 @@
 #include "star.h"
 #include "wall.h"
 
-const int kPlayerSize = 30;
+const int kPlayerSize = 21;
+const int kFlicTime = 18;
 
 //コンストラクタ
 Player::Player( TaskManager* const Manager ) :
@@ -53,6 +54,8 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	jumping_angle_ = gravity_angle_ + XM_PI;
 	now_amount_ = 0.0F;
 	jump_power_ = kJumpAmount;
+
+	timer = 0;
 
 	owner_ = nullptr;
 
@@ -101,13 +104,24 @@ void Player::update()
 //描画
 void Player::draw()
 {
+	slectDirection();
 	RECT trim;
-	trim.top = 0;
-	trim.left = 0;
+	trim.top = static_cast<int>(rect_left_up_.y);
+	trim.left = static_cast< int >( rect_left_up_.x );
 	trim.bottom = trim.top + kPlayerSize;
 	trim.right = trim.left + kPlayerSize;
 
-	Sprite::getInstance()->draw( texture_ , myshape_.position , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2( kPlayerSize / 2.0F , kPlayerSize - kPlayerSize / 4.0F ) );
+	float draw_angle;
+
+	if( flag_.test( Flag::kJump ) )
+	{
+		Vector2 movement = move_vector_.end - move_vector_.start;
+		draw_angle = XM_PI / 2.0F - std::atan2( -movement.y , movement.x );
+	}
+	else
+		draw_angle = -gravity_angle_ - XM_PI / 2.0F;
+
+	Sprite::getInstance()->draw( texture_ , myshape_.position - Vector2( 0.F , 6.F ) , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
 	num.draw( Num , Vector2( 1280 , 720.0F - 128.0F ) , 64L , 128L );
 }
 
@@ -135,6 +149,7 @@ void Player::collision( Star * StarObj)
 {
 	owner_ = StarObj;
 	now_amount_ = 0.0F;
+	timer = 0;
 	flag_.reset( Flag::kJump );
 }
 
@@ -147,6 +162,7 @@ void Player::collision( Wall * WallObj)
 	jumping_angle_ = XM_PI - jumping_angle_;
 
 	flag_.reset( Flag::kCollision );
+	timer = 0;
 	owner_ = nullptr;
 }
 
@@ -159,6 +175,29 @@ float Player::getRotate()
 	return abs( Calc::angle( move_vector_.start - dynamic_cast< Star* >( owner_ )->getposition() , move_vector_.end - dynamic_cast< Star* >( owner_ )->getposition() ) );
 }
 
+
+void Player::slectDirection()
+{
+	switch( direction_id_ )
+	{
+		case Direction::kFlont:
+			if( timer++ > kFlicTime )
+			{
+				timer = 0;
+				rect_left_up_ = rect_left_up_ == Vector2::Zero ? Vector2( kPlayerSize , 0.F ) : Vector2::Zero;
+			}
+
+			break;
+
+		case Direction::kSquat:
+			rect_left_up_ = Vector2( 0.F , kPlayerSize );
+			break;
+
+		case Direction::kFlay:
+			rect_left_up_ = Vector2( kPlayerSize , kPlayerSize );
+			break;
+	}
+}
 
 //----------------------------------------------
 //内部利用関数
@@ -200,16 +239,19 @@ void Player::input()
 	//接地中
 	else
 	{
+		direction_id_ = Direction::kFlont;
 		//ジャンプ入力
 		if( pad_tracker.a == pad_tracker.HELD || key.lastState.Space )
 		{
 			//アニメーションの処理
+			direction_id_ = Direction::kSquat;
 		}
 		//ジャンプ
 		if( pad_tracker.a == pad_tracker.RELEASED || key.released.Space )
 		{
  			flag_.set( Flag::kJump );
 			flag_.set( Flag::kCollision );
+			direction_id_ = Direction::kFlay;
 			now_amount_ = 0.0F;
 			jump_power_ = kJumpAmount;
 			jumping_angle_ = gravity_angle_ + XM_PI;

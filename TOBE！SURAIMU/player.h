@@ -46,6 +46,7 @@ private:
 	Line kGround;
 
 private:
+	//ˆ—Œn
 	//ƒƒ“ƒo•Ï”
 	Line move_vector_;
 
@@ -69,6 +70,21 @@ private:
 
 	Numbers<long> num;
 	ID3D11ShaderResourceView* Num;
+
+private:
+	//•`‰æŒn
+	enum Direction
+	{
+		kFlont,
+		kSquat,
+		kFlay
+	};
+
+	Direction direction_id_;
+	Vector2 rect_left_up_;
+	void slectDirection();
+
+	int timer;
 
 private:
 	//“à•”—˜—pŠÖ”
