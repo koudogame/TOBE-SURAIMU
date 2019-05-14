@@ -113,10 +113,10 @@ void Wall::draw()
 
 /*===========================================================================*/
 // Œ`‚Ì•Ô‹p
-const Line& Wall::getShape(const unsigned GetNum)
+Line* Wall::getShape(const unsigned GetNum)
 {
 	// ”ÍˆÍŠO‚ÌQÆ‚Í‹Ö~
 	assert(GetNum < 2);
 
-	return myshape_[GetNum];
+	return &myshape_[GetNum];
 }

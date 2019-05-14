@@ -2,7 +2,7 @@
 #include "error.h"
 #include "texture.h"
 
-ID3D11ShaderResourceView* Texture::load( const wstring& FileName )
+ID3D11ShaderResourceView* Texture::load( const std::wstring& FileName )
 {
     ID3D11ShaderResourceView* texture;
 

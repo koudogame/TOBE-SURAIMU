@@ -30,7 +30,6 @@
 
 using namespace DirectX;
 using namespace SimpleMath;
-using namespace std;
 
 template <typename T>
 inline T getWindowWidth()

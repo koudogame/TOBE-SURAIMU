@@ -9,7 +9,7 @@
 
 //定数
 const int kStarMin = 134;
-const float kMinSpin = 0.1F;
+const float kMinSpin = 0.F;
 
 Star::Star( TaskManager * const Manager ) :
 	ObjectBase( ObjectID::kStar , Manager )
@@ -86,12 +86,12 @@ bool Star::isLife()
 
 void Star::collision(Player* P)
 {
-	float old_angle = atan2( -( P->getMove().start.y - position_.y ) , ( P->getMove().start.x - position_.x ) );
-	float new_angle = atan2( -( P->getMove().end.y - position_.y ) , ( P->getMove().end.x - position_.x ) );
+	float old_angle = atan2( -( P->getMove()->start.y - position_.y ) , ( P->getMove()->start.x - position_.x ) );
+	float new_angle = atan2( -( P->getMove()->end.y - position_.y ) , ( P->getMove()->end.x - position_.x ) );
 	int signal = ( int ) copysign( 1.0F , new_angle - old_angle );
 	turn_ = signal;
 
-	spin_ += turn_ * rate_ * abs( Calc::cross( P->getMove().end - P->getMove().start , P->getShape().position - position_ ) );
+	spin_ += turn_ * rate_ * abs( Calc::cross( P->getMove()->end - P->getMove()->start , P->getShape()->position - position_ ) );
 	if( std::abs( spin_ ) < kMinSpin )
 		spin_ = kMinSpin * turn_;
 }
@@ -107,6 +107,6 @@ void Star::setAngle()
 		//線分の始点設定
 		myshape_[ i ].end = position_ + Vector2( cos( XMConvertToRadians( angle_[ i ] ) ) , -sin( XMConvertToRadians( angle_[ i ] ) ) ) * size_;
 		//線分の終点設定
-		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) )*size_;
+		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) ) * size_;
 	}
 }

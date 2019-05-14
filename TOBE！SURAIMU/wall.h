@@ -21,7 +21,7 @@ public:
 	virtual void update();
 	virtual void draw();
 
-	virtual const Line& getShape(const unsigned GetNum);
+	virtual Line* getShape(const unsigned GetNum);
 
 public:
 	bool do_create_ = true;
