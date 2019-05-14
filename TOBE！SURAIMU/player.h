@@ -18,7 +18,7 @@ public:
 	void destroy();
 	void update();
 	void draw();
-	bool isLife();
+	bool isAlive();
 
 public:
 	//ŠO•”—˜—pŠÖ”

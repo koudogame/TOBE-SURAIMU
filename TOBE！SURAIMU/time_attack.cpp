@@ -189,7 +189,6 @@ void TimeAttack::draw()
 	);
 }
 
-
 /*===========================================================================*/
 // スタート
 SceneBase* TimeAttack::start()
@@ -265,12 +264,14 @@ SceneBase* TimeAttack::play()
 
 		// 衝突判定
 		Collision* const kCollision = Collision::getInstance();
-		for (auto& star : star_container_->active())
+		for (auto& star : star_container_->active()) // 対スター
 		{
 			kCollision->collision(player_, star);
 		}
-		kCollision->collision(player_, wall_);
+		kCollision->collision(player_, wall_);       // 対壁
 	}
+
+
 	return this;
 }
 
@@ -312,8 +313,8 @@ bool TimeAttack::createStar()
 	// 星の生成
 	Vector2 position;
 	float angle;
-	float fall_speed;
-	float spin_speed;
+	float fall;
+	float spin;
 	float spin_rate;
 	float size;
 	while (true)
@@ -323,8 +324,8 @@ bool TimeAttack::createStar()
 			"%f %f %f %f %f %f %f",
 			&position.x, &position.y,
 			&angle,
-			&fall_speed,
-			&spin_speed,
+			&fall,
+			&spin,
 			&spin_rate,
 			&size) == EOF)
 		{
@@ -332,9 +333,9 @@ bool TimeAttack::createStar()
 			return true;
 		}
 
-		position.y -= getWindowHeight<float>();
+		position.y -= getWindowHeight<float>(); // 画面外へ追いやる
 		if (star_container_->addStar(
-			position, angle, fall_speed, spin_speed, spin_rate, size) == nullptr)
+			position, angle, fall, spin, spin_rate, size) == nullptr)
 		{
 			// 生成に失敗
 			return false;

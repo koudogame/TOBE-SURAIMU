@@ -32,7 +32,7 @@ public:
 			itr != end;)
 		{
 			// 死んだらフリーリストに追加
-			if ((*itr)->isLife() == false)
+			if ((*itr)->isAlive() == false)
 			{
 				(*itr)->destroy();
 				free_list_.push_back((*itr));

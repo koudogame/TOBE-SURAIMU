@@ -21,7 +21,7 @@ public:
 	virtual void destroy() override;
 	virtual void update() override;
 	virtual void draw() override;
-	virtual bool isLife() override { return is_alive_; }
+	virtual bool isAlive() override { return is_alive_; }
 
 private:
 	ID3D11ShaderResourceView* texture_;
