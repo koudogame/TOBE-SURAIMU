@@ -28,7 +28,7 @@ Player::~Player()
 
 
 //初期化
-bool Player::init( const Vector2 & Posit , const float Jump , const float Decay , const float Gravity , const float Speed , const float Boost )
+bool Player::init( const Vector2 & Posit , const float Jump , const float Decay , const float Gravity , const float Speed , const float UpBoost,const float RLBoost )
 {
 	task_manager_->registerTask( this , TaskUpdate::kPlayerUpdate );
 	task_manager_->registerTask( this , TaskDraw::kPlayerDraw );
@@ -38,7 +38,8 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float Decay 
 	kDecay = Decay;
 	kGravity = Gravity;
 	kSpeed = Speed;
-	kBoostPower = Boost;
+	kUPBoostPower = UpBoost;
+	kRLBoostPower = RLBoost;
 	ground_ = &kGround;
 	texture_ = TextureLoder::getInstance()->load( L"Texture/motion dummy.png" );
 	Num = TextureLoder::getInstance()->load( L"Texture/数字.png" );
@@ -83,7 +84,7 @@ void Player::update()
 	}
 
 	//ブースト力の減少
-	boost_power_ = boost_power_ > kSpeed ? jump_power_ - kDecay : kSpeed;
+	boost_power_ = boost_power_ > kSpeed ? boost_power_ - kDecay : kSpeed;
 
 	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * jump_power_;
 
@@ -144,11 +145,8 @@ void Player::collision( Wall * WallObj)
 {
 	setGround( &kGround );
 
-	//角度変更( 今は90度加減算 )
-	if( myshape_.position.x < getWindowWidth<float>() / 2 )
-		jumping_angle_ -= XM_PI / 2.0F;
-	else if( myshape_.position.x > getWindowWidth<float>() / 2 )
-		jumping_angle_ += XM_PI / 2.0F;
+	//角度変更
+	jumping_angle_ = XM_PI - jumping_angle_;
 
 	flag_.reset( Flag::kCollision );
 }
@@ -196,7 +194,8 @@ void Player::input()
 			!flag_.test(Flag::kBoost))
 		{
 			flag_.set( Flag::kBoost );
-			boost_power_ = kBoostPower;
+			jump_power_ += kUPBoostPower;
+			boost_power_ = kRLBoostPower;
 		}
 	}
 	//接地中
