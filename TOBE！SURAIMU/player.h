@@ -57,6 +57,7 @@ private:
 	};
 	std::bitset<3> flag_;
 	float now_amount_;
+	float jump_power_;
 	float boost_power_;
 	float gravity_angle_;
 	float jumping_angle_;
