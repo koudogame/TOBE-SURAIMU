@@ -91,5 +91,4 @@ private:
 	void input();
 	void gravity();
 	void setGravityAngle();
-	float CalcjampAmount();
 };

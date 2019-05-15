@@ -156,6 +156,7 @@
     <ClInclude Include="commonstates.h" />
     <ClInclude Include="container.h" />
     <ClInclude Include="direct3d.h" />
+    <ClInclude Include="easing.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="numbers.h" />
     <ClInclude Include="particle.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="commonstates.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="direct3d.cpp" />
+    <ClCompile Include="easing.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="numbers.cpp" />
     <ClCompile Include="particle.cpp" />
