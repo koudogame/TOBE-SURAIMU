@@ -19,6 +19,7 @@
 #include "player.h"
 #include "wall.h"
 
+
 using namespace std::chrono;
 
 using PadState = GamePad::State;
@@ -152,6 +153,7 @@ bool TimeAttack::create()
 	wall_           = new (std::nothrow) Wall(task_manager_);
 	if (wall_ == nullptr)           { return false; }
 
+
 	return true;
 }
 
@@ -160,6 +162,7 @@ bool TimeAttack::create()
 void TimeAttack::destroy()
 {
 	do_create_ = true;
+
 
 	// 壁
 	wall_->destroy();
@@ -255,6 +258,7 @@ SceneBase* TimeAttack::play()
 	{
 		// ポーズ画面へ
 		update_ = &TimeAttack::pause;
+		timer_->stop();
 	}
 	else
 	{
@@ -317,6 +321,7 @@ SceneBase* TimeAttack::pause()
 	{
 		// プレイ続行
 		update_ = &TimeAttack::play;
+		timer_->restart();
 	}
 
 

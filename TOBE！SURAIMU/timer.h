@@ -28,15 +28,14 @@ public:
 	void stop();
 	void restart();
 
-	long long getCount();
+	long long getCount() const;
 
 private:
 	std::common_type_t<std::chrono::high_resolution_clock::duration, 
 		std::chrono::high_resolution_clock::duration>
-		getElapsedTime();
+		getElapsedTime() const;
 
 	bool stop_ = false;
 	std::chrono::high_resolution_clock::time_point start_;
 	unsigned long long count_ = 0LL;
-
 };

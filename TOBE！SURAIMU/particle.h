@@ -5,10 +5,20 @@
 #include "object_base.h"
 
 class TaskManager;
+struct Seconds;
+template <typename T>
+class Timer;
 
 //-----------------------------------------------------------------------------
 // パーティクル
 //-----------------------------------------------------------------------------
+// --説明--
+// init関数引数リスト 
+//  TextureFileName : 読み込む画像ファイルのパス
+//  Position : 初期座標
+//  Velocity : 移動量
+//  Clock : 経過時間をカウントしているタイマー
+//  LifeTimeSec : 生存時間( 秒 )
 class Particle :
 	public ObjectBase
 {
@@ -18,8 +28,10 @@ public:
 public:
 	virtual bool init(
 		const wchar_t* const TextureFileName, 
+		const Vector2& Position,
 		const Vector2& Velocity,
-		const long long LifeTimeMs);
+		const Timer<Seconds>& Clock,
+		const long long LifeTimeSec);
 	virtual void destroy() override;
 	virtual void update() override;
 	virtual void draw() override;
@@ -29,7 +41,7 @@ private:
 	ID3D11ShaderResourceView* texture_;
 	Vector2 velocity_;
 
-	std::chrono::high_resolution_clock::time_point prev_time_;
-	long long lifetime_ms_;
+	const Timer<Seconds>* clock_ = nullptr;
+	long long lifetime_sec_;
 	bool is_alive_;
 };

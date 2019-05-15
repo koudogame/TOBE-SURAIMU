@@ -1,7 +1,10 @@
 
-#include "release.h"
+#pragma once
 
 // ”Âê ‰·÷
+
+#include "release.h"
+
 
 class TaskManager;
 

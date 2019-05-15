@@ -8,6 +8,7 @@ enum class TaskUpdate
 	kStarUpdate,
 	kPlayerUpdate,
 	kWallUpdate,
+	kParticleUpdate,
 };
 // •`‰æƒ^ƒXƒNID
 enum class TaskDraw
@@ -15,6 +16,7 @@ enum class TaskDraw
 	kStarDraw,
 	kPlayerDraw,
 	kWallDraw,
+	kParticleDraw,
 };
 
 	
