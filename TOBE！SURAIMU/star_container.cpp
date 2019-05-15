@@ -4,7 +4,6 @@
 #include "star_container.h"
 
 #include "release.h"
-#include "star.h"
 
 
 /*===========================================================================*/

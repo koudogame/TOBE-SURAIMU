@@ -55,12 +55,12 @@ void Timer<T>::restart()
 /*===========================================================================*/
 // Œv‘ªŽžŠÔ•Ô‹p
 template <>
-long long Timer<Seconds>::getCount()
+long long Timer<Seconds>::getCount() const
 {
 	return count_ + duration_cast<seconds>(getElapsedTime()).count();
 }
 template <>
-long long Timer<Milliseconds>::getCount()
+long long Timer<Milliseconds>::getCount() const
 {
 	return count_ + duration_cast<milliseconds>(getElapsedTime()).count();
 }
@@ -69,7 +69,7 @@ long long Timer<Milliseconds>::getCount()
 /*===========================================================================*/
 // Œo‰ßŽžŠÔ‚ÌŽæ“¾
 template <typename T>
-std::common_type_t<Clock::duration, Clock::duration> Timer<T>::getElapsedTime()
+std::common_type_t<Clock::duration, Clock::duration> Timer<T>::getElapsedTime() const
 {
 	return (stop_ ? start_ : Clock::now()) - start_;
 }

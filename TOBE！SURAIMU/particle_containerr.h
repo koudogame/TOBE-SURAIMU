@@ -3,9 +3,12 @@
 // î¬èÍ â∑é˜
 
 #include "object_container_base.h"
+#include "particle.h"
 
-class Particle;
-class TaskManager;
+struct Seconds;
+template <typename T>
+class Timer;
+
 
 class ParticleContainer :
 	public ObjectContainerBase<Particle>
@@ -16,7 +19,9 @@ public:
 public:
 	Particle* addParticle(
 		const wchar_t* const TextureFileName,
+		const Vector2& Position,
 		const Vector2& Velocity,
-		const long long LifeTimeMs
+		const Timer<Seconds>& Clock,
+		const long long LifeTimeSec
 	);
 };
