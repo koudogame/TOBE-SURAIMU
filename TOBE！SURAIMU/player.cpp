@@ -33,7 +33,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 {
 	task_manager_->registerTask( this , TaskUpdate::kPlayerUpdate );
 	task_manager_->registerTask( this , TaskDraw::kPlayerDraw );
-	myshape_ = Circle( Posit , 7.5F );
+	myshape_ = Circle( Posit , 4.5F );
 	//定数の定義
 	kJumpAmount = Jump;
 	kAddVolume = AddVol;
@@ -43,7 +43,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	kUPBoostPower = UpBoost;
 	kRLBoostPower = RLBoost;
 	ground_ = &kGround;
-	texture_ = TextureLoder::getInstance()->load( L"Texture/motion dummy.png" );
+	texture_ = TextureLoder::getInstance()->load( L"Texture/player.png" );
 	Num = TextureLoder::getInstance()->load( L"Texture/数字.png" );
 
 	if( texture_ == nullptr )
@@ -121,7 +121,7 @@ void Player::draw()
 	else
 		draw_angle = -gravity_angle_ - XM_PI / 2.0F;
 
-	Sprite::getInstance()->draw( texture_ , myshape_.position - Vector2( 0.F , 6.F ) , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , myshape_.position, &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
 	num.draw( Num , Vector2( 1280 , 720.0F - 128.0F ) , 64L , 128L );
 }
 
@@ -147,9 +147,14 @@ void Player::revision(const Vector2& CrossPoint)
 //星との当たり判定後の処理
 void Player::collision( Star * StarObj)
 {
+	if( owner_ != StarObj )
+	{
+		rect_left_up_ = Vector2::Zero;
+		direction_id_ = Direction::kFlont;
+		timer = 0;
+	}
 	owner_ = StarObj;
 	now_amount_ = 0.0F;
-	timer = 0;
 	flag_.reset( Flag::kJump );
 }
 
@@ -161,8 +166,6 @@ void Player::collision( Wall * WallObj)
 	//角度変更
 	jumping_angle_ = XM_PI - jumping_angle_;
 
-	flag_.reset( Flag::kCollision );
-	timer = 0;
 	owner_ = nullptr;
 }
 
@@ -176,28 +179,6 @@ float Player::getRotate()
 }
 
 
-void Player::slectDirection()
-{
-	switch( direction_id_ )
-	{
-		case Direction::kFlont:
-			if( timer++ > kFlicTime )
-			{
-				timer = 0;
-				rect_left_up_ = rect_left_up_ == Vector2::Zero ? Vector2( kPlayerSize , 0.F ) : Vector2::Zero;
-			}
-
-			break;
-
-		case Direction::kSquat:
-			rect_left_up_ = Vector2( 0.F , kPlayerSize );
-			break;
-
-		case Direction::kFlay:
-			rect_left_up_ = Vector2( kPlayerSize , kPlayerSize );
-			break;
-	}
-}
 
 //----------------------------------------------
 //内部利用関数
@@ -318,4 +299,28 @@ float Player::CalcjampAmount()
 		return jump_power_ * ( -std::pow( 2.0F , -10 * now_amount_ ) + 1.0F );
 
 	return 0.0F;
+}
+
+//プレイヤーの状態から切り取り範囲を選択
+void Player::slectDirection()
+{
+	switch( direction_id_ )
+	{
+		case Direction::kFlont:
+			if( timer++ > kFlicTime )
+			{
+				timer = 0;
+				rect_left_up_ = rect_left_up_ == Vector2::Zero ? Vector2( kPlayerSize , 0.F ) : Vector2::Zero;
+			}
+
+			break;
+
+		case Direction::kSquat:
+			rect_left_up_ = Vector2( 0.F , kPlayerSize );
+			break;
+
+		case Direction::kFlay:
+			rect_left_up_ = Vector2( kPlayerSize , kPlayerSize );
+			break;
+	}
 }
