@@ -1,4 +1,7 @@
 #pragma once
+//========================================
+//CreatorName:YamadaHaruhisa
+
 #include "scene_base.h"
 
 class Game

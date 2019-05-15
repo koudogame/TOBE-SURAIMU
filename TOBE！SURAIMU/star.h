@@ -1,4 +1,7 @@
 #pragma once
+//========================================
+//CreatorName:YamadaHaruhisa
+
 #include "object_base.h"
 #include "shape.h"
 

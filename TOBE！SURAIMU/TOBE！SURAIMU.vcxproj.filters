@@ -146,6 +146,9 @@
     <ClCompile Include="timer.cpp">
       <Filter>Project\Game\Others</Filter>
     </ClCompile>
+    <ClCompile Include="easing.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -234,6 +237,7 @@
     <ClInclude Include="timer.h">
       <Filter>Project\Game\Others</Filter>
     </ClInclude>
+    <ClInclude Include="easing.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

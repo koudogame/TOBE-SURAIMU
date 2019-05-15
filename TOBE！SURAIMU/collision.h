@@ -1,4 +1,7 @@
 #pragma once
+//========================================
+//CreatorName:YamadaHaruhisa
+
 #include "shape.h"
 
 class Player;

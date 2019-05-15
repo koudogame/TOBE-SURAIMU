@@ -22,7 +22,29 @@ void Collision::collision( Player * P , Star * S )
 	for( int i = 0; i < 5; i++ )
 	{
 		//‰~‚Æü‚Ì“–‚½‚è”»’è
-		if( judgment( P->getShape() , S->getShape( i ) ) || judgment( P->getMove() , S->getShape( i ) ) )
+		if( judgment( P->getShape() , S->getShape( i ) ) )
+		{
+			if( P->getOwner() != S )
+			{
+				P->setGround( S->getShape( i ) );
+				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
+				P->collision( S );
+				S->collision( P );
+				break;
+			}
+			else
+			{
+				if( !P->isCollision() )
+				{
+					P->setGround( S->getShape( i ) );
+					P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
+					P->collision( S );
+					break;
+				}
+
+			}
+		}
+		else if( judgment( P->getMove() , S->getShape( i ) ) )
 		{
 			if( P->getOwner() != S )
 			{

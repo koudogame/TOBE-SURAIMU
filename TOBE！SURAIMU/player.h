@@ -1,4 +1,7 @@
 #pragma once
+//========================================
+//CreatorName:YamadaHaruhisa
+
 #include "object_base.h"
 #include "shape.h"
 #include "numbers.h"
@@ -91,5 +94,4 @@ private:
 	void input();
 	void gravity();
 	void setGravityAngle();
-	float CalcjampAmount();
 };

@@ -6,6 +6,8 @@
 #include "key.h"
 #include "calc.h"
 
+#include "easing.h"
+
 //判定対象クラス
 #include "star.h"
 #include "wall.h"
@@ -87,7 +89,7 @@ void Player::update()
 	//ブースト力の減少
 	boost_power_ = boost_power_ > kSpeed ? boost_power_ - kDecay : kSpeed;
 
-	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * CalcjampAmount();
+	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out );
 
 	//重力をかける
 	gravity();
@@ -165,7 +167,7 @@ void Player::collision( Wall * WallObj)
 
 	//角度変更
 	jumping_angle_ = XM_PI - jumping_angle_;
-
+	flag_.reset( Flag::kCollision );
 	owner_ = nullptr;
 }
 
@@ -290,15 +292,6 @@ void Player::setGravityAngle()
 	}
 
 	gravity_angle_ = temp_angle[ 1 ];
-}
-
-//ジャンプ量を算出
-float Player::CalcjampAmount()
-{
-	if(now_amount_ < 1.0)
-		return jump_power_ * ( -std::pow( 2.0F , -10 * now_amount_ ) + 1.0F );
-
-	return 0.0F;
 }
 
 //プレイヤーの状態から切り取り範囲を選択
