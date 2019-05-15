@@ -1,4 +1,6 @@
 
+// ”Âê ‰·÷
+
 #include "particle.h"
 
 #include "textureLoder.h"

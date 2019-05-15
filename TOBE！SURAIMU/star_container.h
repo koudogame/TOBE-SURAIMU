@@ -1,5 +1,7 @@
 #pragma once
 
+// ”Âê ‰·÷
+
 #include "object_container_base.h"
 
 class Star;
