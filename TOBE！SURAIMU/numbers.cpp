@@ -1,4 +1,6 @@
 
+// ”Âê ‰·÷
+
 #include "numbers.h"
 
 #include "sprite.h"

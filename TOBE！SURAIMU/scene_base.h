@@ -1,5 +1,7 @@
 #pragma once
 
+// ”Âê ‰·÷
+
 // ŠeƒV[ƒ“ID
 enum class SceneID
 {

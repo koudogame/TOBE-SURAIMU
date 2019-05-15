@@ -1,12 +1,14 @@
 #pragma once
 
+// ”Âê ‰·÷
+
 #include "scene_base.h"
-#include "numbers.h"
 
 struct Seconds;
 template <typename T>
 class Timer;
-
+template <typename T>
+class Numbers;
 class TaskManager;
 class StarContainer;
 class Player;
@@ -41,7 +43,7 @@ private:
 	SceneBase* play();
 	SceneBase* pause();
 
-	Numbers<int> score_;
+	Numbers<int>* score_;
 	float player_rotate_sum_;
 	void scoring();
 private:

@@ -1,5 +1,7 @@
 #pragma once
 
+// 板場 温樹
+
 struct Seconds;      // 計測時間単位 : 秒
 struct Milliseconds; // 計測時間単位 : ミリ秒
 	

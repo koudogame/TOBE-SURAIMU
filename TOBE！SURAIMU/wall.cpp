@@ -1,4 +1,6 @@
 
+// ”Âê ‰·÷
+
 #include "wall.h"
 
 #include "release.h"

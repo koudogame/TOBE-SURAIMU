@@ -1,4 +1,6 @@
 
+// 板場 温樹
+
 #include "time_attack.h"
 
 #include <direct.h>
@@ -8,6 +10,7 @@
 #include "key.h"
 #include "pad.h"
 #include "result.h"
+#include "numbers.h"
 #include "timer.h"
 #include "task_manager.h"
 #include "collision.h"
@@ -99,7 +102,7 @@ bool TimeAttack::init()
 	timer_->start();
 	timer_->stop();
 	update_ = &TimeAttack::start;
-	score_ = 0;
+	*score_ = 0;
 	player_rotate_sum_ = 0.0F;
 
 	return true;
@@ -126,6 +129,8 @@ bool TimeAttack::create()
 	texture_numbers_ = TextureLoder::getInstance()->load(L"Texture/数字.png");
 	if (texture_ == nullptr) { return false; }
 
+	// 数字
+	score_ = new Numbers<int>();
 
 	// タイマー
 	timer_          = new (std::nothrow) Timer<Seconds>();
@@ -174,6 +179,9 @@ void TimeAttack::destroy()
 	// タイマー
 	safe_delete(timer_);
 
+	// 数字
+	safe_delete(score_);
+
 	// テクスチャ
 	TextureLoder::getInstance()->release(texture_numbers_);
 	TextureLoder::getInstance()->release(texture_);
@@ -208,7 +216,7 @@ void TimeAttack::draw()
 	);
 
 	// スコア描画
-	score_.draw(
+	score_->draw(
 		texture_numbers_,
 		Vector2(320.0F, 0.0F),
 		kNumberWidth, kNumberHeight
@@ -382,7 +390,7 @@ void TimeAttack::scoring()
 		const int kScore = static_cast<int>(player_rotate_sum_ / kScoringAngle);
 		if (kScore > 0)
 		{
-			score_ += kScore;
+			*score_ += kScore;
 			player_rotate_sum_ = 0.0F;
 		}
 	}
