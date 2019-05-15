@@ -38,12 +38,12 @@ void TaskManager::unregisterObject(ObjectBase* const Object)
 
 /*===========================================================================*/
 // 更新タスクの実行
-void TaskManager::allExecuteUpdate()
+void TaskManager::allUpdate()
 {
 	execute(&update_list_, &ObjectBase::update);
 }
 // 描画タスクの実行
-void TaskManager::allExecuteDraw()
+void TaskManager::allDraw()
 {
 	execute(&draw_list_, &ObjectBase::draw);
 }

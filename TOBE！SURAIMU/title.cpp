@@ -5,7 +5,7 @@
 #include "sprite.h"
 #include "key.h"
 #include "pad.h"
-#include "time_attack.h"
+#include "endless.h"
 
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -44,7 +44,7 @@ SceneBase* Title::update()
 	if (Key::getInstance()->getTracker().pressed.Enter ||
 		Pad::getInstance()->getTracker().b == PadTracker::PRESSED)
 	{
-		return new TimeAttack();
+		return new Endless();
 	}
 
 	return this;

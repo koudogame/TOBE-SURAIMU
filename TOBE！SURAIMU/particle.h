@@ -5,7 +5,7 @@
 #include "object_base.h"
 
 class TaskManager;
-struct Seconds;
+struct Milliseconds;
 template <typename T>
 class Timer;
 
@@ -30,8 +30,8 @@ public:
 		const wchar_t* const TextureFileName, 
 		const Vector2& Position,
 		const Vector2& Velocity,
-		const Timer<Seconds>& Clock,
-		const long long LifeTimeSec);
+		const Timer<Milliseconds>& Clock,
+		const long long LifeTimeMs);
 	virtual void destroy() override;
 	virtual void update() override;
 	virtual void draw() override;
@@ -41,7 +41,7 @@ private:
 	ID3D11ShaderResourceView* texture_;
 	Vector2 velocity_;
 
-	const Timer<Seconds>* clock_ = nullptr;
-	long long lifetime_sec_;
+	const Timer<Milliseconds>* clock_ = nullptr;
+	long long lifetime_ms_;
 	bool is_alive_;
 };

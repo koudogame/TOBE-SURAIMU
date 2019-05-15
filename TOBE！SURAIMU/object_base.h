@@ -27,7 +27,7 @@ public:
 		task_manager_(TaskManager)
 	{}
 	virtual ~ObjectBase() = default;
-public:
+// ƒƒ“ƒoŠÖ”
 	virtual bool init() { return true; }
 	virtual void destroy() = 0;
 	virtual void update() = 0;

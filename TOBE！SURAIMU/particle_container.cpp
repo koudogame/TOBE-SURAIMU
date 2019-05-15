@@ -19,7 +19,7 @@ ParticleContainer::~ParticleContainer()
 Particle* ParticleContainer::addParticle(
 	const wchar_t* const TextureFileName,
 	const Vector2& Position, const Vector2& Velocity,
-	const Timer<Seconds>& Clock, const long long LifeTimeSec)
+	const Timer<Milliseconds>& Clock, const long long LifeTimeMs)
 {
 	Particle* particle = getFreeObjAndInsert();
 	if (particle == nullptr) { return nullptr; }
@@ -29,7 +29,7 @@ Particle* ParticleContainer::addParticle(
 		Position,
 		Velocity,
 		Clock,
-		LifeTimeSec
+		LifeTimeMs
 	);
 
 	return particle;

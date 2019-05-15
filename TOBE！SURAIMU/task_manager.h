@@ -40,9 +40,9 @@ public:
 
 	void unregisterObject(ObjectBase* const);
 
-	void allExecuteUpdate();
+	void allUpdate();
 
-	void allExecuteDraw();
+	void allDraw();
 
 
 private:

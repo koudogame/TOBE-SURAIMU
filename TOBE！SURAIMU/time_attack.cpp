@@ -208,7 +208,7 @@ void TimeAttack::draw()
 		texture_, Vector2::Zero, &kTrimmingEffect);
 
 	// オブジェクトの描画
-	task_manager_->allExecuteDraw();
+	task_manager_->allDraw();
 
 	// 残り時間描画
 	Numbers<long long> remaining_time_sec(kLimitTimeSec - timer_->getCount());
@@ -237,7 +237,7 @@ SceneBase* TimeAttack::start()
 		timer_->restart();
 	}
 
-	task_manager_->allExecuteUpdate();
+	task_manager_->allUpdate();
 
 	return this;
 }
@@ -288,7 +288,7 @@ SceneBase* TimeAttack::play()
 
 
 		// オブジェクトの更新処理
-		task_manager_->allExecuteUpdate();
+		task_manager_->allUpdate();
 		scoring();
 
 

@@ -26,8 +26,8 @@ Particle::~Particle()
 bool Particle::init(
 	const wchar_t* const TextureFileName,
 	const Vector2& Position, const Vector2& Velocity,
-	const Timer<Seconds>& Clock,
-	const long long LifeTimeSec)
+	const Timer<Milliseconds>& Clock,
+	const long long LifeTimeMs)
 {
 	// テクスチャの読み込み
 	texture_ = TextureLoder::getInstance()->load(TextureFileName);
@@ -42,7 +42,7 @@ bool Particle::init(
 	position_ = Position;
 	velocity_ = Velocity;
 	clock_ = &Clock;
-	lifetime_sec_ = LifeTimeSec;
+	lifetime_ms_ = LifeTimeMs;
 	is_alive_ = true;
 
 
@@ -64,7 +64,7 @@ void Particle::destroy()
 // 更新処理
 void Particle::update()
 {
-	if (clock_->getCount() >= lifetime_sec_)
+	if (clock_->getCount() >= lifetime_ms_)
 	{
 		is_alive_ = false;
 	}

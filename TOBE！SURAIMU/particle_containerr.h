@@ -5,11 +5,6 @@
 #include "object_container_base.h"
 #include "particle.h"
 
-struct Seconds;
-template <typename T>
-class Timer;
-
-
 class ParticleContainer :
 	public ObjectContainerBase<Particle>
 {
@@ -21,7 +16,7 @@ public:
 		const wchar_t* const TextureFileName,
 		const Vector2& Position,
 		const Vector2& Velocity,
-		const Timer<Seconds>& Clock,
-		const long long LifeTimeSec
+		const Timer<Milliseconds>& Clock,
+		const long long LifeTimeMs
 	);
 };
