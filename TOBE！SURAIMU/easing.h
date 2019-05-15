@@ -1,4 +1,7 @@
 #pragma once
+//========================================
+//CreatorName:YamadaHaruhisa
+
 class Easing
 {
 	//singleton
@@ -15,9 +18,11 @@ public:
 	{
 		In,
 		Out,
-		InOut
+		InOut	//0.5を境にINとOUTが反転する
 	};
 
+	//引数
+	//最大移動量：現在の時間( 0.0 ～ 1.0 )：出力モード
 	float expo( const float Movement, const float Time , Mode Mode );
 
 
