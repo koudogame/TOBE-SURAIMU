@@ -66,7 +66,7 @@ void Background::draw()
     Sprite* const kSprite = Sprite::getInstance();
 
     Vector2 draw_position = position_;
-    while (draw_position.y > 0.0F)
+    while (draw_position.y + kTextureSize > 0.0F)
     {
         kSprite->draw(texture_, draw_position);
 

@@ -7,6 +7,8 @@
 #include "key.h"
 #include "pad.h"
 
+#include "title.h"
+
 /*===========================================================================*/
 Result::Result()
 {
@@ -38,6 +40,12 @@ void Result::destroy()
 // XVˆ—
 SceneBase* Result::update()
 {
+    if (Key::getInstance()->getTracker().pressed.Enter ||
+        Pad::getInstance()->getTracker().b == GamePad::ButtonStateTracker::PRESSED)
+    {
+        return new Title;
+    }
+
 	return this;
 }
 
