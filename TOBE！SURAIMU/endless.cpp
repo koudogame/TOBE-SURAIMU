@@ -3,6 +3,7 @@
 
 #include "endless.h"
 
+#include <direct.h>
 #include "release.h"
 #include "key.h"
 #include "pad.h"
@@ -55,6 +56,7 @@ constexpr RECT kTrimmingBackground{       // 背景切り取り範囲
     0L, 720L, 1280L, 1440L };
 constexpr RECT kTrimmingEffect{           // 背景エフェクト切り取り範囲
     0L,   0L, 1280L,  720L };
+constexpr float kThresholdY = 360.0F;     // プレイヤーの限界Y座標( 絶対座標 )
 
 
 
@@ -265,14 +267,24 @@ SceneBase* Endless::start()
 // プレイ部
 SceneBase* Endless::play()
 {
-    Collision* const kCollision = Collision::getInstance();
+    // 画面外待機している星が無くなったら星の生成
+    auto itr = star_container_->active().begin();
+    auto end = star_container_->active().end();
+    for (; itr != end; ++itr)
+    {
+        if ((*itr)->getPosition().y < 0.0F) { break; }
+    }
+    if (itr == end && createStar() == false) { return nullptr; }
+
 
     // オブジェクト更新
     task_manager_->allUpdate();
+    adjustObjectPosition();
     scoring();
 
     
     // 衝突処理
+    Collision* const kCollision = Collision::getInstance();
     for (auto& star : star_container_->active())
     {
         kCollision->collision(player_, star);
@@ -288,9 +300,11 @@ SceneBase* Endless::play()
 bool Endless::createStar()
 {
     // 生成パターンの選択
+    _chdir("State");
     std::string pattern = pattern_file_[rand() % pattern_file_.size()];
     FILE* file;
     errno_t error = fopen_s(&file, pattern.c_str(), "r");
+    _chdir("../");
     if (error != 0) { return false; }
 
 
@@ -338,4 +352,30 @@ void Endless::scoring()
     const float kPlayerPositionY = player_->getShape()->position.y;
     climb_ -= kPlayerPositionY - prev_player_y_;
     prev_player_y_ = kPlayerPositionY;
+}
+
+/*===========================================================================*/
+// オブジェクトの座標調整
+void Endless::adjustObjectPosition()
+{
+    const float kOver = player_->getShape()->position.y - kThresholdY;
+    if (kOver < 0)
+    {
+        Vector2 dist;
+
+        dist.x = player_->getPosition().x;
+        dist.y = player_->getPosition().y - kOver;
+        player_->setPosition(dist);
+
+
+        for (auto& star : star_container_->active())
+        {
+            dist.x = star->getPosition().x;
+            dist.y = star->getPosition().y - kOver;
+        }
+
+        dist.x = wall_->getPosition().x;
+        dist.y = wall_->getPosition().y - kOver;
+        wall_->setPosition(dist);
+    }
 }
