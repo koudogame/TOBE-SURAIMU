@@ -42,8 +42,7 @@ constexpr long kNumberHeight = 128L;      // ”šc•
 
 
 /*===========================================================================*/
-TimeAttack::TimeAttack() :
-	SceneBase(SceneID::kPlay)
+TimeAttack::TimeAttack()
 {
 }
 

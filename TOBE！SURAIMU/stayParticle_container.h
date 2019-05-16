@@ -6,7 +6,7 @@ class StayParticleContainer :
 	public ObjectContainerBase<StayParticle>
 {
 public:
-	StayParticleContainer();
+	StayParticleContainer( TaskManager* const Manager );
 	~StayParticleContainer();
 };
 

@@ -5,7 +5,7 @@ class StayParticle :
 	public ObjectBase
 {
 public:
-	StayParticle();
+	StayParticle( TaskManager* Manager );
 	~StayParticle();
 };
 

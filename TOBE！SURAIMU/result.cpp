@@ -8,8 +8,7 @@
 #include "pad.h"
 
 /*===========================================================================*/
-Result::Result() :
-	SceneBase(SceneID::kResult)
+Result::Result()
 {
 }
 

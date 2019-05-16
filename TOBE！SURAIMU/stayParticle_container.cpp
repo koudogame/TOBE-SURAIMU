@@ -2,7 +2,8 @@
 #include "stayParticle_container.h"
 
 
-StayParticleContainer::StayParticleContainer()
+StayParticleContainer::StayParticleContainer( TaskManager* const Manager ) :
+	ObjectContainerBase( Manager )
 {}
 
 
