@@ -228,15 +228,12 @@ void Endless::draw()
 {
     Sprite* const kSprite = Sprite::getInstance();
 
-    // 背景
-    kSprite->draw(texture_, Vector2::Zero, &kTrimmingBackground);
-    kSprite->draw(texture_, Vector2::Zero, &kTrimmingEffect);
-
-
     // オブジェクト
     task_manager_->allDraw();
 
 
+    // 背景エフェクト
+    kSprite->draw(texture_, Vector2::Zero, &kTrimmingEffect);
 
 
     Numbers<int> climb(static_cast<int>(climb_));
@@ -372,10 +369,9 @@ void Endless::adjustObjectPosition()
         climb_ += kOver;
         Vector2 dist;
 
-        dist.x = player_->getPosition().x;
-        dist.y = player_->getPosition().y + kOver;
-        player_->setPosition(dist);
-
+        dist.x = background_->getPosition().x;
+        dist.y = background_->getPosition().y + kOver;
+        background_->setPosition(dist);
 
         for (auto& star : star_container_->active())
         {
@@ -383,6 +379,10 @@ void Endless::adjustObjectPosition()
             dist.y = star->getPosition().y + kOver;
             star->setPosition(dist);
         }
+
+        dist.x = player_->getPosition().x;
+        dist.y = player_->getPosition().y + kOver;
+        player_->setPosition(dist);
 
         dist.x = wall_->getPosition().x;
         dist.y = wall_->getPosition().y + kOver;
