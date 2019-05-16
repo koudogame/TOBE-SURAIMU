@@ -9,12 +9,15 @@
 #include "pad.h"
 #include "textureLoder.h"
 #include "sprite.h"
+
 #include "collision.h"
 #include "task_manager.h"
 #include "background.h"
 #include "star_container.h"
 #include "player.h"
 #include "wall.h"
+
+#include "result.h"
 
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -288,6 +291,11 @@ SceneBase* Endless::play()
     task_manager_->allUpdate();
     adjustObjectPosition();
     scoring();
+
+    if (player_->isAlive() == false)
+    {
+        return new Result;
+    }
 
 
     // Õ“Ëˆ—
