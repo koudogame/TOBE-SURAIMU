@@ -150,7 +150,11 @@ void Player::revision(const Vector2& CrossPoint)
 	myshape_.position = CrossPoint;
 	dis_ = Calc::magnitude( CrossPoint , ground_->start ) / Calc::magnitude( ground_->end , ground_->start );
 	setGravityAngle();
-	addGroundParticle();
+	if( !flag_.test( Flag::kParticle ) )
+	{
+		addGroundParticle();
+		flag_.set( Flag::kParticle );
+	}
 	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
 	move_vector_.end = myshape_.position;
 }
@@ -177,6 +181,7 @@ void Player::collision( Wall * WallObj)
 	//äpìxïœçX
 	jumping_angle_ = XM_PI - jumping_angle_;
 	flag_.reset( Flag::kCollision );
+	flag_.reset( Flag::kParticle );
 	owner_ = nullptr;
 }
 
@@ -243,6 +248,7 @@ void Player::input()
 		{
  			flag_.set( Flag::kJump );
 			flag_.set( Flag::kCollision );
+			flag_.reset( Flag::kParticle );
 			direction_id_ = Direction::kFlay;
 			now_amount_ = 0.0F;
 			jump_power_ = kJumpAmount;

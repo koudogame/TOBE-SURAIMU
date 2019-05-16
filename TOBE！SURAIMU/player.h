@@ -61,9 +61,10 @@ private:
 	{
 		kJump,
 		kBoost,
-		kCollision
+		kCollision,
+		kParticle,
 	};
-	std::bitset<3> flag_;
+	std::bitset<4> flag_;
 	float now_amount_;
 	float jump_power_;
 	float boost_power_;
