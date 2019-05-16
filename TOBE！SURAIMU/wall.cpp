@@ -10,25 +10,24 @@
 #include "shape.h"
 
 /*===========================================================================*/
-constexpr float kWallWidth = 30.0F;
-constexpr float kWallWidthHarf = kWallWidth / 2.0F;
-constexpr float kDistanceToCenter = 320.0F;
-const float kCenterX = getWindowWidth<float>() / 2.0F;
-const float kPositionXLeft  = kCenterX - kDistanceToCenter; // 左の壁X座標
-const float kPositionXRight = kCenterX + kDistanceToCenter; // 右の壁X座標
+constexpr float kWallWidth = 30.0F;                     // 壁横幅
+constexpr float kWallHeight = 720.0F;                   // 壁縦幅
+constexpr float kWallWidthHarf = kWallWidth / 2.0F;     // 壁横幅半分
+constexpr float kDistanceToCenter = 320.0F;             // 中央との距離
+const float kCenterX = getWindowWidth<float>() / 2.0F;  // 画面中央x座標
+const float kPositionXLeft  = kCenterX - kDistanceToCenter; // 左の壁x座標
+const float kPositionXRight = kCenterX + kDistanceToCenter; // 右の壁x座標
 
 const Line kCollisionLeftWall{                              // 左の壁衝突判定範囲
-	Vector2(kPositionXLeft, 0.0F), Vector2(kPositionXLeft, 720.0F) };
-const Line kCollisionRightWall{
-	Vector2( kPositionXRight, 720.0F ),Vector2( kPositionXRight, 0.0F ) };
+	Vector2(kPositionXLeft, 0.0F), Vector2(kPositionXLeft, 2000.0F) };
+const Line kCollisionRightWall{                             // 右の壁衝突判定範囲
+	Vector2( kPositionXRight, 2000.0F ),Vector2( kPositionXRight, 0.0F ) };
 
-const Vector2 kDrawPositionLeft{                            // 左の壁描画位置
-	kCollisionLeftWall.start.x - kWallWidthHarf , 0.0F };
-const Vector2 kDrawPositionRight{                           // 右の壁描画位置
-	kCollisionRightWall.start.x - kWallWidthHarf, 0.0F };
+const float kDrawPositionXLeftWall = kPositionXLeft - kWallWidthHarf;   // 左の壁描画x座標
+const float kDrawPositionXRightWall = kPositionXRight - kWallWidthHarf; // 右の壁描画x座標
 
-const RECT kTrimmingLeftWall { 1280L, 0L, 1310L, 720L };    // 左の壁切り取り範囲
-const RECT kTrimmingRightWall{ 1310L, 0L, 1340L, 720L };    // 右の壁切り取り範囲
+constexpr RECT kTrimmingLeftWall { 1280L, 0L, 1310L, 720L };// 左の壁切り取り範囲
+constexpr RECT kTrimmingRightWall{ 1310L, 0L, 1340L, 720L };// 右の壁切り取り範囲
 
 
 
@@ -62,6 +61,9 @@ bool Wall::init()
 	myshape_[0] = kCollisionLeftWall;
 	myshape_[1] = kCollisionRightWall;
 
+    // 描画位置( xは使用しない )
+    position_.x = 0.0F;
+    position_.y = 0.0F;
 
 	return true;
 }
@@ -112,10 +114,19 @@ void Wall::draw()
 {
 	Sprite* const kSprite = Sprite::getInstance();
 
-	// 右
-	kSprite->draw(texture_, kDrawPositionLeft, &kTrimmingLeftWall);
-	// 左
-	kSprite->draw(texture_, kDrawPositionRight, &kTrimmingRightWall);
+    Vector2 draw_position = position_;
+    while (draw_position.y + kWallHeight > 0.0F)
+    {
+        // 左壁
+        draw_position.x = kDrawPositionXLeftWall;
+        kSprite->draw(texture_, draw_position, &kTrimmingLeftWall);
+
+        // 右壁
+        draw_position.x = kDrawPositionXRightWall;
+        kSprite->draw(texture_, draw_position, &kTrimmingRightWall);
+
+        draw_position.y -= kWallHeight;
+    }
 }
 
 /*===========================================================================*/
