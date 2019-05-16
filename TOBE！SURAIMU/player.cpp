@@ -177,7 +177,7 @@ float Player::getRotate()
 	if( owner_ == nullptr || ground_ == &kGround )
 		return false;
 
-	return abs( Calc::angle( move_vector_.start - dynamic_cast< Star* >( owner_ )->getposition() , move_vector_.end - dynamic_cast< Star* >( owner_ )->getposition() ) );
+	return abs( Calc::angle( move_vector_.start - dynamic_cast< Star* >( owner_ )->getPosition() , move_vector_.end - dynamic_cast< Star* >( owner_ )->getPosition() ) );
 }
 
 
