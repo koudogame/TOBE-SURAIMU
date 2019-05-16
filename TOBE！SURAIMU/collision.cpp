@@ -19,6 +19,7 @@ Collision::~Collision()
 
 void Collision::collision( Player * P , Star * S )
 {
+	bool hit_flag = false;
 	for( int i = 0; i < 5; i++ )
 	{
 		//円と辺の始点と終点の判定
@@ -44,8 +45,7 @@ void Collision::collision( Player * P , Star * S )
 			{
 				P->setGround( S->getShape( i ) );
 				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
-				P->collision( S );
-				S->collision( P );
+				hit_flag = true;
 			}
 			else
 			{
@@ -53,7 +53,7 @@ void Collision::collision( Player * P , Star * S )
 				{
 					P->setGround( S->getShape( i ) );
 					P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
-					P->collision( S );
+					hit_flag = true;
 				}
 
 			}
@@ -64,8 +64,7 @@ void Collision::collision( Player * P , Star * S )
 			{
 				P->setGround( S->getShape( i ) );
 				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
-				P->collision( S );
-				S->collision( P );
+					hit_flag = true;
 			}
 			else
 			{
@@ -73,9 +72,25 @@ void Collision::collision( Player * P , Star * S )
 				{
 					P->setGround( S->getShape( i ) );
 					P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
-					P->collision( S );
+					hit_flag = true;
 				}
 
+			}
+		}
+	}
+
+	if( hit_flag )
+	{
+		if( P->getOwner() != S )
+		{
+			P->collision( S );
+			S->collision( P );
+		}
+		else
+		{
+			if( !P->isCollision() )
+			{
+				P->collision( S );
 			}
 		}
 	}
