@@ -35,7 +35,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 {
 	task_manager_->registerTask( this , TaskUpdate::kPlayerUpdate );
 	task_manager_->registerTask( this , TaskDraw::kPlayerDraw );
-	myshape_ = Circle( Posit , 4.5F );
+	myshape_ = Circle( Posit , 5.5F );
 	//’è”‚Ì’è‹`
 	kJumpAmount = Jump;
 	kAddVolume = AddVol;

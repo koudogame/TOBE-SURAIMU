@@ -24,13 +24,19 @@ void Collision::collision( Player * P , Star * S )
 		//‰~‚Æ•Ó‚ÌŽn“_‚ÆI“_‚Ì”»’è
 		if( judgment( P->getShape() , &Circle( S->getShape( i )->start , 0.0F ) ) )
 		{
+			if( !P->isCollision() )
+			{
 				P->setGround( S->getShape( i ) );
 				P->revision( S->getShape( i )->start );
 				P->collision( S );
 				S->collision( P );
-				break;
+				return;
+			}
 		}
+	}
 
+	for( int i = 0; i < 5; i++ )
+	{
 		//‰~‚Æü‚Ì“–‚½‚è”»’è
 		if( judgment( P->getShape() , S->getShape( i ) ) )
 		{
