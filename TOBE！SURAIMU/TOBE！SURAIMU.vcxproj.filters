@@ -75,6 +75,12 @@
     <Filter Include="Project\Game\Scene\Timeattack">
       <UniqueIdentifier>{ed500ba7-d457-4df0-9eea-e571f4b883ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\Container\Particle\Ground">
+      <UniqueIdentifier>{19ac4f98-c6c6-47bf-bf7b-39863c38dc03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\easing">
+      <UniqueIdentifier>{034a96b2-fc3c-4c8d-8a89-81d926b23016}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -146,14 +152,17 @@
     <ClCompile Include="timer.cpp">
       <Filter>Project\Game\Others</Filter>
     </ClCompile>
-    <ClCompile Include="easing.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
     <ClCompile Include="time_attack.cpp">
       <Filter>Project\Game\Scene\Timeattack</Filter>
     </ClCompile>
     <ClCompile Include="endless.cpp">
       <Filter>Project\Game\Scene\Endless</Filter>
+    </ClCompile>
+    <ClCompile Include="groundParticle.cpp">
+      <Filter>Project\Game\Object\Container\Particle\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="easing.cpp">
+      <Filter>Project\Game\Others\easing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -240,12 +249,17 @@
     <ClInclude Include="timer.h">
       <Filter>Project\Game\Others</Filter>
     </ClInclude>
-    <ClInclude Include="easing.h" />
     <ClInclude Include="time_attack.h">
       <Filter>Project\Game\Scene\Timeattack</Filter>
     </ClInclude>
     <ClInclude Include="endless.h">
       <Filter>Project\Game\Scene\Endless</Filter>
+    </ClInclude>
+    <ClInclude Include="groundParticle.h">
+      <Filter>Project\Game\Object\Container\Particle\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="easing.h">
+      <Filter>Project\Game\Others\easing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
