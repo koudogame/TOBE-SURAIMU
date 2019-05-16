@@ -8,5 +8,8 @@ class StayParticleContainer :
 public:
 	StayParticleContainer( TaskManager* const Manager );
 	~StayParticleContainer();
+
+public:
+	StayParticle* addParticle( const std::wstring& FileName , const Vector2& Position );
 };
 

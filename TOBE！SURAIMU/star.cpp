@@ -11,6 +11,7 @@
 const int kStarMin = 134;
 const float kMinSpin = 0.5F;
 const float kMaxSpin = 5.0F;
+const int kParticleTime = 3;
 
 Star::Star( TaskManager * const Manager ) :
 	ObjectBase( ObjectID::kStar , Manager )
@@ -40,12 +41,17 @@ bool Star::init( const Vector2 & Position , const float Angle , const float Fall
 	if( texture_ == nullptr )
 		return false;
 
+	s_particle_container_ = std::make_unique<StayParticleContainer>( task_manager_ );
+
 	position_ = Position;
 	angle_[ 0 ] = Angle;
 	temp_fall_ = Fall;
 	spin_ = Spin;
 	rate_ = Rate;
 	size_ = Size;
+
+	particle_time_ = 0;
+	create_point_ = 0;
 
 	setAngle();
 
@@ -54,12 +60,15 @@ bool Star::init( const Vector2 & Position , const float Angle , const float Fall
 
 void Star::destroy()
 {
+	s_particle_container_.get()->destroy();
 	task_manager_->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
 
 void Star::update()
 {
+	s_particle_container_.get()->update();
+
 	position_.y += fall_;
 	angle_[ 0 ] += spin_;
 	setAngle();
@@ -99,6 +108,19 @@ void Star::collision(Player* P)
 		spin_ = kMinSpin * turn_;
 	else if( std::abs( spin_ ) > kMaxSpin )
 		spin_ = kMaxSpin * turn_;
+
+	particle_time_ = 0;
+}
+
+void Star::addStayParticle()
+{
+	if( ++particle_time_ >= kParticleTime )
+	{
+		s_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_[ create_point_++ ].start );
+		particle_time_ = 0;
+		if( create_point_ >= 5 )
+			create_point_ = 0;
+	}
 }
 
 void Star::setAngle()
