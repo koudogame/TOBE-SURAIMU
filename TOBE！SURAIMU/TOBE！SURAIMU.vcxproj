@@ -159,8 +159,6 @@
     <ClInclude Include="easing.h" />
     <ClInclude Include="endless.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="groundParticle.h" />
-    <ClInclude Include="groundParticle_container.h" />
     <ClInclude Include="numbers.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="particle_containerr.h" />
@@ -194,8 +192,6 @@
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="endless.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="groundParticle.cpp" />
-    <ClCompile Include="groundParticle_container.cpp" />
     <ClCompile Include="numbers.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="particle_container.cpp" />

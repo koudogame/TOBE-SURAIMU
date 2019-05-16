@@ -72,9 +72,6 @@
     <Filter Include="Project\Game\Object\Particle\Nomal">
       <UniqueIdentifier>{d46929fe-6c78-433d-9067-c07968918c32}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Object\Particle\Ground">
-      <UniqueIdentifier>{a2f4ec21-ee05-4320-9c55-3a9bfe8b01a7}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -154,12 +151,6 @@
     </ClCompile>
     <ClCompile Include="particle_container.cpp">
       <Filter>Project\Game\Object\Particle\Nomal</Filter>
-    </ClCompile>
-    <ClCompile Include="groundParticle.cpp">
-      <Filter>Project\Game\Object\Particle\Ground</Filter>
-    </ClCompile>
-    <ClCompile Include="groundParticle_container.cpp">
-      <Filter>Project\Game\Object\Particle\Ground</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,16 +245,10 @@
     <ClInclude Include="particle_containerr.h">
       <Filter>Project\Game\Object\Particle\Nomal</Filter>
     </ClInclude>
-    <ClInclude Include="groundParticle.h">
-      <Filter>Project\Game\Object\Particle\Ground</Filter>
-    </ClInclude>
     <ClInclude Include="star_container.h">
       <Filter>Project\Game\Object\Star</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="groundParticle_container.h">
-      <Filter>Project\Game\Object\Particle\Ground</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
