@@ -37,13 +37,3 @@ Star* StarContainer::addStar(
 
 	return star;
 }
-
-/*===========================================================================*/
-// ƒXƒ^[‚É—Ž‰º‚ð’Ç‰Á
-void StarContainer::setFall()
-{
-	for (auto& star : active_list_)
-	{
-		star->setFall();
-	}
-}

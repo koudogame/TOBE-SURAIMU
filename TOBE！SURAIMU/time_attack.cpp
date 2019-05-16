@@ -233,7 +233,6 @@ SceneBase* TimeAttack::start()
 	if (player_->isJump())
 	{
 		update_ = &TimeAttack::play;
-		star_container_->setFall();
 		timer_->restart();
 	}
 
@@ -278,11 +277,6 @@ SceneBase* TimeAttack::play()
 			{
 			// ¶¬Ž¸”s
 				return nullptr; 
-			}
-			else
-			{
-			// ¶¬¬Œ÷->—Ž‰º‚ð•t—^
-				star_container_->setFall(); 
 			}
 		}
 
