@@ -22,6 +22,7 @@ public:
 	void update();
 	void draw();
 	bool isAlive();
+	void setPosition( const Vector2& Dist ) { myshape_.position = Dist; }
 
 public:
 	//ŠO•”—˜—pŠÖ”

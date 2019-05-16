@@ -13,7 +13,7 @@ class Timer;
 // パーティクル
 //-----------------------------------------------------------------------------
 // --説明--
-// init関数引数リスト 
+// init関数引数リスト
 //  TextureFileName : 読み込む画像ファイルのパス
 //  Position : 初期座標
 //  Velocity : 移動量
@@ -27,7 +27,7 @@ public:
 	~Particle();
 public:
 	virtual bool init(
-		const wchar_t* const TextureFileName, 
+		const wchar_t* const TextureFileName,
 		const Vector2& Position,
 		const Vector2& Velocity,
 		const Timer<Milliseconds>& Clock,
@@ -37,7 +37,7 @@ public:
 	virtual void draw() override;
 	virtual bool isAlive() override { return is_alive_; }
 
-private:
+protected:
 	ID3D11ShaderResourceView* texture_;
 	Vector2 velocity_;
 

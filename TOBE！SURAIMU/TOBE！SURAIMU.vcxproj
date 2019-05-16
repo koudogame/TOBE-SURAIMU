@@ -160,9 +160,11 @@
     <ClInclude Include="endless.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="groundParticle.h" />
+    <ClInclude Include="groundParticle_container.h" />
     <ClInclude Include="numbers.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="particle_containerr.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="time_attack.h" />
     <ClInclude Include="key.h" />
@@ -193,6 +195,7 @@
     <ClCompile Include="endless.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="groundParticle.cpp" />
+    <ClCompile Include="groundParticle_container.cpp" />
     <ClCompile Include="numbers.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="particle_container.cpp" />
@@ -220,6 +223,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TOBE！SURAIMU.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
