@@ -372,6 +372,7 @@ void Endless::adjustObjectPosition()
         {
             dist.x = star->getPosition().x;
             dist.y = star->getPosition().y - kOver;
+            star->setPosition(dist);
         }
 
         dist.x = wall_->getPosition().x;
