@@ -36,9 +36,6 @@
     <Filter Include="Project\Game\Object">
       <UniqueIdentifier>{10e175df-893e-4c40-afa3-5bcf3c5263fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Object\Container">
-      <UniqueIdentifier>{088ae080-abff-41aa-bc8d-904a4376e57b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Object\Collision">
       <UniqueIdentifier>{d79af6f7-4414-4c49-99c2-63e7f80ab6f9}</UniqueIdentifier>
     </Filter>
@@ -62,12 +59,6 @@
     </Filter>
     <Filter Include="Project\Game\Object\Particle">
       <UniqueIdentifier>{41c1f148-516b-425b-911d-cad1ad677457}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Object\Container\Particle">
-      <UniqueIdentifier>{ee061df5-93be-4899-a704-bc0dba64cec9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Object\Container\Star">
-      <UniqueIdentifier>{a043bb7c-3c25-4034-9c05-97a5c785ddb7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Scene\Endless">
       <UniqueIdentifier>{c8a74af1-e0c3-4137-bdbe-0db01a778c18}</UniqueIdentifier>
@@ -113,9 +104,6 @@
     <ClCompile Include="container.cpp">
       <Filter>Project\System\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="star_container.cpp">
-      <Filter>Project\Game\Object\Container\Star</Filter>
-    </ClCompile>
     <ClCompile Include="task_manager.cpp">
       <Filter>Project\Game\Object\TaskManager</Filter>
     </ClCompile>
@@ -146,9 +134,6 @@
     <ClCompile Include="particle.cpp">
       <Filter>Project\Game\Object\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="particle_container.cpp">
-      <Filter>Project\Game\Object\Container\Particle</Filter>
-    </ClCompile>
     <ClCompile Include="timer.cpp">
       <Filter>Project\Game\Others</Filter>
     </ClCompile>
@@ -157,6 +142,12 @@
     </ClCompile>
     <ClCompile Include="endless.cpp">
       <Filter>Project\Game\Scene\Endless</Filter>
+    </ClCompile>
+    <ClCompile Include="star_container.cpp">
+      <Filter>Project\Game\Object\Star</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_container.cpp">
+      <Filter>Project\Game\Object\Particle</Filter>
     </ClCompile>
     <ClCompile Include="groundParticle.cpp">
       <Filter>Project\Game\Object\Container\Particle\Ground</Filter>
@@ -202,9 +193,6 @@
     <ClInclude Include="scene_base.h">
       <Filter>Project\Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="object_container_base.h">
-      <Filter>Project\Game\Object\Container</Filter>
-    </ClInclude>
     <ClInclude Include="collision.h">
       <Filter>Project\Game\Object\Collision</Filter>
     </ClInclude>
@@ -213,9 +201,6 @@
     </ClInclude>
     <ClInclude Include="task_manager.h">
       <Filter>Project\Game\Object\TaskManager</Filter>
-    </ClInclude>
-    <ClInclude Include="star_container.h">
-      <Filter>Project\Game\Object\Container\Star</Filter>
     </ClInclude>
     <ClInclude Include="star_container.h" />
     <ClInclude Include="game.h">
@@ -243,9 +228,6 @@
     <ClInclude Include="particle.h">
       <Filter>Project\Game\Object\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="particle_containerr.h">
-      <Filter>Project\Game\Object\Container\Particle</Filter>
-    </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>Project\Game\Others</Filter>
     </ClInclude>
@@ -260,6 +242,15 @@
     </ClInclude>
     <ClInclude Include="easing.h">
       <Filter>Project\Game\Others\easing</Filter>
+    </ClInclude>
+    <ClInclude Include="star_container.h">
+      <Filter>Project\Game\Object\Star</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_containerr.h">
+      <Filter>Project\Game\Object\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="object_container_base.h">
+      <Filter>Project\Game\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

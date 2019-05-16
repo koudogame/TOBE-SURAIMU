@@ -4,15 +4,52 @@
 #include "endless.h"
 
 #include "release.h"
+#include "key.h"
+#include "pad.h"
 #include "textureLoder.h"
 #include "sprite.h"
+#include "collision.h"
 #include "task_manager.h"
 #include "star_container.h"
 #include "player.h"
 #include "wall.h"
 
+using PadState = GamePad::State;
+using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
+// 難易度に関係
+constexpr Vector2 kInitStarPosi[] = {
+    {640.0F, 100.0F},
+    {640.0F, 300.0F},
+    {640.0F, 600.0F},
+};
+constexpr float kInitStarAngle[] = {
+    90.0F,
+    90.0F,
+    90.0F,
+};
+constexpr float kInitStarFall[] = {
+    5.0F,
+    5.0F,
+    5.0F,
+};
+constexpr float kInitStarSpin[] = {
+    3.0F,
+    3.0F,
+    3.0F,
+};
+constexpr float kInitStarSpinRate[] = {
+    0.01F,
+    0.01F,
+    0.01F,
+};
+constexpr float kInitStarSize[] = {
+    50.0F,
+    100.0F,
+    150.0F
+};
+
 // 処理に関係
 constexpr RECT kTrimmingBackground{       // 背景切り取り範囲
     0L, 720L, 1280L, 1440L };
@@ -43,7 +80,24 @@ bool Endless::init()
     // 生成処理
     if (do_create_ && create() == false) { return false; }
 
-    // 初期化処理
+    // 初期スターの生成
+    for (int i = 0; i < 3; ++i)
+    {
+        if (star_container_->addStar(
+            kInitStarPosi[i],
+            kInitStarAngle[i],
+            kInitStarFall[i],
+            kInitStarSpin[i],
+            kInitStarSpinRate[i],
+            kInitStarSize[i]
+        ) == nullptr)
+        {
+            return false;
+        }
+    }
+
+
+    // プレイヤー初期化
     Vector2 position;
     float jump;
     float add_vol;
@@ -66,7 +120,14 @@ bool Endless::init()
         return false;
     }
 
+    // 壁初期化
     if (wall_->init() == false) { return false; }
+
+
+    // 変数初期化
+    update_ = &Endless::start;
+    prev_player_y_ = 0.0F;
+    climb_ = 0.0F;
 
     return true;
 }
@@ -76,8 +137,11 @@ bool Endless::create()
     do_create_ = false;
 
     // テクスチャ
-    texture_ = TextureLoder::getInstance()->load(L"Texture/プレイ画面.png");
+    TextureLoder* const kTexture = TextureLoder::getInstance();
+    texture_ = kTexture->load(L"Texture/プレイ画面.png");
     if (texture_ == nullptr)        { return false; }
+    texture_numbers_ = kTexture->load(L"Texture/数字.png");
+    if (texture_numbers_ == nullptr){ return false; }
 
     // タスクマネ－ジャー
     task_manager_       = new (std::nothrow) TaskManager();
@@ -133,16 +197,16 @@ void Endless::destroy()
     safe_delete(task_manager_);
 
     // テクスチャ
-    TextureLoder::getInstance()->release(texture_);
+    TextureLoder* const kTexture = TextureLoder::getInstance();
+    kTexture->release(texture_);
+    kTexture->release(texture_numbers_);
 }
 
 /*===========================================================================*/
 // 更新関数
 SceneBase* Endless::update()
 {
-    task_manager_->allUpdate();
-
-    return this;
+    return (this->*update_)();
 }
 
 /*===========================================================================*/
@@ -158,7 +222,120 @@ void Endless::draw()
 
     // オブジェクト
     task_manager_->allDraw();
+
+
+
+
+    Numbers<int> climb(static_cast<int>(climb_));
+    climb.draw(
+        texture_numbers_,
+        Vector2(1280.0F, 0.0F),
+        64L,
+        128L
+    );
 }
 
 /*===========================================================================*/
-// 
+// スタート部
+SceneBase* Endless::start()
+{
+    // プレイヤーがジャンプしたらplay部へ
+    if (player_->isJump())
+    {
+        update_ = &Endless::play;
+        prev_player_y_ = player_->getShape()->position.y;
+        for (auto& star : star_container_->active())
+        {
+            star->setFall();
+        }
+    }
+
+    // オブジェクト更新
+    task_manager_->allUpdate();
+
+    // 星との衝突処理
+    for (auto& star : star_container_->active())
+    {
+        Collision::getInstance()->collision(player_, star);
+    }
+
+
+    return this;
+}
+// プレイ部
+SceneBase* Endless::play()
+{
+    Collision* const kCollision = Collision::getInstance();
+
+    // オブジェクト更新
+    task_manager_->allUpdate();
+    scoring();
+
+    
+    // 衝突処理
+    for (auto& star : star_container_->active())
+    {
+        kCollision->collision(player_, star);
+    }
+    kCollision->collision(player_, wall_);
+
+
+    return this;
+}
+
+/*===========================================================================*/
+// 星の生成
+bool Endless::createStar()
+{
+    // 生成パターンの選択
+    std::string pattern = pattern_file_[rand() % pattern_file_.size()];
+    FILE* file;
+    errno_t error = fopen_s(&file, pattern.c_str(), "r");
+    if (error != 0) { return false; }
+
+
+    Star* star;
+    Vector2 position;
+    float angle;
+    float fall;
+    float spin;
+    float spin_rate;
+    float size;
+
+    int end = 0;
+    while (true)
+    {
+        end = fscanf_s(file,
+            "%f %f %f %f %f %f %f",
+            &position.x, &position.y,
+            &angle,
+            &fall,
+            &spin, &spin_rate,
+            &size);
+        if (end == EOF) { break; }
+
+
+        star = star_container_->addStar(
+            position, angle, fall, spin, spin_rate, size);
+        if (star == nullptr)
+        {
+            fclose(file);
+            return false;
+        }
+        star->setFall();
+    }
+    
+
+    fclose(file);
+    return true;
+}
+
+/*===========================================================================*/
+// スコアリング
+void Endless::scoring()
+{
+    // 上昇距離の計測
+    const float kPlayerPositionY = player_->getShape()->position.y;
+    climb_ -= kPlayerPositionY - prev_player_y_;
+    prev_player_y_ = kPlayerPositionY;
+}

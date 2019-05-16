@@ -18,27 +18,33 @@ class Endless :
 public:
     Endless();
     ~Endless();
-// メンバ関数
+
     bool init() override;
     void destroy() override;
     SceneBase* update() override;
     void draw() override;
 
 private:
-// 関数と関数用の変数
+    // 関数と関数用の変数
     bool create();
     bool do_create_ = true;
+
+    SceneBase* start();
+    SceneBase* play();
+    SceneBase*(Endless::* update_)() = nullptr;
 
     bool createStar();
     std::deque<std::string> pattern_file_;
 
-    SceneBase* play();
-    SceneBase*(Endless::* update_)() = nullptr;
+    void scoring();
+    float prev_player_y_;
+    float climb_;
 
-
-// オブジェクト
+    // オブジェクト
     TaskManager* task_manager_ = nullptr;
     StarContainer* star_container_ = nullptr;
     Player* player_ = nullptr;
     Wall* wall_ = nullptr;
+
+    ID3D11ShaderResourceView* texture_numbers_ = nullptr;
 };

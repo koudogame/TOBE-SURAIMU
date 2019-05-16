@@ -9,7 +9,7 @@
 // スターコンテナ
 //-----------------------------------------------------------------------------
 // --説明--
-// スターの追加はaddStar関数を使用する
+// スターの追加はaddStar関数を使用する( 生成失敗でreturn nullptr )
 // setFall関数ですべてのスターに落下を追加する
 class StarContainer :
 	public ObjectContainerBase<Star>
@@ -26,5 +26,4 @@ public:
 		const float SpinRate,
 		const float Size
 	);
-	void setFall();
 };

@@ -35,6 +35,7 @@ public:
 	virtual bool isAlive() { return true; }
 
 	virtual ObjectID getId() { return id_; }
+    virtual void setPosition(const Vector2& Dist) { position_ = Dist; }
 
 protected:
 	ID3D11ShaderResourceView* texture_ = nullptr;
