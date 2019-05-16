@@ -5,6 +5,7 @@
 #include "scene_base.h"
 
 class TaskManager;
+class Background;
 class StarContainer;
 class Player;
 class Wall;
@@ -25,25 +26,25 @@ public:
     void draw() override;
 
 private:
-    // 関数と関数用の変数
+// 関数と関数用の変数
     bool create();
     bool do_create_ = true;
 
     SceneBase* start();
     SceneBase* play();
-    SceneBase*(Endless::* update_)() = nullptr;
+    SceneBase* (Endless::* update_)() = nullptr;
 
     bool createStar();
     std::deque<std::string> pattern_file_;
 
     void scoring();
-    float prev_player_y_;
     float climb_;
 
     void adjustObjectPosition();
 
-    // オブジェクト
+// オブジェクト
     TaskManager* task_manager_ = nullptr;
+    Background* background_ = nullptr;
     StarContainer* star_container_ = nullptr;
     Player* player_ = nullptr;
     Wall* wall_ = nullptr;

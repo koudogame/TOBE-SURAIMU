@@ -5,6 +5,7 @@ class ObjectBase;
 // 更新タスクID
 enum class TaskUpdate
 {
+    kBackgroundUpdate,
 	kStarUpdate,
 	kPlayerUpdate,
 	kWallUpdate,
@@ -13,6 +14,7 @@ enum class TaskUpdate
 // 描画タスクID
 enum class TaskDraw
 {
+    kBackgroundDraw,
 	kStarDraw,
 	kPlayerDraw,
 	kWallDraw,

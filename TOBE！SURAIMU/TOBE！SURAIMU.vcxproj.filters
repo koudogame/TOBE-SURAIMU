@@ -78,6 +78,9 @@
     <Filter Include="Project\Game\Object\Particle\Stay">
       <UniqueIdentifier>{419f758f-e517-4824-b0a6-fb899780d545}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\Background">
+      <UniqueIdentifier>{0e1baea5-e6b7-4473-8ea1-fc6781b3dc55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -169,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="stayParticle_container.cpp">
       <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClCompile>
+    <ClCompile Include="background.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -278,6 +284,9 @@
     </ClInclude>
     <ClInclude Include="stayParticle_container.h">
       <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClInclude>
+    <ClInclude Include="background.h">
+      <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

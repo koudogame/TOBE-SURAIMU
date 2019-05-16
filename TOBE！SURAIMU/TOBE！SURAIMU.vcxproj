@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="background.h" />
     <ClInclude Include="calc.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="commonstates.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="background.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="commonstates.cpp" />
     <ClCompile Include="container.cpp" />

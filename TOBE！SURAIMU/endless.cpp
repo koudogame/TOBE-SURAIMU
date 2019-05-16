@@ -11,6 +11,7 @@
 #include "sprite.h"
 #include "collision.h"
 #include "task_manager.h"
+#include "background.h"
 #include "star_container.h"
 #include "player.h"
 #include "wall.h"
@@ -22,7 +23,6 @@ using PadTracker = GamePad::ButtonStateTracker;
 // 難易度に関係
 constexpr Vector2 kInitStarPosi[] = {
     {640.0F, 100.0F},
-    {640.0F, 300.0F},
     {640.0F, 600.0F},
 };
 constexpr float kInitStarAngle[] = {
@@ -83,7 +83,7 @@ bool Endless::init()
     if (do_create_ && create() == false) { return false; }
 
     // 初期スターの生成
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 2; ++i)
     {
         if (star_container_->addStar(
             kInitStarPosi[i],
@@ -113,7 +113,7 @@ bool Endless::init()
     if (error != 0) { return false; }
     fscanf_s(player_state,
         "%f %f %f %f %f %f %f %f %f",
-        &position.x, &position.y, &jump, &add_vol,&decay, &gravity, &speed,
+        &position.x, &position.y, &jump, &add_vol, &decay, &gravity, &speed,
         &up_boost, &rl_boost);
     fclose(player_state);
     if (player_->init(
@@ -125,10 +125,15 @@ bool Endless::init()
     // 壁初期化
     if (wall_->init() == false) { return false; }
 
+    // 背景
+    if (background_->init(L"Texture/vector_cosmos.jpg", 0.1F) == false)
+    {
+        return false;
+    }
+
 
     // 変数初期化
     update_ = &Endless::start;
-    prev_player_y_ = 0.0F;
     climb_ = 0.0F;
 
     return true;
@@ -148,6 +153,10 @@ bool Endless::create()
     // タスクマネ－ジャー
     task_manager_       = new (std::nothrow) TaskManager();
     if (task_manager_ == nullptr)   { return false; }
+
+    // 背景
+    background_ = new (std::nothrow) Background(task_manager_);
+    if (background_ == nullptr) { return false; }
 
     // スターコンテナ
     star_container_     = new (std::nothrow) StarContainer(task_manager_);
@@ -194,6 +203,9 @@ void Endless::destroy()
 
     // スターコンテナ
     star_container_->destroy(); safe_delete(star_container_);
+
+    // 背景
+    background_->destroy();     safe_delete(background_);
 
     // タスクマネージャー
     safe_delete(task_manager_);
@@ -245,7 +257,6 @@ SceneBase* Endless::start()
     if (player_->isJump())
     {
         update_ = &Endless::play;
-        prev_player_y_ = player_->getShape()->position.y;
         for (auto& star : star_container_->active())
         {
             star->setFall();
@@ -329,6 +340,7 @@ bool Endless::createStar()
         if (end == EOF) { break; }
 
 
+        position.y -= 720.0F;
         star = star_container_->addStar(
             position, angle, fall, spin, spin_rate, size);
         if (star == nullptr)
@@ -348,35 +360,33 @@ bool Endless::createStar()
 // スコアリング
 void Endless::scoring()
 {
-    // 上昇距離の計測
-    const float kPlayerPositionY = player_->getShape()->position.y;
-    climb_ -= kPlayerPositionY - prev_player_y_;
-    prev_player_y_ = kPlayerPositionY;
+
 }
 
 /*===========================================================================*/
 // オブジェクトの座標調整
 void Endless::adjustObjectPosition()
 {
-    const float kOver = player_->getShape()->position.y - kThresholdY;
-    if (kOver < 0)
+    const float kOver = kThresholdY - player_->getShape()->position.y ;
+    if (kOver > 0)
     {
+        climb_ += kOver;
         Vector2 dist;
 
         dist.x = player_->getPosition().x;
-        dist.y = player_->getPosition().y - kOver;
+        dist.y = player_->getPosition().y + kOver;
         player_->setPosition(dist);
 
 
         for (auto& star : star_container_->active())
         {
             dist.x = star->getPosition().x;
-            dist.y = star->getPosition().y - kOver;
+            dist.y = star->getPosition().y + kOver;
             star->setPosition(dist);
         }
 
         dist.x = wall_->getPosition().x;
-        dist.y = wall_->getPosition().y - kOver;
+        dist.y = wall_->getPosition().y + kOver;
         wall_->setPosition(dist);
     }
 }
