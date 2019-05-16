@@ -269,7 +269,7 @@ SceneBase* TimeAttack::play()
 		auto end = kStarList.end();
 		for (; itr != end; ++itr)
 		{
-			if ((*itr)->getposition().y < 0.0F)
+			if ((*itr)->getPosition().y < 0.0F)
 				break;
 		}
 		if (itr == end)	{
