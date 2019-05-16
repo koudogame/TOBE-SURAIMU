@@ -5,7 +5,7 @@
 #include "sprite.h"
 #include "task_manager.h"
 
-const long kBackgroundTextureSize = 1024L;
+const long kTextureSize = 1024L;
 
 /*===========================================================================*/
 Background::Background(TaskManager* const TaskManager) :
@@ -30,6 +30,8 @@ bool Background::init(const wchar_t* const TextureFile, const float Scroll)
     task_manager_->registerTask(this, TaskDraw::kBackgroundDraw);
 
     // ƒƒ“ƒo
+    position_.x = (getWindowWidth<float>() - static_cast<float>(kTextureSize)) / 2.0F;
+    position_.y = 0.0F;
     scroll_ = Scroll;
 
     return true;
@@ -68,6 +70,7 @@ void Background::draw()
     {
         kSprite->draw(texture_, draw_position);
 
-        draw_position.y -= kBackgroundTextureSize;
+        draw_position.y -= kTextureSize;
     }
+    kSprite->draw(texture_, draw_position);
 }
