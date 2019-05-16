@@ -72,6 +72,12 @@
     <Filter Include="Project\Game\Object\Particle\Nomal">
       <UniqueIdentifier>{d46929fe-6c78-433d-9067-c07968918c32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\Particle\Ground">
+      <UniqueIdentifier>{cde7dbaf-538f-46d4-a830-2646d8621fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Object\Particle\Stay">
+      <UniqueIdentifier>{419f758f-e517-4824-b0a6-fb899780d545}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -151,6 +157,18 @@
     </ClCompile>
     <ClCompile Include="particle_container.cpp">
       <Filter>Project\Game\Object\Particle\Nomal</Filter>
+    </ClCompile>
+    <ClCompile Include="groundparticle_container.cpp">
+      <Filter>Project\Game\Object\Particle\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="groundParticle.cpp">
+      <Filter>Project\Game\Object\Particle\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="stayParticle.cpp">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClCompile>
+    <ClCompile Include="stayParticle_container.cpp">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +267,18 @@
       <Filter>Project\Game\Object\Star</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="groundParticle.h">
+      <Filter>Project\Game\Object\Particle\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="groundParticle_container.h">
+      <Filter>Project\Game\Object\Particle\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="stayParticle.h">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClInclude>
+    <ClInclude Include="stayParticle_container.h">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
