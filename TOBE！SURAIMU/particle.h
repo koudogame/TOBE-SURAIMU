@@ -37,7 +37,7 @@ public:
 	virtual void draw() override;
 	virtual bool isAlive() override { return is_alive_; }
 
-private:
+protected:
 	ID3D11ShaderResourceView* texture_;
 	Vector2 velocity_;
 
