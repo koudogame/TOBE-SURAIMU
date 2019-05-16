@@ -55,6 +55,7 @@ constexpr RECT kTrimmingBackground{       // 背景切り取り範囲
     0L, 720L, 1280L, 1440L };
 constexpr RECT kTrimmingEffect{           // 背景エフェクト切り取り範囲
     0L,   0L, 1280L,  720L };
+constexpr float kThresholdY = 360.0F;     // プレイヤーの限界Y座標( 絶対座標 )
 
 
 
@@ -338,4 +339,21 @@ void Endless::scoring()
     const float kPlayerPositionY = player_->getShape()->position.y;
     climb_ -= kPlayerPositionY - prev_player_y_;
     prev_player_y_ = kPlayerPositionY;
+}
+
+/*===========================================================================*/
+// オブジェクトの座標調整
+void Endless::adjustObjectPosition()
+{
+    const float kOver = player_->getShape()->position.y - kThresholdY;
+    if (kOver < 0)
+    {
+        player_->setPosition(
+            Vector2(player_->getShape()->position.x - kOver,
+                    player_->getShape()->position.y));
+
+        for (auto& star : star_container_->active())
+        {
+        }
+    }
 }

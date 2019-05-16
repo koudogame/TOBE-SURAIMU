@@ -40,6 +40,8 @@ private:
     float prev_player_y_;
     float climb_;
 
+    void adjustObjectPosition();
+
     // オブジェクト
     TaskManager* task_manager_ = nullptr;
     StarContainer* star_container_ = nullptr;
