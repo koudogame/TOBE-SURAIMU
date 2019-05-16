@@ -51,6 +51,8 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	if( texture_ == nullptr )
 		return false;
 
+	g_particle_container = std::make_unique< GroundParticleContainer>( task_manager_ );
+
 	//各変数の初期化
 	setGravityAngle();
 	jumping_angle_ = gravity_angle_ + XM_PI;
@@ -67,6 +69,9 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 //破棄
 void Player::destroy()
 {
+	//全パーティクル削除
+	g_particle_container.get()->destroy();
+
 	task_manager_->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
@@ -74,6 +79,9 @@ void Player::destroy()
 //更新
 void Player::update()
 {
+	//全パーティクルの更新処理
+	g_particle_container.get()->update();
+
  	move_vector_.start = myshape_.position;
 
 	//入力時処理
@@ -142,6 +150,7 @@ void Player::revision(const Vector2& CrossPoint)
 	myshape_.position = CrossPoint;
 	dis_ = Calc::magnitude( CrossPoint , ground_->start ) / Calc::magnitude( ground_->end , ground_->start );
 	setGravityAngle();
+	addGroundParticle();
 	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
 	move_vector_.end = myshape_.position;
 }
@@ -316,4 +325,12 @@ void Player::slectDirection()
 			rect_left_up_ = Vector2( kPlayerSize , kPlayerSize );
 			break;
 	}
+}
+
+//オブジェクトとの衝突時のパーティクルを生成
+void Player::addGroundParticle()
+{
+	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) );
+	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) );
+	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI );
 }

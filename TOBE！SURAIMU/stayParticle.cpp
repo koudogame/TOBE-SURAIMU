@@ -2,7 +2,8 @@
 #include "stayParticle.h"
 
 
-StayParticle::StayParticle()
+StayParticle::StayParticle( TaskManager* Manager ) :
+	ObjectBase( ObjectID::kStayParticle , Manager )
 {}
 
 

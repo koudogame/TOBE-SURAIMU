@@ -1,10 +1,25 @@
 #include "stdafx.h"
 #include "groundParticle_container.h"
 
-
-GroundParticleContainer::GroundParticleContainer()
+//コンストラクタ
+GroundParticleContainer::GroundParticleContainer( TaskManager * const Manager ) :
+	ObjectContainerBase( Manager )
 {}
 
-
+//デストラクタ
 GroundParticleContainer::~GroundParticleContainer()
 {}
+
+//パーティクルの追加
+GroundParticle * GroundParticleContainer::addParticle( const std::wstring & FileName , const Vector2 Position , const float Angle )
+{
+	//フリータスクの取得
+	GroundParticle* g_particle = getFreeObjAndInsert();
+	if( g_particle == nullptr )
+		return nullptr;
+
+	//パーティクルの初期化
+	g_particle->init( FileName , Position , Angle );
+
+	return g_particle;
+}

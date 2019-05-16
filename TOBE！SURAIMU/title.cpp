@@ -11,8 +11,7 @@ using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
-Title::Title() :
-	SceneBase(SceneID::kTitle)
+Title::Title()
 {
 }
 

@@ -12,6 +12,8 @@ enum class ObjectID
 	kWall,
 	kItem,
 	kParticle,
+	kGroundParticle,
+	kStayParticle,
 };
 
 //-----------------------------------------------------------------------------
@@ -33,10 +35,10 @@ public:
 	virtual void update() = 0;
 	virtual void draw() = 0;
 	virtual bool isAlive() { return true; }
-
-	virtual ObjectID getId() { return id_; }
     virtual Vector2 getPosition() const { return position_; }
     virtual void setPosition(const Vector2& Dist) { position_ = Dist; }
+
+	ObjectID getId() { return id_; }
 
 protected:
 	ID3D11ShaderResourceView* texture_ = nullptr;

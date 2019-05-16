@@ -2,14 +2,6 @@
 
 // 板場 温樹
 
-// 各シーンID
-enum class SceneID
-{
-	kTitle,
-	kPlay,
-	kResult,
-};
-
 //-----------------------------------------------------------------------------
 // シーンの基底クラス
 //-----------------------------------------------------------------------------
@@ -19,7 +11,7 @@ enum class SceneID
 class SceneBase
 {
 public:
-	SceneBase(const SceneID ID) : id_(ID) {}
+	SceneBase() = default;
 	virtual ~SceneBase() = default;
 public:
 	virtual bool init() = 0;
@@ -29,7 +21,4 @@ public:
 
 protected:
 	ID3D11ShaderResourceView* texture_ = nullptr;
-
-private:
-	SceneID id_;
 };

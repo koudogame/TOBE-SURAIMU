@@ -61,8 +61,7 @@ constexpr float kThresholdY = 360.0F;     // プレイヤーの限界Y座標( 絶対座標 )
 
 
 /*===========================================================================*/
-Endless::Endless() :
-    SceneBase(SceneID::kPlay)
+Endless::Endless()
 {
 }
 
@@ -282,7 +281,7 @@ SceneBase* Endless::play()
     adjustObjectPosition();
     scoring();
 
-    
+
     // 衝突処理
     Collision* const kCollision = Collision::getInstance();
     for (auto& star : star_container_->active())
@@ -338,7 +337,7 @@ bool Endless::createStar()
         }
         star->setFall();
     }
-    
+
 
     fclose(file);
     return true;
