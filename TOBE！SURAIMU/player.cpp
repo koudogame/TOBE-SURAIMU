@@ -102,12 +102,6 @@ void Player::update()
 	//d—Í‚ð‚©‚¯‚é
 	gravity();
 
-	if( myshape_.position.y > 720.0F - 30.0F )
-	{
-		flag_.reset( Flag::kJump );
-		myshape_.position.y = 720.0F - 30.0F;
-	}
-
 	move_vector_.end = myshape_.position;
 }
 
@@ -337,6 +331,7 @@ void Player::slectDirection()
 void Player::addGroundParticle()
 {
 	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) );
+	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) );
 	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) );
-	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI );
+	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) );
 }

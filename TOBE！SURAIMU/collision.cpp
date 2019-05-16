@@ -21,6 +21,16 @@ void Collision::collision( Player * P , Star * S )
 {
 	for( int i = 0; i < 5; i++ )
 	{
+		//円と辺の始点と終点の判定
+		if( judgment( P->getShape() , &Circle( S->getShape( i )->start , 0.0F ) ) )
+		{
+				P->setGround( S->getShape( i ) );
+				P->revision( S->getShape( i )->start );
+				P->collision( S );
+				S->collision( P );
+				break;
+		}
+
 		//円と線の当たり判定
 		if( judgment( P->getShape() , S->getShape( i ) ) )
 		{
@@ -30,7 +40,6 @@ void Collision::collision( Player * P , Star * S )
 				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
 				P->collision( S );
 				S->collision( P );
-				break;
 			}
 			else
 			{
@@ -39,7 +48,6 @@ void Collision::collision( Player * P , Star * S )
 					P->setGround( S->getShape( i ) );
 					P->revision( crossPoint( P->getShape() , S->getShape( i ) ) );
 					P->collision( S );
-					break;
 				}
 
 			}
@@ -105,11 +113,6 @@ bool Collision::judgment(  Circle * C1,  Circle * C2)
 //円と線の当たり判定
 bool Collision::judgment(  Circle * C,  Line * L)
 {
-	//円と辺の始点と終点の判定
-	if( judgment( C , &Circle( L->start , 0.0F )) ||
-				  judgment( C , &Circle( L->end , 0.0F ) ))
-				  return true;
-
 	//円と線分の判定
 	//判定用のベクトルを生成
 	Vector2 checker[ 2 ] =
