@@ -125,7 +125,7 @@ bool Endless::init()
     if (wall_->init() == false) { return false; }
 
     // ”wŒi
-    if (background_->init(L"Texture/vector_cosmos.jpg", 0.1F) == false)
+    if (background_->init(L"Texture/vector_cosmos.jpg", 10.0F) == false)
     {
         return false;
     }

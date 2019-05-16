@@ -55,7 +55,7 @@ void Background::update()
     position_.y += scroll_;
     if (position_.y > getWindowHeight<float>())
     {
-        position_.y = 0.0F;
+        position_.y = getWindowHeight<float>() - kTextureSize + scroll_;
     }
 }
 
@@ -70,7 +70,7 @@ void Background::draw()
     {
         kSprite->draw(texture_, draw_position);
 
-        draw_position.y -= kTextureSize;
+        draw_position.y -= static_cast<float>(kTextureSize);
     }
     kSprite->draw(texture_, draw_position);
 }
