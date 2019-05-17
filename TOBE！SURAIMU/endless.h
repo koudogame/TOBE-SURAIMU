@@ -49,5 +49,7 @@ private:
     Player* player_ = nullptr;
     Wall* wall_ = nullptr;
 
+    float magnification_;
+
     ID3D11ShaderResourceView* texture_numbers_ = nullptr;
 };

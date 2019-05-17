@@ -111,14 +111,14 @@ bool Endless::init()
     float rl_boost;
     FILE* player_state = nullptr;
     errno_t error = fopen_s(&player_state, "State/player_state.txt", "r");
-    if (error != 0) { return false; }
+    if (error != 0 || player_state == nullptr) { return false; }
     fscanf_s(player_state,
         "%f %f %f %f %f %f %f %f %f",
         &position.x, &position.y, &jump, &add_vol, &decay, &gravity, &speed,
         &up_boost, &rl_boost);
     fclose(player_state);
     if (player_->init(
-        position,jump,add_vol,decay,gravity,speed,up_boost,rl_boost) == false)
+        position,jump,add_vol,decay,gravity,speed,rl_boost) == false)
     {
         return false;
     }
@@ -135,7 +135,8 @@ bool Endless::init()
 
     // 変数初期化
     update_ = &Endless::start;
-    climb_ = 0.0F;
+    climb_ = 0.0F; 
+    magnification_ = 1.0F;
 
     return true;
 }
@@ -176,11 +177,11 @@ bool Endless::create()
 
 
     // スター生成パターンファイルのリスト化
-    FILE* pattern_list;
+    FILE* pattern_list = nullptr;
     errno_t error = fopen_s(&pattern_list, "State/pattern_list.txt", "r");
-    if (error != 0) { return false; }
+    if (error != 0 || pattern_list == nullptr) { return false; }
     char file_name[FILENAME_MAX];
-    while (fscanf_s(pattern_list, "%s", file_name, FILENAME_MAX) != EOF)
+    while (fscanf_s(pattern_list, "%s", &file_name, FILENAME_MAX) != EOF)
     {
         pattern_file_.push_back(file_name);
     }
@@ -290,6 +291,15 @@ SceneBase* Endless::play()
     task_manager_->allUpdate();
     adjustObjectPosition();
     scoring();
+    // オブジェクトの状態倍率を更新
+    const float kMagnification = climb_ / 100000.0F + 1.0F;
+    if ((kMagnification - magnification_) > 0.1F)
+    {
+        magnification_ = kMagnification;
+        player_->resetStatus(magnification_);
+        star_container_->resetStates(magnification_);
+    }
+
 
     if (player_->isAlive() == false)
     {
@@ -314,12 +324,12 @@ SceneBase* Endless::play()
 bool Endless::createStar()
 {
     // 生成パターンの選択
-    _chdir("State");
+    if (_chdir("State") == -1) { return false; }
     std::string pattern = pattern_file_[rand() % pattern_file_.size()];
-    FILE* file;
+    FILE* file = nullptr;
     errno_t error = fopen_s(&file, pattern.c_str(), "r");
-    _chdir("../");
-    if (error != 0) { return false; }
+    if (_chdir("../") == -1) { return false; }
+    if (error != 0 || file == nullptr) { return false; }
 
 
     Star* star;

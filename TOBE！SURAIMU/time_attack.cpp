@@ -73,22 +73,21 @@ bool TimeAttack::init()
 	float decay;
 	float gravity;
 	float speed;
-	float up_boost;
 	float rl_boost;
 	FILE* player_state = nullptr;
 	errno_t error = fopen_s(&player_state, "State/player_state.txt", "r");
 	if (error != 0) { return false; }
 	fscanf_s(player_state,
-		"%f %f %f %f %f %f %f %f %f",
+		"%f %f %f %f %f %f %f %f",
 		&position.x, &position.y,
 		&jump,
 		&add_vol,
 		&decay,
 		&gravity,
 		&speed,
-		&up_boost, &rl_boost);
+		&rl_boost);
 	fclose(player_state);
-	if (player_->init(position, jump, add_vol, decay, gravity, speed, up_boost, rl_boost) == false)
+	if (player_->init(position, jump, add_vol, decay, gravity, speed, rl_boost) == false)
 	{
 		return false;
 	}

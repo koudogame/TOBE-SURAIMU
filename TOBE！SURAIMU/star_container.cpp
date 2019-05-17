@@ -37,3 +37,14 @@ Star* StarContainer::addStar(
 
 	return star;
 }
+
+
+/*===========================================================================*/
+// スターのステータスに倍率をかける
+void StarContainer::resetStates(const float Magnification)
+{
+    for (auto& star : active_list_)
+    {
+        star->resetStatus(Magnification);
+    }
+}

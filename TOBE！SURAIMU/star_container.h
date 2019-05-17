@@ -26,4 +26,6 @@ public:
 		const float SpinRate,
 		const float Size
 	);
+
+    void resetStates(const float Magnification);
 };
