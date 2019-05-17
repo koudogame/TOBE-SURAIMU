@@ -208,12 +208,6 @@ float Player::getRotate()
 	return abs( Calc::angle( move_vector_.start - dynamic_cast< Star* >( owner_ )->getPosition() , move_vector_.end - dynamic_cast< Star* >( owner_ )->getPosition() ) );
 }
 
-//’è”•Ï”‚ğÄİ’è
-void Player::resetStatus( const float Magnification )
-{
-	magnification_ = Magnification;
-}
-
 
 
 //----------------------------------------------

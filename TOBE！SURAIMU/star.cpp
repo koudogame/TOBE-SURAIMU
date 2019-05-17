@@ -52,6 +52,7 @@ bool Star::init( const Vector2 & Position , const float Angle , const float Fall
 
 	particle_time_ = 0;
 	create_point_ = 0;
+	magnification_ = 1.0F;
 
 	setAngle();
 
@@ -70,7 +71,7 @@ void Star::update()
 	s_particle_container_.get()->update();
 
 	position_.y += (fall_*magnification_);
-	angle_[ 0 ] += (spin_*magnification_);
+	angle_[ 0 ] += (spin_ * magnification_ );
 	setAngle();
 }
 
