@@ -5,6 +5,7 @@
 
 const float kMinFall = 5.0F;
 const int kTextureSize = 32;
+const int kRotate = 5;
 
 FreeFallParticle::FreeFallParticle( TaskManager* Manager ) :
 	ObjectBase( ObjectID::kFreeFallParticle , Manager )
@@ -28,6 +29,9 @@ bool FreeFallParticle::init( const std::wstring& FileName , const Vector2& Posit
 	position_ = Posit;
 	alpha_ = 1.0F;
 	move_amount_ = MoveAmount;
+	turn_ = rand() % 2 ? true : false;
+	rotate_ = rand() % 72;
+
 	return true;
 }
 
@@ -40,13 +44,15 @@ void FreeFallParticle::destroy()
 void FreeFallParticle::update()
 {
 	alpha_ -= 0.01F;
+	rotate_ += turn_ ? kRotate : -kRotate;
+
 
 	position_.y += kMinFall + move_amount_;
 }
 
 void FreeFallParticle::draw()
 {
-	Sprite::getInstance()->draw( texture_ , position_ , nullptr , alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ , nullptr , alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , rotate_ , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 }
 
 bool FreeFallParticle::isAlive()

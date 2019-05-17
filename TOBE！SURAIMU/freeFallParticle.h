@@ -19,5 +19,7 @@ private:
 	float alpha_;
 	float angle_;
 	float move_amount_;
+	int rotate_;
+	bool turn_;
 };
 
