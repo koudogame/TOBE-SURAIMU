@@ -1,0 +1,58 @@
+#include "freeFallParticle.h"
+#include "textureLoder.h"
+#include "sprite.h"
+#include "task_manager.h"
+
+const float kMinFall = 5.0F;
+const int kTextureSize = 32;
+
+FreeFallParticle::FreeFallParticle( TaskManager* Manager ) :
+	ObjectBase( ObjectID::kFreeFallParticle , Manager )
+{
+	task_manager_ = Manager;
+}
+
+
+FreeFallParticle::~FreeFallParticle()
+{}
+
+bool FreeFallParticle::init( const std::wstring& FileName , const Vector2& Posit , const float MoveAmount )
+{
+	texture_ = TextureLoder::getInstance()->load( FileName );
+	if( texture_ == nullptr )
+		return false;
+
+	task_manager_->registerTask( this , TaskUpdate::kParticleUpdate );
+	task_manager_->registerTask( this , TaskDraw::kParticleDraw );
+
+	position_ = Posit;
+	alpha_ = 1.0F;
+	move_amount_ = MoveAmount;
+	return true;
+}
+
+void FreeFallParticle::destroy()
+{
+	TextureLoder::getInstance()->release( texture_ );
+	task_manager_->unregisterObject( this );
+}
+
+void FreeFallParticle::update()
+{
+	alpha_ -= 0.01F;
+
+	position_.y += kMinFall + move_amount_;
+}
+
+void FreeFallParticle::draw()
+{
+	Sprite::getInstance()->draw( texture_ , position_ , nullptr , alpha_ , 0.0F , Vector2( 0.5F , 0.5F ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+}
+
+bool FreeFallParticle::isAlive()
+{
+	if( alpha_ <= 0.F )
+		return false;
+
+	return true;
+}

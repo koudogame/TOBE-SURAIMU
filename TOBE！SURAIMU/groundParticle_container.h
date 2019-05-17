@@ -14,5 +14,7 @@ public:
 		const std::wstring& FileName ,
 		const Vector2 Position ,
 		const float Angle );
+
+	void setMove( const float Over );
 };
 

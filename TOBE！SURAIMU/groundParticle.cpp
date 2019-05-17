@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "task_manager.h"
 
+const int kTextureSize = 32;
 
 GroundParticle::GroundParticle( TaskManager * Manager ) :
 	ObjectBase( ObjectID::kGroundParticle , Manager )
@@ -43,7 +44,7 @@ void GroundParticle::update()
 
 void GroundParticle::draw()
 {
-	Sprite::getInstance()->draw( texture_ , position_ + velocity_ , nullptr , 1.0F - now_time_ );
+	Sprite::getInstance()->draw( texture_ , position_ + velocity_ , nullptr , 1.0F - now_time_ , 0.0F , Vector2( 0.5F , 0.5F ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 }
 
 bool GroundParticle::isAlive()

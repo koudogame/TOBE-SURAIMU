@@ -41,7 +41,7 @@ bool Star::init( const Vector2 & Position , const float Angle , const float Fall
 	if( texture_ == nullptr )
 		return false;
 
-	s_particle_container_ = std::make_unique<StayParticleContainer>( task_manager_ );
+	s_particle_container_ = std::make_unique<FreeFallParticleContainer>( task_manager_ );
 
 	position_ = Position;
 	angle_[ 0 ] = Angle;
@@ -96,6 +96,12 @@ bool Star::isAlive()
 	return true;
 }
 
+void Star::setMove( const float Over )
+{
+	position_.y += Over;
+	s_particle_container_.get()->setMove( Over );
+}
+
 void Star::collision(Player* P)
 {
 	float old_angle = atan2( -( P->getMove()->start.y - position_.y ) , ( P->getMove()->start.x - position_.x ) );
@@ -112,11 +118,11 @@ void Star::collision(Player* P)
 	particle_time_ = 0;
 }
 
-void Star::addStayParticle()
+void Star::addFreeFallParticle()
 {
 	if( ++particle_time_ >= kParticleTime )
 	{
-		s_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_[ create_point_++ ].start );
+		s_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_[ create_point_++ ].start , fall_ );
 		particle_time_ = 0;
 		if( create_point_ >= 5 )
 			create_point_ = 0;

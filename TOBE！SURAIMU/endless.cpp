@@ -374,25 +374,14 @@ void Endless::adjustObjectPosition()
     if (kOver > 0)
     {
         climb_ += kOver;
-        Vector2 dist;
 
-        dist.x = background_->getPosition().x;
-        dist.y = background_->getPosition().y + kOver;
-        background_->setPosition(dist);
+		background_->setMove( kOver );
 
-        for (auto& star : star_container_->active())
-        {
-            dist.x = star->getPosition().x;
-            dist.y = star->getPosition().y + kOver;
-            star->setPosition(dist);
-        }
+		for( auto& star : star_container_->active() )
+			star->setMove( kOver );
 
-        dist.x = player_->getPosition().x;
-        dist.y = player_->getPosition().y + kOver;
-        player_->setPosition(dist);
+		player_->setMove( kOver );
 
-        dist.x = wall_->getPosition().x;
-        dist.y = wall_->getPosition().y + kOver;
-        wall_->setPosition(dist);
+		wall_->setMove( kOver );
     }
 }

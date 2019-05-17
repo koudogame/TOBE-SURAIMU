@@ -27,10 +27,6 @@ void Collision::collision( Player * P , Star * S )
 		{
 			if( !P->isCollision() )
 			{
-				P->setGround( S->getShape( i ) );
-				P->revision( S->getShape( i )->start );
-				P->collision( S );
-				S->collision( P );
 				return;
 			}
 		}

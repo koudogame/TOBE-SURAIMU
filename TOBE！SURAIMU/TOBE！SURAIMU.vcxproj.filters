@@ -167,14 +167,14 @@
     <ClCompile Include="groundParticle.cpp">
       <Filter>Project\Game\Object\Particle\Ground</Filter>
     </ClCompile>
-    <ClCompile Include="stayParticle.cpp">
-      <Filter>Project\Game\Object\Particle\Stay</Filter>
-    </ClCompile>
-    <ClCompile Include="stayParticle_container.cpp">
-      <Filter>Project\Game\Object\Particle\Stay</Filter>
-    </ClCompile>
     <ClCompile Include="background.cpp">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="freeFallParticle.cpp">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClCompile>
+    <ClCompile Include="freeFallParticle_container.cpp">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -279,14 +279,14 @@
     <ClInclude Include="groundParticle_container.h">
       <Filter>Project\Game\Object\Particle\Ground</Filter>
     </ClInclude>
-    <ClInclude Include="stayParticle.h">
-      <Filter>Project\Game\Object\Particle\Stay</Filter>
-    </ClInclude>
-    <ClInclude Include="stayParticle_container.h">
-      <Filter>Project\Game\Object\Particle\Stay</Filter>
-    </ClInclude>
     <ClInclude Include="background.h">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="freeFallParticle.h">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClInclude>
+    <ClInclude Include="freeFallParticle_container.h">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
