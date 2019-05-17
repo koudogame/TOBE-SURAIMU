@@ -176,6 +176,9 @@
     <ClCompile Include="freeFallParticle_container.cpp">
       <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClCompile>
+    <ClCompile Include="csvLoader.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -288,6 +291,7 @@
     <ClInclude Include="freeFallParticle_container.h">
       <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClInclude>
+    <ClInclude Include="csvLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

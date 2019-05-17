@@ -156,6 +156,7 @@
     <ClInclude Include="collision.h" />
     <ClInclude Include="commonstates.h" />
     <ClInclude Include="container.h" />
+    <ClInclude Include="csvLoader.h" />
     <ClInclude Include="direct3d.h" />
     <ClInclude Include="easing.h" />
     <ClInclude Include="endless.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="commonstates.cpp" />
     <ClCompile Include="container.cpp" />
+    <ClCompile Include="csvLoader.cpp" />
     <ClCompile Include="direct3d.cpp" />
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="endless.cpp" />
