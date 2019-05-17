@@ -6,7 +6,6 @@
 #include "star.h"
 #include "wall.h"
 
-
 Collision::Collision()
 {}
 
@@ -20,7 +19,7 @@ Collision::~Collision()
 void Collision::collision( Player * P , Star * S )
 {
 	bool hit_flag = false;
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < kStarLineNum; i++ )
 	{
 		//‰~‚Æ•Ó‚ÌŽn“_‚ÆI“_‚Ì”»’è
 		if( judgment( P->getShape() , &Circle( S->getShape( i )->start , 0.0F ) ) )
@@ -32,7 +31,7 @@ void Collision::collision( Player * P , Star * S )
 		}
 	}
 
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < kStarLineNum; i++ )
 	{
 		//‰~‚Æü‚Ì“–‚½‚è”»’è
 		if( judgment( P->getShape() , S->getShape( i ) ) )

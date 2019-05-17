@@ -124,7 +124,7 @@ void Star::addFreeFallParticle()
 	{
 		s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_[ create_point_++ ].start , fall_ );
 		particle_time_ = 0;
-		if( create_point_ >= 5 )
+		if( create_point_ >= kStarLineNum )
 			create_point_ = 0;
 	}
 }
@@ -132,14 +132,14 @@ void Star::addFreeFallParticle()
 void Star::setAngle()
 {
 	//他の角度の指定
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < kStarLineNum; i++ )
 		angle_[ i ] = angle_[ 0 ] + 72 * ( i * 2 );
 
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < kStarLineNum; i++ )
 	{
 		//線分の始点設定
 		myshape_[ i ].end = position_ + Vector2( cos( XMConvertToRadians( angle_[ i ] ) ) , -sin( XMConvertToRadians( angle_[ i ] ) ) ) * size_;
 		//線分の終点設定
-		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < 4 ? i + 1 : 0 ] ) ) ) * size_;
+		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < kStarLineNum - 1 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < kStarLineNum - 1 ? i + 1 : 0 ] ) ) ) * size_;
 	}
 }
