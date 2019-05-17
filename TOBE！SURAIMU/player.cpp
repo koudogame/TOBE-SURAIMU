@@ -14,6 +14,7 @@
 
 const int kPlayerSize = 21;
 const int kFlicTime = 18;
+const int kParticleTime = 10;
 
 //コンストラクタ
 Player::Player( TaskManager* const Manager ) :
@@ -51,13 +52,15 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	if( texture_ == nullptr )
 		return false;
 
-	g_particle_container = std::make_unique< GroundParticleContainer>( task_manager_ );
+	g_particle_container_ = std::make_unique< GroundParticleContainer>( task_manager_ );
+	s_particle_container_ = std::make_unique<StayParticleContainer>( task_manager_ );
 
 	//各変数の初期化
 	setGravityAngle();
 	jumping_angle_ = gravity_angle_ + XM_PI;
 	now_amount_ = 0.0F;
 	jump_power_ = kJumpAmount;
+	particle_time_ = 0;
 
 	timer = 0;
 
@@ -70,7 +73,8 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 void Player::destroy()
 {
 	//全パーティクル削除
-	g_particle_container.get()->destroy();
+	g_particle_container_.get()->destroy();
+	s_particle_container_.get()->destroy();
 
 	task_manager_->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
@@ -80,7 +84,11 @@ void Player::destroy()
 void Player::update()
 {
 	//全パーティクルの更新処理
-	g_particle_container.get()->update();
+	g_particle_container_.get()->update();
+	s_particle_container_.get()->update();
+
+	//各パーティクルの追加
+	addStayParticle();
 
  	move_vector_.start = myshape_.position;
 
@@ -244,6 +252,7 @@ void Player::input()
 			flag_.set( Flag::kCollision );
 			flag_.reset( Flag::kParticle );
 			direction_id_ = Direction::kFlay;
+			particle_time_ = 0;
 			now_amount_ = 0.0F;
 			jump_power_ = kJumpAmount;
 			jumping_angle_ = gravity_angle_ + XM_PI;
@@ -330,8 +339,28 @@ void Player::slectDirection()
 //オブジェクトとの衝突時のパーティクルを生成
 void Player::addGroundParticle()
 {
-	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) );
-	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) );
-	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) );
-	g_particle_container.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) );
+	g_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) );
+	g_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) );
+	g_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) );
+	g_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) );
+}
+
+//ジャンプ中に発生するパーティクルの生成
+void Player::addStayParticle()
+{
+	if( flag_.test( Flag::kJump ) )
+	{
+		if( ++particle_time_ >= kParticleTime )
+		{
+			s_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position );
+			particle_time_ = 0;
+		}
+	}
+	else
+	{
+		if( owner_ != nullptr )
+		{
+			dynamic_cast< Star* >( owner_ )->addStayParticle();
+		}
+	}
 }

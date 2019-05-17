@@ -4,6 +4,7 @@
 
 #include "object_base.h"
 #include "shape.h"
+#include "stayParticle_container.h"
 
 class Star :
 	public ObjectBase
@@ -28,6 +29,7 @@ public:
 	inline void setFall() { fall_ = temp_fall_; }
 	inline Line* getShape( const int GetNum ) { return &myshape_[ GetNum ]; }
 	void collision( class Player* P );
+	void addStayParticle();
 
 private:
 	//“à•”—˜—pŠÖ”
@@ -43,5 +45,9 @@ private:
 	float size_;	        //‘å‚«‚³
 	float rate_;	        //‰ñ“]”{—¦
 	Line myshape_[ 5 ];
+
+	std::unique_ptr<StayParticleContainer> s_particle_container_;
+	int particle_time_;
+	int create_point_;
 };
 

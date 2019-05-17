@@ -5,6 +5,7 @@
 #include "object_base.h"
 #include "shape.h"
 #include "groundParticle_container.h"
+#include "stayParticle_container.h"
 
 #include "numbers.h"
 
@@ -75,7 +76,9 @@ private:
 	ObjectBase* owner_;
 	Circle myshape_;
 	float dis_;
-	std::unique_ptr<GroundParticleContainer> g_particle_container;
+	std::unique_ptr<GroundParticleContainer> g_particle_container_;
+	std::unique_ptr<StayParticleContainer> s_particle_container_;
+	int particle_time_;
 
 	Numbers<long> num;
 	ID3D11ShaderResourceView* Num;
@@ -104,4 +107,6 @@ private:
 	//プレイヤーの座標が交点の位置で
 	//重力方向が更新された後に呼び出すこと
 	void addGroundParticle();
+
+	void addStayParticle();
 };
