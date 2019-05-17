@@ -231,12 +231,12 @@ void Player::input()
 		//移動方向に対して入力が右の場合( 右入力時 )
 		if( cross < 0 || key.lastState.Right )
 		{
-			myshape_.position += Vector2( std::cos( jumping_angle_ - XM_PI / 2.0F ) , -std::sin( jumping_angle_ - XM_PI / 2.0F ) ) * boost_power_;
+			myshape_.position.x +=  boost_power_;
 		}
 		//移動方向に対して入力が左の場合( 左入力時 )
 		else if( cross > 0 || key.lastState.Left )
 		{
-			myshape_.position += Vector2( std::cos( jumping_angle_ + XM_PI / 2.0F ) , -std::sin( jumping_angle_ + XM_PI / 2.0F ) ) * boost_power_;
+			myshape_.position.x -= boost_power_;
 		}
 		//ブースト入力
 		if(( pad_tracker.a == pad_tracker.PRESSED || key.pressed.Space) &&
