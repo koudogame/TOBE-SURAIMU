@@ -49,6 +49,7 @@ private:
 	float size_;	        //大きさ
 	float rate_;	        //回転倍率
 	Line myshape_[ kStarLineNum ];
+	int color_val_;			//星のカラーバリエーション
 
 	std::unique_ptr<FreeFallParticleContainer> s_particle_container_;
 	int particle_time_;
