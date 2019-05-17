@@ -129,6 +129,12 @@ void Star::addFreeFallParticle()
 	}
 }
 
+void Star::resetStatus( const float Magnification )
+{
+	fall_ *= Magnification;
+	rate_ *= Magnification;
+}
+
 void Star::setAngle()
 {
 	//‘¼‚ÌŠp“x‚ÌŽw’è

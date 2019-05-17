@@ -40,6 +40,7 @@ public:
 	void collision( class Star* );
 	void collision( class Wall* );
 	float getRotate();
+	void resetStatus( const float Magnification );
 
 
 private:

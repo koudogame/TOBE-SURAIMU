@@ -33,6 +33,7 @@ public:
 	inline Line* getShape( const int GetNum ) { return &myshape_[ GetNum ]; }
 	void collision( class Player* P );
 	void addFreeFallParticle();
+	void resetStatus( const float Magnification);
 
 private:
 	//“à•”—˜—pŠÖ”
