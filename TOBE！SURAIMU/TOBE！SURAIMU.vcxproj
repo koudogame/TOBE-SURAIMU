@@ -166,8 +166,8 @@
     <ClInclude Include="particle.h" />
     <ClInclude Include="particle_containerr.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="stayParticle.h" />
-    <ClInclude Include="stayParticle_container.h" />
+    <ClInclude Include="freeFallParticle.h" />
+    <ClInclude Include="freeFallParticle_container.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="time_attack.h" />
     <ClInclude Include="key.h" />
@@ -203,8 +203,8 @@
     <ClCompile Include="numbers.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="particle_container.cpp" />
-    <ClCompile Include="stayParticle.cpp" />
-    <ClCompile Include="stayParticle_container.cpp" />
+    <ClCompile Include="freeFallParticle.cpp" />
+    <ClCompile Include="freeFallParticle_container.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="time_attack.cpp" />
     <ClCompile Include="key.cpp" />

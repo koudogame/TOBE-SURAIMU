@@ -13,7 +13,7 @@ enum class ObjectID
 	kItem,
 	kParticle,
 	kGroundParticle,
-	kStayParticle,
+	kFreeFallParticle,
 };
 
 //-----------------------------------------------------------------------------

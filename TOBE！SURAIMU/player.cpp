@@ -53,7 +53,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 		return false;
 
 	g_particle_container_ = std::make_unique< GroundParticleContainer>( task_manager_ );
-	s_particle_container_ = std::make_unique<StayParticleContainer>( task_manager_ );
+	s_particle_container_ = std::make_unique<FreeFallParticleContainer>( task_manager_ );
 
 	//各変数の初期化
 	setGravityAngle();
@@ -88,7 +88,7 @@ void Player::update()
 	s_particle_container_.get()->update();
 
 	//各パーティクルの追加
-	addStayParticle();
+	addFreeFallParticle();
 
  	move_vector_.start = myshape_.position;
 
@@ -144,6 +144,13 @@ bool Player::isAlive()
 		return false;
 
 	return true;
+}
+
+void Player::setMove( const float Over )
+{
+	myshape_.position.y += Over;
+	g_particle_container_.get()->setMove( Over );
+	s_particle_container_.get()->setMove( Over );
 }
 
 //座標の補正
@@ -346,13 +353,13 @@ void Player::addGroundParticle()
 }
 
 //ジャンプ中に発生するパーティクルの生成
-void Player::addStayParticle()
+void Player::addFreeFallParticle()
 {
 	if( flag_.test( Flag::kJump ) )
 	{
 		if( ++particle_time_ >= kParticleTime )
 		{
-			s_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position );
+			s_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , kGravity );
 			particle_time_ = 0;
 		}
 	}
@@ -360,7 +367,7 @@ void Player::addStayParticle()
 	{
 		if( owner_ != nullptr )
 		{
-			dynamic_cast< Star* >( owner_ )->addStayParticle();
+			dynamic_cast< Star* >( owner_ )->addFreeFallParticle();
 		}
 	}
 }

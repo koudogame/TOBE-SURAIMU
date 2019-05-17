@@ -5,7 +5,7 @@
 #include "object_base.h"
 #include "shape.h"
 #include "groundParticle_container.h"
-#include "stayParticle_container.h"
+#include "freeFallParticle_container.h"
 
 #include "numbers.h"
 
@@ -25,7 +25,7 @@ public:
 	void update();
 	void draw();
 	bool isAlive();
-	void setMove( const float Over ) { myshape_.position.y += Over; }
+	void setMove( const float Over );
 	Vector2 getPosition() const { return myshape_.position; }
 
 public:
@@ -77,7 +77,7 @@ private:
 	Circle myshape_;
 	float dis_;
 	std::unique_ptr<GroundParticleContainer> g_particle_container_;
-	std::unique_ptr<StayParticleContainer> s_particle_container_;
+	std::unique_ptr<FreeFallParticleContainer> s_particle_container_;
 	int particle_time_;
 
 	Numbers<long> num;
@@ -108,5 +108,5 @@ private:
 	//重力方向が更新された後に呼び出すこと
 	void addGroundParticle();
 
-	void addStayParticle();
+	void addFreeFallParticle();
 };
