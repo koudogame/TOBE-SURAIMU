@@ -32,7 +32,7 @@ Player::~Player()
 
 
 //‰Šú‰»
-bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol , const float Decay , const float Gravity , const float Speed , const float UpBoost,const float RLBoost )
+bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol , const float Decay , const float Gravity , const float Speed ,const float RLBoost )
 {
 	task_manager_->registerTask( this , TaskUpdate::kPlayerUpdate );
 	task_manager_->registerTask( this , TaskDraw::kPlayerDraw );
@@ -43,7 +43,6 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	kDecay = Decay;
 	kGravity = Gravity;
 	kSpeed = Speed;
-	kUPBoostPower = UpBoost;
 	kRLBoostPower = RLBoost;
 	ground_ = &kGround;
 	texture_ = TextureLoder::getInstance()->load( L"Texture/player.png" );
@@ -207,11 +206,9 @@ float Player::getRotate()
 void Player::resetStatus( const float Magnification )
 {
 	kJumpAmount   *= Magnification;
-	kAddVolume    *= Magnification;
 	kDecay        *= Magnification;
 	kGravity      *= Magnification;
 	kSpeed        *= Magnification;
-	kUPBoostPower *= Magnification;
 	kRLBoostPower *= Magnification;
 }
 
@@ -250,7 +247,6 @@ void Player::input()
 			!flag_.test(Flag::kBoost))
 		{
 			flag_.set( Flag::kBoost );
-			jump_power_ += kUPBoostPower;
 			boost_power_ = kRLBoostPower;
 		}
 	}

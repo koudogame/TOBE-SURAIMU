@@ -20,7 +20,7 @@ public:
 
 public:
 	//åpè≥ä÷êî
-	bool init(const Vector2& Posit,const float Jump = 30.0F,const float AddVol = 0.001F,const float Decay = 0.5F,const float Gravity = 0.5F,const float Speed = 5.0F , const float UpBoost = 10.0F , const float RLBoost = 0.0F );
+	bool init(const Vector2& Posit,const float Jump = 30.0F,const float AddVol = 0.001F,const float Decay = 0.5F,const float Gravity = 0.5F,const float Speed = 5.0F , const float RLBoost = 0.0F );
 	void destroy();
 	void update();
 	void draw();
@@ -50,7 +50,6 @@ private:
 	float kDecay;
 	float kGravity;
 	float kSpeed;
-	float kUPBoostPower;
 	float kRLBoostPower;
 	Line kGround;
 
