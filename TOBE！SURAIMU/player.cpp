@@ -61,6 +61,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	jump_power_ = kJumpAmount;
 	particle_time_ = 0;
 	prev_jump_moveamount_ = 0;
+	magnification_ = 1.0F;
 
 	timer = 0;
 
@@ -97,7 +98,7 @@ void Player::update()
 
 	//ジャンプ量を増やす
 	if( flag_.test( Flag::kJump ) )
-		now_amount_ += kAddVolume;
+		now_amount_ += (kAddVolume *magnification_);
 
 	if( now_amount_ >= 1.0F )
 	{
@@ -106,7 +107,7 @@ void Player::update()
 	}
 
 	//ブースト力の減少
-	boost_power_ = boost_power_ > kSpeed ? boost_power_ - kDecay : kSpeed;
+	boost_power_ = boost_power_ > (kSpeed*magnification_) ? boost_power_ - (kDecay *magnification_) : (kSpeed*magnification_);
 
 	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * ( Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ );
 	prev_jump_moveamount_ = Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out );
@@ -210,11 +211,7 @@ float Player::getRotate()
 //定数変数を再設定
 void Player::resetStatus( const float Magnification )
 {
-	kJumpAmount   *= Magnification;
-	kDecay        *= Magnification;
-	kGravity      *= Magnification;
-	kSpeed        *= Magnification;
-	kRLBoostPower *= Magnification;
+	magnification_ = Magnification;
 }
 
 
@@ -252,7 +249,7 @@ void Player::input()
 			!flag_.test(Flag::kBoost))
 		{
 			flag_.set( Flag::kBoost );
-			boost_power_ = kRLBoostPower;
+			boost_power_ = (kRLBoostPower*magnification_);
 		}
 	}
 	//接地中
@@ -289,7 +286,7 @@ void Player::gravity()
 	if( ground_ == &kGround )
 	{
 		setGravityAngle();
-		myshape_.position += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * kGravity;
+		myshape_.position += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * (kGravity *magnification_);
 	}
 	else
 	{
@@ -373,7 +370,7 @@ void Player::addFreeFallParticle()
 	{
 		if( ++particle_time_ >= kParticleTime )
 		{
-			s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , kGravity );
+			s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , (kGravity *magnification_) );
 			particle_time_ = 0;
 		}
 	}

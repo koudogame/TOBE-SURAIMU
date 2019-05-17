@@ -69,8 +69,8 @@ void Star::update()
 {
 	s_particle_container_.get()->update();
 
-	position_.y += fall_;
-	angle_[ 0 ] += spin_;
+	position_.y += (fall_*magnification_);
+	angle_[ 0 ] += (spin_*magnification_);
 	setAngle();
 }
 
@@ -122,17 +122,11 @@ void Star::addFreeFallParticle()
 {
 	if( ++particle_time_ >= kParticleTime )
 	{
-		s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_[ create_point_++ ].start , fall_ );
+		s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_[ create_point_++ ].start , (fall_*magnification_) );
 		particle_time_ = 0;
 		if( create_point_ >= kStarLineNum )
 			create_point_ = 0;
 	}
-}
-
-void Star::resetStatus( const float Magnification )
-{
-	fall_ *= Magnification;
-	rate_ *= Magnification;
 }
 
 void Star::setAngle()

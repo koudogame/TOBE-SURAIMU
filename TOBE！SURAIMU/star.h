@@ -33,7 +33,7 @@ public:
 	inline Line* getShape( const int GetNum ) { return &myshape_[ GetNum ]; }
 	void collision( class Player* P );
 	void addFreeFallParticle();
-	void resetStatus( const float Magnification);
+	inline void resetStatus( const float Magnification ) { magnification_ = Magnification; }
 
 private:
 	//“à•”—˜—pŠÖ”
@@ -53,5 +53,6 @@ private:
 	std::unique_ptr<FreeFallParticleContainer> s_particle_container_;
 	int particle_time_;
 	int create_point_;
+	float magnification_;
 };
 
