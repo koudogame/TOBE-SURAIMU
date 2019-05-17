@@ -25,8 +25,8 @@ using PadTracker = GamePad::ButtonStateTracker;
 /*===========================================================================*/
 // “ïˆÕ“x‚ÉŠÖŒW
 constexpr Vector2 kInitStarPosi[] = {
-    {640.0F, 100.0F},
     {640.0F, 600.0F},
+    {810.0F, 100.0F},
 };
 constexpr float kInitStarAngle[] = {
     90.0F,
@@ -34,8 +34,8 @@ constexpr float kInitStarAngle[] = {
     90.0F,
 };
 constexpr float kInitStarFall[] = {
-    5.0F,
-    5.0F,
+    2.0F,
+    1.0F,
     5.0F,
 };
 constexpr float kInitStarSpin[] = {
@@ -49,7 +49,6 @@ constexpr float kInitStarSpinRate[] = {
     0.01F,
 };
 constexpr float kInitStarSize[] = {
-    50.0F,
     100.0F,
     150.0F
 };
