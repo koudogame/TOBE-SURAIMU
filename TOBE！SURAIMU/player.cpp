@@ -346,10 +346,10 @@ void Player::slectDirection()
 //オブジェクトとの衝突時のパーティクルを生成
 void Player::addGroundParticle()
 {
-	g_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) );
-	g_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) );
-	g_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) );
-	g_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) );
+	g_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) );
+	g_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) );
+	g_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) );
+	g_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) );
 }
 
 //ジャンプ中に発生するパーティクルの生成
@@ -359,7 +359,7 @@ void Player::addFreeFallParticle()
 	{
 		if( ++particle_time_ >= kParticleTime )
 		{
-			s_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_.position , kGravity );
+			s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , kGravity );
 			particle_time_ = 0;
 		}
 	}

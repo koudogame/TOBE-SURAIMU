@@ -122,7 +122,7 @@ void Star::addFreeFallParticle()
 {
 	if( ++particle_time_ >= kParticleTime )
 	{
-		s_particle_container_.get()->addParticle( L"Texture/bullet.png" , myshape_[ create_point_++ ].start , fall_ );
+		s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_[ create_point_++ ].start , fall_ );
 		particle_time_ = 0;
 		if( create_point_ >= 5 )
 			create_point_ = 0;
