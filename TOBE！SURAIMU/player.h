@@ -79,6 +79,7 @@ private:
 	std::unique_ptr<GroundParticleContainer> g_particle_container_;
 	std::unique_ptr<FreeFallParticleContainer> s_particle_container_;
 	int particle_time_;
+	float prev_jump_moveamount_;
 
 	Numbers<long> num;
 	ID3D11ShaderResourceView* Num;

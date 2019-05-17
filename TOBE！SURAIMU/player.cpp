@@ -60,6 +60,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	now_amount_ = 0.0F;
 	jump_power_ = kJumpAmount;
 	particle_time_ = 0;
+	prev_jump_moveamount_ = 0;
 
 	timer = 0;
 
@@ -99,12 +100,16 @@ void Player::update()
 		now_amount_ += kAddVolume;
 
 	if( now_amount_ >= 1.0F )
+	{
 		flag_.reset( Flag::kCollision );
+		prev_jump_moveamount_ = 0.0F;
+	}
 
 	//ブースト力の減少
 	boost_power_ = boost_power_ > kSpeed ? boost_power_ - kDecay : kSpeed;
 
-	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out );
+	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * ( Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ );
+	prev_jump_moveamount_ = Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out );
 
 	//重力をかける
 	gravity();
@@ -272,6 +277,7 @@ void Player::input()
 			jump_power_ = kJumpAmount;
 			jumping_angle_ = gravity_angle_ + XM_PI;
 			ground_ = &kGround;
+			prev_jump_moveamount_ = 0;
 		}
 		flag_.reset( Flag::kBoost );
 	}
