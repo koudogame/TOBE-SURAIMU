@@ -23,3 +23,11 @@ GroundParticle * GroundParticleContainer::addParticle( const std::wstring & File
 
 	return g_particle;
 }
+
+void GroundParticleContainer::setMove( const float Over )
+{
+	std::list<GroundParticle*> list = this->active();
+
+	for( auto& itr : list )
+		itr->setMove( Over );
+}

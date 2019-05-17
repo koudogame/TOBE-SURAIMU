@@ -24,7 +24,7 @@ public:
 	void update();
 	void draw();
 	bool isAlive();
-	void setPosition( const Vector2& Dist ) { myshape_.position = Dist; }
+	void setMove( const float Over ) { myshape_.position.y += Over; }
 	Vector2 getPosition() const { return myshape_.position; }
 
 public:

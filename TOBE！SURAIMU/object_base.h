@@ -36,7 +36,7 @@ public:
 	virtual void draw() = 0;
 	virtual bool isAlive() { return true; }
     virtual Vector2 getPosition() const { return position_; }
-    virtual void setPosition(const Vector2& Dist) { position_ = Dist; }
+    virtual void setMove(const float Over) { position_.y += Over; }
 
 	ObjectID getId() { return id_; }
 
