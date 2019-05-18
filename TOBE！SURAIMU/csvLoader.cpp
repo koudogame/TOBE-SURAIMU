@@ -66,7 +66,7 @@ std::wstring CsvLoader::getString( const unsigned int X , const unsigned int Y )
 	return container_[ Y ][ X ];
 }
 
-//数値の取得
+//数値の取得( int型 )
 int CsvLoader::getNumber( const unsigned int X , const unsigned int Y )
 {
 	std::wstring num = getString( X , Y );
@@ -76,5 +76,18 @@ int CsvLoader::getNumber( const unsigned int X , const unsigned int Y )
 		return -1;
 
 	//文字を数値に変換して返す
-	return _wtoi( num.c_str() );
+	return _wtof( num.c_str() );
+}
+
+//数値の取得( float型 )
+float CsvLoader::getNumber_f( const unsigned int X , const unsigned int Y )
+{
+	std::wstring num = getString( X , Y );
+
+	//サイズが0の場合エラーを返す( -1 )
+	if( num.size() == 0 )
+		return -1;
+
+	//文字を数値に変換して返す
+	return static_cast< float >( _wtof( num.c_str() ) );
 }
