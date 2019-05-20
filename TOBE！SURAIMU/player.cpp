@@ -15,6 +15,8 @@
 const int kPlayerSize = 21;
 const int kFlicTime = 18;
 const int kParticleTime = 10;
+const int kBottomOn = 3;
+const int kBottomOff = 1;
 
 //コンストラクタ
 Player::Player( TaskManager* const Manager ) :
@@ -61,6 +63,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	particle_time_ = 0;
 	prev_jump_moveamount_ = 0;
 	magnification_ = 1.0F;
+	bottom_input_ = kBottomOff;
 
 	timer = 0;
 
@@ -106,7 +109,7 @@ void Player::update()
 	}
 
 	//ブースト力の減少
-	boost_power_ = boost_power_ > (kSpeed*magnification_) ? boost_power_ - (kDecay *magnification_) : (kSpeed*magnification_);
+	boost_power_ = boost_power_ > ( kSpeed*magnification_ ) ? boost_power_ - ( kDecay *magnification_ ) : ( kSpeed*magnification_ );
 
 	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * ( Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ );
 	prev_jump_moveamount_ = Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out );
@@ -221,16 +224,19 @@ void Player::input()
 	//ジャンプ中
 	if( flag_.test( Flag::kJump ) )
 	{
-		//移動方向に対して入力が右の場合( 右入力時 )
+		//右入力
 		if( stick.x > 0.3F || key.lastState.Right )
-		{
-			myshape_.position.x +=  boost_power_;
-		}
-		//移動方向に対して入力が左の場合( 左入力時 )
+			myshape_.position.x += boost_power_;
+		//左入力
 		else if( stick.x < -0.3F || key.lastState.Left )
-		{
 			myshape_.position.x -= boost_power_;
-		}
+
+		//下入力
+		if( stick.y < -0.3F || key.lastState.Down )
+			bottom_input_ = kBottomOn;
+		else
+			bottom_input_ = kBottomOff;
+
 		//ブースト入力
 		if(( pad_tracker.a == pad_tracker.PRESSED || key.pressed.Space) &&
 			!flag_.test(Flag::kBoost))
@@ -252,7 +258,7 @@ void Player::input()
 		//ジャンプ
 		if( pad_tracker.a == pad_tracker.RELEASED || key.released.Space )
 		{
- 			flag_.set( Flag::kJump );
+			flag_.set( Flag::kJump );
 			flag_.set( Flag::kCollision );
 			flag_.reset( Flag::kParticle );
 			direction_id_ = Direction::kFlay;
@@ -273,7 +279,7 @@ void Player::gravity()
 	if( ground_ == &kGround )
 	{
 		setGravityAngle();
-		myshape_.position += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * (kGravity *magnification_);
+		myshape_.position += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * (kGravity *magnification_ * bottom_input_);
 	}
 	else
 	{

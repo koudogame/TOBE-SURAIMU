@@ -81,6 +81,7 @@ private:
 	int particle_time_;
 	float prev_jump_moveamount_;
 	float magnification_;
+	int bottom_input_;
 
 private:
 	//•`‰æŒn
