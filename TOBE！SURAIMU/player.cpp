@@ -143,7 +143,7 @@ void Player::draw()
 //¶‘¶ƒtƒ‰ƒO‚Ì•Ô‹p
 bool Player::isAlive()
 {
-	if( myshape_.position.y > 1200.0F )
+	if( myshape_.position.y > 900.0F )
 		return false;
 
 	return true;
