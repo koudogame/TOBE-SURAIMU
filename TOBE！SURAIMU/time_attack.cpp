@@ -274,7 +274,7 @@ SceneBase* TimeAttack::play()
 			if (createStar() == false)
 			{
 			// ê∂ê¨é∏îs
-				return nullptr; 
+				return nullptr;
 			}
 		}
 
@@ -358,7 +358,7 @@ bool TimeAttack::createStar()
 
 		position.y -= getWindowHeight<float>(); // âÊñ äOÇ÷í«Ç¢Ç‚ÇÈ
 		if (star_container_->addStar(
-			position, angle, fall, spin, spin_rate, size) == nullptr)
+			position, angle, spin, spin_rate, size) == nullptr)
 		{
 			// ê∂ê¨Ç…é∏îs
 			return false;

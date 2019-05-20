@@ -13,6 +13,7 @@ const int kStarDifference = 30;
 const float kMinSpin = 0.5F;
 const float kMaxSpin = 5.0F;
 const int kParticleTime = 3;
+const float kFallSpeed = 2.0F;
 const Vector3 kStarInformation[ 3 ] = {
 	Vector3( 0.F,0.F,150.0F ),
 	Vector3( 150.0F,0.0F,226.0F ),
@@ -26,7 +27,6 @@ Star::Star( TaskManager * const Manager ) :
 		itr = 0;
 
 	fall_ = 0;
-	temp_fall_ = 0;
 	spin_ = 0;
 	turn_ = 1;
 	rate_ = 0;
@@ -38,7 +38,7 @@ Star::~Star()
 	TextureLoder::getInstance()->release( texture_ );
 }
 
-bool Star::init( const Vector2 & Position , const float Angle , const float Fall , const float Spin , const float Rate , const float Size )
+bool Star::init( const Vector2 & Position , const float Angle  , const float Spin , const float Rate , const float Size )
 {
 	task_manager_->registerTask( this , TaskUpdate::kStarUpdate );
 	task_manager_->registerTask( this , TaskDraw::kStarDraw );
@@ -51,7 +51,6 @@ bool Star::init( const Vector2 & Position , const float Angle , const float Fall
 
 	position_ = Position;
 	angle_[ 0 ] = Angle;
-	temp_fall_ = Fall;
 	spin_ = Spin;
 	rate_ = Rate;
 	size_ = Size;
@@ -108,6 +107,11 @@ void Star::setMove( const float Over )
 {
 	position_.y += Over;
 	s_particle_container_.get()->setMove( Over );
+}
+
+void Star::setFall()
+{
+	fall_ = kFallSpeed;
 }
 
 void Star::collision(Player* P)

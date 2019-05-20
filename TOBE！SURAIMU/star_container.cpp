@@ -18,7 +18,7 @@ StarContainer::~StarContainer()
 /*===========================================================================*/
 // スターの追加
 Star* StarContainer::addStar(
-	const Vector2& Position, const float Angle, const float Fall,
+	const Vector2& Position, const float Angle,
 	const float Spin, const float Rate, const float Size)
 {
 	// フリーなスターを取得
@@ -29,7 +29,6 @@ Star* StarContainer::addStar(
 	star->init(
 		Position,
 		Angle,
-		Fall,
 		Spin,
 		Rate,
 		Size

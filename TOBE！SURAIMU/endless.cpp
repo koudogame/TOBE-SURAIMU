@@ -91,7 +91,6 @@ bool Endless::init()
         if (star_container_->addStar(
             kInitStarPosi[i],
             kInitStarAngle[i],
-            kInitStarFall[i],
             kInitStarSpin[i],
             kInitStarSpinRate[i],
             kInitStarSize[i]
@@ -382,7 +381,7 @@ bool Endless::createStar()
 
         position.y -= 720.0F;
         star = star_container_->addStar(
-            position, angle, fall, spin, spin_rate, size);
+            position, angle, spin, spin_rate, size);
         if (star == nullptr)
         {
             fclose(file);

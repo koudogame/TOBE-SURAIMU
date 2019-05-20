@@ -21,7 +21,6 @@ public:
 	Star* addStar(
 		const Vector2& Position,
 		const float Angle,
-		const float FallSpeed,
 		const float SpinSpeed,
 		const float SpinRate,
 		const float Size
