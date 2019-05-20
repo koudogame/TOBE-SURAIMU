@@ -45,7 +45,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	kSpeed = Speed;
 	kRLBoostPower = RLBoost;
 	ground_ = &kGround;
-	texture_ = TextureLoder::getInstance()->load( L"Texture/player.png" );
+	texture_ = TextureLoder::getInstance()->load( L"Texture/character.png" );
 	Num = TextureLoder::getInstance()->load( L"Texture/”š.png" );
 
 	if( texture_ == nullptr )

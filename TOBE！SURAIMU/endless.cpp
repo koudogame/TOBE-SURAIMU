@@ -49,8 +49,8 @@ constexpr float kInitStarSpinRate[] = {
     0.01F,
 };
 constexpr float kInitStarSize[] = {
-    100.0F,
-    150.0F
+    90.0F,
+    120.0F
 };
 
 // ˆ—‚ÉŠÖŒW
@@ -135,7 +135,7 @@ bool Endless::init()
 
     // •Ï”‰Šú‰»
     update_ = &Endless::start;
-    climb_ = 0.0F; 
+    climb_ = 0.0F;
     magnification_ = 1.0F;
 
     return true;

@@ -8,10 +8,16 @@
 #include "player.h"
 
 //’è”
-const int kStarMin = 134;
+const int kStarMin = 60;
+const int kStarDifference = 30;
 const float kMinSpin = 0.5F;
 const float kMaxSpin = 5.0F;
 const int kParticleTime = 3;
+const Vector3 kStarInformation[ 3 ] = {
+	Vector3( 0.F,0.F,150.0F ),
+	Vector3( 150.0F,0.0F,226.0F ),
+	Vector3( 150.0F + 226.0F,0.0F,300.F )
+};
 
 Star::Star( TaskManager * const Manager ) :
 	ObjectBase( ObjectID::kStar , Manager )
@@ -37,7 +43,7 @@ bool Star::init( const Vector2 & Position , const float Angle , const float Fall
 	task_manager_->registerTask( this , TaskUpdate::kStarUpdate );
 	task_manager_->registerTask( this , TaskDraw::kStarDraw );
 
-	texture_ = TextureLoder::getInstance()->load( L"Texture/™.png" );
+	texture_ = TextureLoder::getInstance()->load( L"Texture/star.png" );
 	if( texture_ == nullptr )
 		return false;
 
@@ -49,6 +55,8 @@ bool Star::init( const Vector2 & Position , const float Angle , const float Fall
 	spin_ = Spin;
 	rate_ = Rate;
 	size_ = Size;
+
+	color_val_ = rand() % 3;
 
 	particle_time_ = 0;
 	create_point_ = 0;
@@ -78,14 +86,13 @@ void Star::update()
 void Star::draw()
 {
 	RECT trim;
-	trim.left = 0;
-	for( int i = 0; i < ( size_ / 50L - 1L ); i++ )
-		trim.left += ( i + 1 ) * kStarMin;
-	trim.top = 0L;
-	trim.right = trim.left + static_cast< long >( size_ / 50L ) * kStarMin;
-	trim.bottom = trim.top + static_cast< long >( size_ / 50L ) * kStarMin;
+	trim.left = static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].x );
+	trim.top = static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].y ) +
+		color_val_ * static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
+	trim.right = trim.left + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
+	trim.bottom = trim.top + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 
-	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.0F , Vector2( 1.0F , 1.0F ) , -(angle_[ 0 ] - 90.0F) , Vector2( ( size_ / 50 * kStarMin ) / 2.0F , ( size_ / 50 * kStarMin ) / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.0F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - 90.0F ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ));
 }
 
 bool Star::isAlive()
