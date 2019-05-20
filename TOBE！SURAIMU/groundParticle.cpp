@@ -4,7 +4,7 @@
 #include "sprite.h"
 #include "task_manager.h"
 
-const int kTextureSize = 32;
+const int kTextureSize = 15;
 
 GroundParticle::GroundParticle( TaskManager * Manager ) :
 	ObjectBase(  Manager )

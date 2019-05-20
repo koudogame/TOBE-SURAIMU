@@ -4,7 +4,7 @@
 #include "task_manager.h"
 
 const float kMinFall = 5.0F;
-const int kTextureSize = 32;
+const int kTextureSize = 15;
 const int kRotate = 5;
 
 FreeFallParticle::FreeFallParticle( TaskManager* Manager ) :

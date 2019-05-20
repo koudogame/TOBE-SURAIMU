@@ -14,7 +14,7 @@
 
 const int kPlayerSize = 21;
 const int kFlicTime = 18;
-const int kParticleTime = 10;
+const int kParticleTime = 1;
 const int kBottomOn = 3;
 const int kBottomOff = 1;
 
