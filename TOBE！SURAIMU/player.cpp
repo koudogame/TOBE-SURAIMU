@@ -46,7 +46,6 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	kRLBoostPower = RLBoost;
 	ground_ = &kGround;
 	texture_ = TextureLoder::getInstance()->load( L"Texture/character.png" );
-	Num = TextureLoder::getInstance()->load( L"Texture/数字.png" );
 
 	if( texture_ == nullptr )
 		return false;
@@ -139,7 +138,6 @@ void Player::draw()
 		draw_angle = -gravity_angle_ - XM_PI / 2.0F;
 
 	Sprite::getInstance()->draw( texture_ , myshape_.position, &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
-	num.draw( Num , Vector2( 1280 , 720.0F - 128.0F ) , 64L , 128L );
 }
 
 //生存フラグの返却
@@ -219,22 +217,17 @@ void Player::input()
 	GamePad::ButtonStateTracker pad_tracker = Pad::getInstance()->getTracker();
 	Keyboard::KeyboardStateTracker key = Key::getInstance()->getTracker();
 	Vector2 stick( pad.thumbSticks.leftX , pad.thumbSticks.leftY );
-	Vector2 move = myshape_.position - move_vector_.start;
-	//正規化
-	stick.Normalize();
-	move.Normalize();
-	float cross = Calc::cross( move , stick );
 
 	//ジャンプ中
 	if( flag_.test( Flag::kJump ) )
 	{
 		//移動方向に対して入力が右の場合( 右入力時 )
-		if( cross < 0 || key.lastState.Right )
+		if( stick.x > 0.3F || key.lastState.Right )
 		{
 			myshape_.position.x +=  boost_power_;
 		}
 		//移動方向に対して入力が左の場合( 左入力時 )
-		else if( cross > 0 || key.lastState.Left )
+		else if( stick.x < -0.3F || key.lastState.Left )
 		{
 			myshape_.position.x -= boost_power_;
 		}
@@ -314,7 +307,6 @@ void Player::setGravityAngle()
 	vect_ground.Normalize();
 	temp_posit[ 0 ].Normalize();
 	temp_posit[ 1 ].Normalize();
-	num = std::abs( static_cast< long >( XMConvertToDegrees( temp_angle[ 0 ] ) ) );
 	if( Calc::cross( vect_ground , temp_posit[ 0 ] ) > 0 )
 	{
 		gravity_angle_ = temp_angle[ 0 ];
