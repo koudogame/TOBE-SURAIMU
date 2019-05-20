@@ -82,9 +82,6 @@ private:
 	float prev_jump_moveamount_;
 	float magnification_;
 
-	Numbers<long> num;
-	ID3D11ShaderResourceView* Num;
-
 private:
 	//•`‰æŒn
 	enum Direction

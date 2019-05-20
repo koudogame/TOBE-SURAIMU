@@ -46,7 +46,6 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	kRLBoostPower = RLBoost;
 	ground_ = &kGround;
 	texture_ = TextureLoder::getInstance()->load( L"Texture/character.png" );
-	Num = TextureLoder::getInstance()->load( L"Texture/”š.png" );
 
 	if( texture_ == nullptr )
 		return false;
@@ -139,7 +138,6 @@ void Player::draw()
 		draw_angle = -gravity_angle_ - XM_PI / 2.0F;
 
 	Sprite::getInstance()->draw( texture_ , myshape_.position, &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
-	num.draw( Num , Vector2( 1280 , 720.0F - 128.0F ) , 64L , 128L );
 }
 
 //¶‘¶ƒtƒ‰ƒO‚Ì•Ô‹p
@@ -229,7 +227,7 @@ void Player::input()
 			myshape_.position.x +=  boost_power_;
 		}
 		//ˆÚ“®•ûŒü‚É‘Î‚µ‚Ä“ü—Í‚ª¶‚Ìê‡( ¶“ü—Í )
-		else if( stick.x < -0.3F > 0 || key.lastState.Left )
+		else if( stick.x < -0.3F || key.lastState.Left )
 		{
 			myshape_.position.x -= boost_power_;
 		}
@@ -309,7 +307,6 @@ void Player::setGravityAngle()
 	vect_ground.Normalize();
 	temp_posit[ 0 ].Normalize();
 	temp_posit[ 1 ].Normalize();
-	num = std::abs( static_cast< long >( XMConvertToDegrees( temp_angle[ 0 ] ) ) );
 	if( Calc::cross( vect_ground , temp_posit[ 0 ] ) > 0 )
 	{
 		gravity_angle_ = temp_angle[ 0 ];
