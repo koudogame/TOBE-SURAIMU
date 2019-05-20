@@ -13,7 +13,7 @@ using namespace std::chrono;
 
 /*===========================================================================*/
 Particle::Particle(TaskManager* const TaskManager) :
-	ObjectBase(ObjectID::kParticle, TaskManager)
+	ObjectBase(TaskManager)
 {
 }
 

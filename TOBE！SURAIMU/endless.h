@@ -4,11 +4,18 @@
 
 #include "scene_base.h"
 
+struct Milliseconds;
+template <typename T>
+class Timer;
+
 class TaskManager;
+class ObjectBase;
 class Background;
 class StarContainer;
 class Player;
 class Wall;
+
+class Combo;
 
 //-----------------------------------------------------------------------------
 // エンドレスモード
@@ -37,17 +44,21 @@ private:
     bool createStar();
     std::deque<std::string> pattern_file_;
 
+    void adjustObjectPosition(const float);
+
     void scoring();
     float climb_;
-
-    void adjustObjectPosition();
+    ObjectBase* prev_player_owner_ = nullptr;
+    bool prev_player_jump_state_;
 
 // オブジェクト
-    TaskManager* task_manager_ = nullptr;
-    Background* background_ = nullptr;
-    StarContainer* star_container_ = nullptr;
-    Player* player_ = nullptr;
-    Wall* wall_ = nullptr;
+    Timer<Milliseconds>* clock_     = nullptr;
+    TaskManager* task_manager_      = nullptr;
+    Background* background_         = nullptr;
+    StarContainer* star_container_  = nullptr;
+    Player* player_                 = nullptr;
+    Wall* wall_                     = nullptr;
+    Combo* combo_                   = nullptr;
 
     float magnification_;
 

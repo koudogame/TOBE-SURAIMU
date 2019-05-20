@@ -33,7 +33,7 @@ constexpr RECT kTrimmingRightWall{ 1310L, 0L, 1340L, 720L };// ‰E‚Ì•ÇØ‚èæ‚è”Íˆ
 
 /*===========================================================================*/
 Wall::Wall(TaskManager* const TaskManager) :
-	ObjectBase(ObjectID::kWall, TaskManager)
+	ObjectBase(TaskManager)
 {
 }
 

@@ -7,7 +7,7 @@
 const int kTextureSize = 32;
 
 GroundParticle::GroundParticle( TaskManager * Manager ) :
-	ObjectBase( ObjectID::kGroundParticle , Manager )
+	ObjectBase(  Manager )
 {
 	task_manager_ = Manager;
 }

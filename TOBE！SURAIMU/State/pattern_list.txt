@@ -1,1 +1,3 @@
-star_pattern_1.txt
+pattern_1.txt 
+pattern_2.txt 
+pattern_3.txt 

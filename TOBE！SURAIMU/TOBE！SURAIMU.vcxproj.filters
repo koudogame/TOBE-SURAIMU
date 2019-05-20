@@ -81,6 +81,9 @@
     <Filter Include="Project\Game\Object\Background">
       <UniqueIdentifier>{0e1baea5-e6b7-4473-8ea1-fc6781b3dc55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\UI">
+      <UniqueIdentifier>{2fc35952-74df-4892-a04b-6e9bab38694c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -178,6 +181,9 @@
     </ClCompile>
     <ClCompile Include="csvLoader.cpp">
       <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="combo.cpp">
+      <Filter>Project\Game\Object\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +298,9 @@
       <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClInclude>
     <ClInclude Include="csvLoader.h" />
+    <ClInclude Include="combo.h">
+      <Filter>Project\Game\Object\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

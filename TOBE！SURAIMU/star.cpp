@@ -20,7 +20,7 @@ const Vector3 kStarInformation[ 3 ] = {
 };
 
 Star::Star( TaskManager * const Manager ) :
-	ObjectBase( ObjectID::kStar , Manager )
+	ObjectBase( Manager )
 {
 	for( float& itr : angle_ )
 		itr = 0;

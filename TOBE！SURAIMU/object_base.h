@@ -4,17 +4,6 @@
 
 class TaskManager;
 
-// 各オブジェクトID
-enum class ObjectID
-{
-	kPlayer,
-	kStar,
-	kWall,
-	kItem,
-	kParticle,
-	kGroundParticle,
-	kFreeFallParticle,
-};
 
 //-----------------------------------------------------------------------------
 // オブジェクトの基底クラス
@@ -24,8 +13,7 @@ enum class ObjectID
 class ObjectBase
 {
 public:
-	ObjectBase(const ObjectID ID, TaskManager* const TaskManager) :
-		id_(ID),
+	ObjectBase(TaskManager* const TaskManager) :
 		task_manager_(TaskManager)
 	{}
 	virtual ~ObjectBase() = default;
@@ -38,15 +26,10 @@ public:
     virtual Vector2 getPosition() const { return position_; }
     virtual void setMove(const float Over) { position_.y += Over; }
 
-	ObjectID getId() { return id_; }
 
 protected:
 	ID3D11ShaderResourceView* texture_ = nullptr;
 	TaskManager* task_manager_;
 	Vector2 position_;
-
-
-private:
-	ObjectID id_;
 };
 

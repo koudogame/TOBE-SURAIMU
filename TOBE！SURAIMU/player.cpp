@@ -18,7 +18,7 @@ const int kParticleTime = 10;
 
 //コンストラクタ
 Player::Player( TaskManager* const Manager ) :
-	ObjectBase( ObjectID::kPlayer , Manager )
+	ObjectBase( Manager )
 {
 	kGround.start = Vector2( 0.0F , getWindowHeight<float>() );
 	kGround.end = Vector2( getWindowWidth<float>() , getWindowHeight<float>() );

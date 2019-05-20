@@ -10,12 +10,14 @@
 #include "textureLoder.h"
 #include "sprite.h"
 
+#include "timer.h"
 #include "collision.h"
 #include "task_manager.h"
 #include "background.h"
 #include "star_container.h"
 #include "player.h"
 #include "wall.h"
+#include "combo.h"
 
 #include "result.h"
 
@@ -123,20 +125,28 @@ bool Endless::init()
         return false;
     }
 
-    // 壁初期化
-    if (wall_->init() == false) { return false; }
-
     // 背景
     if (background_->init(L"Texture/vector_cosmos.jpg", 10.0F) == false)
     {
         return false;
     }
 
+    // 壁初期化
+    if (wall_->init() == false) { return false; }
+
+    // UI初期化
+    if (combo_->init(*clock_) == false) { return false; }
+
+
 
     // 変数初期化
     update_ = &Endless::start;
     climb_ = 0.0F;
+    prev_player_owner_ = nullptr;
+    prev_player_jump_state_ = false;
     magnification_ = 1.0F;
+
+    clock_->start();
 
     return true;
 }
@@ -151,6 +161,10 @@ bool Endless::create()
     if (texture_ == nullptr)        { return false; }
     texture_numbers_ = kTexture->load(L"Texture/数字.png");
     if (texture_numbers_ == nullptr){ return false; }
+
+    // 時計
+    clock_              = new (std::nothrow) Timer<Milliseconds>();
+    if (clock_ == nullptr)          { return false; }
 
     // タスクマネ－ジャー
     task_manager_       = new (std::nothrow) TaskManager();
@@ -172,7 +186,9 @@ bool Endless::create()
     wall_               = new (std::nothrow) Wall(task_manager_);
     if (wall_ == nullptr)           { return false; }
 
-
+    // UI
+    combo_              = new (std::nothrow) Combo(task_manager_);
+    if (combo_ == nullptr)          { return false; }
 
 
 
@@ -197,6 +213,9 @@ void Endless::destroy()
 {
     do_create_ = true;
 
+    //UI
+    combo_->destroy();          safe_delete(combo_);
+
     // 壁
     wall_->destroy();           safe_delete(wall_);
 
@@ -211,6 +230,9 @@ void Endless::destroy()
 
     // タスクマネージャー
     safe_delete(task_manager_);
+
+    // 時計
+    safe_delete(clock_);
 
     // テクスチャ
     TextureLoder* const kTexture = TextureLoder::getInstance();
@@ -260,6 +282,7 @@ SceneBase* Endless::start()
         {
             star->setFall();
         }
+        clock_->start();
     }
 
     // オブジェクト更新
@@ -289,8 +312,19 @@ SceneBase* Endless::play()
 
     // オブジェクト更新
     task_manager_->allUpdate();
-    adjustObjectPosition();
     scoring();
+
+    // プレイヤーが死んでいたらリザルト画面へ
+    if (player_->isAlive() == false)
+    {
+        return new Result;
+    }
+
+    // 座標調整( スクロール )
+    const float kOver = kThresholdY - player_->getPosition().y;
+    if (kOver > 0.0F) { climb_ += kOver; }
+    adjustObjectPosition(kOver);
+
     // オブジェクトの状態倍率を更新
     const float kMagnification = climb_ / 100000.0F + 1.0F;
     if ((kMagnification - magnification_) > 0.1F)
@@ -299,13 +333,6 @@ SceneBase* Endless::play()
         player_->resetStatus(magnification_);
         star_container_->resetStates(magnification_);
     }
-
-
-    if (player_->isAlive() == false)
-    {
-        return new Result;
-    }
-
 
     // 衝突処理
     Collision* const kCollision = Collision::getInstance();
@@ -370,28 +397,36 @@ bool Endless::createStar()
 }
 
 /*===========================================================================*/
-// スコアリング
-void Endless::scoring()
+// オブジェクトの座標調整
+void Endless::adjustObjectPosition(const float Over)
 {
+    if (Over > 0)
+    {
+		background_->setMove( Over );
 
+		for( auto& star : star_container_->active() )
+			star->setMove( Over );
+
+		player_->setMove( Over );
+
+		wall_->setMove( Over );
+    }
 }
 
 /*===========================================================================*/
-// オブジェクトの座標調整
-void Endless::adjustObjectPosition()
+// スコアリング
+void Endless::scoring()
 {
-    const float kOver = kThresholdY - player_->getShape()->position.y ;
-    if (kOver > 0)
+    ObjectBase* const kPlayerOwner = player_->getOwner();
+    const bool kPlayerJump = player_->isJump();
+
+    // 前回の星と違う星に着地したときにコンボ
+    if ((kPlayerJump == false && prev_player_jump_state_)&&
+        (kPlayerOwner != prev_player_owner_))
     {
-        climb_ += kOver;
-
-		background_->setMove( kOver );
-
-		for( auto& star : star_container_->active() )
-			star->setMove( kOver );
-
-		player_->setMove( kOver );
-
-		wall_->setMove( kOver );
+        combo_->addCombo();
     }
+
+    if (kPlayerOwner) { prev_player_owner_ = kPlayerOwner; }
+    prev_player_jump_state_ = kPlayerJump;
 }

@@ -9,7 +9,7 @@ const long kTextureSize = 1024L;
 
 /*===========================================================================*/
 Background::Background(TaskManager* const TaskManager) :
-    ObjectBase(ObjectID::kItem, TaskManager)
+    ObjectBase(TaskManager)
 {
 }
 

@@ -8,7 +8,7 @@ const int kTextureSize = 32;
 const int kRotate = 5;
 
 FreeFallParticle::FreeFallParticle( TaskManager* Manager ) :
-	ObjectBase( ObjectID::kFreeFallParticle , Manager )
+	ObjectBase( Manager )
 {
 	task_manager_ = Manager;
 }

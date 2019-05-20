@@ -154,6 +154,7 @@
     <ClInclude Include="background.h" />
     <ClInclude Include="calc.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="combo.h" />
     <ClInclude Include="commonstates.h" />
     <ClInclude Include="container.h" />
     <ClInclude Include="csvLoader.h" />
@@ -193,6 +194,7 @@
   <ItemGroup>
     <ClCompile Include="background.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="combo.cpp" />
     <ClCompile Include="commonstates.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="csvLoader.cpp" />
