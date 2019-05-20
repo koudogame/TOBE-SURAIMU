@@ -81,6 +81,9 @@
     <Filter Include="Project\Game\Object\Background">
       <UniqueIdentifier>{0e1baea5-e6b7-4473-8ea1-fc6781b3dc55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Others\CSV">
+      <UniqueIdentifier>{4bf1c498-63e0-42dd-9d69-4fbfe2d2b485}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -177,7 +180,7 @@
       <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClCompile>
     <ClCompile Include="csvLoader.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\Game\Others\CSV</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -291,7 +294,9 @@
     <ClInclude Include="freeFallParticle_container.h">
       <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClInclude>
-    <ClInclude Include="csvLoader.h" />
+    <ClInclude Include="csvLoader.h">
+      <Filter>Project\Game\Others\CSV</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

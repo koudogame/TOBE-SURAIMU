@@ -219,22 +219,17 @@ void Player::input()
 	GamePad::ButtonStateTracker pad_tracker = Pad::getInstance()->getTracker();
 	Keyboard::KeyboardStateTracker key = Key::getInstance()->getTracker();
 	Vector2 stick( pad.thumbSticks.leftX , pad.thumbSticks.leftY );
-	Vector2 move = myshape_.position - move_vector_.start;
-	//正規化
-	stick.Normalize();
-	move.Normalize();
-	float cross = Calc::cross( move , stick );
 
 	//ジャンプ中
 	if( flag_.test( Flag::kJump ) )
 	{
 		//移動方向に対して入力が右の場合( 右入力時 )
-		if( cross < 0 || key.lastState.Right )
+		if( stick.x > 0.3F || key.lastState.Right )
 		{
 			myshape_.position.x +=  boost_power_;
 		}
 		//移動方向に対して入力が左の場合( 左入力時 )
-		else if( cross > 0 || key.lastState.Left )
+		else if( stick.x < -0.3F > 0 || key.lastState.Left )
 		{
 			myshape_.position.x -= boost_power_;
 		}
