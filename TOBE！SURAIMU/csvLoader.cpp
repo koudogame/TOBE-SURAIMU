@@ -76,7 +76,7 @@ int CsvLoader::getNumber( const unsigned int X , const unsigned int Y )
 		return -1;
 
 	//•¶š‚ğ”’l‚É•ÏŠ·‚µ‚Ä•Ô‚·
-	return _wtof( num.c_str() );
+	return _wtoi( num.c_str() );
 }
 
 //”’l‚Ìæ“¾( floatŒ^ )
