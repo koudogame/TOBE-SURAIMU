@@ -8,14 +8,14 @@ CsvLoader::CsvLoader()
 }
 
 
-CsvLoader::CsvLoader(std::string FileName)
+CsvLoader::CsvLoader(std::wstring FileName)
 {
 	comma_ = L',';
 	load( FileName );
 }
 
 //“Ç‚İ‚İ
-bool CsvLoader::load( std::string FileName)
+bool CsvLoader::load( std::wstring FileName)
 {
 	//ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚±‚İ
 	std::wifstream file;

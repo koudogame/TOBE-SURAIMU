@@ -3,12 +3,12 @@ class CsvLoader
 {
 public:
 	CsvLoader();
-	CsvLoader( std::string FileName );
+	CsvLoader( std::wstring FileName );
 	~CsvLoader() = default;
 
 public:
-	//CSVファイルの読み込み( 'L'いらない )
-	bool load( std::string );
+	//CSVファイルの読み込み
+	bool load( std::wstring );
 	//文字列情報の取得
 	//引数...ファイルのX座標：ファイルのY座標
 	std::wstring getString( const unsigned int X , const unsigned int Y );
