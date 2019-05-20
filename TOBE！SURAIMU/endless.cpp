@@ -295,7 +295,7 @@ SceneBase* Endless::play()
     const float kMagnification = climb_ / 100000.0F + 1.0F;
     if ((kMagnification - magnification_) > 0.1F)
     {
-        magnification_ = kMagnification;
+        magnification_ = kMagnification - magnification_ + 1.0F;
         player_->resetStatus(magnification_);
         star_container_->resetStates(magnification_);
     }
