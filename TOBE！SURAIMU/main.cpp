@@ -5,6 +5,7 @@
 
 #include "game.h"
 #include "pad.h"
+#include "audio_loader.h"
 
 //  プロトタイプ宣言
 LRESULT CALLBACK WinProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
@@ -143,6 +144,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				Key::getInstance()->update();
 				Pad::getInstance()->update();
+				AudioLoader::getInstance()->allUpdate();
 
 				// ゲーム処理
 				Direct3D::getInstance()->clear();
@@ -170,6 +172,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CoUninitialize();
 	// インターフェイスの開放
 	game.destroy();
+	AudioLoader::getInstance()->allDestroy();
 	Direct3D::getInstance()->destroy();
 
 	return 0;
