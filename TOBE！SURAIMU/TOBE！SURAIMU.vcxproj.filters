@@ -87,6 +87,9 @@
     <Filter Include="Project\Game\Others\CSV">
       <UniqueIdentifier>{4bf1c498-63e0-42dd-9d69-4fbfe2d2b485}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Others\sound">
+      <UniqueIdentifier>{7dc47c95-be4d-4a4e-9560-aefe63f00826}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -187,6 +190,12 @@
     </ClCompile>
     <ClCompile Include="combo.cpp">
       <Filter>Project\Game\Object\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_container.cpp">
+      <Filter>Project\Game\Others\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_loader.cpp">
+      <Filter>Project\Game\Others\sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -308,6 +317,12 @@
     </ClInclude>
     <ClInclude Include="csvLoader.h">
       <Filter>Project\Game\Others\CSV</Filter>
+    </ClInclude>
+    <ClInclude Include="audio_container.h">
+      <Filter>Project\Game\Others\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="audio_loader.h">
+      <Filter>Project\Game\Others\sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

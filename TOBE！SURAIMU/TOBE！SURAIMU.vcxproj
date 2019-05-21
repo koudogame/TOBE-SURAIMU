@@ -151,6 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="audio_container.h" />
+    <ClInclude Include="audio_loader.h" />
     <ClInclude Include="background.h" />
     <ClInclude Include="calc.h" />
     <ClInclude Include="collision.h" />
@@ -192,6 +194,8 @@
     <ClInclude Include="wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="audio_container.cpp" />
+    <ClCompile Include="audio_loader.cpp" />
     <ClCompile Include="background.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="combo.cpp" />
