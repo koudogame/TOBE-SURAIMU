@@ -192,12 +192,6 @@ bool Collision::judgment(  Line * L1,  Line * L2)
 
 Vector2 Collision::crossPoint(  Circle * C ,  Line * L )
 {
-	//円と辺の始点と終点の判定
-	if( judgment( C , &Circle( L->start , 0.0F ) ) )
-		return L->start;
-	else if( judgment( C , &Circle( L->end , 0.0F ) ) )
-		return L->end;
-
 	//円と線分
 	//判定用のベクトルを生成
 	Vector2 checker[ 2 ] =
