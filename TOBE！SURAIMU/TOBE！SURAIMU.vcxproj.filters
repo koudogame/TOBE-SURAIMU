@@ -188,6 +188,9 @@
     <ClCompile Include="combo.cpp">
       <Filter>Project\Game\Object\UI</Filter>
     </ClCompile>
+    <ClCompile Include="back_object.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -308,6 +311,9 @@
     </ClInclude>
     <ClInclude Include="csvLoader.h">
       <Filter>Project\Game\Others\CSV</Filter>
+    </ClInclude>
+    <ClInclude Include="back_object.h">
+      <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,6 @@
 
+// 板場 温樹
+
 #include "background.h"
 
 #include "textureLoder.h"
@@ -19,19 +21,25 @@ Background::~Background()
 
 /*===========================================================================*/
 // 初期化処理
-bool Background::init(const wchar_t* const TextureFile, const float Scroll)
+bool Background::init(const wchar_t* const TextureFile, const RECT& Trimming, 
+                      const float Scroll)
 {
     // テクスチャ読み込み
     texture_ = TextureLoder::getInstance()->load(TextureFile);
     if (texture_ == nullptr) { return false; }
 
+
     // タスクの登録
     task_manager_->registerTask(this, TaskUpdate::kBackgroundUpdate);
     task_manager_->registerTask(this, TaskDraw::kBackgroundDraw);
 
+
     // メンバ
-    position_.x = (getWindowWidth<float>() - static_cast<float>(kTextureSize)) / 2.0F;
+    position_.x = (getWindowWidth<float>() - static_cast<float>(kTextureSize))
+                  / 2.0F;
     position_.y = 0.0F;
+    trimming_ = Trimming;
+    magnification_ = 1.0F;
     scroll_ = Scroll;
 
     return true;
@@ -52,7 +60,7 @@ void Background::destroy()
 // 更新処理
 void Background::update()
 {
-    position_.y += scroll_;
+    position_.y += scroll_ * magnification_;
     if (position_.y > getWindowHeight<float>())
     {
         position_.y = getWindowHeight<float>() - kTextureSize + scroll_;
@@ -68,9 +76,8 @@ void Background::draw()
     Vector2 draw_position = position_;
     while (draw_position.y + kTextureSize > 0.0F)
     {
-        kSprite->draw(texture_, draw_position);
+        kSprite->draw(texture_, draw_position, &trimming_);
 
         draw_position.y -= static_cast<float>(kTextureSize);
     }
-    kSprite->draw(texture_, draw_position);
 }

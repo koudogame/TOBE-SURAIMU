@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="background.h" />
+    <ClInclude Include="back_object.h" />
     <ClInclude Include="calc.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="combo.h" />
@@ -193,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="background.cpp" />
+    <ClCompile Include="back_object.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="combo.cpp" />
     <ClCompile Include="commonstates.cpp" />

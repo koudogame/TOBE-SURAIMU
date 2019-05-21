@@ -9,11 +9,13 @@
 #include "pad.h"
 #include "textureLoder.h"
 #include "sprite.h"
+#include "csvLoader.h"
 
 #include "timer.h"
 #include "collision.h"
 #include "task_manager.h"
 #include "background.h"
+#include "back_object.h"
 #include "star_container.h"
 #include "player.h"
 #include "wall.h"
@@ -56,12 +58,24 @@ constexpr float kInitStarSize[] = {
 };
 
 // 処理に関係
-constexpr RECT kTrimmingBackground{       // 背景切り取り範囲
-    0L, 720L, 1280L, 1440L };
-constexpr RECT kTrimmingEffect{           // 背景エフェクト切り取り範囲
+constexpr long kBackgroundSize = 1024L;     // 背景縦横サイズ
+constexpr RECT kTrimmingBackground{         // 背景切り取り範囲
+    0L, 0L, 1024L, 1024L };
+constexpr RECT kTrimmingEffect{             // 背景エフェクト切り取り範囲
     0L,   0L, 1280L,  720L };
-constexpr float kThresholdY = 360.0F;     // プレイヤーの限界Y座標( 絶対座標 )
-
+constexpr float kThresholdY = 360.0F;       // プレイヤーの限界Y座標( 絶対座標 )
+constexpr float kBackgroundSpeed[] =
+{
+    0.2F,
+    0.4F,
+    1.0F,
+    0.6F
+};
+constexpr RECT kTrimmingBackObject[] = 
+{
+    {0L, 1024L, 1280L, 1744L},
+    {1280L, 1024LL, 2560L, 1744L},
+};
 
 
 /*===========================================================================*/
@@ -102,22 +116,15 @@ bool Endless::init()
 
 
     // プレイヤー初期化
-    Vector2 position;
-    float jump;
-    float add_vol;
-    float decay;
-    float gravity;
-    float speed;
-    float up_boost;
-    float rl_boost;
-    FILE* player_state = nullptr;
-    errno_t error = fopen_s(&player_state, "State/player_state.txt", "r");
-    if (error != 0 || player_state == nullptr) { return false; }
-    fscanf_s(player_state,
-        "%f %f %f %f %f %f %f %f %f",
-        &position.x, &position.y, &jump, &add_vol, &decay, &gravity, &speed,
-        &up_boost, &rl_boost);
-    fclose(player_state);
+    CsvLoader file(L"State/player_state.csv");
+    Vector2 position = Vector2(file.getNumber_f(0, 1),
+                               file.getNumber_f(1, 1));
+    float jump       = file.getNumber_f(2, 1);
+    float add_vol    = file.getNumber_f(3, 1);
+    float decay      = file.getNumber_f(4, 1);
+    float gravity    = file.getNumber_f(5, 1);
+    float speed      = file.getNumber_f(6, 1);
+    float rl_boost   = file.getNumber_f(7, 1);
     if (player_->init(
         position,jump,add_vol,decay,gravity,speed,rl_boost) == false)
     {
@@ -125,10 +132,26 @@ bool Endless::init()
     }
 
     // 背景
-    if (background_->init(L"Texture/vector_cosmos.jpg", 10.0F) == false)
+    RECT trimming = kTrimmingBackground;
+    for (int i = 0; i < kBackgroundLayerNum; ++i)
+    {
+        if (background_[i]->init(
+            L"Texture/background.png",
+            trimming,
+            kBackgroundSpeed[i]) == false)
+        {
+            return false;
+        }
+        trimming.left += kBackgroundSize;
+        trimming.right += kBackgroundSize;
+    }
+    if(back_object_->init(
+        kTrimmingBackObject[rand() % 2],
+        kBackgroundSpeed[3]) == false)
     {
         return false;
     }
+
 
     // 壁初期化
     if (wall_->init() == false) { return false; }
@@ -152,6 +175,7 @@ bool Endless::init()
 // 生成処理
 bool Endless::create()
 {
+    if (do_create_ == false) { return true; }
     do_create_ = false;
 
     // テクスチャ
@@ -170,8 +194,13 @@ bool Endless::create()
     if (task_manager_ == nullptr)   { return false; }
 
     // 背景
-    background_ = new (std::nothrow) Background(task_manager_);
-    if (background_ == nullptr) { return false; }
+    for (auto& background : background_)
+    {
+        background      = new Background(task_manager_);
+        if (background == nullptr)  { return false; }
+    }
+    back_object_        = new (std::nothrow) BackObject(task_manager_);
+    if(back_object_ == nullptr)    { return false; }
 
     // スターコンテナ
     star_container_     = new (std::nothrow) StarContainer(task_manager_);
@@ -192,15 +221,18 @@ bool Endless::create()
 
 
     // スター生成パターンファイルのリスト化
-    FILE* pattern_list = nullptr;
-    errno_t error = fopen_s(&pattern_list, "State/pattern_list.txt", "r");
-    if (error != 0 || pattern_list == nullptr) { return false; }
-    char file_name[FILENAME_MAX];
-    while (fscanf_s(pattern_list, "%s", &file_name, FILENAME_MAX) != EOF)
+    std::wstring file_name;
+    CsvLoader file(L"State/pattern_list.csv");
+    for (int i = 0; ; ++i)
     {
+        file_name = file.getString(0, i);
+        if (wcscmp(file_name.c_str(), L"") == 0)
+        {
+            break;
+        }
+
         pattern_file_.push_back(file_name);
     }
-    fclose(pattern_list);
 
 
     return true;
@@ -225,7 +257,11 @@ void Endless::destroy()
     star_container_->destroy(); safe_delete(star_container_);
 
     // 背景
-    background_->destroy();     safe_delete(background_);
+    back_object_->destroy();    safe_delete(back_object_);
+    for (auto& background : background_)
+    {
+        background->destroy();  safe_delete(background);
+    }
 
     // タスクマネージャー
     safe_delete(task_manager_);
@@ -252,13 +288,13 @@ void Endless::draw()
 {
     Sprite* const kSprite = Sprite::getInstance();
 
+
     // オブジェクト
     task_manager_->allDraw();
 
 
     // 背景エフェクト
     kSprite->draw(texture_, Vector2::Zero, &kTrimmingEffect);
-
 
     Numbers<int> climb(static_cast<int>(climb_));
     climb.draw(
@@ -323,6 +359,11 @@ SceneBase* Endless::play()
     const float kOver = kThresholdY - player_->getPosition().y;
     if (kOver > 0.0F) { climb_ += kOver; }
     adjustObjectPosition(kOver);
+    // 背景オブジェクトが死んでいたら初期化
+    if(back_object_->isAlive() == false)
+    {
+        back_object_->reset( kTrimmingBackObject[rand() % 2] );
+    }
 
     // オブジェクトの状態倍率を更新
     const float kMagnification = climb_ / 100000.0F + 1.0F;
@@ -351,32 +392,28 @@ bool Endless::createStar()
 {
     // 生成パターンの選択
     if (_chdir("State") == -1) { return false; }
-    std::string pattern = pattern_file_[rand() % pattern_file_.size()];
-    FILE* file = nullptr;
-    errno_t error = fopen_s(&file, pattern.c_str(), "r");
-    if (_chdir("../") == -1) { return false; }
-    if (error != 0 || file == nullptr) { return false; }
+    std::wstring pattern = pattern_file_[rand() % pattern_file_.size()];
+    CsvLoader file(pattern);
+    _chdir("../");
 
 
     Star* star;
     Vector2 position;
     float angle;
-    float fall;
     float spin;
     float spin_rate;
     float size;
 
-    int end = 0;
+    int count = 1;
     while (true)
     {
-        end = fscanf_s(file,
-            "%f %f %f %f %f %f %f",
-            &position.x, &position.y,
-            &angle,
-            &fall,
-            &spin, &spin_rate,
-            &size);
-        if (end == EOF) { break; }
+        position.x     = file.getNumber_f(0, count);
+        if (position.x == -1) { break; }
+        position.y     = file.getNumber_f(1, count);
+        angle          = file.getNumber_f(2, count);
+        spin           = file.getNumber_f(3, count);
+        spin_rate      = file.getNumber_f(4, count);
+        size           = file.getNumber_f(5, count);
 
 
         position.y -= 720.0F;
@@ -384,14 +421,11 @@ bool Endless::createStar()
             position, angle, spin, spin_rate, size);
         if (star == nullptr)
         {
-            fclose(file);
             return false;
         }
         star->setFall();
+        ++count;
     }
-
-
-    fclose(file);
     return true;
 }
 
@@ -401,10 +435,16 @@ void Endless::adjustObjectPosition(const float Over)
 {
     if (Over > 0)
     {
-		background_->setMove( Over );
+        for (auto& background : background_)
+        {
+            background->setMove(Over);
+        }
+        back_object_->setMove(Over);
 
-		for( auto& star : star_container_->active() )
-			star->setMove( Over );
+        for (auto& star : star_container_->active())
+        {
+            star->setMove(Over);
+        }
 
 		player_->setMove( Over );
 

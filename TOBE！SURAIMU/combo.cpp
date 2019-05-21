@@ -1,4 +1,6 @@
 
+// 板場 温樹
+
 #include "combo.h"
 
 #include "release.h"
@@ -65,7 +67,7 @@ void Combo::update()
     const long long kElapsed = kNow - prev_time_ms_;
     prev_time_ms_ = kNow;
 
-    life_time_ -= static_cast<long long>(kElapsed * magnification_);
+    life_time_ -= static_cast<long long>(static_cast<long double>(kElapsed) * static_cast<long double>(magnification_));
     if (life_time_ <= 0LL) 
     {
         // 一定時間経過でコンボリセット

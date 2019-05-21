@@ -11,11 +11,16 @@ class Timer;
 class TaskManager;
 class ObjectBase;
 class Background;
+class BackObject;
 class StarContainer;
 class Player;
 class Wall;
 
 class Combo;
+
+namespace {
+    constexpr int kBackgroundLayerNum = 3;      // 背景レイヤー数
+}
 
 //-----------------------------------------------------------------------------
 // エンドレスモード
@@ -42,7 +47,7 @@ private:
     SceneBase* (Endless::* update_)() = nullptr;
 
     bool createStar();
-    std::deque<std::string> pattern_file_;
+    std::deque<std::wstring> pattern_file_;
 
     void adjustObjectPosition(const float);
 
@@ -52,13 +57,14 @@ private:
     bool prev_player_jump_state_;
 
 // オブジェクト
-    Timer<Milliseconds>* clock_     = nullptr;
-    TaskManager* task_manager_      = nullptr;
-    Background* background_         = nullptr;
-    StarContainer* star_container_  = nullptr;
-    Player* player_                 = nullptr;
-    Wall* wall_                     = nullptr;
-    Combo* combo_                   = nullptr;
+    Timer<Milliseconds>* clock_                     = nullptr;
+    TaskManager* task_manager_                      = nullptr;
+    Background* background_[kBackgroundLayerNum]    = { nullptr };
+    BackObject* back_object_                        = nullptr;
+    StarContainer* star_container_                  = nullptr;
+    Player* player_                                 = nullptr;
+    Wall* wall_                                     = nullptr;
+    Combo* combo_                                   = nullptr;
 
     float magnification_;
 
