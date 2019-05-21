@@ -322,6 +322,11 @@ SceneBase* Endless::start()
 
     // オブジェクト更新
     task_manager_->allUpdate();
+    // 背景オブジェクトが死んでいたら初期化
+    if (back_object_->isAlive() == false)
+    {
+        back_object_->reset(kTrimmingBackObject[rand() % 2]);
+    }
 
     // 星との衝突処理
     for (auto& star : star_container_->active())

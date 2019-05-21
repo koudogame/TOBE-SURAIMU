@@ -10,8 +10,8 @@
 #include "shape.h"
 
 /*===========================================================================*/
-constexpr float kWallWidth = 30.0F;                     // ï«â°ïù
-constexpr float kWallHeight = 720.0F;                   // ï«ècïù
+constexpr float kWallWidth = 32.0F;                     // ï«â°ïù
+constexpr float kWallHeight = 81.0F;                   // ï«ècïù
 constexpr float kWallWidthHarf = kWallWidth / 2.0F;     // ï«â°ïùîºï™
 constexpr float kDistanceToCenter = 320.0F;             // íÜâõÇ∆ÇÃãóó£
 const float kCenterX = getWindowWidth<float>() / 2.0F;  // âÊñ íÜâõxç¿ïW
@@ -26,8 +26,7 @@ const Line kCollisionRightWall{                             // âEÇÃï«è’ìÀîªíËîÕà
 const float kDrawPositionXLeftWall = kPositionXLeft - kWallWidthHarf;   // ç∂ÇÃï«ï`âÊxç¿ïW
 const float kDrawPositionXRightWall = kPositionXRight - kWallWidthHarf; // âEÇÃï«ï`âÊxç¿ïW
 
-constexpr RECT kTrimmingLeftWall { 1280L, 0L, 1310L, 720L };// ç∂ÇÃï«êÿÇËéÊÇËîÕàÕ
-constexpr RECT kTrimmingRightWall{ 1310L, 0L, 1340L, 720L };// âEÇÃï«êÿÇËéÊÇËîÕàÕ
+constexpr RECT kTrimmingWall { 0L, 0L, 32L, 81L };     // ï«êÿÇËéÊÇËîÕàÕ
 
 
 
@@ -74,7 +73,7 @@ bool Wall::create()
 
 
 	// ÉeÉNÉXÉ`ÉÉ
-	texture_ = TextureLoder::getInstance()->load(L"Texture/ÉvÉåÉCâÊñ .png");
+	texture_ = TextureLoder::getInstance()->load(L"Texture/wall.png");
 	if (texture_ == nullptr) { return false; }
 
 	// å`
@@ -114,18 +113,19 @@ void Wall::draw()
 {
 	Sprite* const kSprite = Sprite::getInstance();
 
-    Vector2 draw_position = position_;
-    while (draw_position.y + kWallHeight > 0.0F)
+    Vector2 draw_position;
+    draw_position.y = 0.0F;
+    while (draw_position.y <= getWindowHeight<float>())
     {
         // ç∂ï«
         draw_position.x = kDrawPositionXLeftWall;
-        kSprite->draw(texture_, draw_position, &kTrimmingLeftWall);
+        kSprite->draw(texture_, draw_position, &kTrimmingWall);
 
         // âEï«
         draw_position.x = kDrawPositionXRightWall;
-        kSprite->draw(texture_, draw_position, &kTrimmingRightWall);
+        kSprite->draw(texture_, draw_position, &kTrimmingWall);
 
-        draw_position.y -= kWallHeight;
+        draw_position.y += static_cast<long>(kWallHeight);
     }
 }
 
