@@ -54,7 +54,9 @@ void Numbers<T>::draw(
 		Sprite::getInstance()->draw(
 			Texture,
 			position,
-			&trimming
+			&trimming,
+			1.0F,
+			1.0F
 		);
 
 		temp /= kTen;

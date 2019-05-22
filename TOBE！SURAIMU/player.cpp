@@ -59,7 +59,6 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	setGravityAngle();
 	jumping_angle_ = gravity_angle_ + XM_PI;
 	now_amount_ = 0.0F;
-	jump_power_ = kJumpAmount;
 	particle_time_ = 0;
 	prev_jump_moveamount_ = 0;
 	magnification_ = 1.0F;
@@ -68,6 +67,8 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	timer = 0;
 
 	owner_ = nullptr;
+
+	score_.init();
 
 	return true;
 }
@@ -79,6 +80,8 @@ void Player::destroy()
 	g_particle_container_.get()->destroy();
 	s_particle_container_.get()->destroy();
 
+	score_.destroy();
+
 	task_manager_->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
@@ -86,6 +89,15 @@ void Player::destroy()
 //更新
 void Player::update()
 {
+	if( kJumpAmount - prev_jump_moveamount_ < 100.0F )
+
+	{
+		flag_.reset( Flag::kCollision );
+		if( flag_.test( Flag::kJump ) )
+			score_.resetCombo();
+	}
+
+
 	//全パーティクルの更新処理
 	g_particle_container_.get()->update();
 	s_particle_container_.get()->update();
@@ -100,24 +112,21 @@ void Player::update()
 
 	//ジャンプ量を増やす
 	if( flag_.test( Flag::kJump ) )
-		now_amount_ += (kAddVolume *magnification_);
-
-	if( now_amount_ >= 1.0F )
-	{
-		flag_.reset( Flag::kCollision );
-		prev_jump_moveamount_ = 0.0F;
-	}
+		now_amount_ += (kAddVolume * magnification_);
 
 	//ブースト力の減少
 	boost_power_ = boost_power_ > ( kSpeed*magnification_ ) ? boost_power_ - ( kDecay *magnification_ ) : ( kSpeed*magnification_ );
 
-	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * ( Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ );
-	prev_jump_moveamount_ = Easing::getInstance()->expo( jump_power_ , now_amount_ , Easing::Mode::Out );
+	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * ( Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ );
+	prev_jump_moveamount_ = Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out );
 
 	//重力をかける
 	gravity();
 
 	move_vector_.end = myshape_.position;
+
+	if( !flag_.test( Flag::kJump ) )
+		score_.addRotate( XMConvertToDegrees( getRotate() ) );
 }
 
 //描画
@@ -141,6 +150,8 @@ void Player::draw()
 		draw_angle = -gravity_angle_ - XM_PI / 2.0F;
 
 	Sprite::getInstance()->draw( texture_ , myshape_.position, &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
+
+	score_.draw();
 }
 
 //生存フラグの返却
@@ -177,15 +188,20 @@ void Player::revision(const Vector2& CrossPoint)
 //星との当たり判定後の処理
 void Player::collision( Star * StarObj)
 {
-	if( owner_ != StarObj )
+	if( owner_ != StarObj || flag_.test(Flag::kTechnique))
 	{
 		rect_left_up_ = Vector2::Zero;
 		direction_id_ = Direction::kFlont;
 		timer = 0;
+		score_.addCombo();
+
+		if( owner_ == StarObj )
+			score_.addTechnique();
 	}
 	owner_ = StarObj;
 	now_amount_ = 0.0F;
 	flag_.reset( Flag::kJump );
+	flag_.reset( Flag::kTechnique);
 }
 
 //壁との当たり判定後の処理
@@ -197,7 +213,7 @@ void Player::collision( Wall * WallObj)
 	jumping_angle_ = XM_PI - jumping_angle_;
 	flag_.reset( Flag::kCollision );
 	flag_.reset( Flag::kParticle );
-	owner_ = nullptr;
+	flag_.set( Flag::kTechnique );
 }
 
 //回転角を返却
@@ -233,7 +249,11 @@ void Player::input()
 
 		//下入力
 		if( stick.y < -0.3F || key.lastState.Down )
+		{
 			bottom_input_ = kBottomOn;
+			score_.addDown();
+			score_.resetCombo();
+		}
 		else
 			bottom_input_ = kBottomOff;
 
@@ -264,10 +284,10 @@ void Player::input()
 			direction_id_ = Direction::kFlay;
 			particle_time_ = 0;
 			now_amount_ = 0.0F;
-			jump_power_ = kJumpAmount;
 			jumping_angle_ = gravity_angle_ + XM_PI;
 			ground_ = &kGround;
 			prev_jump_moveamount_ = 0;
+			score_.resetRotate();
 		}
 		flag_.reset( Flag::kBoost );
 	}
