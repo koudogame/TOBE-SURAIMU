@@ -34,6 +34,7 @@ public:
 	void collision( class Player* P );
 	void addFreeFallParticle();
 	inline void resetStatus( const float Magnification ) { magnification_ = Magnification; }
+	inline float getSize() { return size_; }
 
 private:
 	//“à•”—˜—pŠÖ”

@@ -201,6 +201,8 @@ void Player::collision( Star * StarObj)
 	}
 	owner_ = StarObj;
 	now_amount_ = 0.0F;
+	if( flag_.test( Flag::kJump ) )
+		score_.addLength( ( myshape_.position - owner_->getPosition() ).Length() / dynamic_cast< Star* >( owner_ )->getSize() );
 	flag_.reset( Flag::kJump );
 	flag_.reset( Flag::kTechnique);
 }

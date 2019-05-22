@@ -5,6 +5,7 @@ const int kComboScore = 100;
 const int kDownScore = 1;
 const int kTechniqueScore = 1000;
 const int kRotationScore = 100;
+const int kLengthScore = 100;
 
 Scoring::Scoring()
 {}
@@ -39,6 +40,7 @@ void Scoring::draw()
 	rota_com_.draw( texture_ , Vector2( 320.0F , 256.0F ) , 64 , 128 );
 }
 
+//îjä¸
 void Scoring::destroy()
 {
 	TextureLoder::getInstance()->release( texture_ );
@@ -47,7 +49,7 @@ void Scoring::destroy()
 //è„è∏ó â¡éZ
 void Scoring::addDefaultScore( float AddScore )
 {
-	if(scoring_flag_)
+	if( scoring_flag_ )
 		score_ += static_cast< int >( AddScore );
 }
 
@@ -108,5 +110,11 @@ void Scoring::resetRotate()
 {
 	rotation_ = 0;
 	rotation_combo_ = 0;
+}
+
+//êØÇÃãóó£Ç≈â¡ì_
+void Scoring::addLength( const float Length )
+{
+	score_ += static_cast< int >( Length * kLengthScore );
 }
 
