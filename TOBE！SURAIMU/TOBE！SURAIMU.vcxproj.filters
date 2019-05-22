@@ -90,6 +90,9 @@
     <Filter Include="Project\Game\Others\sound">
       <UniqueIdentifier>{7dc47c95-be4d-4a4e-9560-aefe63f00826}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Others\Scorring">
+      <UniqueIdentifier>{c77d9a66-d3a9-4e68-9f17-51b399b14b3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -199,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="back_object.cpp">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="scorring.cpp">
+      <Filter>Project\Game\Others\Scorring</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +335,9 @@
     </ClInclude>
     <ClInclude Include="audio_loader.h">
       <Filter>Project\Game\Others\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="scorring.h">
+      <Filter>Project\Game\Others\Scorring</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
