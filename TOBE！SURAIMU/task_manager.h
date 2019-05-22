@@ -15,12 +15,7 @@ enum class TaskUpdate
 // •`‰æƒ^ƒXƒNID
 enum class TaskDraw
 {
-    kBackgroundDraw,
-	kStarDraw,
-	kPlayerDraw,
-	kWallDraw,
-	kParticleDraw,
-    kComboDraw,
+    kDraw,
 };
 
 	

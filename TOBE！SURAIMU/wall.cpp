@@ -54,7 +54,7 @@ bool Wall::init()
 
 	// タスクの登録
 	task_manager_->registerTask(this, TaskUpdate::kWallUpdate);
-	task_manager_->registerTask(this, TaskDraw::kWallDraw);
+	task_manager_->registerTask(this, TaskDraw::kDraw);
 
 	// 形の設定
 	myshape_[0] = kCollisionLeftWall;

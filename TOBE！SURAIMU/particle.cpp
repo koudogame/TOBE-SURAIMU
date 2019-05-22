@@ -35,7 +35,7 @@ bool Particle::init(
 
 	// タスクの登録
 	task_manager_->registerTask(this, TaskUpdate::kParticleUpdate);
-	task_manager_->registerTask(this, TaskDraw::kParticleDraw);
+	task_manager_->registerTask(this, TaskDraw::kDraw);
 
 
 	// メンバ
