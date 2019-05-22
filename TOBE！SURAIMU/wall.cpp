@@ -11,7 +11,7 @@
 
 /*===========================================================================*/
 constexpr float kWallWidth = 32.0F;                     // •Ç‰¡•
-constexpr float kWallHeight = 81.0F;                   // •Çc•
+constexpr float kWallHeight = 81.0F;                    // •Çc•
 constexpr float kWallWidthHarf = kWallWidth / 2.0F;     // •Ç‰¡•”¼•ª
 constexpr float kDistanceToCenter = 320.0F;             // ’†‰›‚Æ‚Ì‹——£
 const float kCenterX = getWindowWidth<float>() / 2.0F;  // ‰æ–Ê’†‰›xÀ•W
@@ -27,7 +27,6 @@ const float kDrawPositionXLeftWall = kPositionXLeft - kWallWidthHarf;   // ¶‚Ì•
 const float kDrawPositionXRightWall = kPositionXRight - kWallWidthHarf; // ‰E‚Ì•Ç•`‰æxÀ•W
 
 constexpr RECT kTrimmingWall { 0L, 0L, 32L, 81L };     // •ÇØ‚èæ‚è”ÍˆÍ
-
 
 
 /*===========================================================================*/

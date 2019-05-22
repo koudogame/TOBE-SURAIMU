@@ -154,7 +154,9 @@
     <ClInclude Include="audio_container.h" />
     <ClInclude Include="audio_loader.h" />
     <ClInclude Include="background.h" />
+    <ClInclude Include="background_container.h" />
     <ClInclude Include="back_object.h" />
+    <ClInclude Include="back_object_container.h" />
     <ClInclude Include="calc.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="combo.h" />
@@ -198,7 +200,9 @@
     <ClCompile Include="audio_container.cpp" />
     <ClCompile Include="audio_loader.cpp" />
     <ClCompile Include="background.cpp" />
+    <ClCompile Include="background_container.cpp" />
     <ClCompile Include="back_object.cpp" />
+    <ClCompile Include="back_object_container.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="combo.cpp" />
     <ClCompile Include="commonstates.cpp" />

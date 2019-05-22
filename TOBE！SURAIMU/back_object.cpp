@@ -9,8 +9,8 @@
 
 
 /*===========================================================================*/
-constexpr float kTextureWidth = 1280.0F;
-constexpr float kTextureHeight = 719.0F;
+constexpr float kTextureWidth = 2048.0F;
+constexpr float kTextureHeight = 1024.0F;
 constexpr float kAmountOfAlphaChange = 0.01F;
 constexpr Vector2 kAnkerPoint(kTextureWidth / 2.0F, kTextureHeight / 2.0F);
 
@@ -27,13 +27,15 @@ BackObject::~BackObject()
 
 /*===========================================================================*/
 // èâä˙âªèàóù
-bool BackObject::init(const RECT& Trimming, const float Scroll, const float Depth)
+bool BackObject::init(const wchar_t* const TextureName, const RECT& Trimming,
+    const float ScrollX, const float ScrollY,
+    const float Depth)
 {
     destroy();
     created_ = true;
 
     // ê∂ê¨èàóù
-    texture_ = TextureLoder::getInstance()->load(L"Texture/background.png");
+    texture_ = TextureLoder::getInstance()->load(TextureName);
     if (texture_ == nullptr) { return false; }
 
     task_manager_->registerTask(this, TaskUpdate::kBackgroundUpdate);
@@ -41,17 +43,7 @@ bool BackObject::init(const RECT& Trimming, const float Scroll, const float Dept
 
 
     // èâä˙âª
-    position_.x    = getWindowWidth<float>() / 2.0F;
-    position_.y    = -kTextureHeight / 2.0F;
-    trimming_      = Trimming;
-    scroll_        = Scroll;
-    draw_depth_    = Depth;
-    magnification_ = 1.0F;
-    angle_         = 0.0F;
-    set_angle_     = &BackObject::addAngle;
-    alpha_red_1    = 1.0F;
-    alpha_red_2    = 0.0F;
-    alpha_blend_   = &BackObject::addAlphaRed2;
+    reset(Trimming, ScrollX, ScrollY, Depth);
 
     return true;
 }
@@ -71,11 +63,13 @@ void BackObject::destroy()
 // çXêVèàóù
 void BackObject::update()
 {
-    position_.y += scroll_ * magnification_;
+    position_.x += scroll_x_ * magnification_;
+    position_.y += scroll_y_ * magnification_;
     if (position_.y > getWindowHeight<float>())
     {
         position_.y = getWindowHeight<float>();
     }
+
     (this->*set_angle_)();
     (this->*alpha_blend_)();
 }
@@ -86,7 +80,19 @@ void BackObject::draw()
 {
     Sprite* const kSprite = Sprite::getInstance();
 
+    Vector2 draw_position = position_;
+    draw_position.x -= getWindowWidth<float>();
+
+    while(draw_position.x < getWindowWidth<float>())
+    {
+        kSprite->draw(texture_, draw_position, &trimming_);
+
+        draw_position.x += kTextureWidth;
+    }
+
+
     // ï`âÊÉÇÅ[Éhâ¡éZ
+#if 0
     kSprite->end();
     kSprite->begin(kSprite->chengeMode());
 
@@ -110,22 +116,28 @@ void BackObject::draw()
 
     kSprite->end();
     kSprite->begin();
+#endif
     // !ï`âÊÉÇÅ[Éhâ¡éZ
 }
 
 /*===========================================================================*/
-// éÄñSîªíË
-bool BackObject::isAlive()
-{
-    return (position_.y - kTextureHeight / 2) <= getWindowHeight<float>();
-}
-
-/*===========================================================================*/
 // çƒê›íË
-void BackObject::reset(const RECT& Trimming)
+void BackObject::reset(const RECT& Trimming,
+    const float ScrollX, const float ScrollY ,
+    const float Depth)
 {
-    trimming_ = Trimming;
-    position_.y = -kTextureHeight;
+    position_.x    = getWindowWidth<float>();// / 2.0F;
+    position_.y    = -kTextureHeight;
+    trimming_      = Trimming;
+    scroll_x_      = ScrollX;
+    scroll_y_      = ScrollY;
+    draw_depth_    = Depth;
+    magnification_ = 1.0F;
+    angle_         = 0.0F;
+    set_angle_     = &BackObject::addAngle;
+    alpha_red_1    = 1.0F;
+    alpha_red_2    = 0.0F;
+    alpha_blend_   = &BackObject::addAlphaRed2;
 }
 
 /*===========================================================================*/

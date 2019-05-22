@@ -47,3 +47,13 @@ void StarContainer::resetStates(const float Magnification)
         star->resetStatus(Magnification);
     }
 }
+
+/*===========================================================================*/
+// y座標の移動( スクロール )
+void StarContainer::setMove(const float Move)
+{
+    for (auto& star : active_list_)
+    {
+        star->setMove(Move);
+    }
+}
