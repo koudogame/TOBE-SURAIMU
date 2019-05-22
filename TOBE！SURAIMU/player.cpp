@@ -89,13 +89,6 @@ void Player::destroy()
 //更新
 void Player::update()
 {
-	if( kJumpAmount - prev_jump_moveamount_ < 100.0F )
-
-	{
-		flag_.reset( Flag::kCollision );
-		if( flag_.test( Flag::kJump ) )
-			score_.resetCombo();
-	}
 
 
 	//全パーティクルの更新処理
@@ -113,6 +106,14 @@ void Player::update()
 	//ジャンプ量を増やす
 	if( flag_.test( Flag::kJump ) )
 		now_amount_ += (kAddVolume * magnification_);
+
+	if( Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ < kGravity )
+
+	{
+		flag_.reset( Flag::kCollision );
+		if( flag_.test( Flag::kJump ) )
+			score_.resetCombo();
+	}
 
 	//ブースト力の減少
 	boost_power_ = boost_power_ > ( kSpeed*magnification_ ) ? boost_power_ - ( kDecay *magnification_ ) : ( kSpeed*magnification_ );

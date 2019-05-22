@@ -21,7 +21,7 @@ void Collision::collision( Player * P , Star * S )
 	bool hit_flag = false;
 	for( int i = 0; i < kStarLineNum; i++ )
 	{
-		//円と辺の始点と終点の判定
+		//円と辺の始点との判定
 		if( judgment( P->getShape() , &Circle( S->getShape( i )->start , 0.0F ) ) )
 		{
 			if( !P->isCollision() )
