@@ -75,7 +75,7 @@ public:
 	virtual const std::list<T*>& active() { return active_list_; }
 
 protected:
-	T* getFreeObjAndInsert()
+	virtual T* getFreeObjAndInsert()
 	{
 		T* free_obj = nullptr;
 		if (free_list_.size())
@@ -85,7 +85,7 @@ protected:
 		}
 		else
 		{
-			free_obj = new (std::nothrow) T(task_manager_);
+			free_obj = new T(task_manager_);
 		}
 		active_list_.push_back(free_obj);
 		return free_obj;

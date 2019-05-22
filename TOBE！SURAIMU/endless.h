@@ -10,8 +10,8 @@ class Timer;
 
 class TaskManager;
 class ObjectBase;
-class Background;
-class BackObject;
+class BackgroundContainer;
+class BackObjectContainer;
 class StarContainer;
 class Player;
 class Wall;
@@ -59,8 +59,8 @@ private:
 // オブジェクト
     Timer<Milliseconds>* clock_                     = nullptr;
     TaskManager* task_manager_                      = nullptr;
-    Background* background_[kBackgroundLayerNum]    = { nullptr };
-    BackObject* back_object_                        = nullptr;
+    BackgroundContainer* background_container_      = nullptr;
+    BackObjectContainer* back_object_container_     = nullptr;
     StarContainer* star_container_                  = nullptr;
     Player* player_                                 = nullptr;
     Wall* wall_                                     = nullptr;

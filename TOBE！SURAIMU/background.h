@@ -14,8 +14,7 @@ public:
     Background(TaskManager* const TaskManager);
     virtual ~Background();
 
-    virtual bool init(const wchar_t* const TextureFileName,
-                      const RECT& Trimming,
+    virtual bool init(const RECT& Trimming,
                       const float Scroll = 1.0F,
                       const float Depth = 0.0F);
     virtual void destroy() override;

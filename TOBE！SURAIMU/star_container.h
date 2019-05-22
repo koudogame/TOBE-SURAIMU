@@ -27,4 +27,5 @@ public:
 	);
 
     void resetStates(const float Magnification);
+    void setMove(const float MoveY);
 };

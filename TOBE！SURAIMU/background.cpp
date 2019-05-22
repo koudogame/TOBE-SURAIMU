@@ -21,11 +21,10 @@ Background::~Background()
 
 /*===========================================================================*/
 // 初期化処理
-bool Background::init(const wchar_t* const TextureFile, const RECT& Trimming, 
-                      const float Scroll, const float Depth)
+bool Background::init(const RECT& Trimming, const float Scroll, const float Depth)
 {
     // テクスチャ読み込み
-    texture_ = TextureLoder::getInstance()->load(TextureFile);
+    texture_ = TextureLoder::getInstance()->load(L"Texture/background.png");
     if (texture_ == nullptr) { return false; }
 
 
