@@ -75,9 +75,6 @@
     <Filter Include="Project\Game\Object\Particle\Ground">
       <UniqueIdentifier>{cde7dbaf-538f-46d4-a830-2646d8621fa5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Object\Particle\Stay">
-      <UniqueIdentifier>{419f758f-e517-4824-b0a6-fb899780d545}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Object\Background">
       <UniqueIdentifier>{0e1baea5-e6b7-4473-8ea1-fc6781b3dc55}</UniqueIdentifier>
     </Filter>
@@ -92,6 +89,12 @@
     </Filter>
     <Filter Include="Project\Game\Others\Scoring">
       <UniqueIdentifier>{c77d9a66-d3a9-4e68-9f17-51b399b14b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Object\Particle\FreeFall">
+      <UniqueIdentifier>{419f758f-e517-4824-b0a6-fb899780d545}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Object\Particle\Stay">
+      <UniqueIdentifier>{567c1266-7f5e-4580-8d2e-1786cce9a3e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -183,10 +186,10 @@
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
     <ClCompile Include="freeFallParticle.cpp">
-      <Filter>Project\Game\Object\Particle\Stay</Filter>
+      <Filter>Project\Game\Object\Particle\FreeFall</Filter>
     </ClCompile>
     <ClCompile Include="freeFallParticle_container.cpp">
-      <Filter>Project\Game\Object\Particle\Stay</Filter>
+      <Filter>Project\Game\Object\Particle\FreeFall</Filter>
     </ClCompile>
     <ClCompile Include="csvLoader.cpp">
       <Filter>Project\Game\Others\CSV</Filter>
@@ -211,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="back_object_container.cpp">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="stay_particle.cpp">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClCompile>
+    <ClCompile Include="stay_particle_container.cpp">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,10 +328,10 @@
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
     <ClInclude Include="freeFallParticle.h">
-      <Filter>Project\Game\Object\Particle\Stay</Filter>
+      <Filter>Project\Game\Object\Particle\FreeFall</Filter>
     </ClInclude>
     <ClInclude Include="freeFallParticle_container.h">
-      <Filter>Project\Game\Object\Particle\Stay</Filter>
+      <Filter>Project\Game\Object\Particle\FreeFall</Filter>
     </ClInclude>
     <ClInclude Include="combo.h">
       <Filter>Project\Game\Object\UI</Filter>
@@ -350,6 +359,12 @@
     </ClInclude>
     <ClInclude Include="back_object_container.h">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="stay_particle.h">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClInclude>
+    <ClInclude Include="stay_particle_container.h">
+      <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

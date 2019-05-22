@@ -53,7 +53,8 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 		return false;
 
 	g_particle_container_ = std::make_unique< GroundParticleContainer>( task_manager_ );
-	s_particle_container_ = std::make_unique<FreeFallParticleContainer>( task_manager_ );
+	f_particle_container_ = std::make_unique<FreeFallParticleContainer>( task_manager_ );
+	s_particle_container_ = std::make_unique<StayParticleContainer>( task_manager_ , &myshape_.position );
 
 	//各変数の初期化
 	setGravityAngle();
@@ -78,6 +79,7 @@ void Player::destroy()
 {
 	//全パーティクル削除
 	g_particle_container_.get()->destroy();
+	f_particle_container_.get()->destroy();
 	s_particle_container_.get()->destroy();
 
 	score_.destroy();
@@ -89,10 +91,12 @@ void Player::destroy()
 //更新
 void Player::update()
 {
-
+	s_particle_container_.get()->addParticle( L"Texture/player particle.png" );
+	s_particle_container_.get()->addParticle( L"Texture/player particle.png" );
 
 	//全パーティクルの更新処理
 	g_particle_container_.get()->update();
+	f_particle_container_.get()->update();
 	s_particle_container_.get()->update();
 
 	//各パーティクルの追加
@@ -168,7 +172,7 @@ void Player::setMove( const float Over )
 {
 	myshape_.position.y += Over;
 	g_particle_container_.get()->setMove( Over );
-	s_particle_container_.get()->setMove( Over );
+	f_particle_container_.get()->setMove( Over );
 }
 
 //座標の補正
@@ -385,7 +389,7 @@ void Player::addFreeFallParticle()
 	{
 		if( ++particle_time_ >= kParticleTime )
 		{
-			s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , (kGravity *magnification_) );
+			f_particle_container_.get()->addParticle( L"Texture/player particle.png" , myshape_.position , (kGravity *magnification_) );
 			particle_time_ = 0;
 		}
 	}

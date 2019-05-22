@@ -4,7 +4,7 @@
 #include "task_manager.h"
 
 const float kMinFall = 5.0F;
-const int kTextureSize = 15;
+const int kTextureSize = 32;
 const int kRotate = 5;
 
 FreeFallParticle::FreeFallParticle( TaskManager* Manager ) :
@@ -52,7 +52,11 @@ void FreeFallParticle::update()
 
 void FreeFallParticle::draw()
 {
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
 	Sprite::getInstance()->draw( texture_ , position_ , nullptr , alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , static_cast< float >( rotate_ ) , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin();
 }
 
 bool FreeFallParticle::isAlive()

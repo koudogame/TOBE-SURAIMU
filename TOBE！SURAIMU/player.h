@@ -6,6 +6,7 @@
 #include "shape.h"
 #include "groundParticle_container.h"
 #include "freeFallParticle_container.h"
+#include "stay_particle_container.h"
 #include "scoring.h"
 
 class TaskManager;
@@ -78,7 +79,8 @@ private:
 	Circle myshape_;
 	float dis_;
 	std::unique_ptr<GroundParticleContainer> g_particle_container_;
-	std::unique_ptr<FreeFallParticleContainer> s_particle_container_;
+	std::unique_ptr<FreeFallParticleContainer> f_particle_container_;
+	std::unique_ptr<StayParticleContainer> s_particle_container_;
 	int particle_time_;
 	float prev_jump_moveamount_;
 	float magnification_;
