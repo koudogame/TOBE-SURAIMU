@@ -10,8 +10,9 @@
 
 /*===========================================================================*/
 constexpr float kTextureWidth = 1280.0F;
-constexpr float kTextureHeight = 720.0F;
+constexpr float kTextureHeight = 719.0F;
 constexpr float kAmountOfAlphaChange = 0.01F;
+constexpr Vector2 kAnkerPoint(kTextureWidth / 2.0F, kTextureHeight / 2.0F);
 
 /*===========================================================================*/
 BackObject::BackObject(TaskManager* const TaskManager) :
@@ -26,7 +27,7 @@ BackObject::~BackObject()
 
 /*===========================================================================*/
 // èâä˙âªèàóù
-bool BackObject::init(const RECT& Trimming, const float Scroll)
+bool BackObject::init(const RECT& Trimming, const float Scroll, const float Depth)
 {
     destroy();
     created_ = true;
@@ -36,27 +37,21 @@ bool BackObject::init(const RECT& Trimming, const float Scroll)
     if (texture_ == nullptr) { return false; }
 
     task_manager_->registerTask(this, TaskUpdate::kBackgroundUpdate);
-    task_manager_->registerTask(this, TaskDraw::kBackgroundDraw);
+    task_manager_->registerTask(this, TaskDraw::kDraw);
 
 
     // èâä˙âª
-    position_.x = getWindowWidth<float>() / 2.0F - kTextureWidth / 2.0F;
-    position_.y = -kTextureHeight;
-    trimming_ = Trimming;
-    scroll_ = Scroll;
-    switch(rand() % 2)
-    {
-    case 0:
-        alpha_red_1 = 1.0F;
-        alpha_red_2 = 0.0F;
-        alpha_blend_ = &BackObject::addAlphaRed2;
-        break;
-    case 1:
-        alpha_red_1 = 0.0F;
-        alpha_red_2 = 1.0F;
-        alpha_blend_ = &BackObject::addAlphaRed1;
-        break;
-    }
+    position_.x    = getWindowWidth<float>() / 2.0F;
+    position_.y    = -kTextureHeight / 2.0F;
+    trimming_      = Trimming;
+    scroll_        = Scroll;
+    draw_depth_    = Depth;
+    magnification_ = 1.0F;
+    angle_         = 0.0F;
+    set_angle_     = &BackObject::addAngle;
+    alpha_red_1    = 1.0F;
+    alpha_red_2    = 0.0F;
+    alpha_blend_   = &BackObject::addAlphaRed2;
 
     return true;
 }
@@ -81,6 +76,7 @@ void BackObject::update()
     {
         position_.y = getWindowHeight<float>();
     }
+    (this->*set_angle_)();
     (this->*alpha_blend_)();
 }
 
@@ -90,16 +86,38 @@ void BackObject::draw()
 {
     Sprite* const kSprite = Sprite::getInstance();
 
+    // ï`âÊÉÇÅ[Éhâ¡éZ
+    kSprite->end();
+    kSprite->begin(kSprite->chengeMode());
+
     RECT trimming = trimming_;
-    kSprite->draw(texture_, position_, &trimming);
+    kSprite->draw(texture_, position_, &trimming, 1.0F, 0.0F,
+        Vector2(1.0F,1.0F), angle_ , kAnkerPoint);
+
 
     trimming.top += static_cast<long>(kTextureHeight);
     trimming.bottom += static_cast<long>(kTextureHeight);
-    kSprite->draw(texture_, position_, &trimming, alpha_red_1);
+
+    kSprite->draw(texture_, position_, &trimming, alpha_red_1, 0.0F,
+        Vector2(1.0F, 1.0F), angle_, kAnkerPoint);
+
 
     trimming.top += static_cast<long>(kTextureHeight);
     trimming.bottom += static_cast<long>(kTextureHeight);
-    kSprite->draw(texture_, position_, &trimming, alpha_red_2);
+
+    kSprite->draw(texture_, position_, &trimming, alpha_red_2, 0.0F,
+        Vector2(1.0F, 1.0F), angle_, kAnkerPoint);
+
+    kSprite->end();
+    kSprite->begin();
+    // !ï`âÊÉÇÅ[Éhâ¡éZ
+}
+
+/*===========================================================================*/
+// éÄñSîªíË
+bool BackObject::isAlive()
+{
+    return (position_.y - kTextureHeight / 2) <= getWindowHeight<float>();
 }
 
 /*===========================================================================*/
@@ -149,5 +167,25 @@ void BackObject::addAlphaRed2()
             alpha_red_2 = 1.0F;
             alpha_blend_ = &BackObject::addAlphaRed1;
         }
+    }
+}
+
+/*===========================================================================*/
+// äpìxâ¡éZ
+void BackObject::addAngle()
+{
+    angle_ += 0.05F;
+    if(angle_ >= 10.0F)
+    {
+        set_angle_ = &BackObject::defAngle;
+    }
+}
+// äpìxå∏éZ
+void BackObject::defAngle()
+{
+    angle_ -= 0.05F;
+    if( angle_ <= -10.0F)
+    {
+        set_angle_ = &BackObject::addAngle;
     }
 }

@@ -41,7 +41,7 @@ Star::~Star()
 bool Star::init( const Vector2 & Position , const float Angle  , const float Spin , const float Rate , const float Size )
 {
 	task_manager_->registerTask( this , TaskUpdate::kStarUpdate );
-	task_manager_->registerTask( this , TaskDraw::kStarDraw );
+	task_manager_->registerTask( this , TaskDraw::kDraw );
 
 	texture_ = TextureLoder::getInstance()->load( L"Texture/star.png" );
 	if( texture_ == nullptr )

@@ -24,7 +24,7 @@ bool FreeFallParticle::init( const std::wstring& FileName , const Vector2& Posit
 		return false;
 
 	task_manager_->registerTask( this , TaskUpdate::kParticleUpdate );
-	task_manager_->registerTask( this , TaskDraw::kParticleDraw );
+	task_manager_->registerTask( this , TaskDraw::kDraw );
 
 	position_ = Posit;
 	alpha_ = 1.0F;

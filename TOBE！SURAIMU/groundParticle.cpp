@@ -18,7 +18,7 @@ GroundParticle::~GroundParticle()
 bool GroundParticle::init(const std::wstring& FileName, Vector2 Posit , const float Angle )
 {
 	task_manager_->registerTask( this , TaskUpdate::kParticleUpdate );
-	task_manager_->registerTask( this , TaskDraw::kParticleDraw );
+	task_manager_->registerTask( this , TaskDraw::kDraw );
 	texture_ = TextureLoder::getInstance()->load( FileName );
 	if( texture_ == nullptr )
 		return false;

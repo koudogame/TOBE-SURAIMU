@@ -16,12 +16,14 @@ public:
     BackObject(TaskManager* const TaskManager);
     ~BackObject();
 
-    bool init(const RECT& Trimming, const float Scroll);
+    bool init(const RECT& Trimming,
+              const float Scroll = 1.0F,
+              const float DrawDepth = 0.0F);
     void destroy() override;
     void update() override;
     void draw() override;
 
-    bool isAlive() override { return position_.y <= getWindowHeight<float>(); }
+    bool isAlive() override;
 
     void resetStates(const float Magnification) { magnification_ = Magnification; }
     void reset(const RECT& Trimming); 
@@ -30,7 +32,13 @@ private:
     bool created_ = false;
     RECT trimming_{ 0L,0L,0L,0L };
     float scroll_ = 1.0F;
+    float draw_depth_ = 0.0F;
     float magnification_ = 1.0F;
+
+    float angle_ = 0.0F;
+    void addAngle();
+    void defAngle();
+    void (BackObject::*set_angle_)() = nullptr;
 
     float alpha_red_1 = 0.0F;
     float alpha_red_2 = 0.0F;

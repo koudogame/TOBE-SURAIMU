@@ -14,7 +14,10 @@ public:
     Background(TaskManager* const TaskManager);
     virtual ~Background();
 
-    virtual bool init(const wchar_t* const TextureFileName, const RECT& Trimming, const float Scroll);
+    virtual bool init(const wchar_t* const TextureFileName,
+                      const RECT& Trimming,
+                      const float Scroll = 1.0F,
+                      const float Depth = 0.0F);
     virtual void destroy() override;
     virtual void update() override;
     virtual void draw() override;
@@ -23,7 +26,8 @@ public:
 
     
 protected:
-    RECT trimming_;
-    float magnification_;
-    float scroll_;
+    RECT trimming_{0L, 0L, 0L, 0L};
+    float magnification_ = 1.0F;
+    float scroll_ = 1.0F;
+    float depth_ = 0.0F;
 };

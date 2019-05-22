@@ -22,7 +22,7 @@ Background::~Background()
 /*===========================================================================*/
 // 初期化処理
 bool Background::init(const wchar_t* const TextureFile, const RECT& Trimming, 
-                      const float Scroll)
+                      const float Scroll, const float Depth)
 {
     // テクスチャ読み込み
     texture_ = TextureLoder::getInstance()->load(TextureFile);
@@ -31,7 +31,7 @@ bool Background::init(const wchar_t* const TextureFile, const RECT& Trimming,
 
     // タスクの登録
     task_manager_->registerTask(this, TaskUpdate::kBackgroundUpdate);
-    task_manager_->registerTask(this, TaskDraw::kBackgroundDraw);
+    task_manager_->registerTask(this, TaskDraw::kDraw);
 
 
     // メンバ
@@ -72,12 +72,16 @@ void Background::update()
 void Background::draw()
 {
     Sprite* const kSprite = Sprite::getInstance();
-
+    
+    kSprite->end();
+    kSprite->begin(kSprite->chengeMode());
     Vector2 draw_position = position_;
     while (draw_position.y + kTextureSize > 0.0F)
     {
-        kSprite->draw(texture_, draw_position, &trimming_);
+        kSprite->draw(texture_, draw_position, &trimming_, 1.0F, depth_);
 
         draw_position.y -= static_cast<float>(kTextureSize);
     }
+    kSprite->end();
+    kSprite->begin();
 }
