@@ -289,6 +289,7 @@ SceneBase* Endless::start()
 			star->setFall();
 		}
 		clock_->start();
+		player_->onStartFlag();
 	}
 
 	// オブジェクト更新
@@ -339,7 +340,7 @@ SceneBase* Endless::play()
 
 	// 座標調整( スクロール )
 	const float kOver = kThresholdY - player_->getPosition().y;
-	if (kOver > 0.0F) { climb_ += kOver; }
+	if( kOver > 0.0F ) { player_->addScore( kOver ); }
 	adjustObjectPosition(kOver);
     // 背景オブジェクトが死んでいたら初期化
     if (back_object_container_->empty())

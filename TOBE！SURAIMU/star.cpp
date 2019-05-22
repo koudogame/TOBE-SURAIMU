@@ -116,12 +116,12 @@ void Star::setFall()
 
 void Star::collision(Player* P)
 {
-	float old_angle = atan2( -( P->getMove()->start.y - position_.y ) , ( P->getMove()->start.x - position_.x ) );
-	float new_angle = atan2( -( P->getMove()->end.y - position_.y ) , ( P->getMove()->end.x - position_.x ) );
-	int signal = ( int ) copysign( 1.0F , new_angle - old_angle );
+	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , ( P->getMove()->start.x - position_.x ) );
+	float new_angle = std::atan2( -( P->getMove()->end.y - position_.y ) , ( P->getMove()->end.x - position_.x ) );
+	int signal = ( int ) std::copysign( 1.0F , new_angle - old_angle );
 	turn_ = signal;
 
-	spin_ += turn_ * rate_ * abs( Calc::cross( P->getMove()->end - P->getMove()->start , P->getShape()->position - position_ ) );
+	spin_ += turn_ * rate_ * std::abs( Calc::cross( P->getMove()->end - P->getMove()->start , P->getShape()->position - position_ ) );
 	if( std::abs( spin_ ) < kMinSpin )
 		spin_ = kMinSpin * turn_;
 	else if( std::abs( spin_ ) > kMaxSpin )
@@ -150,8 +150,8 @@ void Star::setAngle()
 	for( int i = 0; i < kStarLineNum; i++ )
 	{
 		//線分の始点設定
-		myshape_[ i ].end = position_ + Vector2( cos( XMConvertToRadians( angle_[ i ] ) ) , -sin( XMConvertToRadians( angle_[ i ] ) ) ) * size_;
+		myshape_[ i ].end = position_ + Vector2( std::cos( XMConvertToRadians( angle_[ i ] ) ) , -std::sin( XMConvertToRadians( angle_[ i ] ) ) ) * size_;
 		//線分の終点設定
-		myshape_[ i ].start = position_ + Vector2( cos( XMConvertToRadians( angle_[ i < kStarLineNum - 1 ? i + 1 : 0 ] ) ) , -sin( XMConvertToRadians( angle_[ i < kStarLineNum - 1 ? i + 1 : 0 ] ) ) ) * size_;
+		myshape_[ i ].start = position_ + Vector2( std::cos( XMConvertToRadians( angle_[ i < kStarLineNum - 1 ? i + 1 : 0 ] ) ) , -std::sin( XMConvertToRadians( angle_[ i < kStarLineNum - 1 ? i + 1 : 0 ] ) ) ) * size_;
 	}
 }

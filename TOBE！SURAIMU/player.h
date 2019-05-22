@@ -6,8 +6,7 @@
 #include "shape.h"
 #include "groundParticle_container.h"
 #include "freeFallParticle_container.h"
-
-#include "numbers.h"
+#include "scoring.h"
 
 class TaskManager;
 
@@ -41,6 +40,8 @@ public:
 	void collision( class Wall* );
 	float getRotate();
 	void resetStatus( const float Magnification ) { magnification_ = Magnification; }
+	inline void onStartFlag() { score_.start(); }
+	inline void addScore( const float AddScore ) { score_.addDefaultScore( AddScore ); }
 
 
 private:
@@ -64,10 +65,10 @@ private:
 		kBoost,
 		kCollision,
 		kParticle,
+		kTechnique,
 	};
-	std::bitset<4> flag_;
+	std::bitset<5> flag_;
 	float now_amount_;
-	float jump_power_;
 	float boost_power_;
 	float gravity_angle_;
 	float jumping_angle_;
@@ -82,6 +83,8 @@ private:
 	float prev_jump_moveamount_;
 	float magnification_;
 	int bottom_input_;
+
+	Scoring score_;
 
 private:
 	//•`‰æŒn

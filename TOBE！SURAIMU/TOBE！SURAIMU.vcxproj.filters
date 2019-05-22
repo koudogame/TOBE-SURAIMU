@@ -90,6 +90,9 @@
     <Filter Include="Project\Game\Others\sound">
       <UniqueIdentifier>{7dc47c95-be4d-4a4e-9560-aefe63f00826}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Others\Scoring">
+      <UniqueIdentifier>{c77d9a66-d3a9-4e68-9f17-51b399b14b3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -199,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="back_object.cpp">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="scoring.cpp">
+      <Filter>Project\Game\Others\Scoring</Filter>
     </ClCompile>
     <ClCompile Include="background_container.cpp">
       <Filter>Project\Game\Object\Background</Filter>
@@ -335,6 +341,9 @@
     </ClInclude>
     <ClInclude Include="audio_loader.h">
       <Filter>Project\Game\Others\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="scoring.h">
+      <Filter>Project\Game\Others\Scoring</Filter>
     </ClInclude>
     <ClInclude Include="background_container.h">
       <Filter>Project\Game\Object\Background</Filter>

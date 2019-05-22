@@ -1,4 +1,7 @@
 #pragma once
+//========================================
+//CreatorName:YamadaHaruhisa
+
 #include "audio_container.h"
 
 class AudioLoader
