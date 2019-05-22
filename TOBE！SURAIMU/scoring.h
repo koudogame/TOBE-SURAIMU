@@ -1,10 +1,10 @@
 #pragma once
 
-class Scorring
+class Scoring
 {
 public:
-	Scorring();
-	~Scorring();
+	Scoring();
+	~Scoring();
 
 	//外部公開関数( 必ず実行 )
 public:

@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include "scorring.h"
+#include "scoring.h"
 
 const int kComboScore = 100;
 const int kDownScore = 1;
 const int kTechniqueScore = 1000;
 const int kRotationScore = 100;
 
-Scorring::Scorring()
+Scoring::Scoring()
 {}
 
-Scorring::~Scorring()
+Scoring::~Scoring()
 {}
 
-bool Scorring::init()
+bool Scoring::init()
 {
 	score_ = 0;
 	combo_ = 0;
@@ -21,37 +21,37 @@ bool Scorring::init()
 	return true;
 }
 
-void Scorring::draw()
+void Scoring::draw()
 {}
 
-void Scorring::addDefaultScore( float AddScore )
+void Scoring::addDefaultScore( float AddScore )
 {
 	score_ += static_cast< int >( AddScore );
 }
 
-void Scorring::addCombo()
+void Scoring::addCombo()
 {
 	combo_++;
 
 	score_ += combo_ * kComboScore;
 }
 
-void Scorring::resetCombo()
+void Scoring::resetCombo()
 {
 	combo_ = 0;
 }
 
-void Scorring::addtechnique()
+void Scoring::addtechnique()
 {
 	score_ += kTechniqueScore;
 }
 
-void Scorring::addDown()
+void Scoring::addDown()
 {
 	score_ += kDownScore;
 }
 
-void Scorring::addRotate( float Angle )
+void Scoring::addRotate( float Angle )
 {
 	rotation_ += Angle;
 
@@ -63,7 +63,7 @@ void Scorring::addRotate( float Angle )
 	}
 }
 
-void Scorring::resetRotate()
+void Scoring::resetRotate()
 {
 	rotation_ = 0;
 	rotation_combo_ = 0;

@@ -173,7 +173,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="freeFallParticle.h" />
     <ClInclude Include="freeFallParticle_container.h" />
-    <ClInclude Include="scorring.h" />
+    <ClInclude Include="scoring.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="time_attack.h" />
     <ClInclude Include="key.h" />
@@ -216,7 +216,7 @@
     <ClCompile Include="particle_container.cpp" />
     <ClCompile Include="freeFallParticle.cpp" />
     <ClCompile Include="freeFallParticle_container.cpp" />
-    <ClCompile Include="scorring.cpp" />
+    <ClCompile Include="scoring.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="time_attack.cpp" />
     <ClCompile Include="key.cpp" />
