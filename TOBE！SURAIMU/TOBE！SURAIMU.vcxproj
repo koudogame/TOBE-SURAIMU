@@ -200,6 +200,7 @@
     <ClInclude Include="texture.h" />
     <ClInclude Include="textureLoder.h" />
     <ClInclude Include="title.h" />
+    <ClInclude Include="title_object.h" />
     <ClInclude Include="wall.h" />
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +252,7 @@
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="textureLoder.cpp" />
     <ClCompile Include="title.cpp" />
+    <ClCompile Include="title_object.cpp" />
     <ClCompile Include="wall.cpp" />
   </ItemGroup>
   <ItemGroup>

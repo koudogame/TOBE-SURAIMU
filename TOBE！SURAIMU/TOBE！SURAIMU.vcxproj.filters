@@ -105,6 +105,9 @@
     <Filter Include="Project\Game\Others\Time">
       <UniqueIdentifier>{079fb69a-dfa5-4512-abe7-0883d4743ac9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\TitleObj">
+      <UniqueIdentifier>{ba692143-526d-47e7-b53a-83a69d9f2881}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Project\Game\Others\Text">
       <UniqueIdentifier>{b0f22c7b-e10c-473f-818c-e0a4a1125dd7}</UniqueIdentifier>
     </Filter>
@@ -241,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="text.cpp">
       <Filter>Project\Game\Others\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="title_object.cpp">
+      <Filter>Project\Game\Object\TitleObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,6 +401,9 @@
     </ClInclude>
     <ClInclude Include="text.h">
       <Filter>Project\Game\Others\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="title_object.h">
+      <Filter>Project\Game\Object\TitleObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

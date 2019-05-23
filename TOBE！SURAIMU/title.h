@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scene_base.h"
-#include "background_container.h"
+#include "title_object.h"
 
 //-----------------------------------------------------------------------------
 // タイトル
@@ -33,8 +33,18 @@ private:
 	GamePad::ButtonStateTracker pad_;
 	GamePad::State pad_state_;
 	Keyboard::KeyboardStateTracker key_;
+	bool next_flag_;
 
 	Menu select_menu_;
+	std::unique_ptr<TitleObject> object_[ 3 ];
+
+private:
+	enum ObjectNum
+	{
+		kRogo,
+		kMenu,
+		kCusur
+	};
 
 	//内部利用関数
 private:
