@@ -108,6 +108,9 @@
     <Filter Include="Project\Game\Object\TitleObj">
       <UniqueIdentifier>{ba692143-526d-47e7-b53a-83a69d9f2881}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Others\Text">
+      <UniqueIdentifier>{b0f22c7b-e10c-473f-818c-e0a4a1125dd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -235,6 +238,12 @@
     </ClCompile>
     <ClCompile Include="ranking.cpp">
       <Filter>Project\Game\Others\Ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="ranking_in_endless.cpp">
+      <Filter>Project\Game\Object\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="text.cpp">
+      <Filter>Project\Game\Others\Text</Filter>
     </ClCompile>
     <ClCompile Include="title_object.cpp">
       <Filter>Project\Game\Object\TitleObj</Filter>
@@ -389,6 +398,9 @@
     </ClInclude>
     <ClInclude Include="stay_particle_container.h">
       <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClInclude>
+    <ClInclude Include="text.h">
+      <Filter>Project\Game\Others\Text</Filter>
     </ClInclude>
     <ClInclude Include="title_object.h">
       <Filter>Project\Game\Object\TitleObj</Filter>

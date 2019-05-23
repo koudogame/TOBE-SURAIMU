@@ -56,7 +56,7 @@ void Numbers<T>::draw(
 			position,
 			&trimming,
 			1.0F,
-			1.0F
+            1.0F
 		);
 
 		temp /= kTen;
