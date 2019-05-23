@@ -11,8 +11,14 @@
 #include "numbers.h"
 
 /*===========================================================================*/
+constexpr long kTextWidth = 11L;
+constexpr long kTextHeight = 16L;
+constexpr char kPlayerName[] = "YOU";
+
+/*===========================================================================*/
 RankingInEndless::RankingInEndless() :
-    ranking_(100)
+    ranking_(kRegisteredNum),
+    player_name_(kPlayerName)
 {
 }
 
@@ -37,22 +43,18 @@ bool RankingInEndless::init()
     // ランキング情報を取得
     std::pair<std::string, ULONGLONG> data;
     Ranking* kRanking = Ranking::getInstance();
-    for( unsigned i = 0U; i < kRegisteredNum; ++i)
+    for( int i = 0; i < kRegisteredNum; ++i)
     {
         data = kRanking->getData( i + 1U );
         ranking_[i] = std::make_pair(
-                Text(data.first.c_str()),
-                Numbers<ULONGLONG>(data.second) 
-            );
+                Text(data.first.c_str()), Numbers<ULONGLONG>(data.second));
     }
-    player_ = std::make_pair("You", 0ULL);
 
     // メンバ初期化
     position_.x = 1000.0F;
-    position_.y = 100.0F;
+    position_.y = getWindowHeight<float>() - kTextHeight;
+    rank_ = kRegisteredNum + 1U;
     score_ = 0ULL;
-    rank = kRegisteredNum;
-
 
     return true;
 }
@@ -73,7 +75,11 @@ void RankingInEndless::destroy()
 // 更新処理
 void RankingInEndless::update()
 {
-
+    // 順位の更新
+    for(; rank_ >= 0U; --rank_ )
+    {
+        if( ranking_[rank_ - 2].second.get() > score_.get() ) { break; }
+    }
 }
 
 /*===========================================================================*/
@@ -81,17 +87,22 @@ void RankingInEndless::update()
 void RankingInEndless::draw()
 {
     Vector2 draw_position = position_;
-    for( unsigned i = rank - 10U; i < rank; ++i)
+
+    // プレイヤーのスコアを描画
+    player_name_.draw( texture_, draw_position, kTextWidth, kTextHeight );
+    draw_position.x = getWindowWidth<float>();
+    score_.draw( texture_, draw_position, kTextWidth, kTextHeight );
+
+    // ランキングを描画
+    for( int rank = rank_ - 2U; rank >= 0; --rank )
     {
-        ranking_[i].first.draw( texture_, draw_position, 12L, 16L );
-
-        draw_position.x = 1280.0F;
-        ranking_[i].second.draw( texture_, draw_position, 12L, 16L );
-
         draw_position.x = position_.x;
-        draw_position.y += 15.0F;
+        draw_position.y -= kTextHeight;
+        if( draw_position.y < 0.0F ) { break; }
+
+
+        ranking_[rank].first.draw( texture_, draw_position, kTextWidth, kTextHeight );
+        draw_position.x = getWindowWidth<float>();
+        ranking_[rank].second.draw( texture_, draw_position, kTextWidth, kTextHeight );
     }
-    player_.first.draw( texture_, draw_position, 12L, 16L );
-    draw_position.x = position_.x;
-    player_.second.draw( texture_, draw_position, 12L, 16L );
 }

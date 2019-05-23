@@ -49,7 +49,7 @@ void Text::draw( ID3D11ShaderResourceView* Texture,
         trimming.left = getCharNum( ch ) * Width;
         trimming.right = trimming.left + Width;
 
-        kSprite->draw( Texture, position, &trimming, 1.0F, 1.0F );
+        kSprite->draw( Texture, position, &trimming, 1.0F, 0.0F );
 
         position.x += Width;
     }
