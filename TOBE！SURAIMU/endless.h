@@ -8,14 +8,11 @@ struct Milliseconds;
 template <typename T>
 class Timer;
 
-class ObjectBase;
-class BackgroundContainer;
-class BackObjectContainer;
 class StarContainer;
 class Player;
 class Wall;
 
-class Combo;
+class RankingInEndless;
 
 //-----------------------------------------------------------------------------
 // エンドレスモード
@@ -47,12 +44,11 @@ private:
 
 // オブジェクト
     Timer<Milliseconds>* clock_                     = nullptr;
+    RankingInEndless* ranking_                      = nullptr;
     StarContainer* star_container_                  = nullptr;
     Player* player_                                 = nullptr;
     Wall* wall_                                     = nullptr;
 
     float magnification_ = 1.0F;
     float climb_ = 0.0F;
-
-    ID3D11ShaderResourceView* texture_numbers_ = nullptr;
 };

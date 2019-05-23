@@ -11,7 +11,7 @@
 #include "sprite.h"
 #include "csvLoader.h"
 
-#include "ranking.h"
+#include "ranking_in_endless.h"
 #include "timer.h"
 #include "collision.h"
 #include "task_manager.h"
@@ -22,6 +22,7 @@
 #include "wall.h"
 
 #include "result.h"
+#include "text.h"
 
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -38,8 +39,6 @@ constexpr float kInitStarSpin[]     = { 3.0F,3.0F, };
 constexpr float kInitStarSpinRate[] = { 0.001F,0.01F, };
 constexpr float kInitStarSize[]     = { 90.0F,120.0F, };
 
-constexpr RECT kTrimmingEffect{             // 背景エフェクト切り取り範囲
-	0L, 3184L, 1280L, 3904L };
 constexpr float kThresholdY = 360.0F;       // スクロール閾値
 
 
@@ -64,6 +63,9 @@ bool Endless::init()
 	// 生成処理
 	if (do_create_ && create() == false) { return false; }
 
+    // ランキング初期化
+    ranking_->init();
+
 	// 初期スターの生成
 	for (int i = 0; i < 2; ++i)
 	{
@@ -79,7 +81,6 @@ bool Endless::init()
 		}
 	}
 
-    Ranking::getInstance();
 
 	// プレイヤー初期化
 	CsvLoader file(L"State/player_state.csv");
@@ -118,15 +119,11 @@ bool Endless::create()
 	if (do_create_ == false) { return true; }
 	do_create_ = false;
 
-	// テクスチャ
-	TextureLoder* const kTexture = TextureLoder::getInstance();
-	texture_ = kTexture->load(L"Texture/background.png");
-	if (texture_ == nullptr)        { return false; }
-	texture_numbers_ = kTexture->load(L"Texture/数字.png");
-	if (texture_numbers_ == nullptr){ return false; }
-
 	// 時計
 	clock_                 = new Timer<Milliseconds>();
+
+    // ランキング
+    ranking_               = new RankingInEndless();
 
 	// スターコンテナ
 	star_container_        = new StarContainer();
@@ -172,13 +169,11 @@ void Endless::destroy()
 	// スターコンテナ
 	star_container_->destroy();        safe_delete(star_container_);
 
+    // ランキング
+    ranking_->destroy();               safe_delete(ranking_);
+
 	// 時計
 	safe_delete(clock_);
-
-	// テクスチャ
-	TextureLoder* const kTexture = TextureLoder::getInstance();
-	kTexture->release(texture_);
-	kTexture->release(texture_numbers_);
 }
 
 /*===========================================================================*/
@@ -192,18 +187,7 @@ SceneBase* Endless::update()
 // 描画関数
 void Endless::draw()
 {
-	Sprite* const kSprite = Sprite::getInstance();
 
-	// 背景エフェクト
-	kSprite->draw(texture_, Vector2::Zero, &kTrimmingEffect);
-
-	Numbers<int> climb(static_cast<int>(climb_));
-	climb.draw(
-		texture_numbers_,
-		Vector2(1280.0F, 0.0F),
-		64L,
-		128L
-	);
 }
 
 /*===========================================================================*/
@@ -245,7 +229,7 @@ SceneBase* Endless::play()
 
 	// 座標調整( スクロール )
 	const float kOver = kThresholdY - player_->getPosition().y;
-	if( kOver > 0.0F ) { player_->addScore( kOver ); }
+	if( kOver > 0.0F ) { player_->addScore( kOver ); climb_ += kOver; }
 	adjustObjectPosition(kOver);
 
 	// オブジェクトの状態倍率を更新

@@ -11,6 +11,7 @@ enum class TaskUpdate
 	kWallUpdate,
 	kParticleUpdate,
     kComboUpdate,
+    kRankingUpdate,
 };
 // •`‰æƒ^ƒXƒNID
 enum class TaskDraw
