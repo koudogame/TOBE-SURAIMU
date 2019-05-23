@@ -17,7 +17,7 @@ class BackgroundContainer :
     public ObjectContainerBase<Background>
 {
 public :
-    BackgroundContainer(TaskManager * const TaskManager);
+    BackgroundContainer();
     ~BackgroundContainer();
 
     bool addBackground(const RECT& Trimming,

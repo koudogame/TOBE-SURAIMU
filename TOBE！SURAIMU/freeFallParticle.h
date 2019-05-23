@@ -5,7 +5,7 @@ class FreeFallParticle :
 	public ObjectBase
 {
 public:
-	FreeFallParticle( TaskManager* Manager );
+	FreeFallParticle();
 	~FreeFallParticle();
 
 public:

@@ -18,7 +18,7 @@ class BackObjectContainer :
     public ObjectContainerBase<BackObject>
 {
 public:
-    BackObjectContainer(TaskManager * const TaskManager);
+    BackObjectContainer();
     ~BackObjectContainer();
 
     bool addBackObject(

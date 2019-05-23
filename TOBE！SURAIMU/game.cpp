@@ -1,10 +1,29 @@
 #include "game.h"
 #include "release.h"
+#include "task_manager.h"
 
 //-----------------------
 //Å‰‚ÌƒV[ƒ“
 #include "title.h"
 //#include "play.h"
+
+//”wŒiˆ——˜—p’è”
+constexpr int kBackgroundLayerNum = 3;      // ”wŒiƒŒƒCƒ„[”
+constexpr long kBackgroundSize = 1024L;     // ”wŒic‰¡ƒTƒCƒY
+constexpr RECT kTrimmingBackground{         // ”wŒiØ‚èŽæ‚è”ÍˆÍ
+	0L, 0L, 1024L, 1024L };
+
+constexpr float kBackgroundSpeed[] = { 0.2F, 0.4F, 1.0F, 0.6F, };
+constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.1F, 0.3F, 0.2F, };
+constexpr RECT kTrimmingBackObject[] = {
+	{ 0L, 0L, 1024L, 1024L},
+	{ 0L, 0L, 1024L, 1024L},
+};
+const wchar_t* kBackObjectTexture[] = {
+	{L"Texture/roop1.png"},
+	{L"Texture/roop2.png"},
+	{L"Texture/roop3.png"},
+};
 
 //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 Game::Game()
@@ -14,16 +33,44 @@ Game::Game()
 
 //ƒfƒXƒgƒ‰ƒNƒ^
 Game::~Game()
-{
-	safe_delete( scene_ );
-}
+{}
 
 //‰Šú‰»
 bool Game::init()
 {
-	scene_ = new Title;
-	if (scene_->init() == false)
+	scene_ = std::make_unique<Title>();
+
+	if (scene_.get()->init() == false)
 		return false;
+
+	background_container_ = std::make_unique<BackgroundContainer>();
+	back_object_container_ = std::make_unique<BackObjectContainer>();
+
+	// ”wŒi‚Ì’Ç‰Á
+	RECT trimming = kTrimmingBackground;
+	for( int i = 0; i < kBackgroundLayerNum; ++i )
+	{
+		if( background_container_.get()->addBackground(
+			trimming ,
+			kBackgroundSpeed[ i ] ,
+			kBackgroundDrawDepth[ i ] ) == false )
+		{
+			return false;
+		}
+		trimming.left += kBackgroundSize;
+		trimming.right += kBackgroundSize;
+	}
+	for( int i = 0; i < 3; ++i )
+	{
+		if( back_object_container_.get()->addBackObject(
+			{ 0,0,2048L, 1024L } ,
+			-i , 1 , i / 10.0F
+		) == false )
+		{
+			return false;
+		}
+	}
+
 
 	return true;
 }
@@ -31,6 +78,20 @@ bool Game::init()
 //XV
 bool Game::update()
 {
+	TaskManager::getInstance()->allUpdate();
+
+	// ”wŒiƒIƒuƒWƒFƒNƒg‚ªŽ€‚ñ‚Å‚¢‚½‚ç‰Šú‰»
+	if( back_object_container_->empty() )
+	{
+		for( int i = 0; i < 3; ++i )
+		{
+			back_object_container_->addBackObject(
+				{ 0,0,2048L, 1024L } ,
+				-i , 1 , i / 10.0F
+			);
+		}
+	}
+
 	SceneBase* temp = scene_->update();
 
 	if( temp == nullptr )
@@ -38,12 +99,11 @@ bool Game::update()
 		return false;
 	}
 
-	if( scene_ != temp )
+	if( scene_.get() != temp )
 	{
 		scene_->destroy();
 		temp->init();
-		safe_delete( scene_ );
-		scene_ = temp;
+		scene_.reset( temp );
 	}
 
 
@@ -53,11 +113,14 @@ bool Game::update()
 //•`‰æ
 void Game::draw()
 {
+	TaskManager::getInstance()->allDraw();
 	scene_->draw();
 }
 
 //”jŠü
 void Game::destroy()
 {
+	background_container_.get()->destroy();
+	back_object_container_.get()->destroy();
 	scene_->destroy();
 }

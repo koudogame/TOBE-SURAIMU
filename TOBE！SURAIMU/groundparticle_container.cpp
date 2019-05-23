@@ -2,8 +2,7 @@
 #include "groundParticle_container.h"
 
 //コンストラクタ
-GroundParticleContainer::GroundParticleContainer( TaskManager * const Manager ) :
-	ObjectContainerBase( Manager )
+GroundParticleContainer::GroundParticleContainer()
 {}
 
 //デストラクタ

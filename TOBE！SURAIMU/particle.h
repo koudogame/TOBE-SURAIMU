@@ -4,7 +4,6 @@
 
 #include "object_base.h"
 
-class TaskManager;
 struct Milliseconds;
 template <typename T>
 class Timer;
@@ -23,7 +22,7 @@ class Particle :
 	public ObjectBase
 {
 public:
-	Particle(TaskManager* const);
+	Particle();
 	~Particle();
 public:
 	virtual bool init(

@@ -18,7 +18,7 @@ class Combo :
     public ObjectBase
 {
 public:
-    Combo(TaskManager* const TaskManager);
+    Combo();
     ~Combo();
 
     bool init(const Timer<Milliseconds>& Clock);

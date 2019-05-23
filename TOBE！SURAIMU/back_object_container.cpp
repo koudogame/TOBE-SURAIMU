@@ -5,8 +5,7 @@
 
 
 /*===========================================================================*/
-BackObjectContainer::BackObjectContainer(TaskManager * const TaskManager) :
-    ObjectContainerBase(TaskManager)
+BackObjectContainer::BackObjectContainer()
 {
 }
 

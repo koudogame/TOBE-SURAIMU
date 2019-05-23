@@ -7,8 +7,7 @@
 
 
 /*===========================================================================*/
-StarContainer::StarContainer(TaskManager* const TaskManager) :
-	ObjectContainerBase(TaskManager)
+StarContainer::StarContainer()
 {}
 
 StarContainer::~StarContainer()

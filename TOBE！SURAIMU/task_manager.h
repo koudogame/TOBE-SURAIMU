@@ -18,7 +18,7 @@ enum class TaskDraw
     kDraw,
 };
 
-	
+
 //-----------------------------------------------------------------------------
 // タスクマネージャー
 //-----------------------------------------------------------------------------
@@ -29,8 +29,13 @@ enum class TaskDraw
 // タスクはIDにより昇順に実行される
 class TaskManager
 {
-public:
+	//singleton
+private:
 	TaskManager();
+public:
+	static TaskManager* getInstance() { static TaskManager instance; return &instance; }
+
+public:
 	~TaskManager();
 
 public:
@@ -42,6 +47,8 @@ public:
 	void allUpdate();
 
 	void allDraw();
+
+	void allSetOver( const float Over );
 
 
 private:

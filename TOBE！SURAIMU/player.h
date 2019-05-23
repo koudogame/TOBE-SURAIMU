@@ -15,7 +15,7 @@ class Player :
 	public ObjectBase
 {
 public:
-	Player( TaskManager* const Manager );
+	Player();
 	~Player();
 
 public:

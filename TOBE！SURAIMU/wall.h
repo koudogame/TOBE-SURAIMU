@@ -15,7 +15,7 @@ class Wall :
 	public ObjectBase
 {
 public:
-	Wall(TaskManager* const TaskManager);
+	Wall();
 	~Wall();
 public:
 	virtual bool init();

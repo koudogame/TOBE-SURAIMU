@@ -7,11 +7,8 @@ const int kRange = 8;
 const int kTextureSize = 32;
 
 
-StayParticle::StayParticle( TaskManager* Manager ):
-ObjectBase(Manager)
-{
-	task_manager_ = Manager;
-}
+StayParticle::StayParticle()
+{}
 
 
 StayParticle::~StayParticle()
@@ -25,15 +22,15 @@ bool StayParticle::init( const std::wstring & FileName , Vector2* Posit )
 	alpha_ = ( rand() % 10 + 1 ) / 10.0F;
 	position_ = Posit;
 
-	task_manager_->registerTask( this , TaskUpdate::kParticleUpdate );
-	task_manager_->registerTask( this , TaskDraw::kDraw );
+	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
+	TaskManager::getInstance()->registerTask( this , TaskDraw::kDraw );
 	return true;
 }
 
 void StayParticle::destroy()
 {
 	TextureLoder::getInstance()->release( texture_ );
-	task_manager_->unregisterObject( this );
+	TaskManager::getInstance()->unregisterObject( this );
 }
 
 void StayParticle::update()

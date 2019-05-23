@@ -12,7 +12,7 @@ class Star :
 	public ObjectBase
 {
 public:
-	Star(TaskManager* const Maneger );
+	Star();
 	~Star();
 
 public:
@@ -24,7 +24,6 @@ public:
 	void update() override;
 	void draw() override;
 	bool isAlive() override;
-	void setMove( const float Over )override;
 
 public:
 	//ŠO•”—˜—pŠÖ”

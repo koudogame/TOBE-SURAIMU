@@ -1,8 +1,7 @@
 #include "freeFallParticle_container.h"
 
 
-FreeFallParticleContainer::FreeFallParticleContainer( TaskManager* const Manager ) :
-	ObjectContainerBase( Manager )
+FreeFallParticleContainer::FreeFallParticleContainer()
 {}
 
 

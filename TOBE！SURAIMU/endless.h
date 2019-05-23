@@ -8,7 +8,6 @@ struct Milliseconds;
 template <typename T>
 class Timer;
 
-class TaskManager;
 class ObjectBase;
 class BackgroundContainer;
 class BackObjectContainer;
@@ -17,10 +16,6 @@ class Player;
 class Wall;
 
 class Combo;
-
-namespace {
-    constexpr int kBackgroundLayerNum = 3;      // 背景レイヤー数
-}
 
 //-----------------------------------------------------------------------------
 // エンドレスモード
@@ -58,9 +53,6 @@ private:
 
 // オブジェクト
     Timer<Milliseconds>* clock_                     = nullptr;
-    TaskManager* task_manager_                      = nullptr;
-    BackgroundContainer* background_container_      = nullptr;
-    BackObjectContainer* back_object_container_     = nullptr;
     StarContainer* star_container_                  = nullptr;
     Player* player_                                 = nullptr;
     Wall* wall_                                     = nullptr;

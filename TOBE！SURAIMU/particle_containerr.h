@@ -9,7 +9,7 @@ class ParticleContainer :
 	public ObjectContainerBase<Particle>
 {
 public:
-	ParticleContainer(TaskManager* const TaskManager);
+	ParticleContainer();
 	virtual ~ParticleContainer();
 public:
 	Particle* addParticle(

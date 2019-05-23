@@ -6,7 +6,7 @@ class StayParticleContainer :
 	public ObjectContainerBase<StayParticle>
 {
 public:
-	StayParticleContainer( TaskManager* const Manager , Vector2* Posit );
+	StayParticleContainer(Vector2* Posit );
 	~StayParticleContainer();
 
 public:

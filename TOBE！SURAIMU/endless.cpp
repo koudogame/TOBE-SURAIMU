@@ -35,28 +35,12 @@ constexpr Vector2 kInitStarPosi[]   = {
 constexpr float kInitStarAngle[]    = { 90.0F, 90.0F, };
 constexpr float kInitStarFall[]     = { 2.0F,1.0F, };
 constexpr float kInitStarSpin[]     = { 3.0F,3.0F, };
-constexpr float kInitStarSpinRate[] = { 0.01F,0.01F, };
+constexpr float kInitStarSpinRate[] = { 0.001F,0.01F, };
 constexpr float kInitStarSize[]     = { 90.0F,120.0F, };
 
-// 処理に関係
-constexpr long kBackgroundSize = 1024L;     // 背景縦横サイズ
-constexpr RECT kTrimmingBackground{         // 背景切り取り範囲
-	0L, 0L, 1024L, 1024L };
 constexpr RECT kTrimmingEffect{             // 背景エフェクト切り取り範囲
 	0L, 3184L, 1280L, 3904L };
 constexpr float kThresholdY = 360.0F;       // スクロール閾値
-
-constexpr float kBackgroundSpeed[]     = { 0.2F, 0.4F, 1.0F, 0.6F, };
-constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.1F, 0.3F, 0.2F, };
-constexpr RECT kTrimmingBackObject[]   ={
-    { 0L, 0L, 1024L, 1024L},
-    { 0L, 0L, 1024L, 1024L},
-};
-const wchar_t* kBackObjectTexture[] = {
-    {L"Texture/roop1.png"},
-    {L"Texture/roop2.png"},
-    {L"Texture/roop3.png"},
-};
 
 
 /*===========================================================================*/
@@ -112,31 +96,6 @@ bool Endless::init()
 		return false;
 	}
 
-	// 背景
-	RECT trimming = kTrimmingBackground;
-	for (int i = 0; i < kBackgroundLayerNum; ++i)
-	{
-		if (background_container_->addBackground(
-			trimming,
-			kBackgroundSpeed[i],
-            kBackgroundDrawDepth[i]) == false)
-		{
-			return false;
-		}
-		trimming.left += kBackgroundSize;
-		trimming.right += kBackgroundSize;
-	}
-    for( int i = 0; i < 3; ++i)
-    {
-        if(back_object_container_->addBackObject(
-            {0,0,2048L, 1024L},
-            -i, 1, i / 10.0F
-        ) == false)
-        {
-            return false;
-        }
-    }
-
 	// 壁初期化
 	if (wall_->init() == false) { return false; }
 
@@ -172,25 +131,17 @@ bool Endless::create()
 	// 時計
 	clock_                 = new Timer<Milliseconds>();
 
-	// タスクマネ－ジャー
-	task_manager_          = new TaskManager();
-
-	// 背景
-    background_container_  = new BackgroundContainer(task_manager_);
-
-    back_object_container_ = new BackObjectContainer(task_manager_);
-
 	// スターコンテナ
-	star_container_        = new StarContainer(task_manager_);
+	star_container_        = new StarContainer();
 
 	// プレイヤー
-	player_                = new Player(task_manager_);
+	player_                = new Player();
 
 	// 壁
-	wall_                  = new Wall(task_manager_);
+	wall_                  = new Wall();
 
 	// UI
-	combo_                 = new Combo(task_manager_);
+	combo_                 = new Combo();
 
 
 
@@ -230,13 +181,6 @@ void Endless::destroy()
 	// スターコンテナ
 	star_container_->destroy();        safe_delete(star_container_);
 
-	// 背景
-    back_object_container_->destroy(); safe_delete(back_object_container_);
-    background_container_->destroy();  safe_delete(background_container_);
-
-	// タスクマネージャー
-	safe_delete(task_manager_);
-
 	// 時計
 	safe_delete(clock_);
 
@@ -258,11 +202,6 @@ SceneBase* Endless::update()
 void Endless::draw()
 {
 	Sprite* const kSprite = Sprite::getInstance();
-
-
-	// オブジェクト
-	task_manager_->allDraw();
-
 
 	// 背景エフェクト
 	kSprite->draw(texture_, Vector2::Zero, &kTrimmingEffect);
@@ -293,19 +232,7 @@ SceneBase* Endless::start()
 	}
 
 	// オブジェクト更新
-	task_manager_->allUpdate();
-	// 背景オブジェクトが死んでいたら初期化
-	if (back_object_container_->empty())
-	{
-        for (int i = 0; i < 3; ++i)
-        {
-            back_object_container_->addBackObject(
-                { 0,0,2048L, 1024L },
-                -i, 1, i / 10.0F
-            );
-        }
-	}
-
+	TaskManager::getInstance()->allUpdate();
 	// 星との衝突処理
 	for (auto& star : star_container_->active())
 	{
@@ -327,9 +254,6 @@ SceneBase* Endless::play()
 	}
 	if (itr == end && createStar() == false) { return nullptr; }
 
-
-	// オブジェクト更新
-	task_manager_->allUpdate();
 	scoring();
 
 	// プレイヤーが死んでいたらリザルト画面へ
@@ -342,17 +266,6 @@ SceneBase* Endless::play()
 	const float kOver = kThresholdY - player_->getPosition().y;
 	if( kOver > 0.0F ) { player_->addScore( kOver ); }
 	adjustObjectPosition(kOver);
-    // 背景オブジェクトが死んでいたら初期化
-    if (back_object_container_->empty())
-    {
-        for (int i = 0; i < 3; ++i)
-        {
-            back_object_container_->addBackObject(
-                { 0,0,2048L, 1024L },
-                -i, 1, i / 10.0F
-            );
-        }
-    }
 
 	// オブジェクトの状態倍率を更新
 	const float kMagnification = climb_ / 100000.0F + 1.0F;
@@ -424,11 +337,7 @@ void Endless::adjustObjectPosition(const float Over)
 {
 	if (Over > 0)
 	{
-        background_container_->setMove(Over);
-        back_object_container_->setMove(Over);
-        star_container_->setMove(Over);
-		player_->setMove( Over );
-		wall_->setMove( Over );
+		TaskManager::getInstance()->allSetOver( Over );
 	}
 }
 

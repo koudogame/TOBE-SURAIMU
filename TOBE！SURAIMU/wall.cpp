@@ -30,10 +30,8 @@ constexpr RECT kTrimmingWall { 0L, 0L, 32L, 81L };     // •ÇØ‚èŽæ‚è”ÍˆÍ
 
 
 /*===========================================================================*/
-Wall::Wall(TaskManager* const TaskManager) :
-	ObjectBase(TaskManager)
-{
-}
+Wall::Wall()
+{}
 
 Wall::~Wall()
 {
@@ -52,8 +50,8 @@ bool Wall::init()
 	if (do_create_ && create() == false) { return false; }
 
 	// ƒ^ƒXƒN‚Ì“o˜^
-	task_manager_->registerTask(this, TaskUpdate::kWallUpdate);
-	task_manager_->registerTask(this, TaskDraw::kDraw);
+	TaskManager::getInstance()->registerTask(this, TaskUpdate::kWallUpdate);
+	TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
 
 	// Œ`‚ÌÝ’è
 	myshape_[0] = kCollisionLeftWall;
@@ -96,7 +94,7 @@ void Wall::destroy()
 	TextureLoder::getInstance()->release(texture_);
 
 	// ƒ^ƒXƒN‚Ì“o˜^
-	task_manager_->unregisterObject(this);
+	TaskManager::getInstance()->unregisterObject(this);
 }
 
 /*===========================================================================*/

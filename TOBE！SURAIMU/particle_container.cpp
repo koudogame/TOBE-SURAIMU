@@ -5,8 +5,7 @@
 
 
 /*===========================================================================*/
-ParticleContainer::ParticleContainer(TaskManager* const TaskManager) :
-	ObjectContainerBase(TaskManager)
+ParticleContainer::ParticleContainer()
 {
 }
 

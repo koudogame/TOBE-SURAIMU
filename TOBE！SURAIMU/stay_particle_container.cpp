@@ -2,10 +2,8 @@
 #include "stay_particle_container.h"
 
 
-StayParticleContainer::StayParticleContainer( TaskManager* const Manager , Vector2* Posit ):
-ObjectContainerBase(Manager)
+StayParticleContainer::StayParticleContainer( Vector2* Posit )
 {
-	task_manager_ = Manager;
 	position_ = Posit;
 }
 
