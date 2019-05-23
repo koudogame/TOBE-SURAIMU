@@ -227,6 +227,9 @@ SceneBase* Endless::play()
 		return new Result;
 	}
 
+	//コンテナのアップデート
+	star_container_->update();
+
 	// 座標調整( スクロール )
 	const float kOver = kThresholdY - player_->getPosition().y;
 	if( kOver > 0.0F ) { player_->addScore( kOver ); climb_ += kOver; }

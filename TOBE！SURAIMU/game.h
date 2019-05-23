@@ -23,6 +23,6 @@ private:
 	std::unique_ptr<SceneBase> scene_;		//stateパターンシーン格納用変数
 
 	std::unique_ptr<BackgroundContainer> background_container_;
-	std::unique_ptr<BackObjectContainer> back_object_container_;
+	ID3D11ShaderResourceView* texture_;
 };
 
