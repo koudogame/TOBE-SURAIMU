@@ -105,6 +105,9 @@
     <Filter Include="Project\Game\Others\Time">
       <UniqueIdentifier>{079fb69a-dfa5-4512-abe7-0883d4743ac9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\TitleObj">
+      <UniqueIdentifier>{ba692143-526d-47e7-b53a-83a69d9f2881}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -232,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="ranking.cpp">
       <Filter>Project\Game\Others\Ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="title_object.cpp">
+      <Filter>Project\Game\Object\TitleObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -383,6 +389,9 @@
     </ClInclude>
     <ClInclude Include="stay_particle_container.h">
       <Filter>Project\Game\Object\Particle\Stay</Filter>
+    </ClInclude>
+    <ClInclude Include="title_object.h">
+      <Filter>Project\Game\Object\TitleObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

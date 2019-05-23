@@ -27,10 +27,24 @@ Title::~Title()
 // ‰Šú‰»ˆ—
 bool Title::init()
 {
-	texture_ = TextureLoder::getInstance()->load(L"Texture/title.png");
+	for( int i = 0; i < 3; i++ )
+		object_[ i ] = std::make_unique<TitleObject>();
 
-	//”wŒi‚Ì¶¬
-	RECT trim = { 0,0,1024,1024 };
+	//ƒƒS
+	RECT trim = { 0,0,getWindowWidth<int>(),543 };
+	object_[ ObjectNum::kRogo ].get()->init( Vector2::Zero , trim );
+	//ƒƒjƒ…[
+	trim.left = 0;
+	trim.top = trim.bottom;
+	trim.right = trim.left + kMenuSize;
+	trim.bottom = trim.top + kMenuSize;
+	object_[ ObjectNum::kMenu ].get()->init( Vector2( 542.0F , 374.0F ) , trim );
+	//ƒJ[ƒ\ƒ‹
+	trim.left = trim.right;
+	trim.right = trim.left + kMenuSize * 2;
+	object_[ ObjectNum::kCusur ].get()->init( Vector2( 384.0F , 316.0F ) , trim );
+
+	next_flag_ = false;
 
 	return true;
 }
@@ -52,17 +66,31 @@ SceneBase* Title::update()
 
 	input();
 
-	if ( key_.released.Space ||
-		 pad_.a == pad_.PRESSED)
+
+	if( key_.released.Space ||
+		pad_.a == pad_.PRESSED || next_flag_ )
 	{
-		switch( select_menu_ )
+		int itr = 0;
+		for( itr; itr < 3; itr++ )
+			object_[ itr ].get()->update();
+		for( itr = 0; itr < 3; itr++ )
+			if( object_[ itr ].get()->isAlive() )
+				break;
+		if( itr == 3 )
 		{
-			case Title::kPlay:
-				return new Endless;
-			case Title::kRanking:
-				return nullptr;
+			switch( select_menu_ )
+			{
+				case Title::kPlay:
+					return new Endless;
+				case Title::kRanking:
+					return nullptr;
+			}
 		}
+
+		next_flag_ = true;
 	}
+	else
+		object_[ ObjectNum::kCusur ].get()->setPosition( Vector2( 384.0F , 316.0F + kCusurInterval * select_menu_ ) );
 
 	return this;
 }
@@ -71,33 +99,8 @@ SceneBase* Title::update()
 // •`‰æˆ—
 void Title::draw()
 {
-	//ƒƒS‚Ì•`‰æ
-	RECT trim = { 0,0,getWindowWidth<int>(),543 };
-	Sprite::getInstance()->draw(
-		texture_,
-		Vector2::Zero,
-		&trim
-	);
-
-	//ƒƒjƒ…[‚Ì•`‰æ
-	trim.left = 0;
-	trim.top = trim.bottom;
-	trim.right = trim.left + kMenuSize;
-	trim.bottom = trim.top + kMenuSize;
-	Sprite::getInstance()->draw(
-		texture_ ,
-		Vector2( 542.0F , 374.0F ) ,
-		&trim
-	);
-
-	//ƒJ[ƒ\ƒ‹‚Ì•`‰æ
-	trim.left = trim.right;
-	trim.right = trim.left + kMenuSize * 2;
-	Sprite::getInstance()->draw(
-		texture_ ,
-		Vector2( 384.0F , 316.0F + kCusurInterval * select_menu_ ) ,
-		&trim
-	);
+	for( int i = 0; i < 3; i++ )
+		object_[ i ].get()->draw();
 }
 
 void Title::input()
