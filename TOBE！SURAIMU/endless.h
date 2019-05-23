@@ -46,15 +46,9 @@ private:
     SceneBase* play();
     SceneBase* (Endless::* update_)() = nullptr;
 
-    bool createStar();
-    std::deque<std::wstring> pattern_file_;
-
     void adjustObjectPosition(const float);
+    bool checkAndCreateStar();
 
-    void scoring();
-    float climb_;
-    ObjectBase* prev_player_owner_ = nullptr;
-    bool prev_player_jump_state_;
 
 // オブジェクト
     Timer<Milliseconds>* clock_                     = nullptr;
@@ -64,9 +58,9 @@ private:
     StarContainer* star_container_                  = nullptr;
     Player* player_                                 = nullptr;
     Wall* wall_                                     = nullptr;
-    Combo* combo_                                   = nullptr;
 
-    float magnification_;
+    float magnification_ = 1.0F;
+    float climb_ = 0.0F;
 
     ID3D11ShaderResourceView* texture_numbers_ = nullptr;
 };

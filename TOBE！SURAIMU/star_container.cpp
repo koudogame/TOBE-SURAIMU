@@ -4,6 +4,7 @@
 #include "star_container.h"
 
 #include "release.h"
+#include "csvLoader.h"
 
 
 /*===========================================================================*/
@@ -23,7 +24,6 @@ Star* StarContainer::addStar(
 {
 	// フリーなスターを取得
 	Star* star = getFreeObjAndInsert();
-	if (star == nullptr) { return nullptr; }
 
 	// スターの初期化処理
 	star->init(
@@ -56,4 +56,42 @@ void StarContainer::setMove(const float Move)
     {
         star->setMove(Move);
     }
+}
+
+/*===========================================================================*/
+// ランダムなファイルから星の生成情報を読み込んで生成する
+bool StarContainer::createStar()
+{
+    return createStar(pattern_[rand() % pattern_.size()]);
+}
+// 指定したファイルから星の生成情報を読み込んで生成する
+bool StarContainer::createStar(const std::wstring FileCSV)
+{
+    CsvLoader file(FileCSV);
+
+    Vector2 position;
+    float angle;
+    float spin;
+    float spin_rate;
+    float size;
+
+    // 情報があるだけ生成
+    int count = 1;
+    while (true)
+    {
+        position.x     = file.getNumber_f(0, count);
+        if (position.x == -1) { break; }
+        position.y     = file.getNumber_f(1, count);
+        angle          = file.getNumber_f(2, count);
+        spin           = file.getNumber_f(3, count);
+        spin_rate      = file.getNumber_f(4, count);
+        size           = file.getNumber_f(5, count);
+        position.y     -= 720.0F;   // 画面外へ
+
+        // 星をリストに追加して、落下を設定する
+        addStar(
+            position, angle, spin, spin_rate, size)->setFall();
+        ++count;
+    }
+    return true;
 }

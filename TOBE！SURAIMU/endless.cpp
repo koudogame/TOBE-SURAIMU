@@ -11,6 +11,7 @@
 #include "sprite.h"
 #include "csvLoader.h"
 
+#include "ranking.h"
 #include "timer.h"
 #include "collision.h"
 #include "task_manager.h"
@@ -19,7 +20,6 @@
 #include "star_container.h"
 #include "player.h"
 #include "wall.h"
-#include "combo.h"
 
 #include "result.h"
 
@@ -51,11 +51,6 @@ constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.1F, 0.3F, 0.2F, };
 constexpr RECT kTrimmingBackObject[]   ={
     { 0L, 0L, 1024L, 1024L},
     { 0L, 0L, 1024L, 1024L},
-};
-const wchar_t* kBackObjectTexture[] = {
-    {L"Texture/roop1.png"},
-    {L"Texture/roop2.png"},
-    {L"Texture/roop3.png"},
 };
 
 
@@ -95,11 +90,13 @@ bool Endless::init()
 		}
 	}
 
+    Ranking::getInstance();
 
 	// プレイヤー初期化
 	CsvLoader file(L"State/player_state.csv");
-	Vector2 position = Vector2(file.getNumber_f(0, 1),
-							   file.getNumber_f(1, 1));
+	Vector2 position;
+    position.x       = file.getNumber_f(0, 1);
+    position.y       = file.getNumber_f(1, 1);
 	float jump       = file.getNumber_f(2, 1);
 	float add_vol    = file.getNumber_f(3, 1);
 	float decay      = file.getNumber_f(4, 1);
@@ -126,11 +123,12 @@ bool Endless::init()
 		trimming.left += kBackgroundSize;
 		trimming.right += kBackgroundSize;
 	}
-    for( int i = 0; i < 3; ++i)
+    // 背景オブジェクト
+    for (int i = 0; i < 3; ++i)
     {
         if(back_object_container_->addBackObject(
             {0,0,2048L, 1024L},
-            -i, 1, i / 10.0F
+            -static_cast<float>(i), 1.0F, static_cast<float>(i) / 10.0F
         ) == false)
         {
             return false;
@@ -140,16 +138,11 @@ bool Endless::init()
 	// 壁初期化
 	if (wall_->init() == false) { return false; }
 
-	// UI初期化
-	if (combo_->init(*clock_) == false) { return false; }
-
 
 
 	// 変数初期化
 	update_ = &Endless::start;
 	climb_ = 0.0F;
-	prev_player_owner_ = nullptr;
-	prev_player_jump_state_ = false;
 	magnification_ = 1.0F;
 
 	clock_->start();
@@ -189,10 +182,6 @@ bool Endless::create()
 	// 壁
 	wall_                  = new Wall(task_manager_);
 
-	// UI
-	combo_                 = new Combo(task_manager_);
-
-
 
 	// スター生成パターンファイルのリスト化
 	std::wstring file_name;
@@ -205,7 +194,8 @@ bool Endless::create()
 			break;
 		}
 
-		pattern_file_.push_back(file_name);
+        file_name.insert(0,L"State/");
+		star_container_->addPattern(file_name);
 	}
 
 
@@ -218,8 +208,7 @@ void Endless::destroy()
 {
 	do_create_ = true;
 
-	//UI
-	combo_->destroy();                 safe_delete(combo_);
+    Ranking::getInstance()->setScore(5000);
 
 	// 壁
 	wall_->destroy();                  safe_delete(wall_);
@@ -294,6 +283,7 @@ SceneBase* Endless::start()
 
 	// オブジェクト更新
 	task_manager_->allUpdate();
+    back_object_container_->update();
 	// 背景オブジェクトが死んでいたら初期化
 	if (back_object_container_->empty())
 	{
@@ -301,12 +291,12 @@ SceneBase* Endless::start()
         {
             back_object_container_->addBackObject(
                 { 0,0,2048L, 1024L },
-                -i, 1, i / 10.0F
+                -static_cast<float>(i), 1.0F, static_cast<float>(i) / 10.0F
             );
         }
 	}
 
-	// 星との衝突処理
+	// スターとの衝突処理
 	for (auto& star : star_container_->active())
 	{
 		Collision::getInstance()->collision(player_, star);
@@ -318,19 +308,14 @@ SceneBase* Endless::start()
 // プレイ部
 SceneBase* Endless::play()
 {
-	// 画面外待機している星が無くなったら星の生成
-	auto itr = star_container_->active().begin();
-	auto end = star_container_->active().end();
-	for (; itr != end; ++itr)
-	{
-		if ((*itr)->getPosition().y < 0.0F) { break; }
-	}
-	if (itr == end && createStar() == false) { return nullptr; }
+    // スターを生成する
+    checkAndCreateStar();
 
 
 	// オブジェクト更新
 	task_manager_->allUpdate();
-	scoring();
+    star_container_->update();
+    back_object_container_->update();
 
 	// プレイヤーが死んでいたらリザルト画面へ
 	if (player_->isAlive() == false)
@@ -342,14 +327,14 @@ SceneBase* Endless::play()
 	const float kOver = kThresholdY - player_->getPosition().y;
 	if( kOver > 0.0F ) { player_->addScore( kOver ); }
 	adjustObjectPosition(kOver);
-    // 背景オブジェクトが死んでいたら初期化
+    // 背景オブジェクトが画面から無くなっていたら
     if (back_object_container_->empty())
     {
         for (int i = 0; i < 3; ++i)
         {
             back_object_container_->addBackObject(
                 { 0,0,2048L, 1024L },
-                -i, 1, i / 10.0F
+                -static_cast<float>(i), 1.0F, static_cast<float>(i) / 10.0F
             );
         }
     }
@@ -376,54 +361,12 @@ SceneBase* Endless::play()
 }
 
 /*===========================================================================*/
-// 星の生成
-bool Endless::createStar()
-{
-	// 生成パターンの選択
-	if (_chdir("State") == -1) { return false; }
-	std::wstring pattern = pattern_file_[rand() % pattern_file_.size()];
-	CsvLoader file(pattern);
-    if (_chdir("../") == -1)   { return false; }
-
-
-	Star* star;
-	Vector2 position;
-	float angle;
-	float spin;
-	float spin_rate;
-	float size;
-
-	int count = 1;
-	while (true)
-	{
-		position.x     = file.getNumber_f(0, count);
-		if (position.x == -1) { break; }
-		position.y     = file.getNumber_f(1, count);
-		angle          = file.getNumber_f(2, count);
-		spin           = file.getNumber_f(3, count);
-		spin_rate      = file.getNumber_f(4, count);
-		size           = file.getNumber_f(5, count);
-
-
-		position.y -= 720.0F;
-		star = star_container_->addStar(
-			position, angle, spin, spin_rate, size);
-		if (star == nullptr)
-		{
-			return false;
-		}
-		star->setFall();
-		++count;
-	}
-	return true;
-}
-
-/*===========================================================================*/
 // オブジェクトの座標調整
 void Endless::adjustObjectPosition(const float Over)
 {
 	if (Over > 0)
 	{
+        climb_ += Over;
         background_container_->setMove(Over);
         back_object_container_->setMove(Over);
         star_container_->setMove(Over);
@@ -433,19 +376,23 @@ void Endless::adjustObjectPosition(const float Over)
 }
 
 /*===========================================================================*/
-// スコアリング
-void Endless::scoring()
+// スターの生成条件を満たしていたらスターを生成する
+bool Endless::checkAndCreateStar()
 {
-	ObjectBase* const kPlayerOwner = player_->getOwner();
-	const bool kPlayerJump = player_->isJump();
+    // 画面外待機しているスターが無くなったらスターの生成
+    auto itr = star_container_->active().begin();
+    auto end = star_container_->active().end();
+    for (; itr != end; ++itr)
+    {
+        if ((*itr)->getPosition().y < 0.0F) { break; }
+    }
 
-	// 前回の星と違う星に着地したときにコンボ
-	if ((kPlayerJump == false && prev_player_jump_state_)&&
-		(kPlayerOwner != prev_player_owner_))
-	{
-		combo_->addCombo();
-	}
+    if (itr == end &&
+        star_container_->createStar() == false)
+    {
+        return false;
+    }
 
-	if (kPlayerOwner) { prev_player_owner_ = kPlayerOwner; }
-	prev_player_jump_state_ = kPlayerJump;
+
+    return true;
 }

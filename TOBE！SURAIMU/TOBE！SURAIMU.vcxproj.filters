@@ -93,6 +93,15 @@
     <Filter Include="Project\Game\Others\Scoring">
       <UniqueIdentifier>{c77d9a66-d3a9-4e68-9f17-51b399b14b3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Others\Ranking">
+      <UniqueIdentifier>{d69f8c63-0984-4062-9ba4-48328713dd2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\Numbers">
+      <UniqueIdentifier>{85e7533d-dec2-43d6-929f-94ede6466930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\Time">
+      <UniqueIdentifier>{079fb69a-dfa5-4512-abe7-0883d4743ac9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -148,12 +157,6 @@
     </ClCompile>
     <ClCompile Include="wall.cpp">
       <Filter>Project\Game\Object\Wall</Filter>
-    </ClCompile>
-    <ClCompile Include="numbers.cpp">
-      <Filter>Project\Game\Others</Filter>
-    </ClCompile>
-    <ClCompile Include="timer.cpp">
-      <Filter>Project\Game\Others</Filter>
     </ClCompile>
     <ClCompile Include="time_attack.cpp">
       <Filter>Project\Game\Scene\Timeattack</Filter>
@@ -211,6 +214,15 @@
     </ClCompile>
     <ClCompile Include="back_object_container.cpp">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="numbers.cpp">
+      <Filter>Project\Game\Others\Numbers</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Project\Game\Others\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="ranking.cpp">
+      <Filter>Project\Game\Others\Ranking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -278,12 +290,6 @@
     <ClInclude Include="wall.h">
       <Filter>Project\Game\Object\Wall</Filter>
     </ClInclude>
-    <ClInclude Include="numbers.h">
-      <Filter>Project\Game\Others</Filter>
-    </ClInclude>
-    <ClInclude Include="timer.h">
-      <Filter>Project\Game\Others</Filter>
-    </ClInclude>
     <ClInclude Include="time_attack.h">
       <Filter>Project\Game\Scene\Timeattack</Filter>
     </ClInclude>
@@ -350,6 +356,18 @@
     </ClInclude>
     <ClInclude Include="back_object_container.h">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="ranking_in_endless.h">
+      <Filter>Project\Game\Object\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="numbers.h">
+      <Filter>Project\Game\Others\Numbers</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Project\Game\Others\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="ranking.h">
+      <Filter>Project\Game\Others\Ranking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

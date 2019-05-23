@@ -21,6 +21,8 @@ public:
     BackObjectContainer(TaskManager * const TaskManager);
     ~BackObjectContainer();
 
+    void update() override;
+
     bool addBackObject(
         const RECT& Trimming,
         const float ScrollX = 1.0F,
@@ -29,4 +31,7 @@ public:
 
     void setMove(const float MoveY);
     bool empty() { return active_list_.size() == 0; }
+
+private:
+    BackObject* getFreeObject();
 };

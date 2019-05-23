@@ -27,15 +27,15 @@ BackObject::~BackObject()
 
 /*===========================================================================*/
 // ‰Šú‰»ˆ—
-bool BackObject::init(const wchar_t* const TextureName, const RECT& Trimming,
-    const float ScrollX, const float ScrollY,
-    const float Depth)
+bool BackObject::init(const RECT& Trimming,
+                      const float ScrollX, const float ScrollY,
+                      const float Depth)
 {
     destroy();
     created_ = true;
 
     // ¶¬ˆ—
-    texture_ = TextureLoder::getInstance()->load(TextureName);
+    texture_ = TextureLoder::getInstance()->load(L"Texture/roop1.png");
     if (texture_ == nullptr) { return false; }
 
     task_manager_->registerTask(this, TaskUpdate::kBackgroundUpdate);

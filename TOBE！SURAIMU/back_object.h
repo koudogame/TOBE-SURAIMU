@@ -16,8 +16,7 @@ public:
     BackObject(TaskManager* const TaskManager);
     ~BackObject();
 
-    bool init(const wchar_t* const TextureName,
-              const RECT& Trimming,
+    bool init(const RECT& Trimming,
               const float ScrollX = 1.0F,
               const float ScrollY = 1.0F,
               const float DrawDepth = 0.0F);
