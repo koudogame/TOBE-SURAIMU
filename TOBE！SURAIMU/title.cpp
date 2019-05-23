@@ -53,7 +53,8 @@ bool Title::init()
 // I—¹ˆ—
 void Title::destroy()
 {
-	TextureLoder::getInstance()->release(texture_);
+	for( int i = 0; i < 3; i++ )
+		object_[ i ].get()->destroy();
 }
 
 /*===========================================================================*/
@@ -65,7 +66,6 @@ SceneBase* Title::update()
 	key_ = Key::getInstance()->getTracker();
 
 	input();
-
 
 	if( key_.released.Space ||
 		pad_.a == pad_.PRESSED || next_flag_ )
