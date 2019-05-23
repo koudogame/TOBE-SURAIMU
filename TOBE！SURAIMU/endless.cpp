@@ -163,8 +163,6 @@ void Endless::destroy()
 {
 	do_create_ = true;
 
-    Ranking::getInstance()->setScore(5000);
-
 	// 壁
 	wall_->destroy();                  safe_delete(wall_);
 
@@ -224,20 +222,6 @@ SceneBase* Endless::start()
 		player_->onStartFlag();
 	}
 
-	// オブジェクト更新
-	task_manager_->allUpdate();
-	// 背景オブジェクトが死んでいたら初期化
-	if (back_object_container_->empty())
-	{
-        for (int i = 0; i < 3; ++i)
-        {
-            back_object_container_->addBackObject(
-                { 0,0,2048L, 1024L },
-                -i, 1, i / 10.0F
-            );
-        }
-	}
-
 	// 星との衝突処理
 	for (auto& star : star_container_->active())
 	{
@@ -252,11 +236,6 @@ SceneBase* Endless::play()
 {
     // スターを生成する
     checkAndCreateStar();
-
-
-	// オブジェクト更新
-	task_manager_->allUpdate();
-	scoring();
 
 	// プレイヤーが死んでいたらリザルト画面へ
 	if (player_->isAlive() == false)
@@ -296,12 +275,7 @@ void Endless::adjustObjectPosition(const float Over)
 {
 	if (Over > 0)
 	{
-        climb_ += Over;
-        background_container_->setMove(Over);
-        back_object_container_->setMove(Over);
-        star_container_->setMove(Over);
-		player_->setMove( Over );
-		wall_->setMove( Over );
+        TaskManager::getInstance()->allSetOver(Over);
 	}
 }
 
