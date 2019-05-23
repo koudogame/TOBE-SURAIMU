@@ -6,7 +6,7 @@ class GroundParticleContainer :
 	public ObjectContainerBase<GroundParticle>
 {
 public:
-	GroundParticleContainer( TaskManager* const Manager );
+	GroundParticleContainer();
 	~GroundParticleContainer();
 
 public:

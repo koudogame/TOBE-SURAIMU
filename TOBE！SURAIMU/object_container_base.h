@@ -22,9 +22,7 @@ template <class T>
 class ObjectContainerBase
 {
 public:
-	ObjectContainerBase(TaskManager* const TaskManager) :
-		task_manager_(TaskManager)
-	{}
+	ObjectContainerBase(){}
 	virtual ~ObjectContainerBase()
 	{
 		destroy();
@@ -85,14 +83,13 @@ protected:
 		}
 		else
 		{
-			free_obj = new T(task_manager_);
+			free_obj = new T();
 		}
 		active_list_.push_back(free_obj);
 		return free_obj;
 	}
 
 protected:
-	TaskManager* task_manager_ = nullptr;
 	std::list<T*> active_list_;
 	std::vector<T*> free_list_;
 };

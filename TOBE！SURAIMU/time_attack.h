@@ -50,7 +50,6 @@ private:
 private:
 	ID3D11ShaderResourceView* texture_numbers_;
 	Timer<Seconds>* timer_ = nullptr;
-	TaskManager* task_manager_ = nullptr;
 	StarContainer* star_container_ = nullptr;
 	Player* player_ = nullptr;
 	Wall* wall_ = nullptr;

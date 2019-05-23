@@ -20,8 +20,7 @@ const Vector3 kStarInformation[ 3 ] = {
 	Vector3( 150.0F + 226.0F,0.0F,300.F )
 };
 
-Star::Star( TaskManager * const Manager ) :
-	ObjectBase( Manager )
+Star::Star()
 {
 	for( float& itr : angle_ )
 		itr = 0;
@@ -40,14 +39,14 @@ Star::~Star()
 
 bool Star::init( const Vector2 & Position , const float Angle  , const float Spin , const float Rate , const float Size )
 {
-	task_manager_->registerTask( this , TaskUpdate::kStarUpdate );
-	task_manager_->registerTask( this , TaskDraw::kDraw );
+	TaskManager::getInstance()->registerTask( this , TaskUpdate::kStarUpdate );
+	TaskManager::getInstance()->registerTask( this , TaskDraw::kDraw );
 
 	texture_ = TextureLoder::getInstance()->load( L"Texture/star.png" );
 	if( texture_ == nullptr )
 		return false;
 
-	s_particle_container_ = std::make_unique<FreeFallParticleContainer>( task_manager_ );
+	s_particle_container_ = std::make_unique<FreeFallParticleContainer>();
 
 	position_ = Position;
 	angle_[ 0 ] = Angle;
@@ -69,7 +68,7 @@ bool Star::init( const Vector2 & Position , const float Angle  , const float Spi
 void Star::destroy()
 {
 	s_particle_container_.get()->destroy();
-	task_manager_->unregisterObject( this );
+	TaskManager::getInstance()->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
 
@@ -101,12 +100,6 @@ bool Star::isAlive()
 		return false;
 
 	return true;
-}
-
-void Star::setMove( const float Over )
-{
-	position_.y += Over;
-	s_particle_container_.get()->setMove( Over );
 }
 
 void Star::setFall()

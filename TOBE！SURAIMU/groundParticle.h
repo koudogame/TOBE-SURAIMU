@@ -4,7 +4,7 @@ class GroundParticle :
 	public ObjectBase
 {
 public:
-	GroundParticle( TaskManager* Manager );
+	GroundParticle();
 	~GroundParticle();
 
 public:

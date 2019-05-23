@@ -48,6 +48,12 @@ void TaskManager::allDraw()
 	execute(&draw_list_, &ObjectBase::draw);
 }
 
+void TaskManager::allSetOver( const float Over )
+{
+	for( auto& itr : update_list_ )
+		itr.second->setMove( Over );
+}
+
 /*===========================================================================*/
 // 引数のリストに、引数の要素を挿入
 template <typename T>

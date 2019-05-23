@@ -19,8 +19,7 @@ const int kBottomOn = 3;
 const int kBottomOff = 1;
 
 //コンストラクタ
-Player::Player( TaskManager* const Manager ) :
-	ObjectBase( Manager )
+Player::Player()
 {
 	kGround.start = Vector2( 0.0F , getWindowHeight<float>() );
 	kGround.end = Vector2( getWindowWidth<float>() , getWindowHeight<float>() );
@@ -36,8 +35,8 @@ Player::~Player()
 //初期化
 bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol , const float Decay , const float Gravity , const float Speed ,const float RLBoost )
 {
-	task_manager_->registerTask( this , TaskUpdate::kPlayerUpdate );
-	task_manager_->registerTask( this , TaskDraw::kDraw );
+	TaskManager::getInstance()->registerTask( this , TaskUpdate::kPlayerUpdate );
+	TaskManager::getInstance()->registerTask( this , TaskDraw::kDraw );
 	myshape_ = Circle( Posit , 5.5F );
 	//定数の定義
 	kJumpAmount = Jump;
@@ -52,8 +51,9 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	if( texture_ == nullptr )
 		return false;
 
-	g_particle_container_ = std::make_unique< GroundParticleContainer>( task_manager_ );
-	s_particle_container_ = std::make_unique<FreeFallParticleContainer>( task_manager_ );
+	g_particle_container_ = std::make_unique< GroundParticleContainer>();
+	f_particle_container_ = std::make_unique<FreeFallParticleContainer>();
+	s_particle_container_ = std::make_unique<StayParticleContainer>( &myshape_.position );
 
 	//各変数の初期化
 	setGravityAngle();
@@ -78,21 +78,24 @@ void Player::destroy()
 {
 	//全パーティクル削除
 	g_particle_container_.get()->destroy();
+	f_particle_container_.get()->destroy();
 	s_particle_container_.get()->destroy();
 
 	score_.destroy();
 
-	task_manager_->unregisterObject( this );
+	TaskManager::getInstance()->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
 
 //更新
 void Player::update()
 {
-
+	s_particle_container_.get()->addParticle( L"Texture/player particle.png" );
+	s_particle_container_.get()->addParticle( L"Texture/player particle.png" );
 
 	//全パーティクルの更新処理
 	g_particle_container_.get()->update();
+	f_particle_container_.get()->update();
 	s_particle_container_.get()->update();
 
 	//各パーティクルの追加
@@ -167,8 +170,6 @@ bool Player::isAlive()
 void Player::setMove( const float Over )
 {
 	myshape_.position.y += Over;
-	g_particle_container_.get()->setMove( Over );
-	s_particle_container_.get()->setMove( Over );
 }
 
 //座標の補正
@@ -201,6 +202,8 @@ void Player::collision( Star * StarObj)
 	}
 	owner_ = StarObj;
 	now_amount_ = 0.0F;
+	if( flag_.test( Flag::kJump ) )
+		score_.addLength( ( myshape_.position - owner_->getPosition() ).Length() / dynamic_cast< Star* >( owner_ )->getSize() );
 	flag_.reset( Flag::kJump );
 	flag_.reset( Flag::kTechnique);
 }
@@ -383,7 +386,7 @@ void Player::addFreeFallParticle()
 	{
 		if( ++particle_time_ >= kParticleTime )
 		{
-			s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , (kGravity *magnification_) );
+			f_particle_container_.get()->addParticle( L"Texture/player particle.png" , myshape_.position , (kGravity *magnification_) );
 			particle_time_ = 0;
 		}
 	}

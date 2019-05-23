@@ -18,7 +18,7 @@ class StarContainer :
 	public ObjectContainerBase<Star>
 {
 public:
-	StarContainer(TaskManager* const TaskManager );
+	StarContainer();
 	~StarContainer();
 public:
 	Star* addStar(

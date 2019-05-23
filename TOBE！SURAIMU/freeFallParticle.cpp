@@ -4,14 +4,11 @@
 #include "task_manager.h"
 
 const float kMinFall = 5.0F;
-const int kTextureSize = 15;
+const int kTextureSize = 32;
 const int kRotate = 5;
 
-FreeFallParticle::FreeFallParticle( TaskManager* Manager ) :
-	ObjectBase( Manager )
-{
-	task_manager_ = Manager;
-}
+FreeFallParticle::FreeFallParticle()
+{}
 
 
 FreeFallParticle::~FreeFallParticle()
@@ -23,8 +20,8 @@ bool FreeFallParticle::init( const std::wstring& FileName , const Vector2& Posit
 	if( texture_ == nullptr )
 		return false;
 
-	task_manager_->registerTask( this , TaskUpdate::kParticleUpdate );
-	task_manager_->registerTask( this , TaskDraw::kDraw );
+	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
+	TaskManager::getInstance()->registerTask( this , TaskDraw::kDraw );
 
 	position_ = Posit;
 	alpha_ = 1.0F;
@@ -38,7 +35,7 @@ bool FreeFallParticle::init( const std::wstring& FileName , const Vector2& Posit
 void FreeFallParticle::destroy()
 {
 	TextureLoder::getInstance()->release( texture_ );
-	task_manager_->unregisterObject( this );
+	TaskManager::getInstance()->unregisterObject( this );
 }
 
 void FreeFallParticle::update()
@@ -52,7 +49,11 @@ void FreeFallParticle::update()
 
 void FreeFallParticle::draw()
 {
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
 	Sprite::getInstance()->draw( texture_ , position_ , nullptr , alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , static_cast< float >( rotate_ ) , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin();
 }
 
 bool FreeFallParticle::isAlive()

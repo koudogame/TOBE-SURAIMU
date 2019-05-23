@@ -13,9 +13,7 @@ class TaskManager;
 class ObjectBase
 {
 public:
-	ObjectBase(TaskManager* const TaskManager) :
-		task_manager_(TaskManager)
-	{}
+	ObjectBase() = default;
 	virtual ~ObjectBase() = default;
 // ƒƒ“ƒoŠÖ”
 	virtual bool init() { return true; }
@@ -29,7 +27,6 @@ public:
 
 protected:
 	ID3D11ShaderResourceView* texture_ = nullptr;
-	TaskManager* task_manager_;
 	Vector2 position_;
 };
 

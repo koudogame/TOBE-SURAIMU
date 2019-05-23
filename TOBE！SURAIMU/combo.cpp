@@ -14,8 +14,7 @@
 const long long kLifeTimeMs = 3000LL;
 
 /*===========================================================================*/
-Combo::Combo(TaskManager* const TaskManager) :
-    ObjectBase(TaskManager)
+Combo::Combo()
 {
 }
 
@@ -35,8 +34,8 @@ bool Combo::init(const Timer<Milliseconds>& Clock)
     if (texture_ == nullptr) { return false; }
 
     // タスクの設定
-    task_manager_->registerTask(this, TaskUpdate::kComboUpdate);
-    task_manager_->registerTask(this, TaskDraw::kDraw);
+    TaskManager::getInstance()->registerTask(this, TaskUpdate::kComboUpdate);
+    TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
 
     // 各メンバ初期化
     clock_ = &Clock; 
@@ -54,7 +53,7 @@ bool Combo::init(const Timer<Milliseconds>& Clock)
 // 終了処理
 void Combo::destroy()
 {
-    task_manager_->unregisterObject(this);
+    TaskManager::getInstance()->unregisterObject(this);
 
     TextureLoder::getInstance()->release(texture_);
 }

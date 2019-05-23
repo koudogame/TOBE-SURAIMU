@@ -36,17 +36,19 @@ public:
 	void addRotate( float Angle );
 	//回転ステータスリセット
 	void resetRotate();
+	//距離の加点
+	void addLength( const float Length );
 	//スコアの取得
 	inline unsigned long long getScore() { return score_; }
 
 	//メンバ変数
 private:
-	unsigned long long score_;	                //総スコア
+	unsigned long long score_;	                    //総スコア
 	unsigned int combo_;	                        //移動コンボ
-	unsigned int rotation_combo_;	            //回転コンボ
-	float rotation_;	                //回転量
-	bool scoring_flag_;					//スコアリング有効フラグ
-	ID3D11ShaderResourceView* texture_;	//テクスチャ
+	unsigned int rotation_combo_;	                //回転コンボ
+	float rotation_;	                            //回転量
+	bool scoring_flag_;					            //スコアリング有効フラグ
+	ID3D11ShaderResourceView* texture_;	            //テクスチャ
 
 	//仮描画
 	Numbers<unsigned long long> sco_;

@@ -6,7 +6,7 @@ class FreeFallParticleContainer :
 	public ObjectContainerBase<FreeFallParticle>
 {
 public:
-	FreeFallParticleContainer( TaskManager* const Manager );
+	FreeFallParticleContainer();
 	~FreeFallParticleContainer();
 
 public:

@@ -6,19 +6,16 @@
 
 const int kTextureSize = 15;
 
-GroundParticle::GroundParticle( TaskManager * Manager ) :
-	ObjectBase(  Manager )
-{
-	task_manager_ = Manager;
-}
+GroundParticle::GroundParticle()
+{}
 
 GroundParticle::~GroundParticle()
 {}
 
 bool GroundParticle::init(const std::wstring& FileName, Vector2 Posit , const float Angle )
 {
-	task_manager_->registerTask( this , TaskUpdate::kParticleUpdate );
-	task_manager_->registerTask( this , TaskDraw::kDraw );
+	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
+	TaskManager::getInstance()->registerTask( this , TaskDraw::kDraw );
 	texture_ = TextureLoder::getInstance()->load( FileName );
 	if( texture_ == nullptr )
 		return false;
@@ -32,7 +29,7 @@ bool GroundParticle::init(const std::wstring& FileName, Vector2 Posit , const fl
 
 void GroundParticle::destroy()
 {
-	task_manager_->unregisterObject( this );
+	TaskManager::getInstance()->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
 }
 

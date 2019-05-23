@@ -1,15 +1,15 @@
 #pragma once
 #include "object_base.h"
 
-class FreeFallParticle :
+class StayParticle :
 	public ObjectBase
 {
 public:
-	FreeFallParticle();
-	~FreeFallParticle();
+	StayParticle();
+	~StayParticle();
 
 public:
-	bool init( const std::wstring& FileName , const Vector2& Posit , const float MoveAmount );
+	bool init( const std::wstring& FileName , Vector2* Posit );
 	void destroy() override;
 	void update() override;
 	void draw() override;
@@ -18,8 +18,7 @@ public:
 private:
 	float alpha_;
 	float angle_;
-	float move_amount_;
-	int rotate_;
-	bool turn_;
+	float length_;
+	Vector2* position_;
 };
 

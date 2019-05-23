@@ -12,8 +12,7 @@ using namespace std::chrono;
 
 
 /*===========================================================================*/
-Particle::Particle(TaskManager* const TaskManager) :
-	ObjectBase(TaskManager)
+Particle::Particle()
 {
 }
 
@@ -34,8 +33,8 @@ bool Particle::init(
 	if (texture_ == nullptr) { return false; }
 
 	// タスクの登録
-	task_manager_->registerTask(this, TaskUpdate::kParticleUpdate);
-	task_manager_->registerTask(this, TaskDraw::kDraw);
+	TaskManager::getInstance()->registerTask(this, TaskUpdate::kParticleUpdate);
+	TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
 
 
 	// メンバ
@@ -54,7 +53,7 @@ bool Particle::init(
 void Particle::destroy()
 {
 	// タスク登録解除
-	task_manager_->unregisterObject(this);
+	TaskManager::getInstance()->unregisterObject(this);
 
 	// テクスチャ開放
 	TextureLoder::getInstance()->release(texture_);

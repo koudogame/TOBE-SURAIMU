@@ -15,8 +15,7 @@ constexpr float kAmountOfAlphaChange = 0.01F;
 constexpr Vector2 kAnkerPoint(kTextureWidth / 2.0F, kTextureHeight / 2.0F);
 
 /*===========================================================================*/
-BackObject::BackObject(TaskManager* const TaskManager) :
-    ObjectBase(TaskManager)
+BackObject::BackObject()
 {
 }
 
@@ -38,8 +37,8 @@ bool BackObject::init(const RECT& Trimming,
     texture_ = TextureLoder::getInstance()->load(L"Texture/roop1.png");
     if (texture_ == nullptr) { return false; }
 
-    task_manager_->registerTask(this, TaskUpdate::kBackgroundUpdate);
-    task_manager_->registerTask(this, TaskDraw::kDraw);
+    TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackgroundUpdate);
+    TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
 
 
     // ‰Šú‰»
@@ -55,7 +54,7 @@ void BackObject::destroy()
     if(created_ == false) { return; }
     created_ = false;
 
-    task_manager_->unregisterObject(this);
+    TaskManager::getInstance()->unregisterObject(this);
     TextureLoder::getInstance()->release(texture_);
 }
 

@@ -11,7 +11,7 @@ class Background :
     public ObjectBase
 {
 public:
-    Background(TaskManager* const TaskManager);
+    Background();
     virtual ~Background();
 
     virtual bool init(const RECT& Trimming,

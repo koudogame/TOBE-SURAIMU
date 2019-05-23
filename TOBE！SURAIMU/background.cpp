@@ -10,8 +10,7 @@
 const long kTextureSize = 1024L;
 
 /*===========================================================================*/
-Background::Background(TaskManager* const TaskManager) :
-    ObjectBase(TaskManager)
+Background::Background()
 {
 }
 
@@ -29,8 +28,8 @@ bool Background::init(const RECT& Trimming, const float Scroll, const float Dept
 
 
     // タスクの登録
-    task_manager_->registerTask(this, TaskUpdate::kBackgroundUpdate);
-    task_manager_->registerTask(this, TaskDraw::kDraw);
+    TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackgroundUpdate);
+    TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
 
 
     // メンバ
@@ -49,8 +48,8 @@ bool Background::init(const RECT& Trimming, const float Scroll, const float Dept
 void Background::destroy()
 {
     // タスク
-    task_manager_->unregisterObject(this);
-   
+    TaskManager::getInstance()->unregisterObject(this);
+
     // テクスチャ開放
     TextureLoder::getInstance()->release(texture_);
 }
@@ -71,7 +70,7 @@ void Background::update()
 void Background::draw()
 {
     Sprite* const kSprite = Sprite::getInstance();
-    
+
     kSprite->end();
     kSprite->begin(kSprite->chengeMode());
     Vector2 draw_position = position_;

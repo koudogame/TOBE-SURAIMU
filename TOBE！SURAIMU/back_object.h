@@ -13,7 +13,7 @@ class BackObject :
     public ObjectBase
 {
 public:
-    BackObject(TaskManager* const TaskManager);
+    BackObject();
     ~BackObject();
 
     bool init(const RECT& Trimming,
