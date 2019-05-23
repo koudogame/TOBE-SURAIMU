@@ -1,6 +1,8 @@
 #include "game.h"
 #include "release.h"
 #include "task_manager.h"
+#include "sprite.h"
+#include "textureLoder.h"
 
 //-----------------------
 //Å‰‚ÌƒV[ƒ“
@@ -12,6 +14,8 @@ constexpr int kBackgroundLayerNum = 3;      // ”wŒiƒŒƒCƒ„[”
 constexpr long kBackgroundSize = 1024L;     // ”wŒic‰¡ƒTƒCƒY
 constexpr RECT kTrimmingBackground{         // ”wŒiØ‚èŽæ‚è”ÍˆÍ
 	0L, 0L, 1024L, 1024L };
+constexpr RECT kTrimmingEffect{             // ”wŒiƒGƒtƒFƒNƒgØ‚èŽæ‚è”ÍˆÍ
+	0L, 3184L, 1280L, 3904L };
 
 constexpr float kBackgroundSpeed[] = { 0.2F, 0.4F, 1.0F, 0.6F, };
 constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.1F, 0.3F, 0.2F, };
@@ -43,8 +47,9 @@ bool Game::init()
 	if (scene_.get()->init() == false)
 		return false;
 
+	texture_ = TextureLoder::getInstance()->load( L"Texture/Background.png" );
+
 	background_container_ = std::make_unique<BackgroundContainer>();
-	back_object_container_ = std::make_unique<BackObjectContainer>();
 
 	// ”wŒi‚Ì’Ç‰Á
 	RECT trimming = kTrimmingBackground;
@@ -60,17 +65,6 @@ bool Game::init()
 		trimming.left += kBackgroundSize;
 		trimming.right += kBackgroundSize;
 	}
-	for( int i = 0; i < 3; ++i )
-	{
-		if( back_object_container_.get()->addBackObject(
-			{ 0,0,2048L, 1024L } ,
-			-i , 1 , i / 10.0F
-		) == false )
-		{
-			return false;
-		}
-	}
-
 
 	return true;
 }
@@ -79,18 +73,8 @@ bool Game::init()
 bool Game::update()
 {
 	TaskManager::getInstance()->allUpdate();
+	//ƒIƒuƒWƒFƒNƒg‚ÌXV
 
-	// ”wŒiƒIƒuƒWƒFƒNƒg‚ªŽ€‚ñ‚Å‚¢‚½‚ç‰Šú‰»
-	if( back_object_container_->empty() )
-	{
-		for( int i = 0; i < 3; ++i )
-		{
-			back_object_container_->addBackObject(
-				{ 0,0,2048L, 1024L } ,
-				-i , 1 , i / 10.0F
-			);
-		}
-	}
 
 	SceneBase* temp = scene_->update();
 
@@ -106,7 +90,6 @@ bool Game::update()
 		scene_.reset( temp );
 	}
 
-
 	return true;
 }
 
@@ -114,6 +97,9 @@ bool Game::update()
 void Game::draw()
 {
 	TaskManager::getInstance()->allDraw();
+	// ”wŒiƒGƒtƒFƒNƒg
+	Sprite::getInstance()->draw( texture_ , Vector2::Zero , &kTrimmingEffect );
+
 	scene_->draw();
 }
 
@@ -121,6 +107,5 @@ void Game::draw()
 void Game::destroy()
 {
 	background_container_.get()->destroy();
-	back_object_container_.get()->destroy();
 	scene_->destroy();
 }
