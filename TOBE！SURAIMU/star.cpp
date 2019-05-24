@@ -56,6 +56,19 @@ bool Star::init( const Vector2 & Position , const float Angle  , const float Spi
 
 	color_val_ = rand() % 3;
 
+	switch( color_val_ )
+	{
+		case 0:
+			id_ = FreeFallParticleContainer::ParticleID::kCyan;
+			break;
+		case 1:
+			id_ = FreeFallParticleContainer::ParticleID::kYellow;
+			break;
+		case 2:
+			id_ = FreeFallParticleContainer::ParticleID::kMagenta;
+			break;
+	}
+
 	particle_time_ = 0;
 	create_point_ = 0;
 	magnification_ = 1.0F;
@@ -127,7 +140,7 @@ void Star::addFreeFallParticle()
 {
 	if( ++particle_time_ >= kParticleTime )
 	{
-		s_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_[ create_point_++ ].start , (fall_*magnification_) );
+		s_particle_container_.get()->addParticle( myshape_[ create_point_++ ].start , ( fall_*magnification_ ) , id_ );
 		particle_time_ = 0;
 		if( create_point_ >= kStarLineNum )
 			create_point_ = 0;

@@ -4,7 +4,7 @@
 #include "sprite.h"
 #include "task_manager.h"
 
-const int kTextureSize = 15;
+const int kTextureSize = 64;
 
 GroundParticle::GroundParticle()
 {}
@@ -12,17 +12,18 @@ GroundParticle::GroundParticle()
 GroundParticle::~GroundParticle()
 {}
 
-bool GroundParticle::init(const std::wstring& FileName, Vector2 Posit , const float Angle )
+bool GroundParticle::init( const Vector2 & Posit , const RECT & Triming , const float Angle )
 {
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kDraw );
-	texture_ = TextureLoder::getInstance()->load( FileName );
+	texture_ = TextureLoder::getInstance()->load( L"Texture/Particle.png" );
 	if( texture_ == nullptr )
 		return false;
 
 	position_ = Posit;
 	angle_ = Angle;
 	now_time_ = 0;
+	triming_ = Triming;
 
 	return true;
 }
@@ -41,7 +42,7 @@ void GroundParticle::update()
 
 void GroundParticle::draw()
 {
-	Sprite::getInstance()->draw( texture_ , position_ + velocity_ , nullptr , 1.0F - now_time_ , 0.0F , Vector2(1.0F , 1.0F ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ + velocity_ , &triming_ , 1.0F - now_time_ , 0.0F , Vector2(1.0F , 1.0F ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 }
 
 bool GroundParticle::isAlive()

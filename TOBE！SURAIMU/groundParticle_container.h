@@ -10,10 +10,20 @@ public:
 	~GroundParticleContainer();
 
 public:
+	enum ParticleID
+	{
+		kCyan ,
+		kYellow ,
+		kMaggenta ,
+		kWall,
+		kNonParticle
+	};
+
+public:
 	GroundParticle* addParticle(
-		const std::wstring& FileName ,
 		const Vector2 Position ,
-		const float Angle );
+		const float Angle,
+		ParticleID ID );
 
 	void setMove( const float Over );
 };

@@ -10,7 +10,7 @@ public:
 	~StayParticleContainer();
 
 public:
-	StayParticle* addParticle( const std::wstring& FileName);
+	StayParticle* addParticle( const int TurnDirection );
 
 private:
 	Vector2* position_;

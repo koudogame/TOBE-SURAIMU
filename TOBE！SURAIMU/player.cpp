@@ -12,7 +12,7 @@
 #include "star.h"
 #include "wall.h"
 
-const int kPlayerSize = 21;
+const int kPlayerSize = 46;
 const int kFlicTime = 18;
 const int kParticleTime = 1;
 const int kBottomOn = 3;
@@ -55,6 +55,9 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	f_particle_container_ = std::make_unique<FreeFallParticleContainer>();
 	s_particle_container_ = std::make_unique<StayParticleContainer>( &myshape_.position );
 
+	for( int i = 0; i < 2; i++ )
+		s_particle_container_.get()->addParticle( i );
+
 	//各変数の初期化
 	setGravityAngle();
 	jumping_angle_ = gravity_angle_ + XM_PI;
@@ -90,13 +93,9 @@ void Player::destroy()
 //更新
 void Player::update()
 {
-	s_particle_container_.get()->addParticle( L"Texture/player particle.png" );
-	s_particle_container_.get()->addParticle( L"Texture/player particle.png" );
-
 	//全パーティクルの更新処理
 	g_particle_container_.get()->update();
 	f_particle_container_.get()->update();
-	s_particle_container_.get()->update();
 
 	//各パーティクルの追加
 	addFreeFallParticle();
@@ -173,14 +172,14 @@ void Player::setMove( const float Over )
 }
 
 //座標の補正
-void Player::revision(const Vector2& CrossPoint)
+void Player::revision(const Vector2& CrossPoint, GroundParticleContainer::ParticleID ID )
 {
 	myshape_.position = CrossPoint;
 	dis_ = Calc::magnitude( CrossPoint , ground_->start ) / Calc::magnitude( ground_->end , ground_->start );
 	setGravityAngle();
 	if( !flag_.test( Flag::kParticle ) )
 	{
-		addGroundParticle();
+		addGroundParticle( ID );
 		flag_.set( Flag::kParticle );
 	}
 	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
@@ -307,7 +306,7 @@ void Player::gravity()
 	}
 	else
 	{
-		revision( ground_->start + ( ground_->end - ground_->start ) * dis_ );
+		revision( ground_->start + ( ground_->end - ground_->start ) * dis_ , GroundParticleContainer::ParticleID::kNonParticle );
 	}
 
 }
@@ -371,12 +370,12 @@ void Player::slectDirection()
 }
 
 //オブジェクトとの衝突時のパーティクルを生成
-void Player::addGroundParticle()
+void Player::addGroundParticle(GroundParticleContainer::ParticleID ID)
 {
-	g_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) );
-	g_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) );
-	g_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) );
-	g_particle_container_.get()->addParticle( L"Texture/パーティクル☆.png" , myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) );
+	g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) , ID );
+	g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) , ID );
+	g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) , ID );
+	g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) , ID );
 }
 
 //ジャンプ中に発生するパーティクルの生成
@@ -386,7 +385,7 @@ void Player::addFreeFallParticle()
 	{
 		if( ++particle_time_ >= kParticleTime )
 		{
-			f_particle_container_.get()->addParticle( L"Texture/player particle.png" , myshape_.position , (kGravity *magnification_) );
+			f_particle_container_.get()->addParticle( myshape_.position , ( kGravity *magnification_ ) , FreeFallParticleContainer::ParticleID::kPlayer );
 			particle_time_ = 0;
 		}
 	}
