@@ -3,8 +3,8 @@
 #include "textureLoder.h"
 #include "task_manager.h"
 
-const int kRange = 8;
-const int kTextureSize = 32;
+const int kRtate = 4;
+const int kTextureSize = 46;
 
 
 StayParticle::StayParticle()
@@ -14,12 +14,12 @@ StayParticle::StayParticle()
 StayParticle::~StayParticle()
 {}
 
-bool StayParticle::init( const std::wstring & FileName , Vector2* Posit )
+bool StayParticle::init( Vector2* Posit , const int TurnDirection )
 {
-	texture_ = TextureLoder::getInstance()->load( FileName );
-	angle_ = static_cast< float >( rand() % 360 );
-	length_ = static_cast< float >( rand() % kRange );
-	alpha_ = ( rand() % 10 + 1 ) / 10.0F;
+	texture_ = TextureLoder::getInstance()->load( L"Texture/character.png" );
+	turn_ = -1;
+	if( TurnDirection )
+		turn_ = 1;
 	position_ = Posit;
 
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
@@ -35,30 +35,27 @@ void StayParticle::destroy()
 
 void StayParticle::update()
 {
-		alpha_ -= 0.1F;
+	angle_ += turn_ * kRtate;
 }
 
 void StayParticle::draw()
 {
+	RECT trim;
+	trim.left = kTextureSize * 2;
+	trim.top = 0;
+	trim.right = trim.left + kTextureSize;
+	trim.bottom = trim.top + kTextureSize;
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
 	Sprite::getInstance()->draw( texture_ ,
-		( *position_ ) + Vector2( std::cos( XMConvertToRadians( angle_ ) ) , -std::sin( XMConvertToRadians( angle_ ) ) ) * length_ ,
-								 nullptr ,
-								 alpha_ ,
+								( *position_ ) ,
+								 &trim ,
+								 1.0 ,
 								 0.9F ,
 								 Vector2( 1.0F , 1.0F ) ,
-								 0.0F ,
+								 angle_ ,
 								 Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin();
 
-}
-
-bool StayParticle::isAlive()
-{
-	if( alpha_ <= 0.0F )
-		return false;
-
-	return true;
 }

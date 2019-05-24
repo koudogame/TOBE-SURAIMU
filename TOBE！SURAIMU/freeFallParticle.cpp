@@ -4,7 +4,7 @@
 #include "task_manager.h"
 
 const float kMinFall = 5.0F;
-const int kTextureSize = 32;
+const int kTextureSize = 64;
 const int kRotate = 5;
 
 FreeFallParticle::FreeFallParticle()
@@ -14,9 +14,9 @@ FreeFallParticle::FreeFallParticle()
 FreeFallParticle::~FreeFallParticle()
 {}
 
-bool FreeFallParticle::init( const std::wstring& FileName , const Vector2& Posit , const float MoveAmount )
+bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming, const float MoveAmount )
 {
-	texture_ = TextureLoder::getInstance()->load( FileName );
+	texture_ = TextureLoder::getInstance()->load( L"Texture/Particle.png" );
 	if( texture_ == nullptr )
 		return false;
 
@@ -28,6 +28,7 @@ bool FreeFallParticle::init( const std::wstring& FileName , const Vector2& Posit
 	move_amount_ = MoveAmount;
 	turn_ = rand() % 2 ? true : false;
 	rotate_ = rand() % 72;
+	triming_ = Triming;
 
 	return true;
 }
@@ -51,7 +52,7 @@ void FreeFallParticle::draw()
 {
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
-	Sprite::getInstance()->draw( texture_ , position_ , nullptr , alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , static_cast< float >( rotate_ ) , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ , &triming_ , alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , static_cast< float >( rotate_ ) , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin();
 }

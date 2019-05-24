@@ -9,16 +9,14 @@ public:
 	~StayParticle();
 
 public:
-	bool init( const std::wstring& FileName , Vector2* Posit );
+	bool init( Vector2* Posit , const int TurnDirection );
 	void destroy() override;
 	void update() override;
 	void draw() override;
-	bool isAlive() override;
 
 private:
-	float alpha_;
+	int turn_;
 	float angle_;
-	float length_;
 	Vector2* position_;
 };
 

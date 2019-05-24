@@ -34,6 +34,7 @@ public:
 	void addFreeFallParticle();
 	inline void resetStatus( const float Magnification ) { magnification_ = Magnification; }
 	inline float getSize() { return size_; }
+	inline int getColor() { return color_val_; }
 
 private:
 	//“à•”—˜—pŠÖ”
@@ -54,5 +55,6 @@ private:
 	int particle_time_;
 	int create_point_;
 	float magnification_;
+	FreeFallParticleContainer::ParticleID id_;
 };
 

@@ -8,7 +8,7 @@ public:
 	~GroundParticle();
 
 public:
-	bool init( const std::wstring& FileName, Vector2 Posit,const float Angle);
+	bool init(const Vector2& Posit , const RECT& Triming , const float Angle );
 	void destroy() override;
 	void update()override;
 	void draw()override;
@@ -16,6 +16,7 @@ public:
 
 private:
 	Vector2 velocity_;
+	RECT triming_;
 	float angle_;
 	float now_time_;
 };

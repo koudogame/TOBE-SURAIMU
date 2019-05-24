@@ -36,7 +36,7 @@ public:
 	inline bool isCollision() { return flag_.test( Flag::kCollision ); }
 	inline bool isJump() { return flag_.test( Flag::kJump ); }
 	inline ObjectBase* getOwner() { return owner_; }
-	void revision( const Vector2& CrossPoint );
+	void revision( const Vector2& CrossPoint, GroundParticleContainer::ParticleID ID );
 	void collision( class Star* );
 	void collision( class Wall* );
 	float getRotate();
@@ -111,7 +111,7 @@ private:
 	//**注意**
 	//プレイヤーの座標が交点の位置で
 	//重力方向が更新された後に呼び出すこと
-	void addGroundParticle();
+	void addGroundParticle( GroundParticleContainer::ParticleID ID );
 
 	void addFreeFallParticle();
 };

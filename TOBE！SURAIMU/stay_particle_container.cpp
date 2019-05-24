@@ -11,7 +11,7 @@ StayParticleContainer::StayParticleContainer( Vector2* Posit )
 StayParticleContainer::~StayParticleContainer()
 {}
 
-StayParticle * StayParticleContainer::addParticle( const std::wstring & FileName )
+StayParticle * StayParticleContainer::addParticle( const int TurnDirection )
 {
 	//‹óƒRƒ“ƒeƒi‚ðŽæ“¾
 	StayParticle* s_particle = getFreeObjAndInsert();
@@ -19,6 +19,6 @@ StayParticle * StayParticleContainer::addParticle( const std::wstring & FileName
 		return nullptr;
 
 	//‰Šú‰»
-	s_particle->init( FileName , position_ );
+	s_particle->init( position_ , TurnDirection );
 	return s_particle;
 }

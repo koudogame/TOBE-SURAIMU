@@ -3,6 +3,7 @@
 //CreatorName:YamadaHaruhisa
 
 #include "shape.h"
+#include "groundParticle_container.h"
 
 class Player;
 class Star;
@@ -32,5 +33,9 @@ private:
 	//Œğ“_‚ğ‹‚ß‚é
 	Vector2 crossPoint( Circle* , Line* );
 	Vector2 crossPoint( Line* , Line* );
+
+	//ƒƒ“ƒo•Ï”
+private:
+	GroundParticleContainer::ParticleID id_;
 };
 
