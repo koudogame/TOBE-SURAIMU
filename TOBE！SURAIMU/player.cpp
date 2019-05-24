@@ -426,10 +426,10 @@ bool Player::diedEffect()
 {
 	if( !died_flag_ )
 	{
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , gravity_angle_ + XM_PI + XMConvertToRadians( 15 ) , GroundParticleContainer::ParticleID::kCyan );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , gravity_angle_ + XM_PI + XMConvertToRadians( 45 ) , GroundParticleContainer::ParticleID::kMaggenta );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , gravity_angle_ + XM_PI + XMConvertToRadians( -15 ) , GroundParticleContainer::ParticleID::kWall );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , gravity_angle_ + XM_PI + XMConvertToRadians( -45 ) , GroundParticleContainer::ParticleID::kYellow );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 35 ) , GroundParticleContainer::ParticleID::kCyan );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 65 ) , GroundParticleContainer::ParticleID::kMaggenta );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 95 ) , GroundParticleContainer::ParticleID::kWall );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 125 ) , GroundParticleContainer::ParticleID::kYellow );
 		died_flag_ = true;
 	}
 

@@ -101,7 +101,7 @@ void Scoring::addDown()
 //‰ñ“]Šp‰ÁŽZ
 void Scoring::addRotate( float Angle )
 {
-	if( !scoring_flag_ )
+	if( scoring_flag_ )
 	{
 		rotation_ += Angle;
 
