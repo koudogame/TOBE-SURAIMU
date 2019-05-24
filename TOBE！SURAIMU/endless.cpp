@@ -228,7 +228,7 @@ SceneBase* Endless::play()
 	// プレイヤーが死んでいたらリザルト画面へ
 	if (player_->isAlive() == false)
 	{
-		return new Result(ranking_->getRank(), player_->getScore());
+		return new Result(ranking_->getRank(), *player_->getScore());
 	}
 
 	//コンテナのアップデート
