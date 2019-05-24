@@ -236,9 +236,10 @@ SceneBase* Endless::play()
     {
         player_->addScore( kOver );
         climb_ += kOver;
-        ranking_->setScore(static_cast<ULONGLONG>(climb_));
     }
 	adjustObjectPosition(kOver);
+
+    ranking_->setScore(player_->getScore());
 
 	// オブジェクトの状態倍率を更新
 	const float kMagnification = climb_ / 100000.0F + 1.0F;

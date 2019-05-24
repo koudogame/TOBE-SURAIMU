@@ -28,6 +28,13 @@ public:
     void setMove(const float) override {}
 
 private:
+    ID3D11ShaderResourceView* texture_bar_ = nullptr;
+    ID3D11ShaderResourceView* texture_number_ = nullptr;
+    ID3D11ShaderResourceView* texture_text_ = nullptr;
+
     std::vector<Ranking::Data> ranking_;
     Ranking::Data player_;
+
+    float displacement_ = 0.0F;
+    float disp_frame_ = 0.0F;
 };

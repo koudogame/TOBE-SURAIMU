@@ -20,7 +20,7 @@ Ranking::Ranking() :
         for( int i = 0; i < kRegisteredNum; ++i)
         {
             // 万が一途中でファイルの終端に達したら取得を終了する
-            ranking_[i].rank = i;
+            ranking_[i].rank = i + 1;
             if( fscanf_s(file, 
                 "%s %llu",
                 str, kNameMax, &ranking_[i].score) == EOF)
@@ -47,7 +47,7 @@ Ranking::~Ranking()
             fprintf_s( file,
                 "%s %llu \n",
                 ranking_[i].name.c_str(),
-                ranking_[i].score);
+                ranking_[i].score );
         }
         
         fclose(file);
