@@ -76,6 +76,11 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 
 	sound_[ 0 ] = AudioLoader::getInstance()->getSound( L"Sound/jump1-dova.wav" );
 	sound_[ 1 ] = AudioLoader::getInstance()->getSound( L"Sound/collision-dova.wav" );
+	died_sound_ = AudioLoader::getInstance()->getSound( L"Sound/died2-dova.wav" );
+	sound_[ 0 ]->stop();
+	sound_[ 1 ]->stop();
+	died_sound_->stop();
+	died_flag_ = false;
 
 	return true;
 }
@@ -165,7 +170,10 @@ void Player::draw()
 bool Player::isAlive()
 {
 	if( myshape_.position.y > 900.0F )
-		return false;
+	{
+		died_sound_->play( AudioContainer::Mode::kDefault );
+		return diedEffect();
+	}
 
 	return true;
 }
@@ -412,4 +420,22 @@ void Player::addFreeFallParticle()
 			dynamic_cast< Star* >( owner_ )->addFreeFallParticle();
 		}
 	}
+}
+
+bool Player::diedEffect()
+{
+	if( !died_flag_ )
+	{
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , gravity_angle_ + XM_PI + XMConvertToRadians( 15 ) , GroundParticleContainer::ParticleID::kCyan );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , gravity_angle_ + XM_PI + XMConvertToRadians( 45 ) , GroundParticleContainer::ParticleID::kMaggenta );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , gravity_angle_ + XM_PI + XMConvertToRadians( -15 ) , GroundParticleContainer::ParticleID::kWall );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , gravity_angle_ + XM_PI + XMConvertToRadians( -45 ) , GroundParticleContainer::ParticleID::kYellow );
+		died_flag_ = true;
+	}
+
+	if( g_particle_container_->active().size() == 0 )
+		return false;
+
+
+	return true;
 }

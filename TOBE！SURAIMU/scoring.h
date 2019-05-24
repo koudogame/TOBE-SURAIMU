@@ -3,6 +3,7 @@
 //CreatorName:YamadaHaruhisa
 
 #include "numbers.h"
+#include "audio_loader.h"
 
 class Scoring
 {
@@ -56,6 +57,9 @@ private:
 	float rotation_;	                            //回転量
 	bool scoring_flag_;					            //スコアリング有効フラグ
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
+	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
+
+	AudioContainer* combo_sound_;
 
 	//仮描画
 	Numbers<unsigned long long> sco_;

@@ -24,6 +24,8 @@
 #include "result.h"
 #include "text.h"
 
+#include "audio_loader.h"
+
 using PadState = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
 
@@ -110,6 +112,8 @@ bool Endless::init()
 	magnification_ = 1.0F;
 
 	clock_->start();
+
+	AudioLoader::getInstance()->getSound( L"Sound/play4-dova.wav" )->play( AudioContainer::Mode::kDefault , true );
 
 	return true;
 }

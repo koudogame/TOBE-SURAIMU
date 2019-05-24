@@ -25,7 +25,10 @@ bool Scoring::init()
 	max_combo_ = 0;
 	rotation_ = 0.0F;
 	rotation_combo_ = 0;
+	spin_combo_pitch_ = 0.0F;
 	scoring_flag_ = false;
+
+	combo_sound_ = AudioLoader::getInstance()->getSound( L"Sound/spincombo-dova.wav" );
 	return true;
 }
 
@@ -98,13 +101,19 @@ void Scoring::addDown()
 //‰ñ“]Šp‰ÁŽZ
 void Scoring::addRotate( float Angle )
 {
-	if( scoring_flag_ )
+	if( !scoring_flag_ )
 	{
 		rotation_ += Angle;
 
 		//1‰ñ“]‚Å‰Á“_
 		if( rotation_ >= 360.0F )
 		{
+			combo_sound_->stop();
+			combo_sound_->play( AudioContainer::Mode::kDefault );
+			spin_combo_pitch_ += 0.2F;
+			if( spin_combo_pitch_ > 1.0 )
+				spin_combo_pitch_ = 1.0F;
+			combo_sound_->setPitch( spin_combo_pitch_ );
 			rotation_ = 0;
 			rotation_combo_++;
 			score_ += rotation_combo_ * kRotationScore;
@@ -115,6 +124,7 @@ void Scoring::addRotate( float Angle )
 //‰ñ“]ŠpƒŠƒZƒbƒg
 void Scoring::resetRotate()
 {
+	combo_sound_->resetPitch();
 	rotation_ = 0;
 	rotation_combo_ = 0;
 }

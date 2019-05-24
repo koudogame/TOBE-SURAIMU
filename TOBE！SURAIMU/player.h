@@ -88,10 +88,12 @@ private:
 	float prev_jump_moveamount_;
 	float magnification_;
 	int bottom_input_;
+	bool died_flag_;
 
 	Scoring score_;
 
 	AudioContainer* sound_[ 2 ];
+	AudioContainer* died_sound_;
 
 private:
 	//•`‰æŒn
@@ -119,4 +121,5 @@ private:
 	void addGroundParticle( GroundParticleContainer::ParticleID ID );
 
 	void addFreeFallParticle();
+	bool diedEffect();
 };
