@@ -3,7 +3,7 @@
 #include "sprite.h"
 #include "task_manager.h"
 
-const float kMinFall = 5.0F;
+const float kMinFall = 0.0F;
 const int kTextureSize = 64;
 const int kRotate = 5;
 
@@ -14,7 +14,7 @@ FreeFallParticle::FreeFallParticle()
 FreeFallParticle::~FreeFallParticle()
 {}
 
-bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming, const float MoveAmount )
+bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming )
 {
 	texture_ = TextureLoder::getInstance()->load( L"Texture/Particle.png" );
 	if( texture_ == nullptr )
@@ -25,7 +25,6 @@ bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming, const fl
 
 	position_ = Posit;
 	alpha_ = 1.0F;
-	move_amount_ = MoveAmount;
 	turn_ = rand() % 2 ? true : false;
 	rotate_ = rand() % 72;
 	triming_ = Triming;
@@ -43,9 +42,6 @@ void FreeFallParticle::update()
 {
 	alpha_ -= 0.01F;
 	rotate_ += turn_ ? kRotate : -kRotate;
-
-
-	position_.y += kMinFall + move_amount_;
 }
 
 void FreeFallParticle::draw()

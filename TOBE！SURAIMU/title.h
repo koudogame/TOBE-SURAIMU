@@ -40,6 +40,8 @@ private:
 	std::unique_ptr<TitleObject> object_[ 3 ];
 
 	AudioContainer* title_bgm_;
+	AudioContainer* select_se_[2];
+	AudioContainer* scene_se_;
 	float volume_;
 
 private:

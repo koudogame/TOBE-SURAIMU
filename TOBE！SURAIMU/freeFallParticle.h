@@ -9,7 +9,7 @@ public:
 	~FreeFallParticle();
 
 public:
-	bool init(const Vector2& Posit ,const RECT& Triming, const float MoveAmount );
+	bool init(const Vector2& Posit ,const RECT& Triming);
 	void destroy() override;
 	void update() override;
 	void draw() override;

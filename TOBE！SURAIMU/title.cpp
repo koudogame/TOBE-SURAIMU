@@ -47,6 +47,9 @@ bool Title::init()
 	next_flag_ = false;
 
 	title_bgm_ = AudioLoader::getInstance()->getSound( L"Sound/title2-dova.wav" );
+	select_se_[0] = AudioLoader::getInstance()->getSound( L"Sound/select1-dova.wav" );
+	select_se_[1] = AudioLoader::getInstance()->getSound( L"Sound/select2-dova.wav" );
+	scene_se_ = AudioLoader::getInstance()->getSound( L"Sound/scene1-dova.wav" );
 	title_bgm_->allReset();
 	title_bgm_->play( AudioContainer::Mode::kDefault );
 	volume_ = 1.0F;
@@ -74,6 +77,8 @@ SceneBase* Title::update()
 	if( key_.released.Space ||
 		pad_.a == pad_.PRESSED || next_flag_ )
 	{
+		scene_se_->play( AudioContainer::Mode::kDefault , true );
+		select_se_[ 1 ]->play( AudioContainer::Mode::kDefault );
 		volume_ -= 0.01F;
 		title_bgm_->setVolume( volume_ );
 		int itr = 0;
@@ -85,6 +90,9 @@ SceneBase* Title::update()
 		if( itr == 3 )
 		{
 			title_bgm_->stop();
+			scene_se_->stop();
+			select_se_[ 0 ]->stop();
+			select_se_[ 1 ]->stop();
 
 			switch( select_menu_ )
 			{
@@ -114,9 +122,11 @@ void Title::draw()
 void Title::input()
 {
 	//“ü—Í‚ª‚ ‚Á‚½‚çƒJ[ƒ\ƒ‹”½“]
-	if(( key_.pressed.Down || pad_state_.thumbSticks.leftY < -0.3F )||
-		(key_.pressed.Up || pad_state_.thumbSticks.leftY > 0.3F) )
+	if( ( key_.pressed.Down || pad_.leftStickDown == pad_.PRESSED ) ||
+		( key_.pressed.Up || pad_.leftStickUp == pad_.PRESSED ) )
 	{
+		select_se_[0]->stop();
+		select_se_[0]->play( AudioContainer::Mode::kDefault );
 		select_menu_ = select_menu_ == Menu::kPlay ? Menu::kRanking : Menu::kPlay;
 	}
 }

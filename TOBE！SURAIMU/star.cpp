@@ -140,10 +140,13 @@ void Star::addFreeFallParticle()
 {
 	if( ++particle_time_ >= kParticleTime )
 	{
-		s_particle_container_.get()->addParticle( myshape_[ create_point_++ ].start , ( fall_*magnification_ ) , id_ );
-		particle_time_ = 0;
-		if( create_point_ >= kStarLineNum )
-			create_point_ = 0;
+		if( fall_ >= 1.0F )
+		{
+			s_particle_container_.get()->addParticle( myshape_[ create_point_++ ].start , id_ );
+			particle_time_ = 0;
+			if( create_point_ >= kStarLineNum )
+				create_point_ = 0;
+		}
 	}
 }
 

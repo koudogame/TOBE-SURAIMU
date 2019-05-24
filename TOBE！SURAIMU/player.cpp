@@ -73,6 +73,10 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 
 	score_.init();
 
+
+	sound_[ 0 ] = AudioLoader::getInstance()->getSound( L"Sound/jump1-dova.wav" );
+	sound_[ 1 ] = AudioLoader::getInstance()->getSound( L"Sound/collision-dova.wav" );
+
 	return true;
 }
 
@@ -112,7 +116,7 @@ void Player::update()
 	if( Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ < kGravity )
 
 	{
-		flag_.reset( Flag::kCollision );
+		flag_.reset( Flag::kStarCollision );
 		if( flag_.test( Flag::kJump ) )
 			score_.resetCombo();
 	}
@@ -189,8 +193,11 @@ void Player::revision(const Vector2& CrossPoint, GroundParticleContainer::Partic
 //星との当たり判定後の処理
 void Player::collision( Star * StarObj)
 {
-	if( owner_ != StarObj || flag_.test(Flag::kTechnique))
+
+	if( owner_ != StarObj || flag_.test( Flag::kTechnique ) )
 	{
+		sound_[ 1 ]->stop();
+		sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
 		rect_left_up_ = Vector2::Zero;
 		direction_id_ = Direction::kFlont;
 		timer = 0;
@@ -205,18 +212,23 @@ void Player::collision( Star * StarObj)
 		score_.addLength( ( myshape_.position - owner_->getPosition() ).Length() / dynamic_cast< Star* >( owner_ )->getSize() );
 	flag_.reset( Flag::kJump );
 	flag_.reset( Flag::kTechnique);
+	flag_.reset( Flag::kWallParticle );
 }
 
 //壁との当たり判定後の処理
 void Player::collision( Wall * WallObj)
 {
+	sound_[ 1 ]->stop();
+	sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
 	setGround( &kGround );
 
 	//角度変更
 	jumping_angle_ = XM_PI - jumping_angle_;
-	flag_.reset( Flag::kCollision );
-	flag_.reset( Flag::kParticle );
+	flag_.reset( Flag::kStarCollision );
 	flag_.set( Flag::kTechnique );
+	if( !flag_.test( Flag::kWallParticle ) )
+		flag_.reset( Flag::kParticle );
+	flag_.set( Flag::kWallParticle );
 }
 
 //回転角を返却
@@ -227,7 +239,6 @@ float Player::getRotate()
 
 	return abs( Calc::angle( move_vector_.start - dynamic_cast< Star* >( owner_ )->getPosition() , move_vector_.end - dynamic_cast< Star* >( owner_ )->getPosition() ) );
 }
-
 
 
 //----------------------------------------------
@@ -271,6 +282,7 @@ void Player::input()
 	//接地中
 	else
 	{
+		sound_[ 0 ]->stop();
 		direction_id_ = Direction::kFlont;
 		//ジャンプ入力
 		if( pad_tracker.a == pad_tracker.HELD || key.lastState.Space )
@@ -281,8 +293,9 @@ void Player::input()
 		//ジャンプ
 		if( pad_tracker.a == pad_tracker.RELEASED || key.released.Space )
 		{
+			sound_[ 0 ]->play( AudioContainer::Mode::kDefault );
 			flag_.set( Flag::kJump );
-			flag_.set( Flag::kCollision );
+			flag_.set( Flag::kStarCollision );
 			flag_.reset( Flag::kParticle );
 			direction_id_ = Direction::kFlay;
 			particle_time_ = 0;
@@ -372,10 +385,13 @@ void Player::slectDirection()
 //オブジェクトとの衝突時のパーティクルを生成
 void Player::addGroundParticle(GroundParticleContainer::ParticleID ID)
 {
-	g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) , ID );
-	g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) , ID );
-	g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) , ID );
-	g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) , ID );
+	if( score_.isStart() )
+	{
+		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) , ID );
+		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) , ID );
+		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) , ID );
+		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) , ID );
+	}
 }
 
 //ジャンプ中に発生するパーティクルの生成
@@ -385,7 +401,7 @@ void Player::addFreeFallParticle()
 	{
 		if( ++particle_time_ >= kParticleTime )
 		{
-			f_particle_container_.get()->addParticle( myshape_.position , ( kGravity *magnification_ ) , FreeFallParticleContainer::ParticleID::kPlayer );
+			f_particle_container_.get()->addParticle( myshape_.position , FreeFallParticleContainer::ParticleID::kPlayer );
 			particle_time_ = 0;
 		}
 	}

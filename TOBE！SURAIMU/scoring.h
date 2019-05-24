@@ -20,6 +20,7 @@ public:
 	void addDefaultScore( float AddScore );
 	//スコアリング開始
 	inline void start() { scoring_flag_ = true; }
+	inline bool isStart() { return scoring_flag_; }
 
 	//外部公開関数
 public:
