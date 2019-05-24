@@ -171,8 +171,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// COMライブラリの開放.
 	CoUninitialize();
 	// インターフェイスの開放
-	game.destroy();
 	AudioLoader::getInstance()->allDestroy();
+	game.destroy();
 	Direct3D::getInstance()->destroy();
 
 	return 0;

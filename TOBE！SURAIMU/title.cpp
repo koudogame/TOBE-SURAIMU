@@ -46,6 +46,9 @@ bool Title::init()
 
 	next_flag_ = false;
 
+	title_bgm_ = AudioLoader::getInstance()->getSound( L"Sound/title2-dova.wav" );
+
+	title_bgm_->play( AudioContainer::Mode::kDefault );
 	return true;
 }
 

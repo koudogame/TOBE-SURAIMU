@@ -2,6 +2,7 @@
 
 #include "scene_base.h"
 #include "title_object.h"
+#include "audio_loader.h"
 
 //-----------------------------------------------------------------------------
 // ƒ^ƒCƒgƒ‹
@@ -37,6 +38,8 @@ private:
 
 	Menu select_menu_;
 	std::unique_ptr<TitleObject> object_[ 3 ];
+
+	AudioContainer* title_bgm_;
 
 private:
 	enum ObjectNum
