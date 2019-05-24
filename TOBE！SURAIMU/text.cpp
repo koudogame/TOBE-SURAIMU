@@ -16,35 +16,18 @@ constexpr char kCharTable[] = {
 };
 
 /*===========================================================================*/
-Text::Text()
-{
-}
-// 文字セットコンストラクタ
-Text::Text( const char Char )              { text_ = Char; }
-Text::Text( const char* String )          { text_ = String; }
-// 数値セットコンストラクタ
-Text::Text( const int Num )                { text_ = std::to_string(Num); }
-Text::Text( const unsigned Num )           { text_ = std::to_string(Num); }
-Text::Text( const unsigned long& Num)      { text_ = std::to_string(Num); }
-Text::Text( const unsigned long long& Num) { text_ = std::to_string(Num); }
-
-Text::~Text()
-{
-}
-
-/*===========================================================================*/
-// 描画
-void Text::draw( ID3D11ShaderResourceView* Texture,
-                 const Vector2& Position,
-                 const long Width, const long Height )
+// 文字列描画
+void Text::drawString( const std::string& Text,
+                       ID3D11ShaderResourceView* const Texture,
+                       const Vector2& Position,
+                       const long Width, const long Height )
 {
     Sprite* kSprite = Sprite::getInstance();
 
     Vector2 position = Position;
     RECT trimming {0L, 0L, Width, Height};
 
-
-    for( auto ch : text_ )
+    for( auto ch : Text )
     {
         trimming.left = getCharNum( ch ) * Width;
         trimming.right = trimming.left + Width;
@@ -54,8 +37,39 @@ void Text::draw( ID3D11ShaderResourceView* Texture,
         position.x += Width;
     }
 }
+// 数列描画
+void Text::drawNumber( const unsigned long long Number,
+                       ID3D11ShaderResourceView* const Texture,
+                       const Vector2& Position,
+                       const long Width, const long Height,
+                       const unsigned Digit)
+{
+    Vector2 position = Position;
+    position.x -= Width;
 
+    RECT trimming {0L, 0L, Width, Height};
 
+    unsigned long long temp = Number;
+
+    // 1の桁から描画
+	// 指定された桁数より小さいか、数値が0より大きい間描画する
+    for( unsigned i = 0U; (i < Digit) || (temp > 0ULL); ++i )
+    {
+        trimming.left = static_cast<long>(temp % 10ULL) * Width;
+        trimming.right = trimming.left + Width;
+
+        Sprite::getInstance()->draw(
+            Texture,
+            position,
+            &trimming,
+            1.0F,
+            1.0F
+        );
+
+        temp /= 10ULL;
+        position.x -= Width;
+    }
+}
 
 int getCharNum( const char Char )
 {
