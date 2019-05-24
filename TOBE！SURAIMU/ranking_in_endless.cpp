@@ -20,7 +20,7 @@ constexpr long kLineHeight = 25L;
 constexpr char kPlayerName[] = "YOU";
 constexpr long kDispTimeMSPF = 250L / 16L;
 
-void drawData(const Ranking::Data&,
+void drawData(const RankingManager::Data&,
               Vector2 Position,
               ID3D11ShaderResourceView* const TextureText,
               ID3D11ShaderResourceView* const TextureNumber,
@@ -56,7 +56,7 @@ bool RankingInEndless::init()
     TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
 
     // ƒ‰ƒ“ƒLƒ“ƒOî•ñ‚ğæ“¾
-    Ranking* kRanking = Ranking::getInstance();
+    RankingManager* kRanking = RankingManager::getInstance();
     for( int i = 0; i < kRegisteredNum; ++i)
     {
         ranking_[i] = kRanking->getData( i + 1U );
@@ -158,7 +158,7 @@ void RankingInEndless::draw()
 
 /*===========================================================================*/
 void drawData(
-    const Ranking::Data& Data,
+    const RankingManager::Data& Data,
     Vector2 Position,
     ID3D11ShaderResourceView* const Text,
     ID3D11ShaderResourceView* const Number,

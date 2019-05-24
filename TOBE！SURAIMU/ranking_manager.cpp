@@ -1,13 +1,13 @@
 
 // 板場 温樹
 
-#include "ranking.h"
+#include "ranking_manager.h"
 
 constexpr unsigned kNameMax = 10U;
 constexpr unsigned kRangeOfStart = (kRegisteredNum + 1U) / 2U;
 
 /*===========================================================================*/
-Ranking::Ranking() :
+RankingManager::RankingManager() :
     ranking_(kRegisteredNum)
 {
     // ファイルからランキング情報を取得する
@@ -34,7 +34,7 @@ Ranking::Ranking() :
     }
 }
 
-Ranking::~Ranking()
+RankingManager::~RankingManager()
 {
     // ファイルにランキング情報を出力する
     FILE* file = nullptr;
@@ -56,7 +56,7 @@ Ranking::~Ranking()
 
 /*===========================================================================*/
 // スコアのセット
-void Ranking::registerScore(
+void RankingManager::registerScore(
     const std::string& Player,
     const unsigned long long& Score)
 {

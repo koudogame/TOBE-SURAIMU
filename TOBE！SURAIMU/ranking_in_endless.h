@@ -4,7 +4,7 @@
 
 #include "object_base.h"
 
-#include "ranking.h"
+#include "ranking_manager.h"
 
 //-----------------------------------------------------------------------------
 // エンドレスモード内ランキング管理クラス
@@ -32,8 +32,8 @@ private:
     ID3D11ShaderResourceView* texture_number_ = nullptr;
     ID3D11ShaderResourceView* texture_text_ = nullptr;
 
-    std::vector<Ranking::Data> ranking_;
-    Ranking::Data player_;
+    std::vector<RankingManager::Data> ranking_;
+    RankingManager::Data player_;
 
     float displacement_ = 0.0F;
     float disp_frame_ = 0.0F;

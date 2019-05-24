@@ -12,12 +12,12 @@ constexpr unsigned kRegisteredNum = 100U;
 // getInstance関数でインスタンスを取得する
 // getScore関数で引数で受け取った順位のスコアを取得する(1U ~ kRegisteredNum)
 // setScore関数でランキングにスコアを登録する( ランキング外は登録されない )
-class Ranking
+class RankingManager
 {
 private:
-    Ranking();
+    RankingManager();
 public:
-    ~Ranking();
+    ~RankingManager();
     
     struct Data { // ランキングデータ
     unsigned rank;
@@ -26,8 +26,8 @@ public:
     };
 
 
-    inline static Ranking* getInstance() 
-        { static Ranking instance; return &instance;}
+    inline static RankingManager* getInstance()
+        { static RankingManager instance; return &instance;}
 
     void registerScore(const std::string& PlayerName,
                        const unsigned long long& Score);

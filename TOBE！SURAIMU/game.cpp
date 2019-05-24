@@ -3,7 +3,7 @@
 #include "task_manager.h"
 #include "sprite.h"
 #include "textureLoder.h"
-#include "ranking.h"
+#include "ranking_manager.h"
 
 //-----------------------
 //Å‰‚ÌƒV[ƒ“
@@ -43,7 +43,7 @@ Game::~Game()
 //‰Šú‰»
 bool Game::init()
 {
-    Ranking::getInstance();
+    RankingManager::getInstance();
 
 	scene_ = std::make_unique<Title>();
 
