@@ -19,10 +19,10 @@ void AudioContainer::engineUpdate()
 }
 
 //Ä¶
-void AudioContainer::play( Mode PlayMode )
+void AudioContainer::play( Mode PlayMode,bool LoopFlag )
 {
 	if( PlayMode == Mode::kDefault )
-		effect_insance_->Play();
+		effect_insance_->Play( LoopFlag );
 	else if( PlayMode == Mode::kOneShot )
 		effect_->Play();
 }
