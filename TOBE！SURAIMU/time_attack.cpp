@@ -241,7 +241,7 @@ SceneBase* TimeAttack::play()
 	// タイム管理
 	if (timer_->getCount() >= kLimitTimeSec)
 	{
-		return new Result;
+
 	}
 
 
@@ -300,7 +300,6 @@ SceneBase* TimeAttack::pause()
 		Pad::getInstance()->getTracker().b == PadTracker::PRESSED)
 	{
 		// ゲーム終了
-		return new Result;
 	}
 
 	if (Key::getInstance()->getTracker().pressed.P ||

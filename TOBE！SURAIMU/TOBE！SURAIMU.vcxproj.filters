@@ -251,6 +251,9 @@
     <ClCompile Include="ranking_manager.cpp">
       <Filter>Project\Game\Others\RankingManager</Filter>
     </ClCompile>
+    <ClCompile Include="ranking.cpp">
+      <Filter>Project\Game\Scene\Ranking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -407,6 +410,9 @@
     </ClInclude>
     <ClInclude Include="ranking_manager.h">
       <Filter>Project\Game\Others\RankingManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ranking.h">
+      <Filter>Project\Game\Scene\Ranking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

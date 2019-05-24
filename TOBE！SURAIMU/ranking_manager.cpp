@@ -58,7 +58,9 @@ RankingManager::~RankingManager()
 // スコアのセット
 void RankingManager::registerScore(
     const std::string& Player,
-    const unsigned long long& Score)
+    const unsigned long long& Score,
+    const double Height,
+    const unsigned Combo)
 {
     const auto kBegin = ranking_.begin();
 
@@ -93,6 +95,6 @@ void RankingManager::registerScore(
     }
 
     // ランキングに登録する
-    ranking_.insert( kBegin + idx, Data{idx + 1U, Player, Score} );
+    ranking_.insert( kBegin + idx, Data{idx + 1U, Player, Score, Height, Combo} );
     ranking_.pop_back(); // 最下位は弾き出す
 }
