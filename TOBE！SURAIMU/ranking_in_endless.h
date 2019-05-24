@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------------
 // --説明--
 // setScore関数で現在のスコアをセットする
-// 
+// setMove関数は無効化
 class RankingInEndless :
     public ObjectBase
 {
@@ -26,10 +26,11 @@ public:
     void draw() override;
 
     void setScore(ULONGLONG Score) { score_ = Score; }
+    void setMove(const float) override {}
 
 private:
     std::vector<std::pair<Text, Numbers<ULONGLONG>>> ranking_;
-    std::pair<Text, Numbers<ULONGLONG>> player_;
-    ULONGLONG score_ = 0ULL;
-    unsigned rank = 0U;
+    Text player_name_;
+    Numbers<ULONGLONG> score_ = 0ULL;
+    int rank_ = 0U;
 };

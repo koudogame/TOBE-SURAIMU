@@ -1,8 +1,8 @@
-A 10 
-Player 10 
-Player 10 
-Player 10 
-Player 10 
+ORE 10000 
+ATARI 5000 
+III 500 
+USO 100 
+MIMIMI 50 
 Player 10 
 Player 10 
 Player 10 

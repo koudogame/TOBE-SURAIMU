@@ -232,7 +232,12 @@ SceneBase* Endless::play()
 
 	// 座標調整( スクロール )
 	const float kOver = kThresholdY - player_->getPosition().y;
-	if( kOver > 0.0F ) { player_->addScore( kOver ); climb_ += kOver; }
+	if( kOver > 0.0F ) 
+    {
+        player_->addScore( kOver );
+        climb_ += kOver;
+        ranking_->setScore(static_cast<ULONGLONG>(climb_));
+    }
 	adjustObjectPosition(kOver);
 
 	// オブジェクトの状態倍率を更新
@@ -251,7 +256,6 @@ SceneBase* Endless::play()
 		kCollision->collision(player_, star);
 	}
 	kCollision->collision(player_, wall_);
-
 
 	return this;
 }

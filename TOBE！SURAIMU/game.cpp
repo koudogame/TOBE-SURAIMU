@@ -101,7 +101,7 @@ void Game::draw()
 {
 	TaskManager::getInstance()->allDraw();
 	// 背景エフェクト
-	Sprite::getInstance()->draw( texture_ , Vector2::Zero , &kTrimmingEffect );
+	//Sprite::getInstance()->draw( texture_ , Vector2::Zero , &kTrimmingEffect );
 
 	scene_->draw();
 }

@@ -25,6 +25,8 @@ public:
 		const long NumberHeight,
 		const unsigned MinDigits = 1U);
 	
+    T get() { return number_; }
+
 public:
 	T operator = (const T& Operand) { return number_ = Operand; }
 	T operator + (const T& Operand) { return number_ + Operand; }
@@ -41,6 +43,7 @@ public:
 	bool operator <= (const T& Operand) { return number_ <= Operand; }
 	bool operator >  (const T& Operand) { return number_ > Operand;  }
 	bool operator >= (const T& Operand) { return number_ >= Operand; }
+
 
 private:
 	T number_;
