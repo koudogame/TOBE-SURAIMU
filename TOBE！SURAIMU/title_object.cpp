@@ -13,7 +13,7 @@ TitleObject::~TitleObject()
 
 bool TitleObject::init( const Vector2 & Posit , const RECT & Triming )
 {
-	texture_ = TextureLoder::getInstance()->load( L"Texture/Title.png" );
+	texture_ = TextureLoder::getInstance()->load( L"Texture/title.png" );
 	if( texture_ == nullptr )
 		return false;
 	position_ = Posit;

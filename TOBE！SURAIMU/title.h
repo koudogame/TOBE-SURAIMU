@@ -37,7 +37,7 @@ private:
 	bool next_flag_;
 
 	Menu select_menu_;
-	std::unique_ptr<TitleObject> object_[ 3 ];
+	std::unique_ptr<TitleObject> object_[ 2 ];
 
 	AudioContainer* title_bgm_;
 	AudioContainer* select_se_[2];
@@ -48,7 +48,6 @@ private:
 	enum ObjectNum
 	{
 		kRogo,
-		kMenu,
 		kCusur
 	};
 

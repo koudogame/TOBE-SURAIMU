@@ -9,7 +9,7 @@
 
 
 const int kMenuSize = 256;
-const int kCusurInterval = 110;
+const int kCusurInterval = 80;
 const int kLayer = 3;
 
 
@@ -27,22 +27,17 @@ Title::~Title()
 // 初期化処理
 bool Title::init()
 {
-	for( int i = 0; i < 3; i++ )
+	for( int i = 0; i < 2; i++ )
 		object_[ i ] = std::make_unique<TitleObject>();
 
 	//ロゴ
-	RECT trim = { 0,0,getWindowWidth<int>(),543 };
+	RECT trim = { 0,0,getWindowWidth<int>(),getWindowHeight<int>() };
 	object_[ ObjectNum::kRogo ].get()->init( Vector2::Zero , trim );
-	//メニュー
-	trim.left = 0;
-	trim.top = trim.bottom;
-	trim.right = trim.left + kMenuSize;
-	trim.bottom = trim.top + kMenuSize;
-	object_[ ObjectNum::kMenu ].get()->init( Vector2( 542.0F , 374.0F ) , trim );
 	//カーソル
-	trim.left = trim.right;
-	trim.right = trim.left + kMenuSize * 2;
-	object_[ ObjectNum::kCusur ].get()->init( Vector2( 384.0F , 316.0F ) , trim );
+	trim.top = trim.bottom;
+	trim.bottom += kMenuSize;
+	trim.right = kMenuSize * 2;
+	object_[ ObjectNum::kCusur ].get()->init( Vector2( 385.0F , 350.0F ) , trim );
 
 	next_flag_ = false;
 
@@ -60,7 +55,7 @@ bool Title::init()
 // 終了処理
 void Title::destroy()
 {
-	for( int i = 0; i < 3; i++ )
+	for( int i = 0; i < 2; i++ )
 		object_[ i ].get()->destroy();
 }
 
@@ -82,12 +77,12 @@ SceneBase* Title::update()
 		volume_ -= 0.01F;
 		title_bgm_->setVolume( volume_ );
 		int itr = 0;
-		for( itr; itr < 3; itr++ )
+		for( itr; itr < 2; itr++ )
 			object_[ itr ].get()->update();
-		for( itr = 0; itr < 3; itr++ )
+		for( itr = 0; itr < 2; itr++ )
 			if( object_[ itr ].get()->isAlive() )
 				break;
-		if( itr == 3 )
+		if( itr == 2 )
 		{
 			title_bgm_->stop();
 			scene_se_->stop();
@@ -106,7 +101,7 @@ SceneBase* Title::update()
 		next_flag_ = true;
 	}
 	else
-		object_[ ObjectNum::kCusur ].get()->setPosition( Vector2( 384.0F , 316.0F + kCusurInterval * select_menu_ ) );
+		object_[ ObjectNum::kCusur ].get()->setPosition( Vector2( 385.0F , 350.0F + kCusurInterval * select_menu_ ) );
 
 	return this;
 }
@@ -115,7 +110,7 @@ SceneBase* Title::update()
 // 描画処理
 void Title::draw()
 {
-	for( int i = 0; i < 3; i++ )
+	for( int i = 0; i < 2; i++ )
 		object_[ i ].get()->draw();
 }
 
