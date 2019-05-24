@@ -37,20 +37,27 @@ private:
 	bool next_flag_;
 
 	Menu select_menu_;
-	std::unique_ptr<TitleObject> object_[ 3 ];
+	std::unique_ptr<TitleObject> object_[ 2 ];
 
 	AudioContainer* title_bgm_;
+	AudioContainer* select_se_[2];
+	AudioContainer* scene_se_;
 	float volume_;
+	float alpha_;
+	SceneBase* ( Title::* scene_ )( ) = nullptr;
 
 private:
 	enum ObjectNum
 	{
 		kRogo,
-		kMenu,
 		kCusur
 	};
 
 	//ì‡ïîóòópä÷êî
 private:
 	void input();
+	SceneBase* playScene();
+	SceneBase* rankingScene();
+	SceneBase* selectScene();
+
 };

@@ -9,7 +9,8 @@
 #include "stay_particle_container.h"
 #include "scoring.h"
 
-class TaskManager;
+#include "audio_loader.h"
+
 
 class Player :
 	public ObjectBase
@@ -33,7 +34,7 @@ public:
 	inline Circle* getShape() { return &myshape_; }
 	inline Line* getMove() { return &move_vector_; }
 	inline void setGround( Line* const Ground ) { ground_ = Ground; }
-	inline bool isCollision() { return flag_.test( Flag::kCollision ); }
+	inline bool isCollision() { return flag_.test( Flag::kStarCollision ); }
 	inline bool isJump() { return flag_.test( Flag::kJump ); }
 	inline ObjectBase* getOwner() { return owner_; }
 	void revision( const Vector2& CrossPoint, GroundParticleContainer::ParticleID ID );
@@ -43,7 +44,7 @@ public:
 	void resetStatus( const float Magnification ) { magnification_ = Magnification; }
 	inline void onStartFlag() { score_.start(); }
 	inline void addScore( const float AddScore ) { score_.addDefaultScore( AddScore ); }
-	inline unsigned long long getScore() { return score_.getScore(); }
+	inline Scoring* getScore() { return &score_; }
 
 
 private:
@@ -65,11 +66,12 @@ private:
 	{
 		kJump,
 		kBoost,
-		kCollision,
+		kStarCollision,
 		kParticle,
 		kTechnique,
+		kWallParticle,
 	};
-	std::bitset<5> flag_;
+	std::bitset<6> flag_;
 	float now_amount_;
 	float boost_power_;
 	float gravity_angle_;
@@ -86,8 +88,12 @@ private:
 	float prev_jump_moveamount_;
 	float magnification_;
 	int bottom_input_;
+	bool died_flag_;
 
 	Scoring score_;
+
+	AudioContainer* sound_[ 2 ];
+	AudioContainer* died_sound_;
 
 private:
 	//•`‰æŒn
@@ -115,4 +121,5 @@ private:
 	void addGroundParticle( GroundParticleContainer::ParticleID ID );
 
 	void addFreeFallParticle();
+	bool diedEffect();
 };

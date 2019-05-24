@@ -9,7 +9,7 @@ FreeFallParticleContainer::FreeFallParticleContainer()
 FreeFallParticleContainer::~FreeFallParticleContainer()
 {}
 
-FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Position , const float MoveAmound , ParticleID ID )
+FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Position, ParticleID ID )
 {
 	//‹óƒRƒ“ƒeƒi‚ðŽæ“¾
 	FreeFallParticle* s_particle = getFreeObjAndInsert();
@@ -21,7 +21,7 @@ FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Posit
 	trim.right = trim.left + kTextureSize;
 
 	//‰Šú‰»
-	s_particle->init( Position , trim , MoveAmound );
+	s_particle->init( Position , trim);
 	return s_particle;
 }
 

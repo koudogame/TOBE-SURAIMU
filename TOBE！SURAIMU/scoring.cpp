@@ -22,9 +22,13 @@ bool Scoring::init()
 	texture_ = TextureLoder::getInstance()->load( L"Texture/数字.png" );
 	score_ = 0;
 	combo_ = 0;
+	max_combo_ = 0;
 	rotation_ = 0.0F;
 	rotation_combo_ = 0;
+	spin_combo_pitch_ = 0.0F;
 	scoring_flag_ = false;
+
+	combo_sound_ = AudioLoader::getInstance()->getSound( L"Sound/spincombo-dova.wav" );
 	return true;
 }
 
@@ -47,10 +51,13 @@ void Scoring::destroy()
 }
 
 //上昇量加算
-void Scoring::addDefaultScore( float AddScore )
+void Scoring::addDefaultScore( const double AddScore )
 {
 	if( scoring_flag_ )
+	{
+		height_ += AddScore;
 		score_ += static_cast< int >( AddScore );
+	}
 }
 
 
@@ -66,6 +73,9 @@ void Scoring::addCombo()
 
 		score_ += combo_ * kComboScore;
 	}
+
+	if( combo_ > max_combo_ )
+		max_combo_ = combo_;
 }
 
 //移動コンボのリセット
@@ -98,6 +108,12 @@ void Scoring::addRotate( float Angle )
 		//1回転で加点
 		if( rotation_ >= 360.0F )
 		{
+			combo_sound_->stop();
+			combo_sound_->play( AudioContainer::Mode::kDefault );
+			spin_combo_pitch_ += 0.2F;
+			if( spin_combo_pitch_ > 1.0 )
+				spin_combo_pitch_ = 1.0F;
+			combo_sound_->setPitch( spin_combo_pitch_ );
 			rotation_ = 0;
 			rotation_combo_++;
 			score_ += rotation_combo_ * kRotationScore;
@@ -108,6 +124,7 @@ void Scoring::addRotate( float Angle )
 //回転角リセット
 void Scoring::resetRotate()
 {
+	combo_sound_->resetPitch();
 	rotation_ = 0;
 	rotation_combo_ = 0;
 }

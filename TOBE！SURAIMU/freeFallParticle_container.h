@@ -20,7 +20,6 @@ public:
 
 public:
 	FreeFallParticle* addParticle( const Vector2& Position ,
-								   const float MoveAmound ,
 								   ParticleID ID );
 	void setMove( const float Over );
 };

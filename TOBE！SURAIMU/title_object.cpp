@@ -13,7 +13,7 @@ TitleObject::~TitleObject()
 
 bool TitleObject::init( const Vector2 & Posit , const RECT & Triming )
 {
-	texture_ = TextureLoder::getInstance()->load( L"Texture/Title.png" );
+	texture_ = TextureLoder::getInstance()->load( L"Texture/title.png" );
 	if( texture_ == nullptr )
 		return false;
 	position_ = Posit;
@@ -32,9 +32,9 @@ void TitleObject::update()
 	position_.y += kFall;
 }
 
-void TitleObject::draw()
+void TitleObject::draw(const float Alpha)
 {
-	Sprite::getInstance()->draw( texture_ , position_ , &trim_ );
+	Sprite::getInstance()->draw( texture_ , position_ , &trim_ , Alpha );
 }
 
 bool TitleObject::isAlive()
