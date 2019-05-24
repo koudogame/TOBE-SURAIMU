@@ -43,6 +43,8 @@ private:
 	AudioContainer* select_se_[2];
 	AudioContainer* scene_se_;
 	float volume_;
+	float alpha_;
+	SceneBase* ( Title::* scene_ )( ) = nullptr;
 
 private:
 	enum ObjectNum
@@ -54,4 +56,8 @@ private:
 	//“à•”—˜—pŠÖ”
 private:
 	void input();
+	SceneBase* playScene();
+	SceneBase* rankingScene();
+	SceneBase* selectScene();
+
 };

@@ -44,7 +44,7 @@ public:
 	void resetStatus( const float Magnification ) { magnification_ = Magnification; }
 	inline void onStartFlag() { score_.start(); }
 	inline void addScore( const float AddScore ) { score_.addDefaultScore( AddScore ); }
-	inline unsigned long long getScore() { return score_.getScore(); }
+	inline Scoring* getScore() { return &score_; }
 
 
 private:

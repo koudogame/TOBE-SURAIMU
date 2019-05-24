@@ -30,6 +30,8 @@ bool Title::init()
 	for( int i = 0; i < 2; i++ )
 		object_[ i ] = std::make_unique<TitleObject>();
 
+	scene_ = &Title::selectScene;
+
 	//ÉçÉS
 	RECT trim = { 0,0,getWindowWidth<int>(),getWindowHeight<int>() };
 	object_[ ObjectNum::kRogo ].get()->init( Vector2::Zero , trim );
@@ -48,6 +50,7 @@ bool Title::init()
 	title_bgm_->allReset();
 	title_bgm_->play( AudioContainer::Mode::kDefault );
 	volume_ = 1.0F;
+	alpha_ = 1.0F;
 	return true;
 }
 
@@ -63,47 +66,7 @@ void Title::destroy()
 // çXêVèàóù
 SceneBase* Title::update()
 {
-	pad_ = Pad::getInstance()->getTracker();
-	pad_state_ = Pad::getInstance()->getState();
-	key_ = Key::getInstance()->getTracker();
-
-	input();
-
-	if( key_.released.Space ||
-		pad_.a == pad_.PRESSED || next_flag_ )
-	{
-		scene_se_->play( AudioContainer::Mode::kDefault , true );
-		select_se_[ 1 ]->play( AudioContainer::Mode::kDefault );
-		volume_ -= 0.01F;
-		title_bgm_->setVolume( volume_ );
-		int itr = 0;
-		for( itr; itr < 2; itr++ )
-			object_[ itr ].get()->update();
-		for( itr = 0; itr < 2; itr++ )
-			if( object_[ itr ].get()->isAlive() )
-				break;
-		if( itr == 2 )
-		{
-			title_bgm_->stop();
-			scene_se_->stop();
-			select_se_[ 0 ]->stop();
-			select_se_[ 1 ]->stop();
-
-			switch( select_menu_ )
-			{
-				case Title::kPlay:
-					return new Endless;
-				case Title::kRanking:
-					return nullptr;
-			}
-		}
-
-		next_flag_ = true;
-	}
-	else
-		object_[ ObjectNum::kCusur ].get()->setPosition( Vector2( 385.0F , 350.0F + kCusurInterval * select_menu_ ) );
-
-	return this;
+	return ( this->*scene_ )( );
 }
 
 /*===========================================================================*/
@@ -111,7 +74,7 @@ SceneBase* Title::update()
 void Title::draw()
 {
 	for( int i = 0; i < 2; i++ )
-		object_[ i ].get()->draw();
+		object_[ i ].get()->draw( alpha_ );
 }
 
 void Title::input()
@@ -124,4 +87,68 @@ void Title::input()
 		select_se_[0]->play( AudioContainer::Mode::kDefault );
 		select_menu_ = select_menu_ == Menu::kPlay ? Menu::kRanking : Menu::kPlay;
 	}
+}
+
+SceneBase* Title::playScene()
+{
+	volume_ -= 0.01F;
+	scene_se_->setVolume( volume_ );
+	title_bgm_->setVolume( volume_ );
+	int itr = 0;
+	for( itr; itr < 2; itr++ )
+		object_[ itr ].get()->update();
+	for( itr = 0; itr < 2; itr++ )
+		if( object_[ itr ].get()->isAlive() )
+			break;
+	if( itr == 2 )
+	{
+		title_bgm_->stop();
+		scene_se_->stop();
+		select_se_[ 0 ]->stop();
+		select_se_[ 1 ]->stop();
+		return new Endless;
+	}
+	return this;
+}
+
+SceneBase * Title::rankingScene()
+{
+	volume_ -= 0.01F;
+	scene_se_->setVolume( volume_ );
+	title_bgm_->setVolume( volume_ );
+	alpha_ = volume_;
+
+	if( alpha_ < 0 )
+		return nullptr;
+	return this;
+}
+
+SceneBase * Title::selectScene()
+{
+	pad_ = Pad::getInstance()->getTracker();
+	pad_state_ = Pad::getInstance()->getState();
+	key_ = Key::getInstance()->getTracker();
+
+	input();
+
+	if( key_.released.Space ||
+		pad_.a == pad_.PRESSED)
+	{
+		scene_se_->play( AudioContainer::Mode::kDefault , true );
+		select_se_[ 1 ]->play( AudioContainer::Mode::kDefault );
+
+		switch( select_menu_ )
+		{
+			case Title::kPlay:
+				scene_ = &Title::playScene;
+				break;
+			case Title::kRanking:
+				scene_ = &Title::rankingScene;
+				break;
+		}
+	}
+	else
+		object_[ ObjectNum::kCusur ].get()->setPosition( Vector2( 385.0F , 350.0F + kCusurInterval * select_menu_ ) );
+
+	return this;
 }

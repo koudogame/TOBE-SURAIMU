@@ -32,9 +32,9 @@ void TitleObject::update()
 	position_.y += kFall;
 }
 
-void TitleObject::draw()
+void TitleObject::draw(const float Alpha)
 {
-	Sprite::getInstance()->draw( texture_ , position_ , &trim_ );
+	Sprite::getInstance()->draw( texture_ , position_ , &trim_ , Alpha );
 }
 
 bool TitleObject::isAlive()

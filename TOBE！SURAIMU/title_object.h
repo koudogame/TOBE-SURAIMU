@@ -1,8 +1,7 @@
 #pragma once
 #include "object_base.h"
 
-class TitleObject :
-	public ObjectBase
+class TitleObject
 {
 public:
 	TitleObject();
@@ -11,15 +10,17 @@ public:
 	//åpè≥ä÷êî
 public:
 	bool init( const Vector2& Posit , const RECT& Triming );
-	void destroy()override;
-	void update()override;
-	void draw()override;
-	bool isAlive()override;
+	void destroy();
+	void update();
+	void draw(const float Alpha);
+	bool isAlive();
 
 public:
 	inline void setPosition( const Vector2& Posit ) { position_ = Posit; }
 
 private:
 	RECT trim_;
+	Vector2 position_;
+	ID3D11ShaderResourceView* texture_;
 };
 

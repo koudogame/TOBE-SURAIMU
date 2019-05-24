@@ -232,14 +232,14 @@ SceneBase* Endless::play()
 
 	// 座標調整( スクロール )
 	const float kOver = kThresholdY - player_->getPosition().y;
-	if( kOver > 0.0F ) 
+	if( kOver > 0.0F )
     {
         player_->addScore( kOver );
         climb_ += kOver;
     }
 	adjustObjectPosition(kOver);
 
-    ranking_->setScore(player_->getScore());
+	ranking_->setScore( player_->getScore()->getScore() );
 
 	// オブジェクトの状態倍率を更新
 	const float kMagnification = climb_ / 100000.0F + 1.0F;

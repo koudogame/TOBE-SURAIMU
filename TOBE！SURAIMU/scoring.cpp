@@ -22,6 +22,7 @@ bool Scoring::init()
 	texture_ = TextureLoder::getInstance()->load( L"Texture/数字.png" );
 	score_ = 0;
 	combo_ = 0;
+	max_combo_ = 0;
 	rotation_ = 0.0F;
 	rotation_combo_ = 0;
 	scoring_flag_ = false;
@@ -47,10 +48,13 @@ void Scoring::destroy()
 }
 
 //上昇量加算
-void Scoring::addDefaultScore( float AddScore )
+void Scoring::addDefaultScore( const double AddScore )
 {
 	if( scoring_flag_ )
+	{
+		height_ += AddScore;
 		score_ += static_cast< int >( AddScore );
+	}
 }
 
 
@@ -66,6 +70,9 @@ void Scoring::addCombo()
 
 		score_ += combo_ * kComboScore;
 	}
+
+	if( combo_ > max_combo_ )
+		max_combo_ = combo_;
 }
 
 //移動コンボのリセット
