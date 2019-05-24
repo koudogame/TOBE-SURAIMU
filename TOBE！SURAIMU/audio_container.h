@@ -23,7 +23,7 @@ public:
 	void engineUpdate();
 	//Ä¶
 	//ˆø”...Ä¶ƒ‚[ƒh
-	void play( Mode PlayMode );
+	void play( Mode PlayMode , bool LoopFlag = false );
 	//’â~
 	void stop();
 	//ˆê’â~

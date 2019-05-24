@@ -47,8 +47,9 @@ bool Title::init()
 	next_flag_ = false;
 
 	title_bgm_ = AudioLoader::getInstance()->getSound( L"Sound/title2-dova.wav" );
-
+	title_bgm_->allReset();
 	title_bgm_->play( AudioContainer::Mode::kDefault );
+	volume_ = 1.0F;
 	return true;
 }
 
@@ -73,6 +74,8 @@ SceneBase* Title::update()
 	if( key_.released.Space ||
 		pad_.a == pad_.PRESSED || next_flag_ )
 	{
+		volume_ -= 0.01F;
+		title_bgm_->setVolume( volume_ );
 		int itr = 0;
 		for( itr; itr < 3; itr++ )
 			object_[ itr ].get()->update();
@@ -81,6 +84,8 @@ SceneBase* Title::update()
 				break;
 		if( itr == 3 )
 		{
+			title_bgm_->stop();
+
 			switch( select_menu_ )
 			{
 				case Title::kPlay:

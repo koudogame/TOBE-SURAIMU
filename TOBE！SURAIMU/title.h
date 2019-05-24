@@ -40,6 +40,7 @@ private:
 	std::unique_ptr<TitleObject> object_[ 3 ];
 
 	AudioContainer* title_bgm_;
+	float volume_;
 
 private:
 	enum ObjectNum
