@@ -16,21 +16,18 @@
 class Text
 {
 public:
-    Text();
-    Text(const char Char);
-    Text(const char* String);
-    Text(const int Num);
-    Text(const unsigned Num);
-    Text(const unsigned long& Num);
-    Text(const unsigned long long& Num);
-    ~Text();
-
-    void draw(
-        ID3D11ShaderResourceView* Texture,
+    static void drawString(
+        const std::string& Text,
+        ID3D11ShaderResourceView* const Texture,
         const Vector2& DrawPosition,
         const long TextWidth,
         const long TextHeight);
 
-private:
-    std::string text_;
+    static void drawNumber(
+        const unsigned long long Number,
+        ID3D11ShaderResourceView* const Texture,
+        const Vector2& DrawPositionMostRight,
+        const long TextWidth,
+        const long TextHeight,
+        const unsigned MinDigit = 1U);
 };

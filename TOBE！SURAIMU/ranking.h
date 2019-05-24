@@ -4,6 +4,7 @@
 
 constexpr unsigned kRegisteredNum = 100U;
 
+
 //-----------------------------------------------------------------------------
 // ランキング情報管理クラス
 //-----------------------------------------------------------------------------
@@ -17,14 +18,22 @@ private:
     Ranking();
 public:
     ~Ranking();
+    
+    struct Data { // ランキングデータ
+    unsigned rank;
+    std::string name;
+    unsigned long long score;
+    };
+
 
     inline static Ranking* getInstance() 
         { static Ranking instance; return &instance;}
 
-    void registerScore(const std::string& PlayerName, const ULONGLONG& Score);
-    inline std::pair<std::string, ULONGLONG> getData(const unsigned Rank) 
+    void registerScore(const std::string& PlayerName,
+                       const unsigned long long& Score);
+    inline Data getData(const unsigned Rank) 
         { assert((Rank - 1U) <= 99U && (Rank >= 1U)); return ranking_[Rank - 1]; }
 
 private:
-    std::vector<std::pair<std::string, ULONGLONG>> ranking_;
+    std::vector<Data> ranking_;
 };

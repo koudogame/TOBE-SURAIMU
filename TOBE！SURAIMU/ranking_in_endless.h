@@ -4,8 +4,7 @@
 
 #include "object_base.h"
 
-#include "text.h"
-#include "numbers.h"
+#include "ranking.h"
 
 //-----------------------------------------------------------------------------
 // エンドレスモード内ランキング管理クラス
@@ -25,12 +24,10 @@ public:
     void update() override;
     void draw() override;
 
-    void setScore(ULONGLONG Score) { score_ = Score; }
+    void setScore(unsigned long long Score) { player_.score = Score; }
     void setMove(const float) override {}
 
 private:
-    std::vector<std::pair<Text, Numbers<ULONGLONG>>> ranking_;
-    Text player_name_;
-    Numbers<ULONGLONG> score_ = 0ULL;
-    int rank_ = 0U;
+    std::vector<Ranking::Data> ranking_;
+    Ranking::Data player_;
 };

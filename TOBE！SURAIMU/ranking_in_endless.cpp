@@ -5,20 +5,21 @@
 
 #include "textureLoder.h"
 #include "sprite.h"
-#include "ranking.h"
+
 #include "task_manager.h"
 #include "text.h"
-#include "numbers.h"
+
+
+// ランク : 1 ~ 101
 
 /*===========================================================================*/
-constexpr long kTextWidth = 11L;
+constexpr long kTextWidth = 12L;
 constexpr long kTextHeight = 16L;
 constexpr char kPlayerName[] = "YOU";
 
 /*===========================================================================*/
 RankingInEndless::RankingInEndless() :
-    ranking_(kRegisteredNum),
-    player_name_(kPlayerName)
+    ranking_(kRegisteredNum)
 {
 }
 
@@ -41,20 +42,18 @@ bool RankingInEndless::init()
     TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
 
     // ランキング情報を取得
-    std::pair<std::string, ULONGLONG> data;
     Ranking* kRanking = Ranking::getInstance();
     for( int i = 0; i < kRegisteredNum; ++i)
     {
-        data = kRanking->getData( i + 1U );
-        ranking_[i] = std::make_pair(
-                Text(data.first.c_str()), Numbers<ULONGLONG>(data.second));
+        ranking_[i] = kRanking->getData( i + 1U );
     }
 
     // メンバ初期化
     position_.x = 1000.0F;
-    position_.y = getWindowHeight<float>() - kTextHeight;
-    rank_ = kRegisteredNum + 1U;
-    score_ = 0ULL;
+    position_.y = 0.0F;
+    player_.rank = 101ULL;
+    player_.name = kPlayerName;
+    player_.score = 0U;
 
     return true;
 }
@@ -76,9 +75,9 @@ void RankingInEndless::destroy()
 void RankingInEndless::update()
 {
     // 順位の更新
-    for(; rank_ >= 0U; --rank_ )
+    for(; player_.rank >= 0U; --player_.rank )
     {
-        if( ranking_[rank_ - 2].second.get() > score_.get() ) { break; }
+        if( ranking_[player_.rank - 2].score > player_.score ) { break; }
     }
 }
 
@@ -88,21 +87,24 @@ void RankingInEndless::draw()
 {
     Vector2 draw_position = position_;
 
-    // プレイヤーのスコアを描画
-    player_name_.draw( texture_, draw_position, kTextWidth, kTextHeight );
-    draw_position.x = getWindowWidth<float>();
-    score_.draw( texture_, draw_position, kTextWidth, kTextHeight );
-
-    // ランキングを描画
-    for( int rank = rank_ - 2U; rank >= 0; --rank )
+    for( int i = 0; i < kRegisteredNum; ++i )
     {
-        draw_position.x = position_.x;
-        draw_position.y -= kTextHeight;
-        if( draw_position.y < 0.0F ) { break; }
-
-
-        ranking_[rank].first.draw( texture_, draw_position, kTextWidth, kTextHeight );
+        Text::drawNumber( 
+            ranking_[i].rank,
+            texture_, draw_position, kTextWidth, kTextHeight
+        );
+        draw_position.x += kTextWidth * 2L;
+        Text::drawString(
+            ranking_[i].name,
+            texture_, draw_position, kTextWidth, kTextHeight
+        );
         draw_position.x = getWindowWidth<float>();
-        ranking_[rank].second.draw( texture_, draw_position, kTextWidth, kTextHeight );
+        Text::drawNumber( 
+            ranking_[i].score,
+            texture_, draw_position, kTextWidth, kTextHeight
+        );
+
+        draw_position.x = 1000.0F;
+        draw_position.y += kTextHeight;
     }
 }
