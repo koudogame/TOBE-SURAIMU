@@ -6,6 +6,7 @@
 #include "key.h"
 #include "pad.h"
 #include "endless.h"
+#include "ranking.h"
 
 
 const int kMenuSize = 256;
@@ -119,7 +120,7 @@ SceneBase * Title::rankingScene()
 	alpha_ = volume_;
 
 	if( alpha_ < 0 )
-		return nullptr;
+		return new Ranking;
 	return this;
 }
 

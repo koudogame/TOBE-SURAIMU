@@ -1,8 +1,7 @@
 #pragma once
 
 #include "scene_base.h"
-
-class Scoring;
+#include "scoring.h"
 
 namespace {
     constexpr unsigned kNameMax = 8U;
@@ -14,7 +13,7 @@ class Result :
 	public SceneBase
 {
 public:
-	Result(const unsigned Rank, const Scoring& Score);
+	Result(const unsigned Rank, const Scoring Score);
 	~Result();
 
 	bool init() override;
@@ -24,18 +23,31 @@ public:
 
 
 private:
-    char name_[kNameMax + 1U];
-    unsigned index_name_ = 0U;
-    unsigned index_char_ = 10U;
-    unsigned count_frame_ = 0U;
+    bool created_ = false;
+
+
+    SceneBase* in();
+    SceneBase* outToTitle();
+    SceneBase* outToPlay();
     SceneBase* setName();
     SceneBase* selectNext();
     SceneBase* (Result::*update_)() = &Result::setName;
 
+// ‘JˆÚ
+    float alpha_ = 1.0F;
+    float count_ = 0.0F;
+// setName
+    char name_[kNameMax + 1U] = {0};
+    unsigned index_name_ = 0U;
+    int index_char_ = 10U;
+    unsigned count_frame_ = 0U;
 
-    bool created_ = false;
-    Vector2 position_;
-
-    const Scoring& score_;
+// ‚»‚Ì‘¼
+    ID3D11ShaderResourceView* texture_text_ = nullptr;
+    ID3D11ShaderResourceView* texture_numbers_ = nullptr;
+    ID3D11ShaderResourceView* texture_numbers_mini_ = nullptr;
     unsigned rank_ = 101U;
+    Scoring score_;
+    int select_;
+    Vector2 position_base_;
 };

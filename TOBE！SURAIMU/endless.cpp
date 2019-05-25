@@ -41,7 +41,7 @@ constexpr float kInitStarSpin[]     = { 3.0F,3.0F, };
 constexpr float kInitStarSpinRate[] = { 0.001F,0.01F, };
 constexpr float kInitStarSize[]     = { 90.0F,120.0F, };
 
-constexpr float kThresholdY = 360.0F;       // スクロール閾値
+constexpr float kThresholdY = 500.0F;       // スクロール閾値
 
 
 /*===========================================================================*/

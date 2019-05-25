@@ -101,7 +101,8 @@ void Wall::destroy()
 // çXêVèàóù
 void Wall::update()
 {
-
+    position_.y += 1.3F;
+    if( position_.y > 0.0F ) { position_.y -= kWallHeight; }
 }
 
 /*===========================================================================*/
@@ -111,7 +112,7 @@ void Wall::draw()
 	Sprite* const kSprite = Sprite::getInstance();
 
     Vector2 draw_position;
-    draw_position.y = 0.0F;
+    draw_position.y = position_.y;
     while (draw_position.y <= getWindowHeight<float>())
     {
         // ç∂ï«

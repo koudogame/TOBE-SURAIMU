@@ -105,7 +105,7 @@ SceneBase* Ranking::update()
         addOffset( &offset_, kOffset * magnification_ ) ;
         addMagnification( &magnification_ );
     }
-    // Enter‚©
+    // Enter‚©aƒ{ƒ^ƒ“‚ª—£‚³‚ê‚½‚çŒˆ’è
     else if(key_tracker.released.Enter || pad_tracker.a ==PadTracker::RELEASED)
     {
         return new Title();
@@ -139,5 +139,5 @@ void addOffset( float* const Val, const float Add )
     *Val += Add;
 
     if( *Val > kOffsetMax ) { *Val = kOffsetMax; }
-    if( *Val < 0.0F )       { *Val = 0.0F; }
+    else if( *Val < 0.0F )  { *Val = 0.0F; }
 }
