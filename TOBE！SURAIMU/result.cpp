@@ -15,14 +15,20 @@
 #include "endless.h"
 
 
-using KeyState = Keyboard::State;
+using KeyState   = Keyboard::State;
 using KeyTracker = Keyboard::KeyboardStateTracker;
-using PadState = GamePad::State;
+using PadState   = GamePad::State;
 using PadTracker = GamePad::ButtonStateTracker;
 
 
 /*===========================================================================*/
 constexpr unsigned kFrameWait = 10U;
+constexpr long kMiniNumbersWidth = 11U;
+constexpr long kMiniNumbersHeight = 16L;
+constexpr long kNumbersWidth = 20L;
+constexpr long kNumbersHeight = 32L;
+constexpr long kCharacterWidth = 21L;
+constexpr long kCharacterHeight = 32L;
 enum Trimming { kBackground, kCursor, kRankIn };
 const RECT kTrimming[] = 
 {
@@ -33,13 +39,15 @@ const RECT kTrimming[] =
 constexpr Vector2 kPositionBackgroundFromBase { 307.0F, 0.0F };
 enum CursorPosition { kSelectSetName, kSelectOneMore, kSelectTitle, };
 constexpr Vector2 kPositionCursorFromBase[] = {
-    {512.0F, 287.0F},
-    {512.0F, 352.0F},
-    {512.0F, 417.0F},
+    {515.0F, 287.0F},
+    {515.0F, 352.0F},
+    {515.0F, 417.0F},
 };
 constexpr Vector2 kPositionScoreFromBase { 740.0F, 148.0F };
 constexpr Vector2 kPositionHeightFromBase { 417.0F, 222.0F };
+constexpr Vector2 kPositionComboFromBase { 900.0F, 222.0F };
 constexpr Vector2 kPositionRankInFromBase { 319.0F, 100.0F };
+constexpr Vector2 kPositionRankFromBase { 900.0F, 130.0F };
 constexpr Vector2 kPositionNameFromBase { 556.0F, 259.0F };
 
 /*===========================================================================*/
@@ -130,8 +138,23 @@ void Result::draw()
     Text::drawNumber( score_.getScore(),
         texture_numbers_,
         position_base_ + kPositionScoreFromBase,
-        20L, 32L,
-        10U );
+        kNumbersWidth, kNumbersHeight,
+        10U,
+        alpha_ );
+    // 高さ
+    Text::drawNumber( static_cast<unsigned long long>(score_.getHeight()),
+        texture_numbers_mini_,
+        position_base_ + kPositionHeightFromBase,
+        kMiniNumbersWidth, kMiniNumbersHeight,
+        1U,
+        alpha_ );
+    // コンボ
+    Text::drawNumber( score_.getMaxCombo(),
+        texture_numbers_mini_,
+        position_base_ + kPositionComboFromBase,
+        kMiniNumbersWidth, kMiniNumbersHeight,
+        1U,
+        alpha_ );
 
     // カーソル
     kSprite->draw( texture_,
@@ -149,7 +172,14 @@ void Result::draw()
         Text::drawString( name_,
             texture_text_, 
             position_base_ + kPositionNameFromBase,
-            21L, 32L );
+            kCharacterWidth, kCharacterHeight,
+            alpha_ );
+        Text::drawNumber( rank_,
+            texture_numbers_mini_,
+            position_base_ + kPositionRankFromBase,
+            kMiniNumbersWidth, kMiniNumbersHeight,
+            1U,
+            alpha_ );
     }
 }
 
@@ -280,7 +310,8 @@ SceneBase* Result::selectNext()
         }
     }
     // 選択
-    else if( key_tracker.pressed.Up || pad_tracker.leftStickUp )
+    else if( key_tracker.pressed.Up || 
+             pad_tracker.leftStickUp == PadTracker::PRESSED )
     {
         // 上限を超えないよう制御
         if( (rank_ <= kRegisteredNum && select_ > kSelectSetName) || // ランクイン時
@@ -289,7 +320,8 @@ SceneBase* Result::selectNext()
             --select_;
         }
     }
-    else if( key_tracker.pressed.Down || pad_tracker.leftStickDown ) 
+    else if( key_tracker.pressed.Down ||
+             pad_tracker.leftStickDown == PadTracker::PRESSED ) 
     {
         // 下限を超えないよう制御
         if( select_ < kSelectTitle )

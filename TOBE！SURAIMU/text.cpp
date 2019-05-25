@@ -12,7 +12,8 @@ int getCharNum(const char);
 void Text::drawString( const std::string& Text,
                        ID3D11ShaderResourceView* const Texture,
                        const Vector2& Position,
-                       const long Width, const long Height )
+                       const long Width, const long Height,
+                       const float Alpha )
 {
     Sprite* kSprite = Sprite::getInstance();
 
@@ -24,7 +25,7 @@ void Text::drawString( const std::string& Text,
         trimming.left = getCharNum( ch ) * Width;
         trimming.right = trimming.left + Width;
 
-        kSprite->draw( Texture, position, &trimming, 1.0F, 0.0F );
+        kSprite->draw( Texture, position, &trimming, Alpha, 0.0F );
 
         position.x += Width;
     }
@@ -34,7 +35,8 @@ void Text::drawNumber( const unsigned long long Number,
                        ID3D11ShaderResourceView* const Texture,
                        const Vector2& Position,
                        const long Width, const long Height,
-                       const unsigned Digit)
+                       const unsigned Digit,
+                       const float Alpha)
 {
     Vector2 position = Position;
     position.x -= Width;
@@ -54,7 +56,7 @@ void Text::drawNumber( const unsigned long long Number,
             Texture,
             position,
             &trimming,
-            1.0F,
+            Alpha,
             1.0F
         );
 

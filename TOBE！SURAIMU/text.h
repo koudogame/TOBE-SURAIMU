@@ -28,8 +28,9 @@ public:
         const std::string& Text,
         ID3D11ShaderResourceView* const Texture,
         const Vector2& DrawPosition,
-        const long TextWidth,
-        const long TextHeight);
+        const long TextWidth, 
+        const long TextHeight,
+        const float Alpha = 1.0F);
 
     static void drawNumber(
         const unsigned long long Number,
@@ -37,5 +38,6 @@ public:
         const Vector2& DrawPositionMostRight,
         const long TextWidth,
         const long TextHeight,
-        const unsigned MinDigit = 1U);
+        const unsigned MinDigit = 1U,
+        const float Alpha = 1.0F);
 };
