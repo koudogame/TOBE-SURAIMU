@@ -11,35 +11,18 @@ TitleObject::TitleObject()
 TitleObject::~TitleObject()
 {}
 
-bool TitleObject::init( const Vector2 & Posit , const RECT & Triming )
+bool TitleObject::init( TitleStatus* TitleObjectStatus )
 {
-	texture_ = TextureLoder::getInstance()->load( L"Texture/title.png" );
-	if( texture_ == nullptr )
-		return false;
-	position_ = Posit;
-	trim_ = Triming;
-
+	status_ = TitleObjectStatus;
 	return true;
-}
-
-void TitleObject::destroy()
-{
-	TextureLoder::getInstance()->release( texture_ );
 }
 
 void TitleObject::update()
 {
-	position_.y += kFall;
+	status_->position.y += kFall;
 }
 
-void TitleObject::draw(const float Alpha)
+void TitleObject::draw()
 {
-	Sprite::getInstance()->draw( texture_ , position_ , &trim_ , Alpha );
-}
-
-bool TitleObject::isAlive()
-{
-	if( position_.y > 720.0F )
-		return false;
-	return true;
+	Sprite::getInstance()->draw( status_->texture , status_->position , &status_->trim , status_->alpha );
 }

@@ -1,5 +1,11 @@
 #pragma once
-#include "object_base.h"
+struct TitleStatus
+{
+	Vector2 position;
+	ID3D11ShaderResourceView* texture;
+	RECT trim;
+	float alpha = 1.0F;
+};
 
 class TitleObject
 {
@@ -9,18 +15,11 @@ public:
 
 	//åpè≥ä÷êî
 public:
-	bool init( const Vector2& Posit , const RECT& Triming );
-	void destroy();
+	bool init( TitleStatus* TitleObjectStatus );
 	void update();
-	void draw(const float Alpha);
-	bool isAlive();
-
-public:
-	inline void setPosition( const Vector2& Posit ) { position_ = Posit; }
+	void draw();
 
 private:
-	RECT trim_;
-	Vector2 position_;
-	ID3D11ShaderResourceView* texture_;
+	TitleStatus* status_;
 };
 
