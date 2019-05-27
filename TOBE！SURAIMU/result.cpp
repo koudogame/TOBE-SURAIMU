@@ -322,20 +322,19 @@ SceneBase* Result::setName()
 		decision_se_->play( AudioContainer::Mode::kDefault );
 
         name_[index_name_] = kCharTable[index_char_];
-        ++index_name_;
 
         // –¼‘OãŒÀ‚©A2•¶š–ÚˆÈ~‚É' '‚ª“ü—Í‚³‚ê‚½‚çˆ—‚ğ•ÏX
         if( (index_name_ >= kNameMax) ||
-            (kCharTable[index_char_] == ' ' && index_name_ != 1) )
+            (kCharTable[index_char_] == ' ' && index_name_ != 0) )
         {
-            --index_name_;
             ++select_;
             update_ = &Result::selectNext;
         }
         // Ÿ‚Ì•¶š‘I‘ğ‚ÖŒü‚¯‚Ä‰Šú‰»
-        else
+        else if( name_[0] != ' ')
         {
-            // 'A'‚Å‰Šú‰»
+            // Ÿ‚Ì•¶š‚ğ'A'‚Å‰Šú‰»
+            ++index_name_;
             index_char_ = 10;
             name_[index_name_] = kCharTable[index_char_];
 
@@ -368,7 +367,7 @@ SceneBase* Result::setName()
 		select_se_->play( AudioContainer::Mode::kDefault );
         count_frame_ = 0U;
         // zŠÂ‚³‚¹‚é
-        if(++index_char_ >= kCharNum ) { index_char_ = 0; }
+        if(--index_char_ < 0 ) { index_char_ = kCharNum - 1; }
         name_[index_name_] = kCharTable[index_char_];
     }
     else if( 
@@ -384,7 +383,7 @@ SceneBase* Result::setName()
 		select_se_->play( AudioContainer::Mode::kDefault );
         count_frame_ = 0U;
         // zŠÂ‚³‚¹‚é
-        if(--index_char_ < 0 ) { index_char_ = kCharNum - 1; }
+        if(++index_char_ >= kCharNum ) { index_char_ = 0; }
         name_[index_name_] = kCharTable[index_char_];
     }
 
