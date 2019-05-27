@@ -106,6 +106,9 @@ void Player::update()
 	//各パーティクルの追加
 	addFreeFallParticle();
 
+	//スコアの更新
+	score_.update();
+
  	move_vector_.start = myshape_.position;
 
 	//入力時処理

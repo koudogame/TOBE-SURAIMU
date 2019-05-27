@@ -2,11 +2,15 @@
 #include "textureLoder.h"
 #include "sprite.h"
 
-const int kComboScore = 100;
-const int kDownScore = 1;
-const int kTechniqueScore = 1000;
-const int kRotationScore = 100;
-const int kLengthScore = 100;
+const unsigned int kComboScore = 100;
+const unsigned int kDownScore = 1;
+const unsigned int kTechniqueScore = 1000;
+const unsigned int kRotationScore = 100;
+const unsigned int kLengthScore = 100;
+const int kNumWidth = 20;
+const int kNumHeight = 32;
+const int kMinNumWidth = 11;
+const int kMinNumHeight = 15;
 
 Scoring::Scoring()
 {}
@@ -20,7 +24,8 @@ Scoring::~Scoring()
 //初期化
 bool Scoring::init()
 {
-	texture_ = TextureLoder::getInstance()->load( L"Texture/数字.png" );
+	texture_ = TextureLoder::getInstance()->load( L"Texture/totalscore_left.png" );
+	num_texture_ = TextureLoder::getInstance()->load( L"Texture/result_score.png" );
 	score_ = 0;
 	combo_ = 0;
 	max_combo_ = 0;
@@ -33,9 +38,46 @@ bool Scoring::init()
 	return true;
 }
 
+void Scoring::update()
+{
+	bool delete_flag_ = false;
+	int itr_num = 0;
+	for( const auto& itr : addition_list_ )
+	{
+		itr.get()->update( 64.0F + itr_num * kMinNumHeight );
+
+		if( !itr.get()->isAlive() )
+			delete_flag_ = true;
+
+		itr_num++;
+	}
+
+	if( delete_flag_ )
+		addition_list_.pop_back();
+}
+
 //描画
 void Scoring::draw()
 {
+	//トータルスコアの下地描画
+	RECT trim{ 0,0,300,64 };
+	Sprite::getInstance()->draw( texture_ , Vector2::Zero , &trim );
+	//トータルスコアの描画
+	Vector2 draw_position( 225.0F , 12.0F );
+	unsigned long long temp = score_;
+	do
+	{
+		trim.left = kNumWidth * ( temp % 10 );
+		trim.right = trim.left + kNumWidth;
+		trim.bottom = trim.top + kNumHeight;
+		Sprite::getInstance()->draw( num_texture_ , draw_position , &trim );
+		draw_position.x -= kNumWidth;
+		temp /= 10;
+	} while( temp > 0ULL );
+
+	//加点の描画
+	for( const auto& itr : addition_list_ )
+		itr.get()->draw();
 }
 
 //破棄
@@ -66,6 +108,7 @@ void Scoring::addCombo()
 		combo_++;
 
 		score_ += combo_ * kComboScore;
+		createNumber( combo_ * kComboScore );
 	}
 
 	if( combo_ > max_combo_ )
@@ -82,7 +125,10 @@ void Scoring::resetCombo()
 void Scoring::addTechnique()
 {
 	if( scoring_flag_ )
+	{
 		score_ += kTechniqueScore;
+		createNumber( kTechniqueScore );
+	}
 }
 
 //下降点加算
@@ -111,6 +157,7 @@ void Scoring::addRotate( float Angle )
 			rotation_ = 0;
 			rotation_combo_++;
 			score_ += rotation_combo_ * kRotationScore;
+			createNumber( rotation_combo_ * kRotationScore );
 		}
 	}
 }
@@ -128,5 +175,12 @@ void Scoring::resetRotate()
 void Scoring::addLength( const float Length )
 {
 	score_ += static_cast< int >( Length * kLengthScore );
+	createNumber( static_cast< unsigned int >( Length * kLengthScore ) );
+}
+
+void Scoring::createNumber( unsigned int Num )
+{
+	addition_list_.push_front( std::make_shared<ScoreNumber>() );
+	addition_list_.front().get()->init( Num );
 }
 

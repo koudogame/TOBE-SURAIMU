@@ -4,6 +4,7 @@
 
 #include "numbers.h"
 #include "audio_loader.h"
+#include "score_number.h"
 
 class Scoring
 {
@@ -14,6 +15,7 @@ public:
 	//外部公開関数( 必ず実行 )
 public:
 	bool init();
+	void update();
 	void draw();
 	void destroy();
 	//上昇量加算
@@ -58,10 +60,16 @@ private:
 	float rotation_;	                            //回転量
 	bool scoring_flag_;					            //スコアリング有効フラグ
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
+	ID3D11ShaderResourceView* num_texture_;			//数字のテクスチャ
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
 
 	AudioContainer* combo_sound_;					//回転コンボのサウンド
 
 	Numbers<unsigned int> combo_draw_;
+
+	std::list<std::shared_ptr<ScoreNumber>> addition_list_;
+
+private:
+	void createNumber( unsigned int Num );
 };
 
