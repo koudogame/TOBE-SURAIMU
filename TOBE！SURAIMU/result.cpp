@@ -118,7 +118,9 @@ bool Result::init()
 	//サウンドの取得
 	bgm_ = AudioLoader::getInstance()->getSound( L"Sound/title2-dova.wav" );
 	select_se_ = AudioLoader::getInstance()->getSound( L"Sound/select1-dova.wav" );
-
+	decision_se_ = AudioLoader::getInstance()->getSound( L"Sound/select2-dova.wav" );
+	bgm_->allReset();
+	bgm_->play( AudioContainer::Mode::kDefault , true );
 	return true;
 }
 
@@ -289,16 +291,17 @@ SceneBase* Result::outToTitle()
 // プレイへ遷移
 SceneBase* Result::outToPlay()
 {
-    count_ -= 0.1F;
+    count_ += 0.1F;
     float offset = Easing::getInstance()->
         expo(
             getWindowHeight<float>(),
             count_,
-            Easing::Mode::In
+            Easing::Mode::Out
         );
     position_base_.y -= offset;
+	bgm_->setVolume( 1.0F - count_ );
 
-    if( count_ < -1.0F ) { return new Endless(); }
+	if( count_ >= 1.0F ) { bgm_->stop(); return new Endless(); }
     else                 { return this; }
 }
 
@@ -314,6 +317,10 @@ SceneBase* Result::setName()
     // 決定
     if( key_tracker.pressed.Enter || pad_tracker.b == PadTracker::PRESSED )
     {
+		decision_se_->resetPitch();
+		decision_se_->stop();
+		decision_se_->play( AudioContainer::Mode::kDefault );
+
         name_[index_name_] = kCharTable[index_char_];
         ++index_name_;
 
@@ -337,22 +344,28 @@ SceneBase* Result::setName()
     // 戻る
     else if( key_tracker.pressed.Back || pad_tracker.a == PadTracker::PRESSED )
     {
-        if( index_name_ >= 1U ) 
-        {
-            name_[index_name_] = ' ';
-            --index_name_;
-            index_char_ = Text::getCharNum(name_[index_name_]);
-        }
+		if( index_name_ >= 1U )
+		{
+			decision_se_->setPitch( -1.0F );
+			decision_se_->stop();
+			decision_se_->play( AudioContainer::Mode::kDefault );
+			name_[ index_name_ ] = ' ';
+			--index_name_;
+			index_char_ = Text::getCharNum( name_[ index_name_ ] );
+		}
     }
     // 選択
-    else if( 
+    else if(
         // 新規入力か
         ( (key_tracker.pressed.Up ||
             pad_tracker.leftStickUp == PadTracker::PRESSED) ) ||
         // 一定時間の長押しで
-        ( (key_state.Up || pad_state.IsLeftThumbStickUp()) && 
+        ( (key_state.Up || pad_state.IsLeftThumbStickUp()) &&
             ++count_frame_ >= kFrameWait ) )
     {
+		select_se_->stop();
+		select_se_->resetPitch();
+		select_se_->play( AudioContainer::Mode::kDefault );
         count_frame_ = 0U;
         // 循環させる
         if(++index_char_ >= kCharNum ) { index_char_ = 0; }
@@ -366,6 +379,9 @@ SceneBase* Result::setName()
         ( (key_state.Down || pad_state.IsLeftThumbStickDown()) &&
             ++count_frame_ >= kFrameWait ) )
     {
+		select_se_->stop();
+		select_se_->resetPitch();
+		select_se_->play( AudioContainer::Mode::kDefault );
         count_frame_ = 0U;
         // 循環させる
         if(--index_char_ < 0 ) { index_char_ = kCharNum - 1; }
@@ -386,6 +402,9 @@ SceneBase* Result::selectNext()
     // 決定
     if( key_tracker.pressed.Enter || pad_tracker.b == PadTracker::PRESSED )
     {
+		decision_se_->resetPitch();
+		decision_se_->stop();
+		decision_se_->play( AudioContainer::Mode::kDefault );
         // 各項目にあった処理へ移る
         switch( select_ ) 
         {
@@ -395,25 +414,43 @@ SceneBase* Result::selectNext()
         }
     }
     // 選択
-    else if( key_tracker.pressed.Up || 
-             pad_tracker.leftStickUp == PadTracker::PRESSED )
-    {
-        // 上限を超えないよう制御
-        if( (rank_ <= kRegisteredNum && select_ > kSelectSetName) || // ランクイン時
-            (select_ > kSelectOneMore) )                             // ランク外  時
-        {
-            --select_;
-        }
-    }
-    else if( key_tracker.pressed.Down ||
-             pad_tracker.leftStickDown == PadTracker::PRESSED ) 
-    {
-        // 下限を超えないよう制御
-        if( select_ < kSelectTitle )
-        {
-            ++select_;
-        }
-    }
+	else if( key_tracker.pressed.Up ||
+			 pad_tracker.leftStickUp == PadTracker::PRESSED )
+	{
+		// 上限を超えないよう制御
+		if( ( rank_ <= kRegisteredNum && select_ > kSelectSetName ) || // ランクイン時
+			( select_ > kSelectOneMore ) )                             // ランク外  時
+		{
+			--select_;
+			select_se_->stop();
+			select_se_->resetPitch();
+			select_se_->play( AudioContainer::Mode::kDefault );
+		}
+		else
+		{
+			select_se_->stop();
+			select_se_->setPitch( -0.5F );
+			select_se_->play( AudioContainer::Mode::kDefault );
+		}
+	}
+	else if( key_tracker.pressed.Down ||
+			 pad_tracker.leftStickDown == PadTracker::PRESSED )
+	{
+		// 下限を超えないよう制御
+		if( select_ < kSelectTitle )
+		{
+			++select_;
+			select_se_->stop();
+			select_se_->resetPitch();
+			select_se_->play( AudioContainer::Mode::kDefault );
+		}
+		else
+		{
+			select_se_->stop();
+			select_se_->setPitch( -0.5F );
+			select_se_->play( AudioContainer::Mode::kDefault );
+		}
+	}
 
     return this;
 }
