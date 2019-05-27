@@ -26,7 +26,7 @@ using PadTracker = GamePad::ButtonStateTracker;
 /*===========================================================================*/
 constexpr unsigned kFrameWait     = 10U;
 constexpr long kMiniNumbersWidth  = 11U;
-constexpr long kMiniNumbersHeight = 16L;
+constexpr long kMiniNumbersHeight = 15L;
 constexpr long kNumbersWidth      = 20L;
 constexpr long kNumbersHeight     = 32L;
 constexpr long kMiniCharacterWidth = 12L;
@@ -103,13 +103,13 @@ bool Result::init()
     update_ = &Result::in;
     alpha_ = 1.0F;
     count_ = 0.0F;
-    for( auto& name : name_ )
+    name_[0] = 'N'; name_[1] = 'A'; name_[2] = 'M';name_[3] = 'E';
+    for( int i = 4; i < kNameMax; ++i )
     {
-        name = '\0';
+        name_[i] = '\0';
     }
-    name_[0] = 'A';
-    index_name_ = 0U;
-    index_char_ = 10;
+    index_name_ = 4U;
+    index_char_ = kCharNum - 1;
     count_frame_ = 0U;
     select_ = rank_ <= kRegisteredNum ? kSelectSetName : kSelectOneMore;
     position_base_.x = 0.0F;
