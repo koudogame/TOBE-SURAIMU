@@ -16,7 +16,7 @@ const int kCusurInterval = 80;
 const int kLayer = 3;
 const int kFall = 6;
 const int kWallWidth = 32;
-const float kWallHeight = 81.0F;
+const float kWallHeight = 88.0F;
 
 
 /*===========================================================================*/
