@@ -69,6 +69,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	bottom_input_ = kBottomOff;
 
 	timer = 0;
+	guide_alpha_ = 1.0F;
 
 	owner_ = nullptr;
 
@@ -169,8 +170,10 @@ void Player::draw()
 	score_.draw();
 
 	//ƒKƒCƒh‚Ì•`‰æ
-	if( !flag_.test( Flag::kJump ) )
-		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , 1.0F , 0.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( 5.0F / 2.0F , 214.0F ) );
+	if( !flag_.test( Flag::kJump ) && guide_alpha_ > 0.0F )
+		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( 5.0F / 2.0F , 214.0F ) );
+	else if( guide_alpha_ <= 0.0F )
+		guide_alpha_ = 0.0F;
 }
 
 //¶‘¶ƒtƒ‰ƒO‚Ì•Ô‹p
@@ -219,6 +222,7 @@ void Player::collision( Star * StarObj)
 		direction_id_ = Direction::kFlont;
 		timer = 0;
 		score_.addCombo();
+		guide_alpha_ -= 0.1F;
 
 		if( owner_ == StarObj )
 			score_.addTechnique();
