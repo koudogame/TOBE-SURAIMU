@@ -213,24 +213,35 @@ void Endless::draw()
 // スタート部
 SceneBase* Endless::start()
 {
-	// プレイヤーがジャンプしたらplay部へ
-	if (player_->isJump())
+    KeyTracker key = Key::getInstance()->getTracker();
+    PadTracker pad = Pad::getInstance()->getTracker();
+    // ポーズ画面へ
+    if( key.pressed.P || pad.start == PadTracker::PRESSED )
+    {
+        pause_->reset();
+        TaskManager::getInstance()->pause();
+        update_ = &Endless::pause;
+    }
+	else 
 	{
-		update_ = &Endless::play;
-		for (auto& star : star_container_->active())
-		{
-			star->setFall();
-		}
-		clock_->start();
-		player_->onStartFlag();
-	}
+	    // プレイヤーがジャンプしたらplay部へ
+        if (player_->isJump())
+        {
+		    update_ = &Endless::play;
+		    for (auto& star : star_container_->active())
+		    {
+			    star->setFall();
+		    }
+		    clock_->start();
+		    player_->onStartFlag();
+        }
 
-	// 星との衝突処理
-	for (auto& star : star_container_->active())
-	{
-		Collision::getInstance()->collision(player_, star);
+	    // 星との衝突処理
+	    for (auto& star : star_container_->active())
+	    {
+    		Collision::getInstance()->collision(player_, star);
+	    }
 	}
-
 
 	return this;
 }

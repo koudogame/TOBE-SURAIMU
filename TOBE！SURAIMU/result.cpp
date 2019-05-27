@@ -315,20 +315,19 @@ SceneBase* Result::setName()
     if( key_tracker.pressed.Enter || pad_tracker.b == PadTracker::PRESSED )
     {
         name_[index_name_] = kCharTable[index_char_];
-        ++index_name_;
 
         // –¼‘OãŒÀ‚©A2•¶Žš–ÚˆÈ~‚É' '‚ª“ü—Í‚³‚ê‚½‚çˆ—‚ð•ÏX
         if( (index_name_ >= kNameMax) ||
-            (kCharTable[index_char_] == ' ' && index_name_ != 1) )
+            (kCharTable[index_char_] == ' ' && index_name_ != 0) )
         {
-            --index_name_;
             ++select_;
             update_ = &Result::selectNext;
         }
         // ŽŸ‚Ì•¶Žš‘I‘ð‚ÖŒü‚¯‚Ä‰Šú‰»
-        else
+        else if( name_[0] != ' ')
         {
-            // 'A'‚Å‰Šú‰»
+            // ŽŸ‚Ì•¶Žš‚ð'A'‚Å‰Šú‰»
+            ++index_name_;
             index_char_ = 10;
             name_[index_name_] = kCharTable[index_char_];
 
@@ -355,7 +354,7 @@ SceneBase* Result::setName()
     {
         count_frame_ = 0U;
         // zŠÂ‚³‚¹‚é
-        if(++index_char_ >= kCharNum ) { index_char_ = 0; }
+        if(--index_char_ < 0 ) { index_char_ = kCharNum - 1; }
         name_[index_name_] = kCharTable[index_char_];
     }
     else if( 
@@ -368,7 +367,7 @@ SceneBase* Result::setName()
     {
         count_frame_ = 0U;
         // zŠÂ‚³‚¹‚é
-        if(--index_char_ < 0 ) { index_char_ = kCharNum - 1; }
+        if(++index_char_ >= kCharNum ) { index_char_ = 0; }
         name_[index_name_] = kCharTable[index_char_];
     }
 
