@@ -19,12 +19,20 @@ constexpr long kTextHeight = 16L;
 constexpr long kLineHeight = 25L;
 constexpr char kPlayerName[] = "YOU";
 constexpr long kDispTimeMSPF = 250L / 16L;
+constexpr float kBarCoordinateX = 960.0F;
+enum { kNormalBar, kPlayerBar };
+const RECT kTrimming[] = {
+    { 0L,  0L, 415L, 24L },
+    { 0L, 24L, 415L, 48L }
+};
 
 void drawData(const RankingInEndless::Data&,
               Vector2 Position,
               ID3D11ShaderResourceView* const TextureText,
               ID3D11ShaderResourceView* const TextureNumber,
-              ID3D11ShaderResourceView* const TextureBar);
+              ID3D11ShaderResourceView* const TextureBar,
+              const RECT * const TrimmingBar,
+              const float Aplha = 1.0F);
 
 /*===========================================================================*/
 RankingInEndless::RankingInEndless() :
@@ -45,7 +53,7 @@ bool RankingInEndless::init()
 
     texture_ = TextureLoder::getInstance()->load(L"Texture/Pray_Rank_Shadow.png");
     if( texture_ == nullptr ) { return false; }
-    texture_bar_ = TextureLoder::getInstance()->load(L"Texture/Pray_Rank_Bar.png");
+    texture_bar_ = TextureLoder::getInstance()->load(L"Texture/mini_ranking_bar.png");
     texture_number_ = TextureLoder::getInstance()->load(L"Texture/Rank_Number.png");
     if( texture_number_ == nullptr ) { return false; }
     texture_text_ = TextureLoder::getInstance()->load(L"Texture/Rank_Name.png");
@@ -68,14 +76,13 @@ bool RankingInEndless::init()
 
     // メンバ初期化
     position_.x = 1000.0F;
-    position_.y = (getWindowHeight<float>() / 2.0F) -
-                  kLineHeight * kRegisteredNum;
+    position_.y = getWindowHeight<float>();
     player_.rank = 101ULL;
     player_.name = kPlayerName;
     player_.score = 0U;
 
-    displacement_ = 0.0F;
-    disp_frame_ = 0.0F;
+    displacement_ = kRegisteredNum * kLineHeight;
+    disp_frame_ = displacement_ / kDispTimeMSPF;
 
     return true;
 }
@@ -125,7 +132,7 @@ void RankingInEndless::update()
         disp_frame_ = displacement_ / kDispTimeMSPF;
     }
     
-    position_.y += disp_frame_;
+    position_.y -= disp_frame_;
     if( (displacement_ -= disp_frame_) <= 0.0F )
     {
         position_.y += displacement_;
@@ -142,7 +149,9 @@ void RankingInEndless::draw()
     // プレイヤーのデータを描画
     draw_position.x = 1000.0F;
     draw_position.y = getWindowHeight<float>() / 2.0F;
-    drawData( player_, draw_position, texture_text_, texture_number_, texture_bar_);
+    drawData( player_, draw_position,
+              texture_text_, texture_number_, texture_bar_,
+              &kTrimming[kPlayerBar] );
 
     // その他プレイヤーのデータを描画
     draw_position = position_;
@@ -152,13 +161,30 @@ void RankingInEndless::draw()
         if( draw_position.y > getWindowHeight<float>() )  { break; }
         if( i + 1 == player_.rank ) { draw_position.y += kLineHeight; }
         
-        drawData( ranking_[i], draw_position, texture_text_, texture_number_, texture_bar_);
+        drawData( ranking_[i], draw_position,
+                  texture_text_, texture_number_, texture_bar_,
+                  &kTrimming[kNormalBar], 0.8F );
     }
 
     // 影を描画
     Sprite::getInstance()->draw(texture_, Vector2::Zero);
 }
 
+/*===========================================================================*/
+// 演出処理
+bool RankingInEndless::effect()
+{
+    position_.y -= disp_frame_;
+    if ((displacement_ -= disp_frame_) <= 0.0F)
+    {
+        position_.y = getWindowHeight<float>() / 2.0F -
+                      kRegisteredNum * kLineHeight;
+        displacement_ = disp_frame_ = 0.0F;
+        return true;
+    }
+
+    return false;
+}
 
 /*===========================================================================*/
 void drawData(
@@ -166,20 +192,22 @@ void drawData(
     Vector2 Position,
     ID3D11ShaderResourceView* const Text,
     ID3D11ShaderResourceView* const Number,
-    ID3D11ShaderResourceView* const Bar)
+    ID3D11ShaderResourceView* const Bar,
+    const RECT* const TrimminaBar,
+    const float Alpha)
 {
     Text::drawNumber( Data.rank,
-                      Number, Position, kTextNumberWidth, kTextHeight );
+                      Number, Position, kTextNumberWidth, kTextHeight, 1U, Alpha);
 
     Position.x += kTextStringWidth * 2L;
     Text::drawString( Data.name,
-                      Text, Position, kTextStringWidth, kTextHeight );
+                      Text, Position, kTextStringWidth, kTextHeight, Alpha);
 
-    Position.x = getWindowWidth<float>();
+    Position.x = getWindowWidth<float>() - 23.0F;
     Text::drawNumber( Data.score,
-                      Number, Position, kTextNumberWidth, kTextHeight, 10U );
+                      Number, Position, kTextNumberWidth, kTextHeight, 10U, Alpha);
 
-    Position.x = 850.0F;
-    Position.y += 5L;
-    Sprite::getInstance()->draw( Bar, Position );
+    Position.x = kBarCoordinateX;
+    Position.y -= 5.0F;
+    Sprite::getInstance()->draw( Bar, Position, TrimminaBar, Alpha, 1.0F );
 }

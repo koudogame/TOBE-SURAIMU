@@ -110,11 +110,15 @@ bool Endless::init()
 	if (wall_->init() == false) { return false; }
 
 
+    TaskManager::getInstance()->pause();
+
+
 
 	// 変数初期化
 	update_ = &Endless::start;
-	climb_ = 0.0F;
+    ranking_effected_ = false;
 	magnification_ = 1.0F;
+	climb_ = 0.0F;
 
 	clock_->start();
 
@@ -224,8 +228,15 @@ SceneBase* Endless::start()
     }
 	else 
 	{
+        // ランキングの演出をする
+        if( ranking_effected_ == false && ranking_->effect() )
+        {
+            ranking_effected_ = true;
+            TaskManager::getInstance()->restart();
+
+        }
 	    // プレイヤーがジャンプしたらplay部へ
-        if (player_->isJump())
+        else if (player_->isJump())
         {
 		    update_ = &Endless::play;
 		    for (auto& star : star_container_->active())

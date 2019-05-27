@@ -52,6 +52,7 @@ private:
     Player* player_                 = nullptr;
     Wall* wall_                     = nullptr;
 
+    bool ranking_effected_ = false;
     float magnification_ = 1.0F;
     float climb_ = 0.0F;
 };

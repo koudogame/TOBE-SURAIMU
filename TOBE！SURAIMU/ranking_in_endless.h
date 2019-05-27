@@ -23,6 +23,7 @@ public:
     void destroy() override;
     void update() override;
     void draw() override;
+    bool effect();
 
     inline void setScore(unsigned long long Score) { player_.score = Score; }
     inline void setMove(const float) override {}
