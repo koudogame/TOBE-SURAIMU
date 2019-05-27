@@ -40,7 +40,10 @@ void TaskManager::unregisterObject(ObjectBase* const Object)
 // 更新タスクの実行
 void TaskManager::allUpdate()
 {
-	execute(&update_list_, &ObjectBase::update);
+    if( pause_ == false )
+    {
+        execute(&update_list_, &ObjectBase::update);
+    }
 }
 // 描画タスクの実行
 void TaskManager::allDraw()

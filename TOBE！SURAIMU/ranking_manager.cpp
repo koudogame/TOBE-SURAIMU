@@ -22,8 +22,11 @@ RankingManager::RankingManager() :
             // 万が一途中でファイルの終端に達したら取得を終了する
             ranking_[i].rank = i + 1;
             if( fscanf_s(file, 
-                "%s %llu",
-                str, kNameMax, &ranking_[i].score) == EOF)
+                "%s %llu %lf %u",
+                str, kNameMax,
+                &ranking_[i].score,
+                &ranking_[i].height,
+                &ranking_[i].combo) == EOF)
             {
                 break;
             }
@@ -45,9 +48,11 @@ RankingManager::~RankingManager()
         for( int i = 0; i < kRegisteredNum; ++i)
         {
             fprintf_s( file,
-                "%s %llu \n",
+                "%s %llu %lf %u \n",
                 ranking_[i].name.c_str(),
-                ranking_[i].score );
+                ranking_[i].score,
+                ranking_[i].height,
+                ranking_[i].combo);
         }
         
         fclose(file);

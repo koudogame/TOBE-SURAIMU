@@ -8,11 +8,12 @@ struct Milliseconds;
 template <typename T>
 class Timer;
 
+class Pause;
+class RankingInEndless;
+
 class StarContainer;
 class Player;
 class Wall;
-
-class RankingInEndless;
 
 //-----------------------------------------------------------------------------
 // エンドレスモード
@@ -36,6 +37,7 @@ private:
 
     SceneBase* start();
     SceneBase* play();
+    SceneBase* pause();
     SceneBase* (Endless::* update_)() = nullptr;
 
     void adjustObjectPosition(const float);
@@ -43,11 +45,12 @@ private:
 
 
 // オブジェクト
-    Timer<Milliseconds>* clock_                     = nullptr;
-    RankingInEndless* ranking_                      = nullptr;
-    StarContainer* star_container_                  = nullptr;
-    Player* player_                                 = nullptr;
-    Wall* wall_                                     = nullptr;
+    Timer<Milliseconds>* clock_     = nullptr;
+    Pause* pause_                   = nullptr;
+    RankingInEndless* ranking_      = nullptr;
+    StarContainer* star_container_  = nullptr;
+    Player* player_                 = nullptr;
+    Wall* wall_                     = nullptr;
 
     float magnification_ = 1.0F;
     float climb_ = 0.0F;

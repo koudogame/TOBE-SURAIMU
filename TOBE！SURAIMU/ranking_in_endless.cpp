@@ -14,7 +14,7 @@
 
 /*===========================================================================*/
 constexpr long kTextNumberWidth = 11L;
-constexpr long kTextStringWidth = 13L;
+constexpr long kTextStringWidth = 12L;
 constexpr long kTextHeight = 16L;
 constexpr long kLineHeight = 25L;
 constexpr char kPlayerName[] = "YOU";

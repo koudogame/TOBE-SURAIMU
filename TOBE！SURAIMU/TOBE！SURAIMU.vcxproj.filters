@@ -114,6 +114,9 @@
     <Filter Include="Project\Game\Others\RankingManager">
       <UniqueIdentifier>{d69f8c63-0984-4062-9ba4-48328713dd2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Others\Pause">
+      <UniqueIdentifier>{ca5e6288-5a78-4c62-8ef1-db59f28d734c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -253,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="ranking.cpp">
       <Filter>Project\Game\Scene\Ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="pause.cpp">
+      <Filter>Project\Game\Others\Pause</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -413,6 +419,9 @@
     </ClInclude>
     <ClInclude Include="ranking.h">
       <Filter>Project\Game\Scene\Ranking</Filter>
+    </ClInclude>
+    <ClInclude Include="pause.h">
+      <Filter>Project\Game\Others\Pause</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
