@@ -1,5 +1,6 @@
 #include "scoring.h"
 #include "textureLoder.h"
+#include "sprite.h"
 
 const int kComboScore = 100;
 const int kDownScore = 1;
@@ -35,13 +36,6 @@ bool Scoring::init()
 //•`‰æ
 void Scoring::draw()
 {
-	sco_ = score_;
-	move_com_ = combo_;
-	rota_com_ = rotation_combo_;
-
-	sco_.draw( texture_ , Vector2( 320.0F , 0.0F ) , 64 , 128 );
-	move_com_.draw( texture_ , Vector2( 320.0F , 128.0F ) , 64 , 128 );
-	rota_com_.draw( texture_ , Vector2( 320.0F , 256.0F ) , 64 , 128 );
 }
 
 //”jŠü
@@ -125,6 +119,7 @@ void Scoring::addRotate( float Angle )
 void Scoring::resetRotate()
 {
 	combo_sound_->resetPitch();
+	spin_combo_pitch_ = 0.0F;
 	rotation_ = 0;
 	rotation_combo_ = 0;
 }

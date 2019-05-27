@@ -5,7 +5,7 @@ Easing::~Easing()
 
 float Easing::expo( const float Movement , const float Time , Mode Mode )
 {
-	if( Time < 1.0F )
+	if( Time <= 1.0F )
 	{
 		switch( Mode )
 		{

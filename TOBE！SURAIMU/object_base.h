@@ -30,3 +30,17 @@ protected:
 	Vector2 position_;
 };
 
+//反則　TGSまでには修正します今は許して//***山田　晴久***
+namespace NameSpaceParticle
+{
+	enum ParticleID
+	{
+		kCyan ,
+		kYellow ,
+		kMagenta ,
+		kWall,
+		kPlayer,
+		kNonParticle,
+	};
+}
+

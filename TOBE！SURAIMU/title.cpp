@@ -8,11 +8,15 @@
 #include "endless.h"
 #include "ranking.h"
 #include "csvLoader.h"
+#include "easing.h"
 
 
 const int kMenuSize = 256;
 const int kCusurInterval = 80;
 const int kLayer = 3;
+const int kFall = 6;
+const int kWallWidth = 32;
+const float kWallHeight = 81.0F;
 
 
 /*===========================================================================*/
@@ -29,7 +33,7 @@ Title::~Title()
 // èâä˙âªèàóù
 bool Title::init()
 {
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		object_[ i ] = std::make_unique<TitleObject>();
 
 	scene_ = &Title::selectScene;
@@ -75,9 +79,28 @@ bool Title::init()
 	object_status_[ ObjectNum::kPlayer ].position = Vector2( file.getNumber_f( 0 , 1 ) - 46.0F / 2.0F , file.getNumber_f( 1 , 1 ) - 46.0F / 2.0F - getWindowHeight<float>() );
 	object_status_[ ObjectNum::kPlayer ].trim = trim;
 
+	//ï«( âE )
+	trim.left = 0L;
+	trim.top = 0L;
+	trim.right = trim.left + kWallWidth;
+	trim.bottom = trim.top + static_cast<int>(kWallHeight);
+	object_status_[ ObjectNum::kWallRight ].texture = TextureLoder::getInstance()->load( L"Texture/wall.png" );
+	object_status_[ ObjectNum::kWallRight ].position = Vector2( getWindowWidth<float>(), 0.0F );
+	object_status_[ ObjectNum::kWallRight ].trim = trim;
+
+	//ï«( ç∂ )
+	trim.left = 0L;
+	trim.top = 0L;
+	trim.right = trim.left + kWallWidth;
+	trim.bottom = trim.top + static_cast<int>(kWallHeight);
+	object_status_[ ObjectNum::kWallLeft ].texture = TextureLoder::getInstance()->load( L"Texture/wall.png" );
+	object_status_[ ObjectNum::kWallLeft ].position = Vector2( -kWallWidth , 0.0F );
+	object_status_[ ObjectNum::kWallLeft ].trim = trim;
+
+
 	next_flag_ = false;
 
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		object_[ i ].get()->init( &object_status_[ i ] );
 
 	title_bgm_ = AudioLoader::getInstance()->getSound( L"Sound/title2-dova.wav" );
@@ -94,7 +117,7 @@ bool Title::init()
 // èIóπèàóù
 void Title::destroy()
 {
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		TextureLoder::getInstance()->release( object_status_[ i ].texture );
 }
 
@@ -109,8 +132,22 @@ SceneBase* Title::update()
 // ï`âÊèàóù
 void Title::draw()
 {
-	for( int i = 0; i < 5; i++ )
-		object_[ i ].get()->draw( );
+	for( int i = 0; i <= ObjectNum::kPlayer; i++ )
+		object_[ i ].get()->draw();
+
+	for( float y = object_status_[ ObjectNum::kWallRight ].position.y; y < getWindowHeight<float>(); y += kWallHeight )
+	{
+		Vector2 positright = object_status_[ ObjectNum::kWallRight ].position;
+		Vector2 positleft = object_status_[ ObjectNum::kWallLeft ].position;
+
+		positright.y = y;
+		positleft.y = y;
+
+		Sprite::getInstance()->draw( object_status_[ ObjectNum::kWallRight ].texture , positright , &object_status_[ ObjectNum::kWallRight ].trim , object_status_[ ObjectNum::kWallRight ].alpha ,
+									 1.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2::Zero , SpriteEffects::SpriteEffects_FlipHorizontally );
+		Sprite::getInstance()->draw( object_status_[ ObjectNum::kWallLeft ].texture , positleft , &object_status_[ ObjectNum::kWallLeft ].trim , object_status_[ ObjectNum::kWallLeft ].alpha ,
+									 1.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2::Zero , SpriteEffects::SpriteEffects_None );
+	}
 }
 
 void Title::input()
@@ -130,9 +167,14 @@ SceneBase* Title::playScene()
 	volume_ -= 0.01F;
 	scene_se_->setVolume( volume_ );
 	title_bgm_->setVolume( volume_ );
-	int itr = 0;
-	for( itr; itr < 5; itr++ )
-		object_[ itr ].get()->update();
+	for( int i = 0; i <= ObjectNum::kPlayer; i++ )
+		object_status_[ i ].position.y += kFall;
+
+	float now_time_ = object_status_[ ObjectNum::kRogo ].position.y / getWindowHeight<float>();
+	if( now_time_ >= 1.0F )
+		now_time_ = 1.0F;
+	object_status_[ kWallRight ].position.x = getWindowWidth<float>() - Easing::getInstance()->expo( 320.0F + kWallWidth / 2.0F , now_time_ , Easing::Mode::In );
+	object_status_[ kWallLeft ].position.x = -kWallWidth + Easing::getInstance()->expo( 320.0F + kWallWidth / 2.0F, now_time_ , Easing::Mode::In );
 
 	if( object_status_[ kRogo ].position.y > getWindowHeight<float>() )
 	{
@@ -150,8 +192,9 @@ SceneBase * Title::rankingScene()
 	volume_ -= 0.01F;
 	scene_se_->setVolume( volume_ );
 	title_bgm_->setVolume( volume_ );
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		object_status_[ i ].alpha = volume_;
+
 
 	if( volume_ < 0 )
 		return new Ranking;

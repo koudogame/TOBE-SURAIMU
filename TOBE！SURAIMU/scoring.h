@@ -21,6 +21,7 @@ public:
 	void addDefaultScore( const double AddScore );
 	//スコアリング開始
 	inline void start() { scoring_flag_ = true; }
+	inline void stop() { scoring_flag_ = false; }
 	inline bool isStart() { return scoring_flag_; }
 
 	//外部公開関数
@@ -59,12 +60,8 @@ private:
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
 
-	AudioContainer* combo_sound_;
+	AudioContainer* combo_sound_;					//回転コンボのサウンド
 
-	//仮描画
-	Numbers<unsigned long long> sco_;
-	Numbers<unsigned int> move_com_;
-	Numbers<unsigned int> rota_com_;
-
+	Numbers<unsigned int> combo_draw_;
 };
 

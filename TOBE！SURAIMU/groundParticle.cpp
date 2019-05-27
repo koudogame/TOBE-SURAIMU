@@ -37,7 +37,7 @@ void GroundParticle::destroy()
 void GroundParticle::update()
 {
  	velocity_ = Vector2( std::cos( angle_ ) , -std::sin( angle_ ) ) * Easing::getInstance()->expo( 100.0F , now_time_ , Easing::Mode::Out );
-	now_time_ += 0.01F;
+	now_time_ += 0.02F;
 }
 
 void GroundParticle::draw()

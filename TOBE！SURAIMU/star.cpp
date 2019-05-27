@@ -11,7 +11,12 @@
 const int kStarMin = 60;
 const int kStarDifference = 30;
 const float kMinSpin = 0.5F;
-const float kMaxSpin = 5.0F;
+const float kMaxSpin[ 3 ] =
+{
+	3.0F,
+	5.0F,
+	10.0F
+};
 const int kParticleTime = 3;
 const float kFallSpeed = 2.0F;
 const Vector3 kStarInformation[ 3 ] = {
@@ -54,20 +59,12 @@ bool Star::init( const Vector2 & Position , const float Angle  , const float Spi
 	rate_ = Rate;
 	size_ = Size;
 
-	color_val_ = rand() % 3;
-
-	switch( color_val_ )
-	{
-		case 0:
-			id_ = FreeFallParticleContainer::ParticleID::kCyan;
-			break;
-		case 1:
-			id_ = FreeFallParticleContainer::ParticleID::kYellow;
-			break;
-		case 2:
-			id_ = FreeFallParticleContainer::ParticleID::kMagenta;
-			break;
-	}
+	if( Rate < 0.01F )
+		id_ = NameSpaceParticle::ParticleID::kCyan;
+	else if( Rate < 0.1F )
+		id_ = NameSpaceParticle::ParticleID::kYellow;
+	else
+		id_ = NameSpaceParticle::ParticleID::kMagenta;
 
 	particle_time_ = 0;
 	create_point_ = 0;
@@ -99,7 +96,7 @@ void Star::draw()
 	RECT trim;
 	trim.left = static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].x );
 	trim.top = static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].y ) +
-		color_val_ * static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
+		id_ * static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 	trim.right = trim.left + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 	trim.bottom = trim.top + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 
@@ -130,8 +127,8 @@ void Star::collision(Player* P)
 	spin_ += turn_ * rate_ * std::abs( Calc::cross( P->getMove()->end - P->getMove()->start , P->getShape()->position - position_ ) );
 	if( std::abs( spin_ ) < kMinSpin )
 		spin_ = kMinSpin * turn_;
-	else if( std::abs( spin_ ) > kMaxSpin )
-		spin_ = kMaxSpin * turn_;
+	else if( std::abs( spin_ ) > kMaxSpin[id_] )
+		spin_ = kMaxSpin[id_] * turn_;
 
 	particle_time_ = 0;
 }

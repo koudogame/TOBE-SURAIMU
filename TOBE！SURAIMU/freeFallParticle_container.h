@@ -10,17 +10,8 @@ public:
 	~FreeFallParticleContainer();
 
 public:
-	enum ParticleID
-	{
-		kCyan ,
-		kYellow ,
-		kMagenta ,
-		kPlayer = 4,
-	};
-
-public:
 	FreeFallParticle* addParticle( const Vector2& Position ,
-								   ParticleID ID );
+								   NameSpaceParticle::ParticleID ID );
 	void setMove( const float Over );
 };
 

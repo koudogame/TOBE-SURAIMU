@@ -18,18 +18,7 @@ Collision::~Collision()
 
 void Collision::collision( Player * P , Star * S )
 {
-	switch( S->getColor() )
-	{
-		case 0:
-			id_ = GroundParticleContainer::ParticleID::kCyan;
-			break;
-		case 1:
-			id_ = GroundParticleContainer::ParticleID::kYellow;
-			break;
-		case 2:
-			id_ = GroundParticleContainer::ParticleID::kMaggenta;
-			break;
-	}
+	id_ = S->getColor();
 	bool hit_flag = false;
 	for( int i = 0; i < kStarLineNum; i++ )
 	{
@@ -111,7 +100,7 @@ void Collision::collision( Player * P , Wall * W )
 		{
 			//‰~‚Æü‚Ì“–‚½‚è”»’è
 			P->setGround( W->getShape( i ) );
-			P->revision( crossPoint( P->getShape() , W->getShape( i ) ) , GroundParticleContainer::ParticleID::kWall );
+			P->revision( crossPoint( P->getShape() , W->getShape( i ) ) , NameSpaceParticle::ParticleID::kWall );
 			P->collision( W );
 			break;
 		}
