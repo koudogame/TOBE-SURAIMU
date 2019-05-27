@@ -115,6 +115,10 @@ bool Result::init()
     position_base_.x = 0.0F;
     position_base_.y = -getWindowHeight<float>();
 
+	//ƒTƒEƒ“ƒh‚ÌŽæ“¾
+	bgm_ = AudioLoader::getInstance()->getSound( L"Sound/title2-dova.wav" );
+	select_se_ = AudioLoader::getInstance()->getSound( L"Sound/select1-dova.wav" );
+
 	return true;
 }
 

@@ -2,6 +2,7 @@
 
 #include "scene_base.h"
 #include "scoring.h"
+#include "audio_loader.h"
 
 namespace {
     constexpr unsigned kNameMax = 8U;
@@ -58,4 +59,8 @@ private:
     Scoring score_;
     int select_;
     Vector2 position_base_;
+
+	AudioContainer* bgm_;
+	AudioContainer* select_se_;
+	AudioContainer* decision_se_;
 };

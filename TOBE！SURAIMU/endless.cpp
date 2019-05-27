@@ -255,6 +255,7 @@ SceneBase* Endless::play()
 	// プレイヤーが死んでいたらリザルト画面へ
 	if (player_->isAlive() == false)
 	{
+		AudioLoader::getInstance()->getSound( L"Sound/play4-dova.wav" )->stop();
 		return new Result(ranking_->getRank(), *player_->getScore());
 	}
 
@@ -308,7 +309,7 @@ SceneBase* Endless::pause()
 
     switch( pause_->update() )
     {
-    case Pause::kContinue : 
+    case Pause::kContinue :
         kTaskManager->restart();
         clock_->restart();
         update_ = &Endless::play;   break;
