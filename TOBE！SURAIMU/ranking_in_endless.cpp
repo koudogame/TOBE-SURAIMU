@@ -76,12 +76,12 @@ bool RankingInEndless::init()
 
     // ƒƒ“ƒo‰Šú‰»
     position_.x = 1000.0F;
-    position_.y = getWindowHeight<float>();
+    position_.y = getWindowHeight<float>() / 2.0F;
     player_.rank = 101ULL;
     player_.name = kPlayerName;
     player_.score = 0U;
 
-    displacement_ = kRegisteredNum * kLineHeight;
+    displacement_ = static_cast<int>(kRegisteredNum) * -kLineHeight;
     disp_frame_ = displacement_ / kDispTimeMSPF;
 
     return true;
@@ -132,11 +132,15 @@ void RankingInEndless::update()
         disp_frame_ = displacement_ / kDispTimeMSPF;
     }
     
-    position_.y -= disp_frame_;
-    if( (displacement_ -= disp_frame_) <= 0.0F )
+    position_.y += disp_frame_;
+    if( (std::abs(displacement_) - std::abs(disp_frame_)) <= 0.0F )
     {
-        position_.y += displacement_;
+        position_.y += displacement_ - disp_frame_;
         displacement_ = disp_frame_ = 0.0F;
+    }
+    else
+    {
+        displacement_ -= disp_frame_;
     }
 }
 
@@ -170,21 +174,6 @@ void RankingInEndless::draw()
     Sprite::getInstance()->draw(texture_, Vector2::Zero);
 }
 
-/*===========================================================================*/
-// ‰‰oˆ—
-bool RankingInEndless::effect()
-{
-    position_.y -= disp_frame_;
-    if ((displacement_ -= disp_frame_) <= 0.0F)
-    {
-        position_.y = getWindowHeight<float>() / 2.0F -
-                      kRegisteredNum * kLineHeight;
-        displacement_ = disp_frame_ = 0.0F;
-        return true;
-    }
-
-    return false;
-}
 
 /*===========================================================================*/
 void drawData(
