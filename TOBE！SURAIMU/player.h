@@ -90,6 +90,8 @@ private:
 	int bottom_input_;
 	bool died_flag_;
 	float collision_combo_pitch_;
+	ID3D11ShaderResourceView* guide_;
+	float guide_alpha_;
 
 	Scoring score_;
 
