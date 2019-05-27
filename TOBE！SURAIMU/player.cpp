@@ -47,6 +47,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	kRLBoostPower = RLBoost;
 	ground_ = &kGround;
 	texture_ = TextureLoder::getInstance()->load( L"Texture/character.png" );
+	guide_ = TextureLoder::getInstance()->load( L"Texture/guide.png" );
 
 	if( texture_ == nullptr )
 		return false;
@@ -68,6 +69,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	bottom_input_ = kBottomOff;
 
 	timer = 0;
+	guide_alpha_ = 1.0F;
 
 	owner_ = nullptr;
 
@@ -163,9 +165,15 @@ void Player::draw()
 	else
 		draw_angle = -gravity_angle_ - XM_PI / 2.0F;
 
-	Sprite::getInstance()->draw( texture_ , myshape_.position, &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , myshape_.position , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
 
 	score_.draw();
+
+	//ƒKƒCƒh‚Ì•`‰æ
+	if( !flag_.test( Flag::kJump ) && guide_alpha_ > 0.0F )
+		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( 5.0F / 2.0F , 214.0F ) );
+	else if( guide_alpha_ <= 0.0F )
+		guide_alpha_ = 0.0F;
 }
 
 //¶‘¶ƒtƒ‰ƒO‚Ì•Ô‹p
@@ -214,6 +222,7 @@ void Player::collision( Star * StarObj)
 		direction_id_ = Direction::kFlont;
 		timer = 0;
 		score_.addCombo();
+		guide_alpha_ -= 0.1F;
 
 		if( owner_ == StarObj )
 			score_.addTechnique();
