@@ -34,7 +34,7 @@ public:
 	void addFreeFallParticle();
 	inline void resetStatus( const float Magnification ) { magnification_ = Magnification; }
 	inline float getSize() { return size_; }
-	inline int getColor() { return color_val_; }
+	inline NameSpaceParticle::ParticleID  getColor() { return id_; }
 
 private:
 	//内部利用関数
@@ -49,12 +49,11 @@ private:
 	float size_;	        //大きさ
 	float rate_;	        //回転倍率
 	Line myshape_[ kStarLineNum ];
-	int color_val_;			//星のカラーバリエーション
 
 	std::unique_ptr<FreeFallParticleContainer> s_particle_container_;
 	int particle_time_;
 	int create_point_;
 	float magnification_;
-	FreeFallParticleContainer::ParticleID id_;
+	NameSpaceParticle::ParticleID id_;
 };
 

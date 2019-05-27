@@ -125,6 +125,7 @@ void Scoring::addRotate( float Angle )
 void Scoring::resetRotate()
 {
 	combo_sound_->resetPitch();
+	spin_combo_pitch_ = 0.0F;
 	rotation_ = 0;
 	rotation_combo_ = 0;
 }

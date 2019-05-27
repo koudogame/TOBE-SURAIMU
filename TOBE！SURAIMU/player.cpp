@@ -184,7 +184,7 @@ void Player::setMove( const float Over )
 }
 
 //座標の補正
-void Player::revision(const Vector2& CrossPoint, GroundParticleContainer::ParticleID ID )
+void Player::revision( const Vector2& CrossPoint , NameSpaceParticle::ParticleID ID )
 {
 	myshape_.position = CrossPoint;
 	dis_ = Calc::magnitude( CrossPoint , ground_->start ) / Calc::magnitude( ground_->end , ground_->start );
@@ -204,8 +204,11 @@ void Player::collision( Star * StarObj)
 
 	if( owner_ != StarObj || flag_.test( Flag::kTechnique ) )
 	{
-		sound_[ 1 ]->stop();
-		sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
+		if( score_.isStart() )
+		{
+			sound_[ 1 ]->stop();
+			sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
+		}
 		rect_left_up_ = Vector2::Zero;
 		direction_id_ = Direction::kFlont;
 		timer = 0;
@@ -226,8 +229,11 @@ void Player::collision( Star * StarObj)
 //壁との当たり判定後の処理
 void Player::collision( Wall * WallObj)
 {
-	sound_[ 1 ]->stop();
-	sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
+	if( score_.isStart() )
+	{
+		sound_[ 1 ]->stop();
+		sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
+	}
 	setGround( &kGround );
 
 	//角度変更
@@ -327,7 +333,7 @@ void Player::gravity()
 	}
 	else
 	{
-		revision( ground_->start + ( ground_->end - ground_->start ) * dis_ , GroundParticleContainer::ParticleID::kNonParticle );
+		revision( ground_->start + ( ground_->end - ground_->start ) * dis_ , NameSpaceParticle::ParticleID::kNonParticle );
 	}
 
 }
@@ -391,7 +397,7 @@ void Player::slectDirection()
 }
 
 //オブジェクトとの衝突時のパーティクルを生成
-void Player::addGroundParticle(GroundParticleContainer::ParticleID ID)
+void Player::addGroundParticle( NameSpaceParticle::ParticleID ID)
 {
 	if( score_.isStart() )
 	{
@@ -409,7 +415,7 @@ void Player::addFreeFallParticle()
 	{
 		if( ++particle_time_ >= kParticleTime )
 		{
-			f_particle_container_.get()->addParticle( myshape_.position , FreeFallParticleContainer::ParticleID::kPlayer );
+			f_particle_container_.get()->addParticle( myshape_.position , NameSpaceParticle::ParticleID::kPlayer );
 			particle_time_ = 0;
 		}
 	}
@@ -426,11 +432,12 @@ bool Player::diedEffect()
 {
 	if( !died_flag_ )
 	{
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 35 ) , GroundParticleContainer::ParticleID::kCyan );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 65 ) , GroundParticleContainer::ParticleID::kMaggenta );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 95 ) , GroundParticleContainer::ParticleID::kWall );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 125 ) , GroundParticleContainer::ParticleID::kYellow );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 35 ) , NameSpaceParticle::ParticleID::kCyan );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 65 ) , NameSpaceParticle::ParticleID::kMagenta );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 95 ) , NameSpaceParticle::ParticleID::kWall );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 125 ) , NameSpaceParticle::ParticleID::kYellow );
 		died_flag_ = true;
+		score_.stop();
 	}
 
 	if( g_particle_container_->active().size() == 0 )

@@ -9,7 +9,7 @@ FreeFallParticleContainer::FreeFallParticleContainer()
 FreeFallParticleContainer::~FreeFallParticleContainer()
 {}
 
-FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Position, ParticleID ID )
+FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Position, NameSpaceParticle::ParticleID ID )
 {
 	//‹óƒRƒ“ƒeƒi‚ðŽæ“¾
 	FreeFallParticle* s_particle = getFreeObjAndInsert();

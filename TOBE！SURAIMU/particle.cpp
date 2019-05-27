@@ -67,7 +67,7 @@ void Particle::update()
 	{
 		is_alive_ = false;
 	}
-	else 
+	else
 	{
 		position_ += velocity_;
 		if (position_.x < 0.0F || position_.x > getWindowWidth<float>() ||

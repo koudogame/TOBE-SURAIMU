@@ -12,9 +12,9 @@ GroundParticleContainer::~GroundParticleContainer()
 {}
 
 //パーティクルの追加
-GroundParticle * GroundParticleContainer::addParticle(const Vector2 Position , const float Angle, ParticleID ID )
+GroundParticle * GroundParticleContainer::addParticle(const Vector2 Position , const float Angle, NameSpaceParticle::ParticleID ID )
 {
-	if( ID == ParticleID::kNonParticle )
+	if( ID == NameSpaceParticle::ParticleID::kNonParticle )
 		return nullptr;
 
 	//フリータスクの取得

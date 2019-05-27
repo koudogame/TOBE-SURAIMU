@@ -36,6 +36,6 @@ private:
 
 	//ƒƒ“ƒo•Ï”
 private:
-	GroundParticleContainer::ParticleID id_;
+	NameSpaceParticle::ParticleID id_;
 };
 

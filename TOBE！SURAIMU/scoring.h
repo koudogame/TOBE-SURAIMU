@@ -21,6 +21,7 @@ public:
 	void addDefaultScore( const double AddScore );
 	//スコアリング開始
 	inline void start() { scoring_flag_ = true; }
+	inline void stop() { scoring_flag_ = false; }
 	inline bool isStart() { return scoring_flag_; }
 
 	//外部公開関数
