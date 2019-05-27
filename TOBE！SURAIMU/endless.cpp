@@ -11,8 +11,11 @@
 #include "sprite.h"
 #include "csvLoader.h"
 
-#include "ranking_in_endless.h"
+#include "audio_loader.h"
+#include "text.h"
 #include "timer.h"
+#include "pause.h"
+#include "ranking_in_endless.h"
 #include "collision.h"
 #include "task_manager.h"
 #include "background_container.h"
@@ -21,12 +24,11 @@
 #include "player.h"
 #include "wall.h"
 
+#include "title.h"
+#include "endless.h"
 #include "result.h"
-#include "text.h"
 
-#include "audio_loader.h"
-
-using PadState = GamePad::State;
+using KeyTracker = Keyboard::KeyboardStateTracker;
 using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
@@ -65,8 +67,11 @@ bool Endless::init()
 	// 生成処理
 	if (do_create_ && create() == false) { return false; }
 
+    // ポーズ初期化
+    if( pause_->init() == false ) { return false; }
+
     // ランキング初期化
-    ranking_->init();
+    if( ranking_->init() == false ) { return false; }
 
 	// 初期スターの生成
 	for (int i = 0; i < 2; ++i)
@@ -126,6 +131,9 @@ bool Endless::create()
 	// 時計
 	clock_                 = new Timer<Milliseconds>();
 
+    // ポーズ
+    pause_                 = new Pause();
+
     // ランキング
     ranking_               = new RankingInEndless();
 
@@ -176,6 +184,9 @@ void Endless::destroy()
     // ランキング
     ranking_->destroy();               safe_delete(ranking_);
 
+    // ポーズ
+    pause_->destroy();                 safe_delete(pause_);
+
 	// 時計
 	safe_delete(clock_);
 }
@@ -191,7 +202,11 @@ SceneBase* Endless::update()
 // 描画関数
 void Endless::draw()
 {
-
+    // ポーズ中だったらポーズを描画
+    if( update_ == &Endless::pause )
+    {
+        pause_->draw();
+    }
 }
 
 /*===========================================================================*/
@@ -222,6 +237,18 @@ SceneBase* Endless::start()
 // プレイ部
 SceneBase* Endless::play()
 {
+    KeyTracker key = Key::getInstance()->getTracker();
+    PadTracker pad = Pad::getInstance()->getTracker();
+    if( key.pressed.P || pad.start == PadTracker::PRESSED )
+    {
+        clock_->stop();
+        pause_->reset();
+        TaskManager::getInstance()->pause();
+        update_ = &Endless::pause;
+        return this;
+    }
+
+
     // スターを生成する
     checkAndCreateStar();
 
@@ -263,6 +290,40 @@ SceneBase* Endless::play()
 	kCollision->collision(player_, wall_);
 
 	return this;
+}
+// ポーズ部
+SceneBase* Endless::pause()
+{
+    TaskManager* const kTaskManager = TaskManager::getInstance();
+
+    KeyTracker key = Key::getInstance()->getTracker();
+    PadTracker pad = Pad::getInstance()->getTracker();
+    if( key.pressed.P || pad.start == PadTracker::PRESSED )
+    {
+        kTaskManager->restart();
+        clock_->restart();
+
+        update_ = &Endless::play;
+    }
+
+    switch( pause_->update() )
+    {
+    case Pause::kContinue : 
+        kTaskManager->restart();
+        clock_->restart();
+        update_ = &Endless::play;   break;
+
+    case Pause::kRestart  :
+        kTaskManager->restart();
+        return new Endless();
+
+    case Pause::kTitle    :
+        kTaskManager->restart();
+        return new Title();
+    }
+
+
+    return this;
 }
 
 /*===========================================================================*/

@@ -5,8 +5,6 @@
 
 #include "sprite.h"
 
-int getCharNum(const char);
-
 /*===========================================================================*/
 // •¶Žš—ñ•`‰æ
 void Text::drawString( const std::string& Text,
@@ -65,7 +63,7 @@ void Text::drawNumber( const unsigned long long Number,
     }
 }
 
-int getCharNum( const char Char )
+int Text::getCharNum( const char Char )
 {
     for( int i = 0; i < kCharNum; ++i )
     {

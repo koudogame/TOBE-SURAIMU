@@ -45,8 +45,9 @@ public:
 
 	void unregisterObject(ObjectBase* const);
 
+    inline void pause()   { pause_ = true; }
+    inline void restart() { pause_ = false; }
 	void allUpdate();
-
 	void allDraw();
 
 	void allSetOver( const float Over );
@@ -63,6 +64,7 @@ private:
 	void execute(std::list<std::pair<T, ObjectBase*>>* const, void(ObjectBase::*)());
 
 private:
+    bool pause_ = false;
 	std::list<std::pair<TaskUpdate, ObjectBase*>> update_list_;
 	std::list<std::pair<TaskDraw, ObjectBase*>> draw_list_;
 };

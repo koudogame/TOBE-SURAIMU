@@ -33,6 +33,13 @@ private:
     SceneBase* selectNext();
     SceneBase* (Result::*update_)() = &Result::setName;
 
+    void drawRankingElem( Vector2,
+                          const unsigned,
+                          const char*,
+                          const unsigned long long,
+                          const double,
+                          const unsigned );
+
 // ‘JˆÚ
     float alpha_ = 1.0F;
     float count_ = 0.0F;
@@ -43,7 +50,8 @@ private:
     unsigned count_frame_ = 0U;
 
 // ‚»‚Ì‘¼
-    ID3D11ShaderResourceView* texture_text_ = nullptr;
+    ID3D11ShaderResourceView* texture_char_ = nullptr;
+    ID3D11ShaderResourceView* texture_char_mini_ = nullptr;
     ID3D11ShaderResourceView* texture_numbers_ = nullptr;
     ID3D11ShaderResourceView* texture_numbers_mini_ = nullptr;
     unsigned rank_ = 101U;

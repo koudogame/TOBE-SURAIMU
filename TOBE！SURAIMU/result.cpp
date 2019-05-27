@@ -15,6 +15,8 @@
 #include "endless.h"
 
 
+typedef unsigned long long ULL;
+
 using KeyState   = Keyboard::State;
 using KeyTracker = Keyboard::KeyboardStateTracker;
 using PadState   = GamePad::State;
@@ -22,33 +24,46 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 
 /*===========================================================================*/
-constexpr unsigned kFrameWait = 10U;
-constexpr long kMiniNumbersWidth = 11U;
+constexpr unsigned kFrameWait     = 10U;
+constexpr long kMiniNumbersWidth  = 11U;
 constexpr long kMiniNumbersHeight = 16L;
-constexpr long kNumbersWidth = 20L;
-constexpr long kNumbersHeight = 32L;
-constexpr long kCharacterWidth = 21L;
-constexpr long kCharacterHeight = 32L;
-enum Trimming { kBackground, kCursor, kRankIn };
+constexpr long kNumbersWidth      = 20L;
+constexpr long kNumbersHeight     = 32L;
+constexpr long kMiniCharacterWidth = 12L;
+constexpr long kMiniCharacterHeight = 16L;
+constexpr long kCharacterWidth    = 21L;
+constexpr long kCharacterHeight   = 32L;
+enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankIn };
 const RECT kTrimming[] = 
 {
-    { 0L, 0L, 665L, 720L },
-    { 665L, 0L, 921L, 16L },
-    { 0L, 720L, 642L, 922L },
+    {   0L,   0L, 680L, 720L },
+    { 665L,   0L, 921L,  16L },
+    { 683L,  85L, 700L, 141L },
+    {   0L, 720L, 642L, 922L },
 };
-constexpr Vector2 kPositionBackgroundFromBase { 307.0F, 0.0F };
-enum CursorPosition { kSelectSetName, kSelectOneMore, kSelectTitle, };
+
+enum { kPosBackground, kPosScore, kPosHeight, kPosCombo, kPosRankIn, 
+                kPosRank, kPosName, kPosNameCursor, kPosRanking };
+constexpr Vector2 kPositionFromBase[] {
+    { 307.0F,   0.0F }, // back
+    { 740.0F, 148.0F }, // score
+    { 417.0F, 222.0F }, // height
+    { 898.0F, 221.0F }, // combo
+    { 319.0F, 100.0F }, // rankin
+    { 885.0F, 130.0F }, // rank
+    { 556.0F, 262.0F }, // name
+    { 558.0F, 247.0F }, // name cursor
+    { 436.0F, 456.0F }, // ranking
+};
+
+enum { kSelectSetName, kSelectOneMore, kSelectTitle, };
 constexpr Vector2 kPositionCursorFromBase[] = {
     {515.0F, 287.0F},
     {515.0F, 352.0F},
     {515.0F, 417.0F},
 };
-constexpr Vector2 kPositionScoreFromBase { 740.0F, 148.0F };
-constexpr Vector2 kPositionHeightFromBase { 417.0F, 222.0F };
-constexpr Vector2 kPositionComboFromBase { 900.0F, 222.0F };
-constexpr Vector2 kPositionRankInFromBase { 319.0F, 100.0F };
-constexpr Vector2 kPositionRankFromBase { 900.0F, 130.0F };
-constexpr Vector2 kPositionNameFromBase { 556.0F, 259.0F };
+
+constexpr float kIntervalRankingElem = 22.0F;
 
 /*===========================================================================*/
 Result::Result(const unsigned Rank, const Scoring Score) :
@@ -71,15 +86,17 @@ bool Result::init()
     created_ = true;
 
     // テクスチャ読み込み
-    TextureLoder* kLoader = TextureLoder::getInstance();
-	texture_ = kLoader->load(L"Texture/result.png");
-    if( texture_ == nullptr )        { return false; }
-    texture_text_ = kLoader->load(L"Texture/result_name.png");
-    if( texture_ == nullptr )        { return false; }
-    texture_numbers_ = kLoader->load(L"Texture/result_score.png");
-    if( texture_numbers_ == nullptr ) { return false; }
+    TextureLoder*           kLoader = TextureLoder::getInstance();
+	texture_ =              kLoader->load(L"Texture/result.png");
+    if( texture_              == nullptr )        { return false; }
+    texture_char_ =         kLoader->load(L"Texture/result_name.png");
+    if( texture_char_         == nullptr )        { return false; }
+    texture_char_mini_ =    kLoader->load(L"Texture/rank_name.png");
+    if( texture_char_mini_    == nullptr)         { return false; }
+    texture_numbers_ =      kLoader->load(L"Texture/result_score.png");
+    if( texture_numbers_      == nullptr )        { return false; }
     texture_numbers_mini_ = kLoader->load(L"Texture/Rank_number.png");
-    if( texture_numbers_mini_ == nullptr ) { return false; }
+    if( texture_numbers_mini_ == nullptr )        { return false; }
 
 
     // メンバ初期化
@@ -108,11 +125,16 @@ void Result::destroy()
     if( created_ == false ) { return; }
     created_ = false;
 
+    RankingManager::getInstance()->registerScore(
+        name_, score_.getScore(), score_.getHeight(), score_.getMaxCombo()
+    );
+
     // テクスチャ開放
     TextureLoder* kLoader = TextureLoder::getInstance();
     kLoader->release(texture_numbers_mini_);
     kLoader->release(texture_numbers_);
-    kLoader->release(texture_text_);
+    kLoader->release(texture_char_mini_);
+    kLoader->release(texture_char_);
     kLoader->release(texture_);
 }
 
@@ -131,56 +153,102 @@ void Result::draw()
 
     // 背景
 	kSprite->draw( texture_,
-        position_base_ + kPositionBackgroundFromBase,
-        &kTrimming[Trimming::kBackground], alpha_ );
+                   position_base_ + kPositionFromBase[kPosBackground],
+                   &kTrimming[kTrmBackground], alpha_ );
 
     // スコア
     Text::drawNumber( score_.getScore(),
-        texture_numbers_,
-        position_base_ + kPositionScoreFromBase,
-        kNumbersWidth, kNumbersHeight,
-        10U,
-        alpha_ );
+                      texture_numbers_,
+                      position_base_ + kPositionFromBase[kPosScore],
+                      kNumbersWidth, kNumbersHeight,
+                      10U, alpha_ );
+
     // 高さ
-    Text::drawNumber( static_cast<unsigned long long>(score_.getHeight()),
-        texture_numbers_mini_,
-        position_base_ + kPositionHeightFromBase,
-        kMiniNumbersWidth, kMiniNumbersHeight,
-        1U,
-        alpha_ );
+    Text::drawNumber( static_cast<ULL>(score_.getHeight()), 
+                      texture_numbers_mini_,
+                      position_base_ + kPositionFromBase[kPosHeight],
+                      kMiniNumbersWidth, kMiniNumbersHeight, 1U, alpha_ );
+
     // コンボ
-    Text::drawNumber( score_.getMaxCombo(),
-        texture_numbers_mini_,
-        position_base_ + kPositionComboFromBase,
-        kMiniNumbersWidth, kMiniNumbersHeight,
-        1U,
-        alpha_ );
+    Text::drawNumber( score_.getMaxCombo(), texture_numbers_mini_,
+                      position_base_ + kPositionFromBase[kPosCombo],
+                      kMiniNumbersWidth, kMiniNumbersHeight, 1U, alpha_ );
 
     // カーソル
     kSprite->draw( texture_,
-        position_base_ + kPositionCursorFromBase[select_],
-        &kTrimming[Trimming::kCursor], alpha_ );
+                   position_base_ + kPositionCursorFromBase[select_],
+                   &kTrimming[kTrmCursor], alpha_ );
 
+    // ランキング
+    RankingManager::Data data;
+    Vector2 position = position_base_ + kPositionFromBase[kPosRanking];
+    unsigned rank = 1;
+    // ランキングの描画順位を決定( プレイヤーがランクインしていたらそこを基準に描画する )
+    if( rank_ <= kRegisteredNum )
+    {
+        if( rank_ > 95U )     { rank = kRegisteredNum - 10U; }
+        else if( rank_ > 6U ) { rank = rank_ - 5U; }
+    }
+
+    bool draw_player_ = false;
+    for( int i = 0; i < 11; ++i, ++rank )
+    {
+
+        if( rank == rank_ && draw_player_ == false )
+        {
+            draw_player_ = true;
+            drawRankingElem( 
+                position,
+                rank, name_,
+                score_.getScore(), score_.getHeight(), score_.getMaxCombo() );
+            position.y += kIntervalRankingElem;
+            ++i;
+        }
+
+
+        data = RankingManager::getInstance()->getData(rank);
+        drawRankingElem( 
+            position,
+            draw_player_ ? rank + 1 : rank, data.name.c_str(),
+            data.score, data.height, data.combo );
+
+        position.y += kIntervalRankingElem;
+    }
 
     // ランクイン時に描画するもの
     if( rank_ <= kRegisteredNum )
     {
+        // 下線
         kSprite->draw( texture_,
-            position_base_ + kPositionRankInFromBase,
-            &kTrimming[Trimming::kRankIn], alpha_ );
+                       position_base_ + kPositionFromBase[kPosRankIn],
+                       &kTrimming[kTrmRankIn], alpha_ );
 
+        // 名前
         Text::drawString( name_,
-            texture_text_, 
-            position_base_ + kPositionNameFromBase,
-            kCharacterWidth, kCharacterHeight,
-            alpha_ );
+                          texture_char_, 
+                          position_base_ + kPositionFromBase[kPosName],
+                          kCharacterWidth, kCharacterHeight, alpha_ );
+       
+
+        // ランク
         Text::drawNumber( rank_,
-            texture_numbers_mini_,
-            position_base_ + kPositionRankFromBase,
-            kMiniNumbersWidth, kMiniNumbersHeight,
-            1U,
-            alpha_ );
+                          texture_numbers_mini_,
+                          position_base_ + kPositionFromBase[kPosRank],
+                          kMiniNumbersWidth, kMiniNumbersHeight,
+                          1U, alpha_ );
+
+        // 名前カーソル( 名前選択時にのみ描画 )
+        if( update_ == &Result::setName )
+        {
+            position = position_base_ + kPositionFromBase[kPosNameCursor];
+            position.x += kCharacterWidth * index_name_;
+            kSprite->draw( texture_, 
+                           position,
+                           &kTrimming[kTrmNameCursor], alpha_
+            );
+        }
     }
+
 }
 
 /*===========================================================================*/
@@ -253,7 +321,24 @@ SceneBase* Result::setName()
             ++select_;
             update_ = &Result::selectNext;
         }
-        index_char_ = kCharNum - 1;
+        // 次の文字選択へ向けて初期化
+        else
+        {
+            // 'A'で初期化
+            index_char_ = 10;
+            name_[index_name_] = kCharTable[index_char_];
+
+        }
+    }
+    // 戻る
+    else if( key_tracker.pressed.Back || pad_tracker.a == PadTracker::PRESSED )
+    {
+        if( index_name_ >= 1U ) 
+        {
+            name_[index_name_] = ' ';
+            --index_name_;
+            index_char_ = Text::getCharNum(name_[index_name_]);
+        }
     }
     // 選択
     else if( 
@@ -297,10 +382,6 @@ SceneBase* Result::selectNext()
     // 決定
     if( key_tracker.pressed.Enter || pad_tracker.b == PadTracker::PRESSED )
     {
-        RankingManager::getInstance()->registerScore(
-            name_, score_.getScore(), score_.getHeight(), score_.getMaxCombo() 
-        );
-
         // 各項目にあった処理へ移る
         switch( select_ ) 
         {
@@ -331,4 +412,48 @@ SceneBase* Result::selectNext()
     }
 
     return this;
+}
+
+
+void Result::drawRankingElem( Vector2 Position, 
+                      const unsigned Rank, const char* Name, 
+                      const unsigned long long Score,
+                      const double Height, const unsigned Combo )
+{
+
+    // ランク ( 桁数に応じて位置を変える )
+    Position.x += kMiniNumbersWidth * (Rank > 99U ? 3.0F : (Rank > 9 ? 2.5F : 2.0F));
+    Text::drawNumber( Rank,
+        texture_numbers_mini_,
+        Position, kMiniNumbersWidth, kMiniNumbersHeight,
+        1U, alpha_ );
+
+    // 名前
+    Position.x = 472.0F;
+    Text::drawString( Name,
+        texture_char_mini_,
+        Position, kMiniCharacterWidth, kMiniCharacterHeight,
+        alpha_ );
+
+    // スコア
+    Position.x = 690.0F;
+    Text::drawNumber( Score,
+        texture_numbers_mini_,
+        Position, kMiniNumbersWidth, kMiniNumbersHeight,
+        10U, alpha_ );
+
+    // 距離
+    Position.x = 790.0F;
+    Text::drawNumber( static_cast<ULL>(Height),
+        texture_numbers_mini_,
+        Position, kMiniNumbersWidth, kMiniNumbersHeight,
+        7U, alpha_ );
+
+    // 最大コンボ
+    Position.x = 842.0F;
+    Text::drawNumber( Combo,
+        texture_numbers_mini_,
+        Position, kMiniNumbersWidth, kMiniNumbersHeight,
+        2U, alpha_ );
+
 }
