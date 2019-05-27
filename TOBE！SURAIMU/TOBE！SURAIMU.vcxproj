@@ -179,6 +179,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="freeFallParticle.h" />
     <ClInclude Include="freeFallParticle_container.h" />
+    <ClInclude Include="score_number.h" />
     <ClInclude Include="scoring.h" />
     <ClInclude Include="stay_particle.h" />
     <ClInclude Include="stay_particle_container.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="ranking_manager.cpp" />
     <ClCompile Include="ranking_in_endless.cpp" />
+    <ClCompile Include="score_number.cpp" />
     <ClCompile Include="scoring.cpp" />
     <ClCompile Include="stay_particle.cpp" />
     <ClCompile Include="stay_particle_container.cpp" />

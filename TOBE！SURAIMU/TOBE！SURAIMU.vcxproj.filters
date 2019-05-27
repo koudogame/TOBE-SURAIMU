@@ -260,6 +260,9 @@
     <ClCompile Include="pause.cpp">
       <Filter>Project\Game\Others\Pause</Filter>
     </ClCompile>
+    <ClCompile Include="score_number.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -423,6 +426,7 @@
     <ClInclude Include="pause.h">
       <Filter>Project\Game\Others\Pause</Filter>
     </ClInclude>
+    <ClInclude Include="score_number.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
