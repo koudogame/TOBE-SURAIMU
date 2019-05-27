@@ -60,12 +60,8 @@ private:
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
 
-	AudioContainer* combo_sound_;
+	AudioContainer* combo_sound_;					//回転コンボのサウンド
 
-	//仮描画
-	Numbers<unsigned long long> sco_;
-	Numbers<unsigned int> move_com_;
-	Numbers<unsigned int> rota_com_;
-
+	Numbers<unsigned int> combo_draw_;
 };
 

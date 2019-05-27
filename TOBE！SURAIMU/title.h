@@ -29,6 +29,18 @@ private:
 		kRanking
 	};
 
+	enum ObjectNum
+	{
+		kRogo ,
+		kCusur ,
+		kStar1 ,
+		kStar2 ,
+		kPlayer ,
+		kWallRight,
+		kWallLeft,
+		kObjectNum
+	};
+
 	//ƒƒ“ƒo•Ï”
 private:
 	GamePad::ButtonStateTracker pad_;
@@ -37,24 +49,14 @@ private:
 	bool next_flag_;
 
 	Menu select_menu_;
-	TitleStatus object_status_[ 5 ];
-	std::unique_ptr<TitleObject> object_[ 5 ];
+	TitleStatus object_status_[ ObjectNum::kObjectNum ];
+	std::unique_ptr<TitleObject> object_[ ObjectNum::kObjectNum ];
 
 	AudioContainer* title_bgm_;
 	AudioContainer* select_se_[2];
 	AudioContainer* scene_se_;
 	float volume_;
 	SceneBase* ( Title::* scene_ )( ) = nullptr;
-
-private:
-	enum ObjectNum
-	{
-		kRogo,
-		kCusur,
-		kStar1,
-		kStar2,
-		kPlayer
-	};
 
 	//“à•”—˜—pŠÖ”
 private:

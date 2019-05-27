@@ -16,7 +16,6 @@ public:
 	//Œp³ŠÖ”
 public:
 	bool init( TitleStatus* TitleObjectStatus );
-	void update();
 	void draw();
 
 private:

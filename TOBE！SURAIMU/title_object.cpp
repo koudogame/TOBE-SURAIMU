@@ -17,11 +17,6 @@ bool TitleObject::init( TitleStatus* TitleObjectStatus )
 	return true;
 }
 
-void TitleObject::update()
-{
-	status_->position.y += kFall;
-}
-
 void TitleObject::draw()
 {
 	Sprite::getInstance()->draw( status_->texture , status_->position , &status_->trim , status_->alpha );
