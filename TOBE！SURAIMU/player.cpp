@@ -77,9 +77,6 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	sound_[ 0 ] = AudioLoader::getInstance()->getSound( L"Sound/jump1-dova.wav" );
 	sound_[ 1 ] = AudioLoader::getInstance()->getSound( L"Sound/collision-dova.wav" );
 	died_sound_ = AudioLoader::getInstance()->getSound( L"Sound/died2-dova.wav" );
-	sound_[ 0 ]->stop();
-	sound_[ 1 ]->stop();
-	died_sound_->stop();
 	died_flag_ = false;
 
 	return true;
@@ -119,11 +116,13 @@ void Player::update()
 		now_amount_ += (kAddVolume * magnification_);
 
 	if( Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ < kGravity )
-
 	{
 		flag_.reset( Flag::kStarCollision );
 		if( flag_.test( Flag::kJump ) )
+		{
+			collision_combo_pitch_ = 0.0F;
 			score_.resetCombo();
+		}
 	}
 
 	//ブースト力の減少
@@ -146,7 +145,7 @@ void Player::draw()
 {
 	slectDirection();
 	RECT trim;
-	trim.top = static_cast<int>(rect_left_up_.y);
+	trim.top = static_cast< int >( rect_left_up_.y );
 	trim.left = static_cast< int >( rect_left_up_.x );
 	trim.bottom = trim.top + kPlayerSize;
 	trim.right = trim.left + kPlayerSize;
@@ -170,10 +169,7 @@ void Player::draw()
 bool Player::isAlive()
 {
 	if( myshape_.position.y > 900.0F )
-	{
-		died_sound_->play( AudioContainer::Mode::kDefault );
 		return diedEffect();
-	}
 
 	return true;
 }
@@ -206,8 +202,10 @@ void Player::collision( Star * StarObj)
 	{
 		if( score_.isStart() )
 		{
+			sound_[ 1 ]->setPitch( collision_combo_pitch_ );
 			sound_[ 1 ]->stop();
 			sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
+			collision_combo_pitch_ += 0.2F;
 		}
 		rect_left_up_ = Vector2::Zero;
 		direction_id_ = Direction::kFlont;
@@ -231,6 +229,7 @@ void Player::collision( Wall * WallObj)
 {
 	if( score_.isStart() )
 	{
+		sound_[ 1 ]->resetPitch();
 		sound_[ 1 ]->stop();
 		sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
 	}
@@ -290,13 +289,12 @@ void Player::input()
 			!flag_.test(Flag::kBoost))
 		{
 			flag_.set( Flag::kBoost );
-			boost_power_ = (kRLBoostPower*magnification_);
+			boost_power_ = ( kRLBoostPower*magnification_ );
 		}
 	}
 	//接地中
 	else
 	{
-		sound_[ 0 ]->stop();
 		direction_id_ = Direction::kFlont;
 		//ジャンプ入力
 		if( pad_tracker.a == pad_tracker.HELD || key.lastState.Space )
@@ -307,7 +305,11 @@ void Player::input()
 		//ジャンプ
 		if( pad_tracker.a == pad_tracker.RELEASED || key.released.Space )
 		{
-			sound_[ 0 ]->play( AudioContainer::Mode::kDefault );
+			if( !died_flag_ )
+			{
+				sound_[ 0 ]->stop();
+				sound_[ 0 ]->play( AudioContainer::Mode::kDefault );
+			}
 			flag_.set( Flag::kJump );
 			flag_.set( Flag::kStarCollision );
 			flag_.reset( Flag::kParticle );
@@ -432,12 +434,15 @@ bool Player::diedEffect()
 {
 	if( !died_flag_ )
 	{
+		died_sound_->stop();
+		died_sound_->play( AudioContainer::Mode::kDefault );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 35 ) , NameSpaceParticle::ParticleID::kCyan );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 65 ) , NameSpaceParticle::ParticleID::kMagenta );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 95 ) , NameSpaceParticle::ParticleID::kWall );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 125 ) , NameSpaceParticle::ParticleID::kYellow );
 		died_flag_ = true;
 		score_.stop();
+		flag_.set( Flag::kJump );
 	}
 
 	if( g_particle_container_->active().size() == 0 )

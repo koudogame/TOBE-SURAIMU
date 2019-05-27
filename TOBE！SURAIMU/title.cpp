@@ -153,12 +153,38 @@ void Title::draw()
 void Title::input()
 {
 	//“ü—Í‚ª‚ ‚Á‚½‚çƒJ[ƒ\ƒ‹”½“]
-	if( ( key_.pressed.Down || pad_.leftStickDown == pad_.PRESSED ) ||
-		( key_.pressed.Up || pad_.leftStickUp == pad_.PRESSED ) )
+	if( key_.pressed.Down || pad_.leftStickDown == pad_.PRESSED)
 	{
-		select_se_[0]->stop();
+		if( select_menu_ == Menu::kPlay )
+		{
+		select_se_[ 0 ]->stop();
+		select_se_[ 0 ]->resetPitch();
 		select_se_[0]->play( AudioContainer::Mode::kDefault );
-		select_menu_ = select_menu_ == Menu::kPlay ? Menu::kRanking : Menu::kPlay;
+			select_menu_ = Menu::kRanking;
+		}
+		else
+		{
+			select_se_[ 0 ]->stop();
+			select_se_[ 0 ]->setPitch( -0.5F );
+			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
+		}
+	}
+	else if( key_.pressed.Up || pad_.leftStickUp == pad_.PRESSED )
+	{
+		if( select_menu_ == Menu::kRanking )
+		{
+			select_se_[ 0 ]->stop();
+			select_se_[ 0 ]->resetPitch();
+			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
+			select_menu_ = Menu::kPlay;
+		}
+		else
+		{
+			select_se_[ 0 ]->stop();
+			select_se_[ 0 ]->setPitch(-0.5F);
+			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
+		}
+
 	}
 }
 
@@ -212,6 +238,8 @@ SceneBase * Title::selectScene()
 	if( key_.released.Space ||
 		pad_.a == pad_.PRESSED )
 	{
+		scene_se_->stop();
+		select_se_[ 1 ]->stop();
 		scene_se_->play( AudioContainer::Mode::kDefault , true );
 		select_se_[ 1 ]->play( AudioContainer::Mode::kDefault );
 

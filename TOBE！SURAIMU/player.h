@@ -89,6 +89,7 @@ private:
 	float magnification_;
 	int bottom_input_;
 	bool died_flag_;
+	float collision_combo_pitch_;
 
 	Scoring score_;
 
