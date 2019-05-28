@@ -171,7 +171,7 @@ void RankingInEndless::draw()
     }
 
     // ‰e‚ð•`‰æ
-	Sprite::getInstance()->draw( texture_ , Vector2::Zero , nullptr , 1.0F , 1.0F );
+	Sprite::getInstance()->draw( texture_ , Vector2::Zero , nullptr , 1.0F , 0.95F );
 }
 
 
@@ -198,5 +198,5 @@ void drawData(
 
     Position.x = kBarCoordinateX;
     Position.y -= 5.0F;
-    Sprite::getInstance()->draw( Bar, Position, TrimminaBar, Alpha, 1.0F );
+    Sprite::getInstance()->draw( Bar, Position, TrimminaBar, Alpha, 0.5F );
 }
