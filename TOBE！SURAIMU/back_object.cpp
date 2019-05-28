@@ -38,7 +38,7 @@ bool BackObject::init(const RECT& Trimming,
     if (texture_ == nullptr) { return false; }
 
     TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackgroundUpdate);
-    TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
+    TaskManager::getInstance()->registerTask(this, TaskDraw::kBackground);
 
 
     // ‰Šú‰»

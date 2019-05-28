@@ -29,7 +29,7 @@ bool Background::init(const RECT& Trimming, const float Scroll, const float Dept
 
     // タスクの登録
     TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackgroundUpdate);
-    TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
+    TaskManager::getInstance()->registerTask(this, TaskDraw::kBackground);
 
 
     // メンバ
