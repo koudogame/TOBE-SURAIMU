@@ -226,6 +226,8 @@ void Player::collision( Star * StarObj)
 
 		if( owner_ == StarObj )
 			score_.addTechnique();
+		else
+			score_.resettechnique();
 	}
 	owner_ = StarObj;
 	now_amount_ = 0.0F;

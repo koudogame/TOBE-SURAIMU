@@ -34,6 +34,8 @@ public:
 	void resetCombo();
 	//テクニック加点
 	void addTechnique();
+	//テクニックコンボのリセット
+	void resettechnique();
 	//下降加点
 	void addDown();
 	//回転加点
@@ -57,6 +59,7 @@ private:
 	unsigned int combo_;	                        //移動コンボ
 	unsigned int max_combo_;						//最大移動コンボ
 	unsigned int rotation_combo_;	                //回転コンボ
+	unsigned int technique_combo_;					//テクニックコンボ
 	float rotation_;	                            //回転量
 	bool scoring_flag_;					            //スコアリング有効フラグ
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
