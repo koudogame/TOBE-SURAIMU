@@ -355,6 +355,7 @@ SceneBase* Endless::pause()
         return new Endless();
 
     case Pause::kTitle    :
+		AudioLoader::getInstance()->getSound( L"Sound/play4-dova.wav" )->stop();
         kTaskManager->restart();
         return new Title();
     }
