@@ -20,9 +20,12 @@ constexpr RECT kTrimmingEffect{             // 背景エフェクト切り取り範囲
 
 constexpr float kBackgroundSpeed[]     = { 0.2F, 0.4F, 1.0F, 0.6F, };
 constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.01F, 0.03F, 0.02F, };
+constexpr float kBackobjectMoveX = -1.0F;
+constexpr float kBackobjectMoveY = 0.1F;
 constexpr float kBackobjectDrawDepth   =  0.05F;
+constexpr unsigned kBackobjectKind = 1U;
 constexpr RECT kTrimmingBackObject[]   = {
-	{ 0L, 0L, 4096L, 800L},
+	{ 0L, 0L, 4096L, 1000L},
 	{ 800L, 0L, 4096L, 1800L},
 	{ 1800L, 0L, 4096L, 2800L},
 };
@@ -67,7 +70,9 @@ bool Game::init()
 		trimming.right += kBackgroundSize;
 	}
 
-    backobject_container_->addBackObject( kTrimmingBackObject[rand() % 3], -0.5F, 0.1F, kBackobjectDrawDepth );
+    backobject_container_->addBackObject( 
+        kTrimmingBackObject[rand() % kBackobjectKind], 
+        kBackobjectMoveX, kBackobjectMoveY, kBackobjectDrawDepth );
 
 	return true;
 }
@@ -79,11 +84,17 @@ bool Game::update()
 	//オブジェクトの更新
     if( backobject_container_->empty() )
     {
-        backobject_container_->addBackObject(kTrimmingBackObject[rand() % 2 + 1], -0.5F, 0.1F, kBackobjectDrawDepth);
+        backobject_container_->addBackObject(
+            kTrimmingBackObject[0],
+            kBackobjectMoveX, kBackobjectMoveY, kBackobjectDrawDepth);
 
     }
     if( backobject_container_->active().size() <= 5 )
-        backobject_container_->addBackObject(kTrimmingBackObject[0], -0.5F, 0.1F, kBackobjectDrawDepth);
+    {
+        backobject_container_->addBackObject(
+            kTrimmingBackObject[0],
+            kBackobjectMoveX, kBackobjectMoveY, kBackobjectDrawDepth);
+    }
   
 
 

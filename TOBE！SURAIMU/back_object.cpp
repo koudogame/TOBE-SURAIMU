@@ -34,7 +34,7 @@ bool BackObject::init(const RECT& Trimming,
     created_ = true;
 
     // 生成処理
-    texture_ = TextureLoder::getInstance()->load(L"Texture/back_wave.png");
+    texture_ = TextureLoder::getInstance()->load(L"Texture/wave.png");
     if (texture_ == nullptr) { return false; }
 
     TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackgroundUpdate);
@@ -64,13 +64,18 @@ void BackObject::update()
 {
     position_.x += scroll_x_ * magnification_;
     position_.y += scroll_y_ * magnification_;
-    if (position_.y > getWindowHeight<float>())
+
+    // 画面外へ行ったらそこで止める
+    if( position_.y > getWindowHeight<float>() )
     {
         position_.y = getWindowHeight<float>();
     }
-
-    (this->*set_angle_)();
-    (this->*alpha_blend_)();
+    // 右端が画面左端を超えたら、
+    const long kWidth = trimming_.right - trimming_.left;
+    if( position_.x + kWidth < 0.0F )
+    {
+        position_.x -= kWidth;
+    }
 }
 
 /*===========================================================================*/
@@ -82,41 +87,13 @@ void BackObject::draw()
     Vector2 draw_position = position_;
     draw_position.x -= getWindowWidth<float>();
 
+    // シームレスに描画
     while(draw_position.x < getWindowWidth<float>())
     {
         kSprite->draw(texture_, draw_position, &trimming_);
 
         draw_position.x += kTextureWidth;
     }
-
-
-    // 描画モード加算
-#if 0
-    kSprite->end();
-    kSprite->begin(kSprite->chengeMode());
-
-    RECT trimming = trimming_;
-    kSprite->draw(texture_, position_, &trimming, 1.0F, 0.0F,
-        Vector2(1.0F,1.0F), angle_ , kAnkerPoint);
-
-
-    trimming.top += static_cast<long>(kTextureHeight);
-    trimming.bottom += static_cast<long>(kTextureHeight);
-
-    kSprite->draw(texture_, position_, &trimming, alpha_red_1, 0.0F,
-        Vector2(1.0F, 1.0F), angle_, kAnkerPoint);
-
-
-    trimming.top += static_cast<long>(kTextureHeight);
-    trimming.bottom += static_cast<long>(kTextureHeight);
-
-    kSprite->draw(texture_, position_, &trimming, alpha_red_2, 0.0F,
-        Vector2(1.0F, 1.0F), angle_, kAnkerPoint);
-
-    kSprite->end();
-    kSprite->begin();
-#endif
-    // !描画モード加算
 }
 
 /*===========================================================================*/
@@ -125,78 +102,14 @@ void BackObject::reset(const RECT& Trimming,
     const float ScrollX, const float ScrollY ,
     const float Depth)
 {
-    position_.x    = getWindowWidth<float>();// / 2.0F;
+    position_.x    = 0.0F;
     position_.y    = (Trimming.bottom - Trimming.top) * -1.0F;
     trimming_      = Trimming;
     scroll_x_      = ScrollX;
     scroll_y_      = ScrollY;
     draw_depth_    = Depth;
     magnification_ = 1.0F;
-    angle_         = 0.0F;
-    set_angle_     = &BackObject::addAngle;
-    alpha_red_1    = 1.0F;
-    alpha_red_2    = 0.0F;
-    alpha_blend_   = &BackObject::addAlphaRed2;
-}
-
-/*===========================================================================*/
-// 赤1のアルファを加算
-void BackObject::addAlphaRed1()
-{
-    // 赤2のアルファ値を0まで下げる
-    if( alpha_red_2 > 0.0F)
-    {
-        alpha_red_2 -= kAmountOfAlphaChange;
-        if( alpha_red_2 < 0.0F ) { alpha_red_2 = 0.0F; }
-    }
-    // 赤1のアルファ値を加算
-    else
-    {
-        alpha_red_1 += kAmountOfAlphaChange;
-        if(alpha_red_1 >= 1.0F)
-        {
-            alpha_red_1 = 1.0F;
-            alpha_blend_ = &BackObject::addAlphaRed2;
-        }
-    }
-}
-// 赤2のアルファを加算
-void BackObject::addAlphaRed2()
-{
-    // 赤1のアルファ値を0まで下げる
-    if( alpha_red_1 > 0.0F)
-    {
-        alpha_red_1 -= kAmountOfAlphaChange;
-        if(alpha_red_1 < 0.0F) { alpha_red_1 =  0.0F; }
-    }
-    // 赤2のアルファ値を加算
-    else
-    {
-        alpha_red_2 += kAmountOfAlphaChange;
-        if( alpha_red_2 >= 1.0F )
-        {
-            alpha_red_2 = 1.0F;
-            alpha_blend_ = &BackObject::addAlphaRed1;
-        }
-    }
-}
-
-/*===========================================================================*/
-// 角度加算
-void BackObject::addAngle()
-{
-    angle_ += 0.05F;
-    if(angle_ >= 10.0F)
-    {
-        set_angle_ = &BackObject::defAngle;
-    }
-}
-// 角度減算
-void BackObject::defAngle()
-{
-    angle_ -= 0.05F;
-    if( angle_ <= -10.0F)
-    {
-        set_angle_ = &BackObject::addAngle;
-    }
+    is_add_red_1_  = true;
+    alpha_red_1_   = 1.0F;
+    alpha_red_2_   = 0.0F;
 }

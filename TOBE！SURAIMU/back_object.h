@@ -34,19 +34,12 @@ public:
 private:
     bool created_        = false;
     RECT trimming_       { 0L,0L,0L,0L };
-    float scroll_x_      = 1.0F;
-    float scroll_y_      = 1.0F;
+    float scroll_x_      = 0.0F;
+    float scroll_y_      = 0.0F;
     float draw_depth_    = 0.0F;
-    float magnification_ = 1.0F;
+    float magnification_ = 0.0F;
 
-    float angle_         = 0.0F;
-    void addAngle();
-    void defAngle();
-    void (BackObject::*set_angle_)()   = nullptr;
-
-    float alpha_red_1    = 0.0F;
-    float alpha_red_2    = 0.0F;
-    void (BackObject::*alpha_blend_)() = nullptr;
-    void addAlphaRed1();
-    void addAlphaRed2();
+    bool is_add_red_1_   = false;
+    float alpha_red_1_   = 0.0F;
+    float alpha_red_2_   = 0.0F;
 };

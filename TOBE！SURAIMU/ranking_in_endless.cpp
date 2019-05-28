@@ -185,6 +185,7 @@ void drawData(
     const RECT* const TrimminaBar,
     const float Alpha)
 {
+    // ランク外の時、ランクは描画しない
     if( Data.rank <= kRegisteredNum )
     {
         Text::drawNumber( Data.rank,
