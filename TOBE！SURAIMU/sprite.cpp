@@ -17,7 +17,7 @@ bool Sprite::init()
 
 void Sprite::begin(ID3D11BlendState* BlendState)
 {
-	sprite_->Begin( SpriteSortMode_BackToFront , BlendState , Common::getInstance()->getStates()->LinearWrap() );
+	sprite_->Begin( SpriteSortMode::SpriteSortMode_FrontToBack , BlendState , Common::getInstance()->getStates()->LinearWrap() );
 }
 
 void Sprite::draw( ID3D11ShaderResourceView* Texture, const Vector2& Position, const RECT* Rect,float alpha, float Depth, const Vector2& Scale, float Rotate, const Vector2& Anker, SpriteEffects Effect)

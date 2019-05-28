@@ -100,7 +100,7 @@ void Star::draw()
 	trim.right = trim.left + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 	trim.bottom = trim.top + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 
-	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.0F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - 90.0F ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ));
+	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.9F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - 90.0F ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ) );
 }
 
 bool Star::isAlive()

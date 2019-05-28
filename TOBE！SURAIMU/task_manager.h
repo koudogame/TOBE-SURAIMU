@@ -16,7 +16,9 @@ enum class TaskUpdate
 // •`‰æƒ^ƒXƒNID
 enum class TaskDraw
 {
-    kDraw,
+    kBackground,
+	kParticle,
+	kObject,
 };
 
 

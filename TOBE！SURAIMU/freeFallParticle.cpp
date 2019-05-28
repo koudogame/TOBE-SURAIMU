@@ -48,7 +48,7 @@ void FreeFallParticle::draw()
 {
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
-	Sprite::getInstance()->draw( texture_ , position_ , &triming_ , alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , static_cast< float >( rotate_ ) , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ , &triming_ , alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , static_cast< float >( rotate_ ) , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin();
 }

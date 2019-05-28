@@ -34,7 +34,7 @@ constexpr long kMiniCharacterHeight = 16L;
 constexpr long kCharacterWidth      = 21L;
 constexpr long kCharacterHeight     = 32L;
 enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankIn };
-const RECT kTrimming[] = 
+const RECT kTrimming[] =
 {
     {   0L,   0L, 680L, 720L },
     { 665L,   0L, 921L,  16L },
@@ -42,7 +42,7 @@ const RECT kTrimming[] =
     {   0L, 720L, 642L, 922L },
 };
 
-enum { kPosBackground, kPosScore, kPosHeight, kPosCombo, kPosRankIn, 
+enum { kPosBackground, kPosScore, kPosHeight, kPosCombo, kPosRankIn,
                 kPosRank, kPosName, kPosNameCursor, kPosRanking };
 constexpr Vector2 kPositionFromBase[] {
     { 307.0F,   0.0F }, // back
@@ -160,7 +160,7 @@ void Result::draw()
     // 背景
 	kSprite->draw( texture_,
                    position_base_ + kPositionFromBase[kPosBackground],
-                   &kTrimming[kTrmBackground], alpha_ );
+				   &kTrimming[ kTrmBackground ] , alpha_ , 1.0F );
 
     // スコア
     Text::drawNumber( score_.getScore(),
@@ -170,7 +170,7 @@ void Result::draw()
                       10U, alpha_ );
 
     // 高さ
-    Text::drawNumber( static_cast<ULL>(score_.getHeight()), 
+    Text::drawNumber( static_cast<ULL>(score_.getHeight()),
                       texture_numbers_mini_,
                       position_base_ + kPositionFromBase[kPosHeight],
                       kMiniNumbersWidth, kMiniNumbersHeight, 1U, alpha_ );
@@ -183,7 +183,7 @@ void Result::draw()
     // カーソル
     kSprite->draw( texture_,
                    position_base_ + kPositionCursorFromBase[select_],
-                   &kTrimming[kTrmCursor], alpha_ );
+				   &kTrimming[ kTrmCursor ] , alpha_ , 1.0F );
 
     // ランキング
     RankingManager::Data data;
@@ -203,7 +203,7 @@ void Result::draw()
         if( rank == rank_ && draw_player_ == false )
         {
             draw_player_ = true;
-            drawRankingElem( 
+            drawRankingElem(
                 position,
                 rank, name_,
                 score_.getScore(), score_.getHeight(), score_.getMaxCombo() );
@@ -213,7 +213,7 @@ void Result::draw()
 
 
         data = RankingManager::getInstance()->getData(rank);
-        drawRankingElem( 
+        drawRankingElem(
             position,
             draw_player_ ? rank + 1 : rank, data.name.c_str(),
             data.score, data.height, data.combo );
@@ -227,14 +227,14 @@ void Result::draw()
         // 下線
         kSprite->draw( texture_,
                        position_base_ + kPositionFromBase[kPosRankIn],
-                       &kTrimming[kTrmRankIn], alpha_ );
+					   &kTrimming[ kTrmRankIn ] , alpha_ , 1.F );
 
         // 名前
         Text::drawString( name_,
-                          texture_char_, 
+                          texture_char_,
                           position_base_ + kPositionFromBase[kPosName],
                           kCharacterWidth, kCharacterHeight, alpha_ );
-       
+
 
         // ランク
         Text::drawNumber( rank_,
@@ -248,10 +248,10 @@ void Result::draw()
         {
             position = position_base_ + kPositionFromBase[kPosNameCursor];
             position.x += kCharacterWidth * index_name_;
-            kSprite->draw( texture_, 
+            kSprite->draw( texture_,
                            position,
-                           &kTrimming[kTrmNameCursor], alpha_
-            );
+                           &kTrimming[kTrmNameCursor], alpha_,1.0F
+			);
         }
     }
 
@@ -370,7 +370,7 @@ SceneBase* Result::setName()
         if(--index_char_ < 0 ) { index_char_ = kCharNum - 1; }
         name_[index_name_] = kCharTable[index_char_];
     }
-    else if( 
+    else if(
         // 新規入力か
         ( (key_tracker.pressed.Down ||
             pad_tracker.leftStickDown == PadTracker::PRESSED) ) ||
@@ -405,7 +405,7 @@ SceneBase* Result::selectNext()
 		decision_se_->stop();
 		decision_se_->play( AudioContainer::Mode::kDefault );
         // 各項目にあった処理へ移る
-        switch( select_ ) 
+        switch( select_ )
         {
         case kSelectSetName: update_ = &Result::setName; break;
         case kSelectOneMore: update_ = &Result::outToPlay; break;
@@ -455,8 +455,8 @@ SceneBase* Result::selectNext()
 }
 
 
-void Result::drawRankingElem( Vector2 Position, 
-                      const unsigned Rank, const char* Name, 
+void Result::drawRankingElem( Vector2 Position,
+                      const unsigned Rank, const char* Name,
                       const unsigned long long Score,
                       const double Height, const unsigned Combo )
 {

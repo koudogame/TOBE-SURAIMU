@@ -171,7 +171,7 @@ void Player::draw()
 
 	//ƒKƒCƒh‚Ì•`‰æ
 	if( !flag_.test( Flag::kJump ) && guide_alpha_ > 0.0F )
-		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( 5.0F / 2.0F , 214.0F ) );
+		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( 5.0F / 2.0F , 214.0F ) );
 	else if( guide_alpha_ <= 0.0F )
 		guide_alpha_ = 0.0F;
 }

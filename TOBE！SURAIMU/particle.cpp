@@ -83,8 +83,10 @@ void Particle::update()
 void Particle::draw()
 {
 	Sprite::getInstance()->draw(
-		texture_,
-		position_,
-		nullptr
+		texture_ ,
+		position_ ,
+		nullptr ,
+		1.0F ,
+		0.2F
 	);
 }

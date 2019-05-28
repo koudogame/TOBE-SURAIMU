@@ -78,13 +78,13 @@ int Pause::update()
     {
         if( select_ > kContinue )
         {
-            --select_; 
+            --select_;
             position_cursor_.y -= kCursorMove;
         }
     }
     else if( key.pressed.Down || pad.leftStickDown == PadTracker::PRESSED )
     {
-        if( select_ < kTitle )    
+        if( select_ < kTitle )
         {
             ++select_;
             position_cursor_.y += kCursorMove;
@@ -101,11 +101,11 @@ void Pause::draw() const
 {
     Sprite* kSprite = Sprite::getInstance();
 
-    kSprite->draw( texture_back_, Vector2::Zero );
+	kSprite->draw( texture_back_ , Vector2::Zero , nullptr , 1.0F , 1.0F );
 
-    kSprite->draw( texture_, kPosition, &kTrimming, 1.0F, 0.0F );
+    kSprite->draw( texture_, kPosition, &kTrimming, 1.0F, 1.0F );
 
-    kSprite->draw( texture_, position_cursor_, &kTrimmingCursor, 1.0F, 0.0F );
+    kSprite->draw( texture_, position_cursor_, &kTrimmingCursor, 1.0F, 1.0F );
 
 }
 

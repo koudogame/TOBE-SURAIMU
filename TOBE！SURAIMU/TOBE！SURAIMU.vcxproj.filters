@@ -36,9 +36,6 @@
     <Filter Include="Project\Game\Object">
       <UniqueIdentifier>{10e175df-893e-4c40-afa3-5bcf3c5263fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Object\Collision">
-      <UniqueIdentifier>{d79af6f7-4414-4c49-99c2-63e7f80ab6f9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Scene\Game">
       <UniqueIdentifier>{6aee0cd5-190f-4049-b852-646871b1283e}</UniqueIdentifier>
     </Filter>
@@ -53,9 +50,6 @@
     </Filter>
     <Filter Include="Project\Game\Others">
       <UniqueIdentifier>{583b3209-771a-4518-a699-11345f16cc1f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Object\TaskManager">
-      <UniqueIdentifier>{f11f552b-e0df-4b26-993c-f716098789ba}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\Particle">
       <UniqueIdentifier>{41c1f148-516b-425b-911d-cad1ad677457}</UniqueIdentifier>
@@ -117,6 +111,12 @@
     <Filter Include="Project\Game\Others\Pause">
       <UniqueIdentifier>{ca5e6288-5a78-4c62-8ef1-db59f28d734c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Others\Collision">
+      <UniqueIdentifier>{d79af6f7-4414-4c49-99c2-63e7f80ab6f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\TaskManager">
+      <UniqueIdentifier>{f11f552b-e0df-4b26-993c-f716098789ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -150,10 +150,10 @@
       <Filter>Project\System\Texture</Filter>
     </ClCompile>
     <ClCompile Include="task_manager.cpp">
-      <Filter>Project\Game\Object\TaskManager</Filter>
+      <Filter>Project\Game\Others\TaskManager</Filter>
     </ClCompile>
     <ClCompile Include="collision.cpp">
-      <Filter>Project\Game\Object\Collision</Filter>
+      <Filter>Project\Game\Others\Collision</Filter>
     </ClCompile>
     <ClCompile Include="title.cpp">
       <Filter>Project\Game\Scene\Title</Filter>
@@ -302,13 +302,13 @@
       <Filter>Project\Game\Scene</Filter>
     </ClInclude>
     <ClInclude Include="collision.h">
-      <Filter>Project\Game\Object\Collision</Filter>
+      <Filter>Project\Game\Others\Collision</Filter>
     </ClInclude>
     <ClInclude Include="calc.h">
       <Filter>Project\System</Filter>
     </ClInclude>
     <ClInclude Include="task_manager.h">
-      <Filter>Project\Game\Object\TaskManager</Filter>
+      <Filter>Project\Game\Others\TaskManager</Filter>
     </ClInclude>
     <ClInclude Include="game.h">
       <Filter>Project\Game\Scene\Game</Filter>

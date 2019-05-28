@@ -19,5 +19,5 @@ bool TitleObject::init( TitleStatus* TitleObjectStatus )
 
 void TitleObject::draw()
 {
-	Sprite::getInstance()->draw( status_->texture , status_->position , &status_->trim , status_->alpha );
+	Sprite::getInstance()->draw( status_->texture , status_->position , &status_->trim , status_->alpha , 1.0F );
 }

@@ -46,14 +46,14 @@ void ScoreNumber::draw()
 		trim.left = kNumWidth * ( temp % 10 );
 		trim.right = trim.left + kNumWidth;
 		trim.bottom = trim.top + kNumHeight;
-		Sprite::getInstance()->draw( texture_ , draw_position , &trim , alpha_ );
+		Sprite::getInstance()->draw( texture_ , draw_position , &trim , alpha_ , 1.0F );
 		draw_position.x -= kNumWidth;
 	}
 
 	//+‚Ì•`‰æ
 	trim.left = 302;
 	trim.right = trim.left + kNumWidth;
-	Sprite::getInstance()->draw( puluse_ , draw_position , &trim , alpha_ );
+	Sprite::getInstance()->draw( puluse_ , draw_position , &trim , alpha_ , 1.0F );
 }
 
 bool ScoreNumber::isAlive()

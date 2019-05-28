@@ -61,7 +61,7 @@ void Scoring::draw()
 {
 	//トータルスコアの下地描画
 	RECT trim{ 0,0,300,64 };
-	Sprite::getInstance()->draw( texture_ , Vector2::Zero , &trim );
+	Sprite::getInstance()->draw( texture_ , Vector2::Zero , &trim , 1.0F , 0.9F );
 	//トータルスコアの描画
 	Vector2 draw_position( 225.0F , 12.0F );
 	unsigned long long temp = score_;
@@ -70,7 +70,7 @@ void Scoring::draw()
 		trim.left = kNumWidth * ( temp % 10 );
 		trim.right = trim.left + kNumWidth;
 		trim.bottom = trim.top + kNumHeight;
-		Sprite::getInstance()->draw( num_texture_ , draw_position , &trim );
+		Sprite::getInstance()->draw( num_texture_ , draw_position , &trim , 1.0F , 1.0F );
 		draw_position.x -= kNumWidth;
 		temp /= 10;
 	} while( temp > 0ULL );

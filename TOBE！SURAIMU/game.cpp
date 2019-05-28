@@ -19,7 +19,7 @@ constexpr RECT kTrimmingEffect{             // 背景エフェクト切り取り範囲
 	0L, 3184L, 1280L, 3904L };
 
 constexpr float kBackgroundSpeed[] = { 0.2F, 0.4F, 1.0F, 0.6F, };
-constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.1F, 0.3F, 0.2F, };
+constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.01F, 0.03F, 0.02F, };
 constexpr RECT kTrimmingBackObject[] = {
 	{ 0L, 0L, 1024L, 1024L},
 	{ 0L, 0L, 1024L, 1024L},
@@ -101,7 +101,7 @@ void Game::draw()
 {
 	TaskManager::getInstance()->allDraw();
 	// 背景エフェクト
-	//mSprite::getInstance()->draw( texture_ , Vector2::Zero , &kTrimmingEffect );
+	Sprite::getInstance()->draw( texture_ , Vector2::Zero , &kTrimmingEffect , 1.0F , 0.09F );
 
 	scene_->draw();
 }

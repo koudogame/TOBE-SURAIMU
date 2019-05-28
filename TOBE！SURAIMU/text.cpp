@@ -23,7 +23,7 @@ void Text::drawString( const std::string& Text,
         trimming.left = getCharNum( ch ) * Width;
         trimming.right = trimming.left + Width;
 
-        kSprite->draw( Texture, position, &trimming, Alpha, 0.0F );
+        kSprite->draw( Texture, position, &trimming, Alpha, 1.0F );
 
         position.x += Width;
     }

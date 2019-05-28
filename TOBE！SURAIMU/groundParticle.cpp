@@ -42,7 +42,7 @@ void GroundParticle::update()
 
 void GroundParticle::draw()
 {
-	Sprite::getInstance()->draw( texture_ , position_ + velocity_ , &triming_ , 1.0F - now_time_ , 0.0F , Vector2(1.0F , 1.0F ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ + velocity_ , &triming_ , 1.0F - now_time_ , 0.2F , Vector2(1.0F , 1.0F ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 }
 
 bool GroundParticle::isAlive()
