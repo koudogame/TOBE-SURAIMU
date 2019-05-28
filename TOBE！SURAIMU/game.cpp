@@ -77,7 +77,9 @@ bool Game::init()
 	trim.top = trim.bottom - 1024;
 	background_container_.get()->addBackground( trim , 20.0F );
 
-    backobject_container_->addBackObject( kTrimmingBackObject[rand() % 3], -0.5F, 0.1F, kBackobjectDrawDepth );
+    backobject_container_->addBackObject(
+        kTrimmingBackObject[rand() % kBackobjectKind],
+        kBackobjectMoveX, kBackobjectMoveY, kBackobjectDrawDepth);
 
 	return true;
 }
