@@ -31,6 +31,7 @@ bool Scoring::init()
 	max_combo_ = 0;
 	rotation_ = 0.0F;
 	rotation_combo_ = 0;
+	technique_combo_ = 0;
 	spin_combo_pitch_ = 0.0F;
 	scoring_flag_ = false;
 
@@ -126,9 +127,14 @@ void Scoring::addTechnique()
 {
 	if( scoring_flag_ )
 	{
-		score_ += kTechniqueScore;
-		createNumber( kTechniqueScore );
+		score_ += kTechniqueScore * static_cast< unsigned int >( std::pow( 2 , technique_combo_ ) );
+		createNumber( kTechniqueScore * static_cast< unsigned int >( std::pow( 2 , technique_combo_++ ) ) );
 	}
+}
+
+void Scoring::resettechnique()
+{
+	technique_combo_ = 0;
 }
 
 //â∫ç~ì_â¡éZ
