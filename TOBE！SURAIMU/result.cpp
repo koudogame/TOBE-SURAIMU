@@ -315,7 +315,7 @@ SceneBase* Result::setName()
     PadTracker pad_tracker = Pad::getInstance()->getTracker();
 
     // Œˆ’è
-    if( key_tracker.pressed.Enter || pad_tracker.b == PadTracker::PRESSED )
+    if( key_tracker.pressed.Space || pad_tracker.a == PadTracker::PRESSED )
     {
 		decision_se_->resetPitch();
 		decision_se_->stop();
@@ -341,7 +341,7 @@ SceneBase* Result::setName()
         }
     }
     // –ß‚é
-    else if( key_tracker.pressed.Back || pad_tracker.a == PadTracker::PRESSED )
+    else if( key_tracker.pressed.Back || pad_tracker.b == PadTracker::PRESSED )
     {
 		if( index_name_ >= 1U )
 		{
@@ -399,7 +399,7 @@ SceneBase* Result::selectNext()
     PadTracker pad_tracker = Pad::getInstance()->getTracker();
 
     // Œˆ’è
-    if( key_tracker.pressed.Enter || pad_tracker.b == PadTracker::PRESSED )
+    if( key_tracker.pressed.Space || pad_tracker.a == PadTracker::PRESSED )
     {
 		decision_se_->resetPitch();
 		decision_se_->stop();
@@ -460,7 +460,6 @@ void Result::drawRankingElem( Vector2 Position,
                       const unsigned long long Score,
                       const double Height, const unsigned Combo )
 {
-
     // ƒ‰ƒ“ƒN ( Œ…”‚É‰‚¶‚ÄˆÊ’u‚ğ•Ï‚¦‚é )
     Position.x += kMiniNumbersWidth * (Rank > 99U ? 3.0F : (Rank > 9 ? 2.5F : 2.0F));
     Text::drawNumber( Rank,

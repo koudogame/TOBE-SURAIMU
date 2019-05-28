@@ -155,8 +155,8 @@ SceneBase* Ranking::update()
         addOffset( &offset_, kOffset * magnification_ ) ;
         addMagnification( &magnification_ );
     }
-    // Enterかaボタンが離されたら決定
-    else if(key_tracker.released.Enter || pad_tracker.a ==PadTracker::RELEASED)
+    // Spaceかaボタンが離されたら決定
+    else if(key_tracker.released.Space || pad_tracker.a ==PadTracker::RELEASED)
     {
 		select_se_[ 1 ]->stop();
 		scene_se_->stop();
