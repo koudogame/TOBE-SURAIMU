@@ -1,4 +1,5 @@
 #pragma once
+#include "audio_loader.h"
 
 //-----------------------------------------------------------------------------
 // É|Å[ÉY
@@ -37,4 +38,6 @@ private:
     ID3D11ShaderResourceView* texture_back_ = nullptr;
     Vector2 position_cursor_;
     int select_ = kContinue;
+
+	AudioContainer* select_se_[ 2 ];
 };
