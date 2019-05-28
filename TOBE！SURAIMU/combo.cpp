@@ -35,7 +35,7 @@ bool Combo::init(const Timer<Milliseconds>& Clock)
 
     // タスクの設定
     TaskManager::getInstance()->registerTask(this, TaskUpdate::kComboUpdate);
-    TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
+    TaskManager::getInstance()->registerTask(this, TaskDraw::kObject);
 
     // 各メンバ初期化
     clock_ = &Clock; 

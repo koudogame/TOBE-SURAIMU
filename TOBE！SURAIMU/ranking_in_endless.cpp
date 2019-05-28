@@ -61,7 +61,7 @@ bool RankingInEndless::init()
 
     // タスクの登録
     TaskManager::getInstance()->registerTask(this, TaskUpdate::kRankingUpdate);
-    TaskManager::getInstance()->registerTask(this, TaskDraw::kDraw);
+    TaskManager::getInstance()->registerTask(this, TaskDraw::kObject);
 
     // ランキング情報を取得
     RankingManager::Data data;
@@ -131,7 +131,7 @@ void RankingInEndless::update()
         displacement_ += up * kLineHeight;
         disp_frame_ = displacement_ / kDispTimeMSPF;
     }
-    
+
     position_.y += disp_frame_;
     if( (std::abs(displacement_) - std::abs(disp_frame_)) <= 0.0F )
     {
@@ -164,7 +164,7 @@ void RankingInEndless::draw()
         if( draw_position.y < 0.0F ) { continue; }
         if( draw_position.y > getWindowHeight<float>() )  { break; }
         if( i + 1 == player_.rank ) { draw_position.y += kLineHeight; }
-        
+
         drawData( ranking_[i], draw_position,
                   texture_text_, texture_number_, texture_bar_,
                   &kTrimming[kNormalBar], 0.8F );

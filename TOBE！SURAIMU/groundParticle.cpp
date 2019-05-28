@@ -15,7 +15,7 @@ GroundParticle::~GroundParticle()
 bool GroundParticle::init( const Vector2 & Posit , const RECT & Triming , const float Angle )
 {
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
-	TaskManager::getInstance()->registerTask( this , TaskDraw::kDraw );
+	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 	texture_ = TextureLoder::getInstance()->load( L"Texture/Particle.png" );
 	if( texture_ == nullptr )
 		return false;
