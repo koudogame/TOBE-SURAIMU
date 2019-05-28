@@ -70,7 +70,7 @@ void BackObject::update()
     {
         position_.y = getWindowHeight<float>();
     }
-    // 右端が画面左端を超えたら、
+    // 右端が画面左端を超えたら、戻す
     const long kWidth = trimming_.right - trimming_.left;
     if( position_.x + kWidth < 0.0F )
     {

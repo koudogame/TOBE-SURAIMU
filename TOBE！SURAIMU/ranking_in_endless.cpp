@@ -19,7 +19,12 @@ constexpr long kTextHeight = 16L;
 constexpr long kLineHeight = 25L;
 constexpr char kPlayerName[] = "YOU";
 constexpr long kDispTimeMSPF = 250L / 16L;
+constexpr float kBasePositionX = 1000.0F;
+constexpr float kBasePositionY = getWindowHeight<float>() / 2.0F;
 constexpr float kBarCoordinateX = 960.0F;
+const float kIntervalRankToName = kTextStringWidth * 2.0F;
+const float kDrawPositionXScore = getWindowWidth<float>() - 23.0F;
+const unsigned kScoreDigits = 10U;
 enum { kNormalBar, kPlayerBar };
 const RECT kTrimming[] = {
     { 0L,  0L, 415L, 24L },
@@ -75,9 +80,9 @@ bool RankingInEndless::init()
     }
 
     // メンバ初期化
-    position_.x = 1000.0F;
-    position_.y = getWindowHeight<float>() / 2.0F;
-    player_.rank = 101ULL;
+    position_.x = kBasePositionX;
+    position_.y = kBasePositionY;
+    player_.rank = kRegisteredNum + 1U;
     player_.name = kPlayerName;
     player_.score = 0U;
 
@@ -151,8 +156,8 @@ void RankingInEndless::draw()
     Vector2 draw_position;
 
     // プレイヤーのデータを描画
-    draw_position.x = 1000.0F;
-    draw_position.y = getWindowHeight<float>() / 2.0F;
+    draw_position.x = kBasePositionX;
+    draw_position.y = kBasePositionY;
     drawData( player_, draw_position,
               texture_text_, texture_number_, texture_bar_,
               &kTrimming[kPlayerBar] );
@@ -189,16 +194,16 @@ void drawData(
     if( Data.rank <= kRegisteredNum )
     {
         Text::drawNumber( Data.rank,
-                      Number, Position, kTextNumberWidth, kTextHeight, 1U, Alpha);
+            Number, Position, kTextNumberWidth, kTextHeight, 1U, Alpha);
     }
 
-    Position.x += kTextStringWidth * 2L;
+    Position.x += kIntervalRankToName;
     Text::drawString( Data.name,
-                      Text, Position, kTextStringWidth, kTextHeight, Alpha);
+        Text, Position, kTextStringWidth, kTextHeight, Alpha);
 
-    Position.x = getWindowWidth<float>() - 23.0F;
+    Position.x = kDrawPositionXScore;
     Text::drawNumber( Data.score,
-                      Number, Position, kTextNumberWidth, kTextHeight, 10U, Alpha);
+        Number, Position, kTextNumberWidth, kTextHeight, kScoreDigits, Alpha);
 
     Position.x = kBarCoordinateX;
     Position.y -= 5.0F;
