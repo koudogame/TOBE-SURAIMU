@@ -32,18 +32,27 @@ using KeyTracker = Keyboard::KeyboardStateTracker;
 using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
+// 処理に関係
+constexpr float kDispTimeMSPF = 500.0F / 16.0F;
 // 難易度に関係
-constexpr float kScrollMax = getWindowHeight<float>() * 0.75F;
-constexpr float kLevelUpThreshold = 1000.0F;
+constexpr unsigned kHeight = 0U;
+constexpr unsigned kThreshold = 1U;
+constexpr unsigned kLevelMax = 2U;
+constexpr float kLevelTable[][2] = {
+    {      0.0F, getWindowHeight<float>() * 0.25F },
+    {   1000.0F, getWindowHeight<float>() * 0.35F },
+    {   5000.0F, getWindowHeight<float>() * 0.50F },
+    { 100000.0F, getWindowHeight<float>() * 0.75F }
+};
 constexpr Vector2 kInitStarPosi[]   = {
     {640.0F, 600.0F},
     {810.0F, 100.0F},
 };
 constexpr float kInitStarAngle[]    = { 90.0F, 90.0F, };
-constexpr float kInitStarFall[]     = { 2.0F,1.0F, };
-constexpr float kInitStarSpin[]     = { 3.0F,3.0F, };
-constexpr float kInitStarSpinRate[] = { 0.001F,0.005F, };
-constexpr float kInitStarSize[]     = { 90.0F,120.0F, };
+constexpr float kInitStarFall[]     = {  2.0F, 1.0F, };
+constexpr float kInitStarSpin[]     = {  3.0F, 3.0F, };
+constexpr float kInitStarSpinRate[] = { 0.001F, 0.005F, };
+constexpr float kInitStarSize[]     = { 90.0F, 120.0F, };
 
 
 /*===========================================================================*/
@@ -112,13 +121,16 @@ bool Endless::init()
 
 	// 変数初期化
 	update_ = &Endless::start;
-    scroll_threshold_ = getWindowHeight<float>() * 0.25F;
+    level_ = 0U;
+    scroll_threshold_ = kLevelTable[0U][kThreshold];
+    offset_ = 0.0F;
+    offset_one_frame_ = 0.0F;
 	climb_ = 0.0F;
-    climb_counter_ = 0.0F;
 
 	clock_->start();
 
-	AudioLoader::getInstance()->getSound( L"Sound/play4-dova.wav" )->play( AudioContainer::Mode::kDefault , true );
+	AudioLoader::getInstance()->getSound( L"Sound/play4-dova.wav" )->
+                                 play( AudioContainer::Mode::kDefault , true );
 
 	return true;
 }
@@ -266,7 +278,7 @@ SceneBase* Endless::play()
 	// プレイヤーが死んでいたらリザルト画面へ
 	if (player_->isAlive() == false)
 	{
-		AudioLoader::getInstance()->getSound( L"Sound/play4-dova.wav" )->stop();
+		AudioLoader::getInstance()->getSound(L"Sound/play4-dova.wav")->stop();
 		return new Result(ranking_->getRank(), *player_->getScore());
 	}
 
@@ -279,16 +291,24 @@ SceneBase* Endless::play()
     {
         player_->addScore( kOver );
         climb_ += kOver;
-	    adjustObjectPosition(kOver);
+	    adjustObjectPosition( kOver );
 
-        // スクロール閾値の変更( 難易度上昇 )
-        if( (climb_counter_ += kOver) >= kLevelUpThreshold )
+        // レベルアップ
+        if( level_ < kLevelMax && climb_ >= kLevelTable[level_ + 1U][kHeight] )
         {
-            climb_counter_ = 0.0F;
-            if( (scroll_threshold_ += 10.0F) > kScrollMax )
-            {
-                scroll_threshold_ = kScrollMax;
-            }
+            offset_ = kLevelTable[level_ + 1U][kThreshold] - scroll_threshold_;
+            offset_one_frame_ = offset_ / kDispTimeMSPF;
+        }
+
+
+        if( (std::abs(offset_) - std::abs(offset_one_frame_)) < 0.0F )
+        {
+            scroll_threshold_ += offset_ - offset_one_frame_;
+            offset_ = offset_one_frame_ = 0.0F;
+        }
+        else
+        {
+            scroll_threshold_ += offset_one_frame_;
         }
     }
 

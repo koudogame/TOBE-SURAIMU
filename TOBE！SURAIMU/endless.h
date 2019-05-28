@@ -52,7 +52,9 @@ private:
     Player* player_                 = nullptr;
     Wall* wall_                     = nullptr;
 
+    unsigned level_ = 0U;
     float scroll_threshold_ = 0.0F;
+    float offset_ = 0.0F;;
+    float offset_one_frame_ = 0.0F;
     float climb_ = 0.0F;
-    float climb_counter_ = 0.0F;
 };
