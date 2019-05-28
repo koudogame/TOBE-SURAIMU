@@ -21,7 +21,7 @@ bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming )
 		return false;
 
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
-	TaskManager::getInstance()->registerTask( this , TaskDraw::kDraw );
+	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 
 	position_ = Posit;
 	alpha_ = 1.0F;
