@@ -30,7 +30,7 @@ void ScoreNumber::update( const float DrawPositY )
 	if( position_.x > 300.0F - kNumWidth )
 	{
 		position_.x = 300.0F - kNumWidth;
-		alpha_ -= 0.01F;
+		alpha_ -= 0.005F;
 	}
 
 	position_.y = DrawPositY;
