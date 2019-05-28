@@ -7,10 +7,11 @@ const unsigned int kDownScore = 1;
 const unsigned int kTechniqueScore = 1000;
 const unsigned int kRotationScore = 100;
 const unsigned int kLengthScore = 100;
+const unsigned int kHeightScore = 10;
 const int kNumWidth = 20;
 const int kNumHeight = 32;
 const int kMinNumWidth = 11;
-const int kMinNumHeight = 15;
+const int kMinNumHeight = 20;
 
 Scoring::Scoring()
 {}
@@ -33,6 +34,8 @@ bool Scoring::init()
 	rotation_combo_ = 0;
 	technique_combo_ = 0;
 	spin_combo_pitch_ = 0.0F;
+	height_ = 0.0;
+	all_height_ = 0.0F;
 	scoring_flag_ = false;
 
 	combo_sound_ = AudioLoader::getInstance()->getSound( L"Sound/spincombo-dova.wav" );
@@ -45,7 +48,8 @@ void Scoring::update()
 	int itr_num = 0;
 	for( const auto& itr : addition_list_ )
 	{
-		itr.get()->update( 64.0F + itr_num * kMinNumHeight );
+		//マジックナンバー
+		itr.get()->update( 84.0F + itr_num * kMinNumHeight );
 
 		if( !itr.get()->isAlive() )
 			delete_flag_ = true;
@@ -61,10 +65,11 @@ void Scoring::update()
 void Scoring::draw()
 {
 	//トータルスコアの下地描画
+	//マジックナンバー
 	RECT trim{ 0,0,300,64 };
-	Sprite::getInstance()->draw( texture_ , Vector2::Zero , &trim , 1.0F , 0.9F );
+	Sprite::getInstance()->draw( texture_ , Vector2(10.0F,20.0F) , &trim , 1.0F , 0.9F );
 	//トータルスコアの描画
-	Vector2 draw_position( 225.0F , 12.0F );
+	Vector2 draw_position( 225.0F , 32.0F );
 	unsigned long long temp = score_;
 	do
 	{
@@ -92,8 +97,20 @@ void Scoring::addDefaultScore( const double AddScore )
 {
 	if( scoring_flag_ )
 	{
-		height_ += AddScore;
-		score_ += static_cast< int >( AddScore );
+		if( AddScore > 0.0F )
+		{
+			height_ += AddScore;
+			all_height_ += AddScore;
+		}
+		else
+		{
+			if( all_height_ > 0.0F )
+			{
+				createNumber( static_cast< unsigned int >( all_height_ ) *  kHeightScore );
+				score_ += static_cast< unsigned long long >( all_height_ ) * static_cast< unsigned long long >( kHeightScore );
+			}
+			all_height_ = 0.0F;
+		}
 	}
 }
 
@@ -107,8 +124,7 @@ void Scoring::addCombo()
 	if( scoring_flag_ )
 	{
 		combo_++;
-
-		score_ += combo_ * kComboScore;
+		score_ += static_cast< unsigned long long >( combo_ ) * static_cast< unsigned long long >( kComboScore );
 		createNumber( combo_ * kComboScore );
 	}
 
@@ -127,8 +143,8 @@ void Scoring::addTechnique()
 {
 	if( scoring_flag_ )
 	{
-		score_ += kTechniqueScore * static_cast< unsigned int >( std::pow( 2 , technique_combo_ ) );
-		createNumber( kTechniqueScore * static_cast< unsigned int >( std::pow( 2 , technique_combo_++ ) ) );
+		score_ += static_cast< unsigned long long >( kTechniqueScore ) * static_cast< unsigned long long >( ++technique_combo_ );
+		createNumber( kTechniqueScore * technique_combo_ );
 	}
 }
 
@@ -141,7 +157,7 @@ void Scoring::resettechnique()
 void Scoring::addDown()
 {
 	if( scoring_flag_ )
-		score_ += kDownScore;
+		score_ += static_cast< unsigned long long >( kDownScore );
 }
 
 //回転角加算
@@ -162,7 +178,7 @@ void Scoring::addRotate( float Angle )
 			combo_sound_->setPitch( spin_combo_pitch_ );
 			rotation_ = 0;
 			rotation_combo_++;
-			score_ += rotation_combo_ * kRotationScore;
+			score_ += static_cast< unsigned long long >( rotation_combo_ ) * static_cast< unsigned long long >( kRotationScore );
 			createNumber( rotation_combo_ * kRotationScore );
 		}
 	}
@@ -180,7 +196,7 @@ void Scoring::resetRotate()
 //星の距離で加点
 void Scoring::addLength( const float Length )
 {
-	score_ += static_cast< int >( Length * kLengthScore );
+	score_ += static_cast< unsigned long long >( static_cast< double >( Length ) * kLengthScore );
 	createNumber( static_cast< unsigned int >( Length * kLengthScore ) );
 }
 

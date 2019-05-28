@@ -288,8 +288,12 @@ SceneBase* Endless::play()
 	star_container_->update();
 
 	// 座標調整( スクロール )
-	const float kOver = scroll_threshold_ - player_->getPosition().y;
-	if( kOver > 0.0F )
+	float kOver = scroll_threshold_ - player_->getPosition().y;
+
+	if( kOver <= 0.0F )
+		kOver = 0.0F;
+
+	if( kOver >= 0.0F )
     {
         player_->addScore( kOver );
         climb_ += kOver;

@@ -8,7 +8,7 @@ public:
 	~GroundParticle();
 
 public:
-	bool init(const Vector2& Posit , const RECT& Triming , const float Angle );
+	bool init( const Vector2& Posit , const RECT& Triming , const float Angle , const float Scale );
 	void destroy() override;
 	void update()override;
 	void draw()override;
@@ -19,5 +19,6 @@ private:
 	RECT triming_;
 	float angle_;
 	float now_time_;
+	float scale_;
 };
 
