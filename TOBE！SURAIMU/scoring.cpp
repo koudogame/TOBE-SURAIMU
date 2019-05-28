@@ -11,7 +11,7 @@ const unsigned int kHeightScore = 10;
 const int kNumWidth = 20;
 const int kNumHeight = 32;
 const int kMinNumWidth = 11;
-const int kMinNumHeight = 15;
+const int kMinNumHeight = 20;
 
 Scoring::Scoring()
 {}

@@ -12,7 +12,7 @@ GroundParticle::GroundParticle()
 GroundParticle::~GroundParticle()
 {}
 
-bool GroundParticle::init( const Vector2 & Posit , const RECT & Triming , const float Angle )
+bool GroundParticle::init( const Vector2 & Posit , const RECT & Triming , const float Angle ,const float Scale)
 {
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
@@ -24,6 +24,7 @@ bool GroundParticle::init( const Vector2 & Posit , const RECT & Triming , const 
 	angle_ = Angle;
 	now_time_ = 0;
 	triming_ = Triming;
+	scale_ = Scale;
 
 	return true;
 }
@@ -42,7 +43,7 @@ void GroundParticle::update()
 
 void GroundParticle::draw()
 {
-	Sprite::getInstance()->draw( texture_ , position_ + velocity_ , &triming_ , 1.0F - now_time_ , 0.2F , Vector2(1.0F , 1.0F ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ + velocity_ , &triming_ , 1.0F - now_time_ , 0.2F , Vector2(scale_ , scale_ ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 }
 
 bool GroundParticle::isAlive()

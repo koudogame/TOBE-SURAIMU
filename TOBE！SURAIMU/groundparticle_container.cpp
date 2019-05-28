@@ -12,7 +12,7 @@ GroundParticleContainer::~GroundParticleContainer()
 {}
 
 //パーティクルの追加
-GroundParticle * GroundParticleContainer::addParticle(const Vector2 Position , const float Angle, NameSpaceParticle::ParticleID ID )
+GroundParticle * GroundParticleContainer::addParticle(const Vector2 Position , const float Angle, NameSpaceParticle::ParticleID ID,const float Scale )
 {
 	if( ID == NameSpaceParticle::ParticleID::kNonParticle )
 		return nullptr;
@@ -27,7 +27,7 @@ GroundParticle * GroundParticleContainer::addParticle(const Vector2 Position , c
 	trim.right = trim.left + kTextureSize;
 
 	//パーティクルの初期化
-	g_particle->init( Position , trim , Angle );
+	g_particle->init( Position , trim , Angle , Scale );
 
 	return g_particle;
 }

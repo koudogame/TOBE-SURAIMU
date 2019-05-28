@@ -450,11 +450,11 @@ bool Player::diedEffect()
 	if( !died_flag_ )
 	{
 		died_sound_->stop();
-		died_sound_->play( AudioContainer::Mode::kDefault );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 35 ) , NameSpaceParticle::ParticleID::kCyan );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 65 ) , NameSpaceParticle::ParticleID::kMagenta );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 95 ) , NameSpaceParticle::ParticleID::kWall );
-		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 125 ) , NameSpaceParticle::ParticleID::kYellow );
+		died_sound_->play( AudioContainer::Mode::kDefault                                         );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 45 ) , NameSpaceParticle::ParticleID::kCyan , 2.0F );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 75 ) , NameSpaceParticle::ParticleID::kMagenta , 2.0F );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 105 ) , NameSpaceParticle::ParticleID::kWall , 2.0F );
+		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 135 ) , NameSpaceParticle::ParticleID::kYellow , 2.0F );
 		died_flag_ = true;
 		score_.stop();
 		flag_.set( Flag::kJump );
