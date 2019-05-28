@@ -67,40 +67,28 @@ void RankingManager::registerScore(
     const double Height,
     const unsigned Combo)
 {
-    unsigned idx = 0U;
     // ランキング外
-    if( Score < ranking_[kRegisteredNum - 1].score ) { return; }
-    // 1位
-    if( Score >= ranking_[0].score ) { idx = 0U; }
-    // 最下位
-    else if( Score < ranking_[kRegisteredNum - 2U].score ) { idx = kRegisteredNum - 1U; }
+    if( Score < ranking_[kRegisteredNum - 1U].score ) { return; }
     // ランクイン
     else
     {
-        // 挿入順位を検索する( 2分探索 )
-        unsigned range_size = kRangeOfStart;
-        idx = kRangeOfStart;
-        while( range_size > 1U )
+        unsigned idx = 0U;
+
+        // 引数のスコア以下の位置まで進める
+        for( ; idx < kRegisteredNum; ++idx )
         {
-            range_size  = (range_size + 1U) / 2U;
-            if( Score >= ranking_[idx].score )
-            {
-                if( range_size > idx ) { idx = 0U; }
-                else                   { idx -= range_size; }
-            }
-            else
-            {
-                idx += range_size;
-                if( idx >= kRegisteredNum) { idx = kRegisteredNum; }
-            }
+            if( Score >= ranking_[idx].score ) { break; }
+        }
+
+        // 登録する
+        ranking_.pop_back(); // 最下位をはじき出す
+        ranking_.insert( ranking_.begin() + idx,
+                         Data{ idx, Player, Score, Height, Combo } );
+
+        // プレイヤー以下の順位を下げる
+        for( ; idx < kRegisteredNum; ++idx )
+        {
+            ++ranking_[idx].rank;
         }
     }
-
-    // ランキングに登録する
-    ranking_.insert( ranking_.begin() + idx, Data{idx + 1U, Player, Score, Height, Combo} );
-    for (++idx; idx < kRegisteredNum; ++idx)
-    {
-        ++ranking_[idx].rank;
-    }
-    ranking_.pop_back(); // 最下位は弾き出す
 }

@@ -185,8 +185,11 @@ void drawData(
     const RECT* const TrimminaBar,
     const float Alpha)
 {
-    Text::drawNumber( Data.rank,
+    if( Data.rank <= kRegisteredNum )
+    {
+        Text::drawNumber( Data.rank,
                       Number, Position, kTextNumberWidth, kTextHeight, 1U, Alpha);
+    }
 
     Position.x += kTextStringWidth * 2L;
     Text::drawString( Data.name,

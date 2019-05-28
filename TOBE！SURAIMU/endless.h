@@ -52,6 +52,7 @@ private:
     Player* player_                 = nullptr;
     Wall* wall_                     = nullptr;
 
+    bool is_pause_ = false;
     unsigned level_ = 0U;
     float scroll_threshold_ = 0.0F;
     float offset_ = 0.0F;;

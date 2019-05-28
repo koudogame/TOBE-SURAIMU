@@ -121,6 +121,7 @@ bool Endless::init()
 
 	// •Ï”‰Šú‰»
 	update_ = &Endless::start;
+    is_pause_ = false;
     level_ = 0U;
     scroll_threshold_ = kLevelTable[0U][kThreshold];
     offset_ = 0.0F;
@@ -230,6 +231,7 @@ SceneBase* Endless::start()
     // ƒ|[ƒY‰æ–Ê‚Ö
     if( key.pressed.P || pad.start == PadTracker::PRESSED )
     {
+        is_pause_ = true;
         pause_->reset();
         TaskManager::getInstance()->pause();
         update_ = &Endless::pause;
@@ -344,7 +346,8 @@ SceneBase* Endless::pause()
         kTaskManager->restart();
         clock_->restart();
 
-        update_ = &Endless::play;
+        update_ = is_pause_ ? &Endless::start : &Endless::play;
+        is_pause_ = false;
     }
 
     switch( pause_->update() )
@@ -352,7 +355,9 @@ SceneBase* Endless::pause()
     case Pause::kContinue :
         kTaskManager->restart();
         clock_->restart();
-        update_ = &Endless::play;   break;
+        update_ = is_pause_ ? &Endless::start : &Endless::play;
+        is_pause_ = false;
+        break;
 
     case Pause::kRestart  :
         kTaskManager->restart();
