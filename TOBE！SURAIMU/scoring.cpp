@@ -127,8 +127,8 @@ void Scoring::addTechnique()
 {
 	if( scoring_flag_ )
 	{
-		score_ += kTechniqueScore * ++technique_combo_;
-		createNumber( kTechniqueScore * technique_combo_ );
+		score_ += kTechniqueScore * static_cast< unsigned int >( std::pow( 2 , technique_combo_ ) );
+		createNumber( kTechniqueScore * static_cast< unsigned int >( std::pow( 2 , technique_combo_++ ) ) );
 	}
 }
 
