@@ -55,7 +55,7 @@ void FreeFallParticle::draw()
 
 bool FreeFallParticle::isAlive()
 {
-	if( alpha_ <= 0.F )
+	if( alpha_ <= 0.0F )
 		return false;
 
 	return true;

@@ -67,6 +67,13 @@ bool Game::init()
 		trimming.right += kBackgroundSize;
 	}
 
+	RECT trim;
+	trim.bottom = 4096;
+	trim.right = 4096;
+	trim.left = trim.right - 1024;
+	trim.top = trim.bottom - 1024;
+	background_container_.get()->addBackground( trim , 20.0F );
+
     backobject_container_->addBackObject( kTrimmingBackObject[rand() % 3], -0.5F, 0.1F, kBackobjectDrawDepth );
 
 	return true;

@@ -44,6 +44,7 @@ bool Title::init()
 	object_status_[ ObjectNum::kRogo ].position = Vector2::Zero;
 	object_status_[ ObjectNum::kRogo ].trim = trim;
 	//カーソル
+	//マジックナンバー
 	trim.top = trim.bottom;
 	trim.bottom += kMenuSize;
 	trim.right = kMenuSize * 2;
@@ -52,6 +53,7 @@ bool Title::init()
 	object_status_[ ObjectNum::kCusur ].trim = trim;
 
 	//初期の星１
+	//マジックナンバー
 	trim.left = 150L;
 	trim.top = 0L;
 	trim.right = trim.left + 226L;
@@ -61,6 +63,7 @@ bool Title::init()
 	object_status_[ ObjectNum::kStar1 ].trim = trim;
 
 	//初期の星2
+	//マジックナンバー
 	trim.left = 150L + 226L;
 	trim.top = 0L;
 	trim.right = trim.left + 300L;
@@ -70,6 +73,7 @@ bool Title::init()
 	object_status_[ ObjectNum::kStar2 ].trim = trim;
 
 	//プレイヤー
+	//マジックナンバー
 	CsvLoader file( L"State/player_state.csv" );
 	trim.left = 0;
 	trim.top = 0;

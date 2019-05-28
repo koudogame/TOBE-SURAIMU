@@ -48,7 +48,8 @@ void Scoring::update()
 	int itr_num = 0;
 	for( const auto& itr : addition_list_ )
 	{
-		itr.get()->update( 64.0F + itr_num * kMinNumHeight );
+		//マジックナンバー
+		itr.get()->update( 84.0F + itr_num * kMinNumHeight );
 
 		if( !itr.get()->isAlive() )
 			delete_flag_ = true;
@@ -64,10 +65,11 @@ void Scoring::update()
 void Scoring::draw()
 {
 	//トータルスコアの下地描画
+	//マジックナンバー
 	RECT trim{ 0,0,300,64 };
-	Sprite::getInstance()->draw( texture_ , Vector2::Zero , &trim , 1.0F , 0.9F );
+	Sprite::getInstance()->draw( texture_ , Vector2(10.0F,20.0F) , &trim , 1.0F , 0.9F );
 	//トータルスコアの描画
-	Vector2 draw_position( 225.0F , 12.0F );
+	Vector2 draw_position( 225.0F , 32.0F );
 	unsigned long long temp = score_;
 	do
 	{
