@@ -217,7 +217,6 @@ SceneBase * Title::rankingScene()
 {
 	volume_ -= 0.01F;
 	scene_se_->setVolume( volume_ );
-	title_bgm_->setVolume( volume_ );
 	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		object_status_[ i ].alpha = volume_;
 

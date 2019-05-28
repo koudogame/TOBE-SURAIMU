@@ -88,6 +88,12 @@ bool Ranking::init()
     magnification_ = 1.0F;
     offset_ = 0.0F;
 
+	//サウンドの読み込み
+	select_se_[ 0 ] = AudioLoader::getInstance()->getSound( L"Sound/select1-dova.wav" );
+	select_se_[ 1 ] = AudioLoader::getInstance()->getSound( L"Sound/select2-dova.wav" );
+	scene_se_ = AudioLoader::getInstance()->getSound( L"Sound/scene1-dova.wav" );
+	sound_flag_ = false;
+
     return true;
 }
 
@@ -120,6 +126,9 @@ SceneBase* Ranking::update()
     {
         magnification_ = 1.0F;
         addOffset( &offset_, -kLineHeight );
+		select_se_[ 0 ]->setPitch( 1.0F );
+		select_se_[ 0 ]->play( AudioContainer::Mode::kDefault , true );
+		sound_flag_ = false;
     }
     // 下新規入力時、1列分下へスクロール
     else if( key_tracker.pressed.Down ||
@@ -127,12 +136,16 @@ SceneBase* Ranking::update()
     {
         magnification_ = 1.0F;
         addOffset( &offset_, kLineHeight );
+		select_se_[ 0 ]->setPitch( 1.0F );
+		select_se_[ 0 ]->play( AudioContainer::Mode::kDefault , true );
+		sound_flag_ = false;
     }
     // 上長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
     else if( key_state.Up || pad_state.IsLeftThumbStickUp() )
     {
         addOffset( &offset_, -kOffset * magnification_ );
         addMagnification( &magnification_ );
+
     }
     // 下長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
     else if( key_state.Down || pad_state.IsLeftThumbStickDown() )
@@ -143,9 +156,26 @@ SceneBase* Ranking::update()
     // Enterかaボタンが離されたら決定
     else if(key_tracker.released.Enter || pad_tracker.a ==PadTracker::RELEASED)
     {
+		select_se_[ 1 ]->stop();
+		scene_se_->stop();
+		select_se_[ 1 ]->play( AudioContainer::Mode::kDefault );
+		scene_se_->play( AudioContainer::Mode::kDefault );
         return new Title();
     }
+	else
+	{
+		select_se_[ 0 ]->stop();
+		sound_flag_ = false;
+	}
 
+
+	if( (offset_ == kOffsetMax || offset_ == 0.0F) && !sound_flag_)
+	{
+		select_se_[ 0 ]->stop();
+		select_se_[ 0 ]->setPitch( -1.0F );
+		select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
+		sound_flag_ = true;
+	}
 
     return this;
 }
@@ -222,6 +252,6 @@ void addOffset( float* const Val, const float Add )
 {
     *Val += Add;
 
-    if( *Val > kOffsetMax ) { *Val = kOffsetMax; }
+	if( *Val > kOffsetMax ) { *Val = kOffsetMax;}
     else if( *Val < 0.0F )  { *Val = 0.0F; }
 }
