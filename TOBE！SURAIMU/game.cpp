@@ -89,6 +89,7 @@ bool Game::update()
 {
 	TaskManager::getInstance()->allUpdate();
 	//オブジェクトの更新
+    backobject_container_->update();
     if( backobject_container_->empty() )
     {
         backobject_container_->addBackObject(
@@ -96,7 +97,7 @@ bool Game::update()
             kBackobjectMoveX, kBackobjectMoveY, kBackobjectDrawDepth);
 
     }
-    if( backobject_container_->active().size() <= 5 )
+    if( !(rand() % 1000) && backobject_container_->active().size() <= 5 )
     {
         backobject_container_->addBackObject(
             kTrimmingBackObject[0],
@@ -136,5 +137,6 @@ void Game::draw()
 void Game::destroy()
 {
 	background_container_.get()->destroy();
+    backobject_container_.get()->destroy();
 	scene_->destroy();
 }

@@ -315,7 +315,7 @@ SceneBase* Result::setName()
     PadTracker pad_tracker = Pad::getInstance()->getTracker();
 
     // Œˆ’è
-    if( key_tracker.pressed.Space || pad_tracker.a == PadTracker::PRESSED )
+    if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
     {
 		decision_se_->resetPitch();
 		decision_se_->stop();
@@ -399,7 +399,7 @@ SceneBase* Result::selectNext()
     PadTracker pad_tracker = Pad::getInstance()->getTracker();
 
     // Œˆ’è
-    if( key_tracker.pressed.Space || pad_tracker.a == PadTracker::PRESSED )
+    if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
     {
 		decision_se_->resetPitch();
 		decision_se_->stop();
