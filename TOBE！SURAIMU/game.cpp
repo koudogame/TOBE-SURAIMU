@@ -82,7 +82,7 @@ bool Game::update()
         backobject_container_->addBackObject(kTrimmingBackObject[rand() % 2 + 1], -0.5F, 0.1F, kBackobjectDrawDepth);
 
     }
-    if( rand() % 500 == 0 )
+    if( backobject_container_->active().size() <= 5 )
         backobject_container_->addBackObject(kTrimmingBackObject[0], -0.5F, 0.1F, kBackobjectDrawDepth);
   
 
