@@ -10,12 +10,12 @@
 //’è”
 const int kStarMin = 60;
 const int kStarDifference = 30;
-const float kMinSpin = 0.5F;
+const float kMinSpin = 1.0F;
 const float kMaxSpin[ 3 ] =
 {
 	3.0F,
-	5.0F,
-	10.0F
+	6.0F,
+	9.0F
 };
 const int kParticleTime = 3;
 const float kFallSpeed = 2.0F;
@@ -119,16 +119,16 @@ void Star::setFall()
 
 void Star::collision(Player* P)
 {
-	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , ( P->getMove()->start.x - position_.x ) );
-	float new_angle = std::atan2( -( P->getMove()->end.y - position_.y ) , ( P->getMove()->end.x - position_.x ) );
-	int signal = ( int ) std::copysign( 1.0F , new_angle - old_angle );
+	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , ( P->getMove()->start.x - position_.x ) ) + XM_PI;
+	float new_angle = std::atan2( -( P->getMove()->end.y - position_.y ) , ( P->getMove()->end.x - position_.x ) ) + XM_PI;
+	int signal = static_cast< int >( std::copysign( 1.0F , new_angle - old_angle ) );
 	turn_ = signal;
 
 	spin_ += turn_ * rate_ * std::abs( Calc::cross( P->getMove()->end - P->getMove()->start , P->getShape()->position - position_ ) );
 	if( std::abs( spin_ ) < kMinSpin )
 		spin_ = kMinSpin * turn_;
-	else if( std::abs( spin_ ) > kMaxSpin[id_] )
-		spin_ = kMaxSpin[id_] * turn_;
+	else if( std::abs( spin_ ) > kMaxSpin[ id_ ] )
+		spin_ = kMaxSpin[ id_ ] * turn_;
 
 	particle_time_ = 0;
 }
