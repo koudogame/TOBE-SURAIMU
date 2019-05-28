@@ -261,7 +261,7 @@
       <Filter>Project\Game\Others\Pause</Filter>
     </ClCompile>
     <ClCompile Include="score_number.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\Game\Others\Scoring</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -297,9 +297,6 @@
     </ClInclude>
     <ClInclude Include="object_base.h">
       <Filter>Project\Game\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="scene_base.h">
-      <Filter>Project\Game\Scene</Filter>
     </ClInclude>
     <ClInclude Include="collision.h">
       <Filter>Project\Game\Others\Collision</Filter>
@@ -426,7 +423,10 @@
     <ClInclude Include="pause.h">
       <Filter>Project\Game\Others\Pause</Filter>
     </ClInclude>
-    <ClInclude Include="score_number.h" />
+    <ClInclude Include="score_number.h">
+      <Filter>Project\Game\Others\Scoring</Filter>
+    </ClInclude>
+    <ClInclude Include="scene_base.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

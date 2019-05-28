@@ -294,6 +294,7 @@ void Player::input()
 			bottom_input_ = kBottomOn;
 			score_.addDown();
 			score_.resetCombo();
+			flag_.reset( Flag::kStarCollision );
 		}
 		else
 			bottom_input_ = kBottomOff;

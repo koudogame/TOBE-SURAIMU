@@ -70,6 +70,8 @@ private:
 
 	Numbers<unsigned int> combo_draw_;
 
+	float all_height_;
+
 	std::list<std::shared_ptr<ScoreNumber>> addition_list_;
 
 private:
