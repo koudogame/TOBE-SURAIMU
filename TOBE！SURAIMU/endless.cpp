@@ -40,7 +40,7 @@ constexpr unsigned kThreshold = 1U;
 constexpr unsigned kLevelMax = 2U;
 constexpr float kLevelTable[][2] = {
     {      0.0F, getWindowHeight<float>() * 0.25F },
-    {   1000.0F, getWindowHeight<float>() * 0.35F },
+    {   1000.0F, getWindowHeight<float>() * 0.50F },
     {   5000.0F, getWindowHeight<float>() * 0.50F },
     { 100000.0F, getWindowHeight<float>() * 0.75F }
 };

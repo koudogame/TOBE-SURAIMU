@@ -79,10 +79,10 @@ bool Game::update()
 	//オブジェクトの更新
     if( backobject_container_->empty() )
     {
-        backobject_container_->addBackObject(kTrimmingBackObject[rand() % 2 + 1], 1.0F, 1.5F, kBackobjectDrawDepth);
+        backobject_container_->addBackObject(kTrimmingBackObject[rand() % 2 + 1], -0.5F, 0.1F, kBackobjectDrawDepth);
 
     }
-    if( rand() % 1000 == 0 )
+    if( rand() % 500 == 0 )
         backobject_container_->addBackObject(kTrimmingBackObject[0], -0.5F, 0.1F, kBackobjectDrawDepth);
   
 
