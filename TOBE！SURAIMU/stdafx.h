@@ -34,13 +34,13 @@ using namespace DirectX;
 using namespace SimpleMath;
 
 template <typename T>
-inline T getWindowWidth()
+inline constexpr T getWindowWidth()
 {
 	return static_cast<T>(1280);
 }
 
 template <typename T>
-inline T getWindowHeight()
+inline constexpr T getWindowHeight()
 {
 	return static_cast<T>(720);
 }

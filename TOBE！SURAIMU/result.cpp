@@ -335,7 +335,7 @@ SceneBase* Result::setName()
         {
             // Ÿ‚Ì•¶š‚ğ'A'‚Å‰Šú‰»
             ++index_name_;
-            index_char_ = 10;
+            index_char_ = kCharNum - 1;
             name_[index_name_] = kCharTable[index_char_];
 
         }

@@ -52,6 +52,7 @@ private:
     Player* player_                 = nullptr;
     Wall* wall_                     = nullptr;
 
-    float magnification_ = 1.0F;
+    float scroll_threshold_ = 0.0F;
     float climb_ = 0.0F;
+    float climb_counter_ = 0.0F;
 };

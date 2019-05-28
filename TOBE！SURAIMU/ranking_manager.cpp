@@ -50,7 +50,7 @@ RankingManager::~RankingManager()
             fprintf_s( file,
                 "%s %llu %lf %u \n",
                 ranking_[i].name.c_str(),
-                ranking_[i].score,
+                0ULL,
                 ranking_[i].height,
                 ranking_[i].combo);
         }

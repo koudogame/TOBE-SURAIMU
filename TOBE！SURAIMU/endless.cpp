@@ -33,6 +33,8 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
 // 難易度に関係
+constexpr float kScrollMax = getWindowHeight<float>() * 0.75F;
+constexpr float kLevelUpThreshold = 1000.0F;
 constexpr Vector2 kInitStarPosi[]   = {
     {640.0F, 600.0F},
     {810.0F, 100.0F},
@@ -42,8 +44,6 @@ constexpr float kInitStarFall[]     = { 2.0F,1.0F, };
 constexpr float kInitStarSpin[]     = { 3.0F,3.0F, };
 constexpr float kInitStarSpinRate[] = { 0.001F,0.005F, };
 constexpr float kInitStarSize[]     = { 90.0F,120.0F, };
-
-constexpr float kThresholdY = 500.0F;       // スクロール閾値
 
 
 /*===========================================================================*/
@@ -112,8 +112,9 @@ bool Endless::init()
 
 	// 変数初期化
 	update_ = &Endless::start;
-	magnification_ = 1.0F;
+    scroll_threshold_ = getWindowHeight<float>() * 0.25F;
 	climb_ = 0.0F;
+    climb_counter_ = 0.0F;
 
 	clock_->start();
 
@@ -273,24 +274,29 @@ SceneBase* Endless::play()
 	star_container_->update();
 
 	// 座標調整( スクロール )
-	const float kOver = kThresholdY - player_->getPosition().y;
+	const float kOver = scroll_threshold_ - player_->getPosition().y;
 	if( kOver > 0.0F )
     {
         player_->addScore( kOver );
         climb_ += kOver;
+	    adjustObjectPosition(kOver);
+
+        // スクロール閾値の変更( 難易度上昇 )
+        if( (climb_counter_ += kOver) >= kLevelUpThreshold )
+        {
+            climb_counter_ = 0.0F;
+            if( (scroll_threshold_ += 10.0F) > kScrollMax )
+            {
+                scroll_threshold_ = kScrollMax;
+            }
+        }
     }
-	adjustObjectPosition(kOver);
+
+    
 
 	ranking_->setScore( player_->getScore()->getScore() );
 
-	// オブジェクトの状態倍率を更新
-	const float kMagnification = climb_ / 100000.0F + 1.0F;
-	if ((kMagnification - magnification_) > 0.1F)
-	{
-		magnification_ = kMagnification - magnification_ + 1.0F;
-		player_->resetStatus(magnification_);
-		star_container_->resetStates(magnification_);
-	}
+
 
 	// 衝突処理
 	Collision* const kCollision = Collision::getInstance();
