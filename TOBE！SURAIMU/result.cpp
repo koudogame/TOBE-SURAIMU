@@ -160,7 +160,7 @@ void Result::draw()
     // îwåi
 	kSprite->draw( texture_,
                    position_base_ + kPositionFromBase[kPosBackground],
-				   &kTrimming[ kTrmBackground ] , alpha_ , 1.0F );
+				   &kTrimming[ kTrmBackground ] , alpha_ , 0.9F );
 
     // ÉXÉRÉA
     Text::drawNumber( score_.getScore(),
