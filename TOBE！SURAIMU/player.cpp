@@ -321,17 +321,17 @@ void Player::input()
 			{
 				sound_[ 0 ]->stop();
 				sound_[ 0 ]->play( AudioContainer::Mode::kDefault );
+				flag_.set( Flag::kJump );
+				flag_.set( Flag::kStarCollision );
+				flag_.reset( Flag::kParticle );
+				direction_id_ = Direction::kFlay;
+				particle_time_ = 0;
+				now_amount_ = 0.0F;
+				jumping_angle_ = gravity_angle_ + XM_PI;
+				ground_ = &kGround;
+				prev_jump_moveamount_ = 0;
+				score_.resetRotate();
 			}
-			flag_.set( Flag::kJump );
-			flag_.set( Flag::kStarCollision );
-			flag_.reset( Flag::kParticle );
-			direction_id_ = Direction::kFlay;
-			particle_time_ = 0;
-			now_amount_ = 0.0F;
-			jumping_angle_ = gravity_angle_ + XM_PI;
-			ground_ = &kGround;
-			prev_jump_moveamount_ = 0;
-			score_.resetRotate();
 		}
 		flag_.reset( Flag::kBoost );
 	}

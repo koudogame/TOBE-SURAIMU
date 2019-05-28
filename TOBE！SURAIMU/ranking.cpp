@@ -127,6 +127,7 @@ SceneBase* Ranking::update()
         magnification_ = 1.0F;
         addOffset( &offset_, -kLineHeight );
 		select_se_[ 0 ]->setPitch( 1.0F );
+		select_se_[ 0 ]->stop();
 		select_se_[ 0 ]->play( AudioContainer::Mode::kDefault , true );
 		sound_flag_ = false;
     }
@@ -137,6 +138,7 @@ SceneBase* Ranking::update()
         magnification_ = 1.0F;
         addOffset( &offset_, kLineHeight );
 		select_se_[ 0 ]->setPitch( 1.0F );
+		select_se_[ 0 ]->stop();
 		select_se_[ 0 ]->play( AudioContainer::Mode::kDefault , true );
 		sound_flag_ = false;
     }
@@ -172,7 +174,7 @@ SceneBase* Ranking::update()
 	if( (offset_ == kOffsetMax || offset_ == 0.0F) && !sound_flag_)
 	{
 		select_se_[ 0 ]->stop();
-		select_se_[ 0 ]->setPitch( -1.0F );
+		select_se_[ 0 ]->setPitch( -0.5F );
 		select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
 		sound_flag_ = true;
 	}
