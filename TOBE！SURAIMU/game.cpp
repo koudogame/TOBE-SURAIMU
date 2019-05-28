@@ -18,16 +18,13 @@ constexpr RECT kTrimmingBackground{         // 背景切り取り範囲
 constexpr RECT kTrimmingEffect{             // 背景エフェクト切り取り範囲
 	0L, 3184L, 1280L, 3904L };
 
-constexpr float kBackgroundSpeed[] = { 0.2F, 0.4F, 1.0F, 0.6F, };
+constexpr float kBackgroundSpeed[]     = { 0.2F, 0.4F, 1.0F, 0.6F, };
 constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.01F, 0.03F, 0.02F, };
-constexpr RECT kTrimmingBackObject[] = {
-	{ 0L, 0L, 1024L, 1024L},
-	{ 0L, 0L, 1024L, 1024L},
-};
-const wchar_t* kBackObjectTexture[] = {
-	{L"Texture/roop1.png"},
-	{L"Texture/roop2.png"},
-	{L"Texture/roop3.png"},
+constexpr float kBackobjectDrawDepth   =  0.05F;
+constexpr RECT kTrimmingBackObject[]   = {
+	{ 0L, 0L, 4096L, 800L},
+	{ 800L, 0L, 4096L, 1800L},
+	{ 1800L, 0L, 4096L, 2800L},
 };
 
 //コンストラクタ
@@ -53,6 +50,7 @@ bool Game::init()
 	texture_ = TextureLoder::getInstance()->load( L"Texture/Background.png" );
 
 	background_container_ = std::make_unique<BackgroundContainer>();
+    backobject_container_ = std::make_unique<BackObjectContainer>();
 
 	// 背景の追加
 	RECT trimming = kTrimmingBackground;
@@ -69,6 +67,8 @@ bool Game::init()
 		trimming.right += kBackgroundSize;
 	}
 
+    backobject_container_->addBackObject( kTrimmingBackObject[rand() % 3], -0.5F, 0.1F, kBackobjectDrawDepth );
+
 	return true;
 }
 
@@ -77,6 +77,14 @@ bool Game::update()
 {
 	TaskManager::getInstance()->allUpdate();
 	//オブジェクトの更新
+    if( backobject_container_->empty() )
+    {
+        backobject_container_->addBackObject(kTrimmingBackObject[rand() % 2 + 1], 1.0F, 1.5F, kBackobjectDrawDepth);
+
+    }
+    if( rand() % 1000 == 0 )
+        backobject_container_->addBackObject(kTrimmingBackObject[0], -0.5F, 0.1F, kBackobjectDrawDepth);
+  
 
 
 	SceneBase* temp = scene_->update();

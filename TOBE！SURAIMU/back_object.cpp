@@ -34,7 +34,7 @@ bool BackObject::init(const RECT& Trimming,
     created_ = true;
 
     // ¶¬ˆ—
-    texture_ = TextureLoder::getInstance()->load(L"Texture/roop1.png");
+    texture_ = TextureLoder::getInstance()->load(L"Texture/back_wave.png");
     if (texture_ == nullptr) { return false; }
 
     TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackgroundUpdate);
@@ -126,7 +126,7 @@ void BackObject::reset(const RECT& Trimming,
     const float Depth)
 {
     position_.x    = getWindowWidth<float>();// / 2.0F;
-    position_.y    = -kTextureHeight;
+    position_.y    = (Trimming.bottom - Trimming.top) * -1.0F;
     trimming_      = Trimming;
     scroll_x_      = ScrollX;
     scroll_y_      = ScrollY;
