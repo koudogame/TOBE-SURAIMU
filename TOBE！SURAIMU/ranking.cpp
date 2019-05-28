@@ -8,8 +8,12 @@
 #include "key.h"
 #include "pad.h"
 
+#include "ranking_manager.h"
+#include "text.h"
+
 #include "title.h"
 
+typedef unsigned long long ULL;
 
 using KeyState = Keyboard::State;
 using KeyTracker = Keyboard::KeyboardStateTracker;
@@ -20,13 +24,36 @@ void addMagnification(float* const Val);
 void addOffset(float* const Val, const float AddVal);
 
 /*===========================================================================*/
-constexpr float kLineHeight = 25.0F;
-constexpr float kMagnification = 0.1F;
+constexpr float kLineHeight       = 20.0F;
+constexpr float kMagnification    = 0.1F;
 constexpr float kMagnificationMax = 2.0F;
-constexpr float kOffset = 5.0F;
-constexpr float kOffsetMax = 100.0F;
-const RECT kTrimmingBackground{
-    0L, 0L, getWindowWidth<long>(), getWindowHeight<long>() };
+constexpr float kOffset           = 5.0F;
+constexpr float kOffsetMax        = 1580.0F;
+constexpr float kFieldMax         = 640.0F;
+constexpr long kCharWidth         = 12L;
+constexpr long kCharHeight        = 16L;
+constexpr long kNumWidth          = 11L;
+constexpr long kNumHeight         = 15L;
+constexpr unsigned kScoreDigits   = 10U;
+constexpr unsigned kHeightDigits  = 6U;
+constexpr unsigned kComboDigits   = 2U;
+
+enum { kRank, kName, kScore, kHeight, kCombo, };
+constexpr float kCoordinateX[] = {
+    390.0F, 430.0F, 535.0F, 680.0F, 778.0F
+};
+
+enum { kFrame, kBack, kField };
+constexpr Vector2 kPosition[] = {
+    { 120.0F,  21.0F },
+    { 370.0F,  43.0F },
+    { 650.0F, 200.0F },
+};
+const RECT kTrimming[] = {
+    {    0L,    0L, 1133L,  678L },
+    { 1133L,    0L, 1674L,  635L },
+    {    0L,  678L,  196L,   690L },
+};
 
 
 /*===========================================================================*/
@@ -48,8 +75,13 @@ bool Ranking::init()
 
 
     // テクスチャ読み込み
-    texture_ = TextureLoder::getInstance()->load(L"Texture/title.png");
+    TextureLoder* kLoader = TextureLoder::getInstance();
+    texture_ = kLoader->load(L"Texture/ranking.png");
     if( texture_ == nullptr ) { return false; }
+    texture_numbers_ = kLoader->load(L"Texture/rank_number.png");
+    if( texture_numbers_ == nullptr ) {return false; }
+    texture_characters_ = kLoader->load(L"Texture/rank_name.png");
+    if( texture_characters_ == nullptr ) { return false; }
 
 
     // メンバ初期化
@@ -67,7 +99,10 @@ void Ranking::destroy()
     created_ = false;
 
     // テクスチャ開放
-    TextureLoder::getInstance()->release( texture_ );
+    TextureLoder* kLoader = TextureLoder::getInstance();
+    kLoader->release( texture_characters_);
+    kLoader->release( texture_numbers_);
+    kLoader->release( texture_ );
 }
 
 /*===========================================================================*/
@@ -119,10 +154,59 @@ SceneBase* Ranking::update()
 // 描画処理
 void Ranking::draw()
 {
-    // 背景の描画
-    Sprite::getInstance()->draw(texture_, Vector2::Zero, &kTrimmingBackground);
+    Sprite* const kSprite = Sprite::getInstance();
+
+    // バックの描画
+    kSprite->draw( texture_, kPosition[kBack], &kTrimming[kBack], 1.0F, 1.0F );
 
     // ランキングの描画
+    RankingManager* const kRanking = RankingManager::getInstance();
+    RankingManager::Data data;
+    Vector2 position(0.0F, 200.0F);
+    position.y -= offset_;
+    for( unsigned rank = 1U; rank <= kRegisteredNum;
+                                            ++rank, position.y += kLineHeight )
+    {
+        if( position.y < kPosition[kField].y ) { continue; }
+        if( position.y > kFieldMax )           { break; }
+
+        data = kRanking->getData( rank );
+
+        // フィールド
+        position.x = kPosition[kField].x;
+        kSprite->draw( texture_, position, &kTrimming[kField], 1.0F, 1.0F );
+
+        // ランク
+        position.x = kCoordinateX[kRank] + kNumWidth * 
+                            ( rank > 99U ? 3.0F : (rank > 9U ? 2.5F :  2.0F) );
+        Text::drawNumber( rank, texture_numbers_, position,
+                          kNumWidth, kNumHeight );
+
+        // 名前
+        position.x = kCoordinateX[kName];
+        Text::drawString( data.name, texture_characters_, position,
+                          kCharWidth, kCharHeight );
+
+        // スコア
+        position.x = kCoordinateX[kScore] + kNumWidth * kScoreDigits;
+        Text::drawNumber( data.score, texture_numbers_, position,
+                          kNumWidth, kNumHeight, kScoreDigits );
+
+        // 高さ
+        position.x = kCoordinateX[kHeight] + kNumWidth * kHeightDigits;
+        Text::drawNumber( static_cast<ULL>(data.height), texture_numbers_,
+                          position,
+                          kNumWidth, kNumHeight );
+
+        // コンボ
+        position.x = kCoordinateX[kCombo] + kNumWidth * kComboDigits;
+        Text::drawNumber( data.combo, texture_numbers_, position,
+                         kNumWidth, kNumHeight );
+    }
+
+
+    // フレームの描画
+    kSprite->draw(texture_, kPosition[kFrame], &kTrimming[kFrame], 1.0F, 0.0F);
 }
 
 

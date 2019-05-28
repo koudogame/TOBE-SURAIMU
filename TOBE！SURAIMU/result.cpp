@@ -24,15 +24,15 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 
 /*===========================================================================*/
-constexpr unsigned kFrameWait     = 10U;
-constexpr long kMiniNumbersWidth  = 11U;
-constexpr long kMiniNumbersHeight = 15L;
-constexpr long kNumbersWidth      = 20L;
-constexpr long kNumbersHeight     = 32L;
-constexpr long kMiniCharacterWidth = 12L;
+constexpr unsigned kFrameWait       = 10U;
+constexpr long kMiniNumbersWidth    = 11U;
+constexpr long kMiniNumbersHeight   = 15L;
+constexpr long kNumbersWidth        = 20L;
+constexpr long kNumbersHeight       = 32L;
+constexpr long kMiniCharacterWidth  = 12L;
 constexpr long kMiniCharacterHeight = 16L;
-constexpr long kCharacterWidth    = 21L;
-constexpr long kCharacterHeight   = 32L;
+constexpr long kCharacterWidth      = 21L;
+constexpr long kCharacterHeight     = 32L;
 enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankIn };
 const RECT kTrimming[] = 
 {
@@ -324,7 +324,7 @@ SceneBase* Result::setName()
         name_[index_name_] = kCharTable[index_char_];
 
         // –¼‘OãŒÀ‚©A2•¶Žš–ÚˆÈ~‚É' '‚ª“ü—Í‚³‚ê‚½‚çˆ—‚ð•ÏX
-        if( (index_name_ >= kNameMax) ||
+        if( (index_name_ + 1U >= kNameMax) ||
             (kCharTable[index_char_] == ' ' && index_name_ != 0) )
         {
             ++select_;

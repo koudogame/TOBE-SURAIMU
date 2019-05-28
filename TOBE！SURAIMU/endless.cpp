@@ -110,11 +110,10 @@ bool Endless::init()
 	if (wall_->init() == false) { return false; }
 
 
-
 	// •Ï”‰Šú‰»
 	update_ = &Endless::start;
-	climb_ = 0.0F;
 	magnification_ = 1.0F;
+	climb_ = 0.0F;
 
 	clock_->start();
 

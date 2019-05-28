@@ -21,6 +21,8 @@ public:
 
 private:
     bool created_ = false;
+    ID3D11ShaderResourceView* texture_numbers_ = nullptr;
+    ID3D11ShaderResourceView* texture_characters_ = nullptr;
 
     float magnification_ = 1.0F;
     float offset_ = 0.0F;
