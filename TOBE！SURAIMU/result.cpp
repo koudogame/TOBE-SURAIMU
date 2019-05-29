@@ -25,16 +25,20 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 
 /*===========================================================================*/
-const int kShowNum                  = 11U;
-constexpr unsigned kFrameWait       = 10U;
-constexpr long kMiniNumbersWidth    = 11U;
-constexpr long kMiniNumbersHeight   = 15L;
-constexpr long kNumbersWidth        = 20L;
-constexpr long kNumbersHeight       = 32L;
-constexpr long kMiniCharacterWidth  = 12L;
-constexpr long kMiniCharacterHeight = 16L;
-constexpr long kCharacterWidth      = 21L;
-constexpr long kCharacterHeight     = 32L;
+constexpr unsigned kShowNum          = 10U;
+constexpr unsigned kScoreDigits      = 10U;
+constexpr unsigned kHeightDigits     = 6U;
+constexpr unsigned kComboDigits      = 2U;
+constexpr unsigned kFrameWait        = 10U;
+constexpr long kMiniNumbersWidth     = 11U;
+constexpr long kMiniNumbersHeight    = 15L;
+constexpr long kNumbersWidth         = 20L;
+constexpr long kNumbersHeight        = 32L;
+constexpr long kMiniCharacterWidth   = 12L;
+constexpr long kMiniCharacterHeight  = 16L;
+constexpr long kCharacterWidth       = 21L;
+constexpr long kCharacterHeight      = 32L;
+constexpr float kIntervalRankingElem = 22.0F;
 enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankIn };
 const RECT kTrimming[] =
 {
@@ -65,7 +69,11 @@ constexpr Vector2 kPositionCursorFromBase[] = {
     {515.0F, 417.0F},
 };
 
-constexpr float kIntervalRankingElem = 22.0F;
+enum { kName, kScore, kHeight, kCombo };
+constexpr float kDrawPositionX[] = {
+    472.0F, 690.0F, 790.0F, 842.0F
+};
+
 
 /*===========================================================================*/
 Result::Result(const unsigned Rank, const Scoring Score) :
@@ -190,16 +198,28 @@ void Result::draw()
     RankingManager* kRanking = RankingManager::getInstance();
     RankingManager::Data data;
     Vector2 position = position_base_ + kPositionFromBase[kPosRanking];
-    unsigned rank = 1;
-    // ランキングの描画順位を決定( プレイヤーがランクインしていたらそこを基準に描画する )
-    if( rank_ <= kRegisteredNum )
+
+    // ランキングの描画順位を決定
+    unsigned rank = 0U;
+
+    // プレイヤーの上に、表示数の半数がいない場合、1位が一番上になるよう調整
+    if( (rank_ < (kShowNum / 2U)) || rank_ > kRegisteredNum )
     {
-        if( rank_ > 95U )     { rank = kRegisteredNum - 10U; }
-        else if( rank_ > 6U ) { rank = rank_ - 5U; }
+        rank = 1U;
+    }
+    // プレイヤーの下に、表示数の半数がいない場合、最下位が一番下になるよう調整
+    else if( rank_ > kRegisteredNum - (kShowNum / 2U) ) 
+    {
+        rank = kRegisteredNum - kShowNum;
+    }
+    // プレイヤーを中心に位置を調整
+    else
+    {
+        rank = rank_ - (kShowNum / 2U); 
     }
 
     bool draw_player_ = false;
-    for( int i = 0; i < kShowNum; ++i, ++rank )
+    for( int i = 0; i <= kShowNum; ++i, ++rank )
     {
 
         if( rank == rank_ && draw_player_ == false )
@@ -229,7 +249,7 @@ void Result::draw()
         // 下線
         kSprite->draw( texture_,
                        position_base_ + kPositionFromBase[kPosRankIn],
-					   &kTrimming[ kTrmRankIn ] , alpha_ , 1.F );
+					   &kTrimming[ kTrmRankIn ] , alpha_ , 1.0F );
 
         // 名前
         Text::drawString( name_,
@@ -252,11 +272,10 @@ void Result::draw()
             position.x += kCharacterWidth * index_name_;
             kSprite->draw( texture_,
                            position,
-                           &kTrimming[kTrmNameCursor], alpha_,1.0F
+                           &kTrimming[kTrmNameCursor], alpha_, 1.0F
 			);
         }
     }
-
 }
 
 /*===========================================================================*/
@@ -462,12 +481,14 @@ SceneBase* Result::selectNext()
 }
 
 
+/*===========================================================================*/
+// ランキングの要素を描画
 void Result::drawRankingElem( Vector2 Position,
                       const unsigned Rank, const char* Name,
                       const unsigned long long Score,
                       const double Height, const unsigned Combo )
 {
-    // ランク ( 桁数に応じて位置を変える )
+    // ランク ( 桁数に応じて位置を変える ) /*     3桁     */　　/*    2桁    */   /*1桁*/
     Position.x += kMiniNumbersWidth * (Rank > 99U ? 3.0F : (Rank > 9 ? 2.5F : 2.0F));
     Text::drawNumber( Rank,
         texture_numbers_mini_,
@@ -475,31 +496,31 @@ void Result::drawRankingElem( Vector2 Position,
         1U, alpha_ );
 
     // 名前
-    Position.x = 472.0F;
+    Position.x = kDrawPositionX[kName];
     Text::drawString( Name,
         texture_char_mini_,
         Position, kMiniCharacterWidth, kMiniCharacterHeight,
         alpha_ );
 
     // スコア
-    Position.x = 690.0F;
+    Position.x = kDrawPositionX[kScore];
     Text::drawNumber( Score,
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        10U, alpha_ );
+        kScoreDigits, alpha_ );
 
     // 距離
-    Position.x = 790.0F;
+    Position.x = kDrawPositionX[kHeight];
     Text::drawNumber( static_cast<ULL>(Height),
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        7U, alpha_ );
+        kHeightDigits, alpha_ );
 
     // 最大コンボ
-    Position.x = 842.0F;
+    Position.x = kDrawPositionX[kCombo];
     Text::drawNumber( Combo,
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        2U, alpha_ );
+        kComboDigits, alpha_ );
 
 }
