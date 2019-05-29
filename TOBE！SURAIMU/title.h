@@ -32,9 +32,9 @@ private:
 	{
 		kRogo ,
 		kCusur ,
+		kPlayer ,
 		kStar1 ,
 		kStar2 ,
-		kPlayer ,
 		kWallRight,
 		kWallLeft,
 		kObjectNum
@@ -50,7 +50,7 @@ private:
 	Menu select_menu_;
 	TitleStatus object_status_[ ObjectNum::kObjectNum ];
 	std::unique_ptr<TitleObject> object_[ ObjectNum::kObjectNum ];
-
+	ID3D11ShaderResourceView* overlay_texture_;
 	float volume_;
 	SceneBase* ( Title::* scene_ )( ) = nullptr;
 

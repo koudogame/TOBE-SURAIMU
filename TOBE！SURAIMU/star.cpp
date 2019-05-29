@@ -51,10 +51,11 @@ Star::~Star()
 bool Star::init( const Vector2 & Position , const float Angle  , const float Spin , const float Rate , const float Size )
 {
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kStarUpdate );
-	TaskManager::getInstance()->registerTask( this , TaskDraw::kObject );
+	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 
 	texture_ = TextureLoder::getInstance()->load( L"Texture/star.png" );
-	if( texture_ == nullptr )
+	overlay_texture_ = TextureLoder::getInstance()->load( L"Texture/star1.png" );
+	if( texture_ == nullptr || overlay_texture_ == nullptr )
 		return false;
 
 	s_particle_container_ = std::make_unique<FreeFallParticleContainer>();
@@ -106,6 +107,11 @@ void Star::draw()
 	trim.right = trim.left + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 	trim.bottom = trim.top + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
+	Sprite::getInstance()->draw( overlay_texture_ , position_ , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - 90.0F ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ) );
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin();
 	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.9F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - 90.0F ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ) );
 }
 

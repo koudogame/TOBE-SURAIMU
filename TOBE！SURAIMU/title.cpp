@@ -102,6 +102,7 @@ bool Title::init()
 	object_status_[ ObjectNum::kWallLeft ].position = Vector2( -kWallWidth , 0.0F );
 	object_status_[ ObjectNum::kWallLeft ].trim = trim;
 
+	overlay_texture_ = TextureLoder::getInstance()->load( L"Texture/star1.png" );
 
 	next_flag_ = false;
 
@@ -121,6 +122,8 @@ void Title::destroy()
 {
 	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		TextureLoder::getInstance()->release( object_status_[ i ].texture );
+
+	TextureLoder::getInstance()->release( overlay_texture_ );
 }
 
 /*===========================================================================*/
@@ -134,6 +137,19 @@ SceneBase* Title::update()
 // •`‰æˆ—
 void Title::draw()
 {
+
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
+	for( int i = ObjectNum::kStar1; i <= ObjectNum::kStar2; i++ )
+	{
+		Sprite::getInstance()->draw( overlay_texture_ , object_status_[ i ].position , &object_status_[ i ].trim , 1.0F , 1.0F );
+	}
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin();
+
+	Sprite::getInstance()->draw( object_status_[ ObjectNum::kStar1 ].texture , object_status_[ ObjectNum::kStar1 ].position , &object_status_[ ObjectNum::kStar1 ].trim , 1.0F , 1.0F );
+	Sprite::getInstance()->draw( object_status_[ ObjectNum::kStar2 ].texture , object_status_[ ObjectNum::kStar2 ].position , &object_status_[ ObjectNum::kStar2 ].trim , 1.0F , 1.0F);
+
 	for( int i = 0; i <= ObjectNum::kPlayer; i++ )
 		object_[ i ].get()->draw();
 
@@ -150,6 +166,8 @@ void Title::draw()
 		Sprite::getInstance()->draw( object_status_[ ObjectNum::kWallLeft ].texture , positleft , &object_status_[ ObjectNum::kWallLeft ].trim , object_status_[ ObjectNum::kWallLeft ].alpha ,
 									 1.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2::Zero , SpriteEffects::SpriteEffects_None );
 	}
+
+
 }
 
 void Title::input()
@@ -198,7 +216,7 @@ SceneBase* Title::playScene()
 	SOUND->setVolume( SoundId::kTitle , volume_ );
 	SOUND->play( SoundId::kScene , false );
 
-	for( int i = 0; i <= ObjectNum::kPlayer; i++ )
+	for( int i = 0; i <= ObjectNum::kStar2; i++ )
 		object_status_[ i ].position.y += kFall;
 
 	float now_time_ = object_status_[ ObjectNum::kRogo ].position.y / getWindowHeight<float>();

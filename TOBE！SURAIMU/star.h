@@ -55,5 +55,7 @@ private:
 	int create_point_;
 	float magnification_;
 	NameSpaceParticle::ParticleID id_;
+
+	ID3D11ShaderResourceView* overlay_texture_;
 };
 
