@@ -11,7 +11,7 @@
 #include "sprite.h"
 #include "csvLoader.h"
 
-#include "audio_loader.h"
+
 #include "text.h"
 #include "timer.h"
 #include "pause.h"
@@ -130,9 +130,6 @@ bool Endless::init()
 	climb_ = 0.0F;
 
 	clock_->start();
-
-	AudioLoader::getInstance()->getSound( L"Sound/play4-dova.wav" )->
-                                 play( AudioContainer::Mode::kDefault , true );
 
 	return true;
 }
@@ -281,7 +278,6 @@ SceneBase* Endless::play()
 	// プレイヤーが死んでいたらリザルト画面へ
 	if (player_->isAlive() == false)
 	{
-		AudioLoader::getInstance()->getSound(L"Sound/play4-dova.wav")->stop();
 		return new Result(ranking_->getRank(), *player_->getScore());
 	}
 
@@ -365,7 +361,6 @@ SceneBase* Endless::pause()
         return new Endless();
 
     case Pause::kTitle    :
-		AudioLoader::getInstance()->getSound( L"Sound/play4-dova.wav" )->stop();
         kTaskManager->restart();
         return new Title();
     }

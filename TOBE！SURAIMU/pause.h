@@ -1,5 +1,5 @@
 #pragma once
-#include "audio_loader.h"
+
 
 //-----------------------------------------------------------------------------
 // É|Å[ÉY
@@ -39,5 +39,4 @@ private:
     Vector2 position_cursor_;
     int select_ = kContinue;
 
-	AudioContainer* select_se_[ 2 ];
 };

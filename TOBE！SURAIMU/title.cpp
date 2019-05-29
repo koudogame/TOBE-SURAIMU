@@ -107,12 +107,6 @@ bool Title::init()
 	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		object_[ i ].get()->init( &object_status_[ i ] );
 
-	title_bgm_ = AudioLoader::getInstance()->getSound( L"Sound/title2-dova.wav" );
-	select_se_[0] = AudioLoader::getInstance()->getSound( L"Sound/select1-dova.wav" );
-	select_se_[1] = AudioLoader::getInstance()->getSound( L"Sound/select2-dova.wav" );
-	scene_se_ = AudioLoader::getInstance()->getSound( L"Sound/scene1-dova.wav" );
-	title_bgm_->allReset();
-	title_bgm_->play( AudioContainer::Mode::kDefault );
 	volume_ = 1.0F;
 	return true;
 }
@@ -161,32 +155,20 @@ void Title::input()
 	{
 		if( select_menu_ == Menu::kPlay )
 		{
-		select_se_[ 0 ]->stop();
-		select_se_[ 0 ]->resetPitch();
-		select_se_[0]->play( AudioContainer::Mode::kDefault );
 			select_menu_ = Menu::kRanking;
 		}
 		else
 		{
-			select_se_[ 0 ]->stop();
-			select_se_[ 0 ]->setPitch( -0.5F );
-			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
 		}
 	}
 	else if( key_.pressed.Up || pad_.leftStickUp == pad_.PRESSED )
 	{
 		if( select_menu_ == Menu::kRanking )
 		{
-			select_se_[ 0 ]->stop();
-			select_se_[ 0 ]->resetPitch();
-			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
 			select_menu_ = Menu::kPlay;
 		}
 		else
 		{
-			select_se_[ 0 ]->stop();
-			select_se_[ 0 ]->setPitch(-0.5F);
-			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
 		}
 
 	}
@@ -195,8 +177,6 @@ void Title::input()
 SceneBase* Title::playScene()
 {
 	volume_ -= 0.01F;
-	scene_se_->setVolume( volume_ );
-	title_bgm_->setVolume( volume_ );
 	for( int i = 0; i <= ObjectNum::kPlayer; i++ )
 		object_status_[ i ].position.y += kFall;
 
@@ -208,10 +188,6 @@ SceneBase* Title::playScene()
 
 	if( object_status_[ kRogo ].position.y > getWindowHeight<float>() )
 	{
-		title_bgm_->stop();
-		scene_se_->stop();
-		select_se_[ 0 ]->stop();
-		select_se_[ 1 ]->stop();
 		return new Endless;
 	}
 	return this;
@@ -220,7 +196,6 @@ SceneBase* Title::playScene()
 SceneBase * Title::rankingScene()
 {
 	volume_ -= 0.01F;
-	scene_se_->setVolume( volume_ );
 	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		object_status_[ i ].alpha = volume_;
 
@@ -241,10 +216,6 @@ SceneBase * Title::selectScene()
 	if( key_.released.Space ||
 		pad_.a == pad_.PRESSED )
 	{
-		scene_se_->stop();
-		select_se_[ 1 ]->stop();
-		scene_se_->play( AudioContainer::Mode::kDefault , true );
-		select_se_[ 1 ]->play( AudioContainer::Mode::kDefault );
 
 		switch( select_menu_ )
 		{

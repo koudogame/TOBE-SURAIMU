@@ -9,7 +9,7 @@
 #include "stay_particle_container.h"
 #include "scoring.h"
 
-#include "audio_loader.h"
+
 
 
 class Player :
@@ -94,9 +94,6 @@ private:
 	float guide_alpha_;
 
 	Scoring score_;
-
-	AudioContainer* sound_[ 2 ];
-	AudioContainer* died_sound_;
 
 private:
 	//•`‰æŒn

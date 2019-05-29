@@ -3,7 +3,7 @@
 //CreatorName:YamadaHaruhisa
 
 #include "numbers.h"
-#include "audio_loader.h"
+
 #include "score_number.h"
 
 class Scoring
@@ -65,8 +65,6 @@ private:
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
 	ID3D11ShaderResourceView* num_texture_;			//数字のテクスチャ
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
-
-	AudioContainer* combo_sound_;					//回転コンボのサウンド
 
 	Numbers<unsigned int> combo_draw_;
 

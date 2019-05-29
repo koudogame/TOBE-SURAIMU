@@ -76,9 +76,6 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	score_.init();
 
 
-	sound_[ 0 ] = AudioLoader::getInstance()->getSound( L"Sound/jump1-dova.wav" );
-	sound_[ 1 ] = AudioLoader::getInstance()->getSound( L"Sound/collision-dova.wav" );
-	died_sound_ = AudioLoader::getInstance()->getSound( L"Sound/died2-dova.wav" );
 	died_flag_ = false;
 
 	return true;
@@ -213,9 +210,6 @@ void Player::collision( Star * StarObj)
 	{
 		if( score_.isStart() )
 		{
-			sound_[ 1 ]->setPitch( collision_combo_pitch_ );
-			sound_[ 1 ]->stop();
-			sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
 			collision_combo_pitch_ += 0.2F;
 		}
 		rect_left_up_ = Vector2::Zero;
@@ -243,9 +237,6 @@ void Player::collision( Wall * WallObj)
 {
 	if( score_.isStart() )
 	{
-		sound_[ 1 ]->resetPitch();
-		sound_[ 1 ]->stop();
-		sound_[ 1 ]->play( AudioContainer::Mode::kDefault );
 	}
 	setGround( &kGround );
 
@@ -322,8 +313,6 @@ void Player::input()
 		{
 			if( !died_flag_ )
 			{
-				sound_[ 0 ]->stop();
-				sound_[ 0 ]->play( AudioContainer::Mode::kDefault );
 				flag_.set( Flag::kJump );
 				flag_.set( Flag::kStarCollision );
 				flag_.reset( Flag::kParticle );
@@ -449,8 +438,6 @@ bool Player::diedEffect()
 {
 	if( !died_flag_ )
 	{
-		died_sound_->stop();
-		died_sound_->play( AudioContainer::Mode::kDefault                                         );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 45 ) , NameSpaceParticle::ParticleID::kCyan , 2.0F );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 75 ) , NameSpaceParticle::ParticleID::kMagenta , 2.0F );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 105 ) , NameSpaceParticle::ParticleID::kWall , 2.0F );
