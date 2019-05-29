@@ -22,7 +22,8 @@ constexpr long kDispTimeMSPF = 250L / 16L;
 constexpr float kBasePositionX = 1000.0F;
 constexpr float kBasePositionY = getWindowHeight<float>() / 2.0F;
 constexpr float kBarCoordinateX = 960.0F;
-const float kIntervalRankToName = kTextStringWidth * 2.0F;
+constexpr float kIntervalRankToName = kTextStringWidth * 2.0F;
+constexpr float kIntervalNameToBar = -5.0F;
 const float kDrawPositionXScore = getWindowWidth<float>() - 23.0F;
 const unsigned kScoreDigits = 10U;
 enum { kNormalBar, kPlayerBar };
@@ -206,6 +207,6 @@ void drawData(
         Number, Position, kTextNumberWidth, kTextHeight, kScoreDigits, Alpha);
 
     Position.x = kBarCoordinateX;
-    Position.y -= 5.0F;
+    Position.y += kIntervalNameToBar;
     Sprite::getInstance()->draw( Bar, Position, TrimminaBar, Alpha, 0.5F );
 }
