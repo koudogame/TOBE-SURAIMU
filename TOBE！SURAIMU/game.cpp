@@ -20,14 +20,16 @@ constexpr RECT kTrimmingEffect{             // 背景エフェクト切り取り範囲
 
 constexpr float kBackgroundSpeed[]     = { 0.2F, 0.4F, 1.0F, 0.6F, };
 constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.01F, 0.03F, 0.02F, };
-constexpr float kBackobjectMoveX = -1.0F;
-constexpr float kBackobjectMoveY = 0.1F;
+constexpr int   kBackobjectCreateRate  = 1000;
+constexpr int   kBackobjectMax         = 5;
+constexpr float kBackobjectMoveX       = -1.0F;
+constexpr float kBackobjectMoveY       = 0.1F;
 constexpr float kBackobjectDrawDepth   =  0.05F;
-constexpr unsigned kBackobjectKind = 1U;
+constexpr unsigned kBackobjectKind     = 3U;
 constexpr RECT kTrimmingBackObject[]   = {
-	{ 0L, 0L, 4096L, 1000L},
-	{ 800L, 0L, 4096L, 1800L},
-	{ 1800L, 0L, 4096L, 2800L},
+	{ 0L,    0L, 4096L, 1200L},
+	{ 0L, 1200L, 4096L, 2400L},
+	{ 0L, 2400L, 4096L, 3600L},
 };
 
 //コンストラクタ
@@ -90,18 +92,15 @@ bool Game::update()
 	TaskManager::getInstance()->allUpdate();
 	//オブジェクトの更新
     backobject_container_->update();
-    if( backobject_container_->empty() )
+    if( backobject_container_->empty() ||
+        (!(rand() % kBackobjectCreateRate) &&
+         backobject_container_->active().size() < kBackobjectMax) )
     {
         backobject_container_->addBackObject(
-            kTrimmingBackObject[0],
-            kBackobjectMoveX, kBackobjectMoveY, kBackobjectDrawDepth);
+            kTrimmingBackObject[rand() % kBackobjectKind],
+            (kBackobjectMoveX * (rand() % 2 ? 1 : -1)), kBackobjectMoveY,
+            kBackobjectDrawDepth);
 
-    }
-    if( !(rand() % 1000) && backobject_container_->active().size() <= 5 )
-    {
-        backobject_container_->addBackObject(
-            kTrimmingBackObject[0],
-            kBackobjectMoveX, kBackobjectMoveY, kBackobjectDrawDepth);
     }
   
 

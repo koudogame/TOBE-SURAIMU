@@ -201,9 +201,8 @@ void Result::draw()
 
     // ランキングの描画順位を決定
     unsigned rank = 0U;
-
     // プレイヤーの上に、表示数の半数がいない場合、1位が一番上になるよう調整
-    if( (rank_ < (kShowNum / 2U)) || rank_ > kRegisteredNum )
+    if( (rank_ <= (kShowNum / 2U)) || rank_ > kRegisteredNum )
     {
         rank = 1U;
     }
