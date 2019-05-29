@@ -20,15 +20,15 @@ const float kMaxSpin[ 3 ] =
 const int kParticleTime = 3;
 const float kFallSpeed = 2.0F;
 const Vector3 kStarInformation[ 3 ] = {
-	Vector3( 0.F,0.F,150.0F ),
+	Vector3( 0.0F,0.0F,150.0F ),
 	Vector3( 150.0F,0.0F,226.0F ),
 	Vector3( 150.0F + 226.0F,0.0F,300.F )
 };
 
 const float kStarColorThreshold[ 2 ] =
 {
-	0.1F,
-	0.6F
+	0.4F,
+	0.8F
 };
 
 Star::Star()
@@ -66,9 +66,9 @@ bool Star::init( const Vector2 & Position , const float Angle  , const float Spi
 	rate_ = Rate;
 	size_ = Size;
 
-	if( Rate < kStarColorThreshold[ 0 ] )
+	if( Rate <= kStarColorThreshold[ 0 ] )
 		id_ = NameSpaceParticle::ParticleID::kCyan;
-	else if( Rate < kStarColorThreshold[ 1 ] )
+	else if( Rate <= kStarColorThreshold[ 1 ] )
 		id_ = NameSpaceParticle::ParticleID::kYellow;
 	else
 		id_ = NameSpaceParticle::ParticleID::kMagenta;
