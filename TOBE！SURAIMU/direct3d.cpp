@@ -31,6 +31,7 @@ bool Direct3D::init( const HWND hWnd )
     sc.SampleDesc.Quality = 0;                                              //  マルチサンプリング品質
     sc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;                      //  モード設定
 
+#ifdef _DEBUG
     //  各種インターフェイスを作成
     if( FAILED( D3D11CreateDeviceAndSwapChain(
         NULL,                               //  DXGIアダプター
@@ -49,6 +50,26 @@ bool Direct3D::init( const HWND hWnd )
         //  エラー
         return false;
     }
+#else
+    //  各種インターフェイスを作成
+    if( FAILED( D3D11CreateDeviceAndSwapChain(
+        NULL,                               //  DXGIアダプター
+        D3D_DRIVER_TYPE_HARDWARE,           //  ドライバータイプ
+        NULL,                               //  ソフトウェアラスタライザーDLLハンドル
+        0,									//  オプションプラグ
+        level,                              //  機能レベル
+        3,                                  //  機能レベル個数
+        D3D11_SDK_VERSION,                  //  常にこの値を指定
+        &sc,                                //  スワップチェーン構造体ポインタ
+        &swap_chain_,                       //  スワップチェーンインターフェイス受取先ポインタ
+        &d3d_device_,                       //  D3Dデバイスインターフェイス受取先ポインタ
+        &feature_level_,                    //  採用された機能レベル
+        &device_context_ ) ) )              //  デバイスコンテキストインターフェイス受取先ポインタ
+    {
+        //  エラー
+        return false;
+    }
+#endif
 
     //  バックバッファ描画ターゲットの取得
     ID3D11Texture2D* backbuffer = NULL;

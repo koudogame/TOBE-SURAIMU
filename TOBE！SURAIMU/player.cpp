@@ -38,7 +38,7 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 {
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kPlayerUpdate );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kObject );
-	myshape_ = Circle( Posit , 5.5F );
+	myshape_ = Circle( Posit , 5.0F );
 	//’è”‚Ì’è‹`
 	kJumpAmount = Jump;
 	kAddVolume = AddVol;
@@ -192,7 +192,12 @@ void Player::setMove( const float Over )
 void Player::revision( const Vector2& CrossPoint , NameSpaceParticle::ParticleID ID )
 {
 	myshape_.position = CrossPoint;
-	dis_ = Calc::magnitude( CrossPoint , ground_->start ) / Calc::magnitude( ground_->end , ground_->start );
+	if( ID != NameSpaceParticle::ParticleID::kNonParticle )
+	{
+		dis_ = Calc::magnitude( CrossPoint , ground_->start ) / Calc::magnitude( ground_->end , ground_->start );
+		int temp = static_cast< int >( std::round( dis_ * 1000.0F ) );
+		dis_ = temp / 1000.0F;
+	}
 	setGravityAngle();
 	if( !flag_.test( Flag::kParticle ) )
 	{

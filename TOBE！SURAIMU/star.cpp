@@ -137,8 +137,9 @@ void Star::collision(Player* P)
 	if( old_angle < 0.0F ) old_angle += XM_2PI;
 	if( new_angle < 0.0F ) new_angle += XM_2PI;
 
-	if( new_angle - old_angle > XM_PI )
-		new_angle += XM_2PI;
+	if( std::abs( new_angle - old_angle ) > XM_PI )
+		new_angle < old_angle ? new_angle += XM_2PI : old_angle += XM_2PI;
+
 	turn_ = static_cast< int >( std::copysign( 1.0F , new_angle - old_angle ) );
 
 	//’†S‚©‚ç‚ÌŠ„‡

@@ -59,7 +59,7 @@ void Collision::collision( Player * P , Star * S )
 			if( P->getOwner() != S )
 			{
 				P->setGround( S->getShape( i ) );
-				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) , id_ );
+				P->revision( crossPoint( P->getMove() , S->getShape( i ) ) , id_ );
 					hit_flag = true;
 			}
 			else
@@ -67,7 +67,7 @@ void Collision::collision( Player * P , Star * S )
 				if( !P->isCollision() )
 				{
 					P->setGround( S->getShape( i ) );
-					P->revision( crossPoint( P->getShape() , S->getShape( i ) ) , id_ );
+					P->revision( crossPoint( P->getMove() , S->getShape( i ) ) , id_ );
 					hit_flag = true;
 				}
 
