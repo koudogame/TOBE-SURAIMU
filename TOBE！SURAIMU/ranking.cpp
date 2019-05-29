@@ -29,26 +29,28 @@ constexpr float kLineHeight       = 20.0F;
 constexpr float kMagnification    = 0.1F;
 constexpr float kMagnificationMax = 2.0F;
 constexpr float kOffset           = 5.0F;
-constexpr float kOffsetMax        = 1580.0F;
+constexpr float kOffsetMax        = 2000.0F;
 constexpr float kFieldMax         = 640.0F;
+constexpr float kIntervalNumber   = 1.0F;
 constexpr long kCharWidth         = 12L;
 constexpr long kCharHeight        = 16L;
-constexpr long kNumWidth          = 11L;
-constexpr long kNumHeight         = 15L;
+constexpr long kNumWidth          = 10L;
+constexpr long kNumHeight         = 16L;
 constexpr unsigned kScoreDigits   = 10U;
 constexpr unsigned kHeightDigits  = 6U;
 constexpr unsigned kComboDigits   = 2U;
 
 enum { kRank, kName, kScore, kHeight, kCombo, };
 constexpr float kCoordinateX[] = {
-    390.0F, 430.0F, 535.0F, 680.0F, 778.0F
+    390.0F, 430.0F, 535.0F, 673.0F, 767.0F
 };
 
+constexpr Vector2 kPositionBase( 0.0F, 400.0F );
 enum { kFrame, kBack, kField };
 constexpr Vector2 kPosition[] = {
     { 120.0F,  21.0F },
     { 370.0F,  43.0F },
-    { 650.0F, 200.0F },
+    { 638.0F, 200.0F },
 };
 const RECT kTrimming[] = {
     {    0L,    0L, 1133L,  678L },
@@ -79,7 +81,7 @@ bool Ranking::init()
     TextureLoder* kLoader = TextureLoder::getInstance();
     texture_ = kLoader->load(L"Texture/ranking.png");
     if( texture_ == nullptr ) { return false; }
-    texture_numbers_ = kLoader->load(L"Texture/rank_number.png");
+    texture_numbers_ = kLoader->load(L"Texture/ranking_number.png");
     if( texture_numbers_ == nullptr ) {return false; }
     texture_characters_ = kLoader->load(L"Texture/rank_name.png");
     if( texture_characters_ == nullptr ) { return false; }
@@ -192,7 +194,7 @@ void Ranking::draw()
     // ランキングの描画
     RankingManager* const kRanking = RankingManager::getInstance();
     RankingManager::Data data;
-    Vector2 position(0.0F, 200.0F);
+    Vector2 position = kPositionBase;
     position.y -= offset_;
     for( unsigned rank = 1U; rank <= kRegisteredNum;
                                             ++rank, position.y += kLineHeight )
@@ -204,7 +206,9 @@ void Ranking::draw()
 
         // フィールド
         position.x = kPosition[kField].x;
+        position.y += 3.0F;
 		kSprite->draw( texture_ , position , &kTrimming[ kField ] , 1.0F , 0.3F );
+        position.y -= 3.0F;
 
         // ランク
         position.x = kCoordinateX[kRank] + kNumWidth *
@@ -220,18 +224,18 @@ void Ranking::draw()
         // スコア
         position.x = kCoordinateX[kScore] + kNumWidth * kScoreDigits;
         Text::drawNumber( data.score, texture_numbers_, position,
-                          kNumWidth, kNumHeight, kScoreDigits );
+                          kNumWidth, kNumHeight, kScoreDigits, 1.0F, kIntervalNumber );
 
         // 高さ
         position.x = kCoordinateX[kHeight] + kNumWidth * kHeightDigits;
         Text::drawNumber( static_cast<ULL>(data.height), texture_numbers_,
                           position,
-                          kNumWidth, kNumHeight );
+                          kNumWidth, kNumHeight, 1U, 1.0F, kIntervalNumber );
 
         // コンボ
         position.x = kCoordinateX[kCombo] + kNumWidth * kComboDigits;
         Text::drawNumber( data.combo, texture_numbers_, position,
-                         kNumWidth, kNumHeight );
+                         kNumWidth, kNumHeight, 1U, 1.0F, kIntervalNumber );
     }
 
 

@@ -39,7 +39,8 @@ public:
         const long TextWidth,
         const long TextHeight,
         const unsigned MinDigit = 1U,
-        const float Alpha = 1.0F);
+        const float Alpha = 1.0F,
+        const float Interval = 0.0F);
 
     static int getCharNum(const char);
 };

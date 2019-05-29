@@ -18,12 +18,12 @@ constexpr RECT kTrimmingBackground{         // ”wŒiØ‚èŽæ‚è”ÍˆÍ
 constexpr RECT kTrimmingEffect{             // ”wŒiƒGƒtƒFƒNƒgØ‚èŽæ‚è”ÍˆÍ
 	0L, 3184L, 1280L, 3904L };
 
-constexpr float kBackgroundSpeed[]     = { 0.2F, 0.4F, 1.0F, 0.6F, };
-constexpr float kBackgroundDrawDepth[] = { 0.0F, 0.01F, 0.03F, 0.02F, };
-constexpr int   kBackobjectCreateRate  = 1000;
-constexpr int   kBackobjectMax         = 5;
-constexpr float kBackobjectMoveX       = -1.0F;
-constexpr float kBackobjectMoveY       = 0.1F;
+constexpr float kBackgroundSpeed[]     = { 0.25F, 0.4F, 1.0F };
+constexpr float kBackgroundDrawDepth[] = { 0.03F, 0.01F, 0.02F };
+constexpr int   kBackobjectCreateRate  = 500;
+constexpr int   kBackobjectMax         = 10;
+constexpr float kBackobjectMoveXMax    = 0.2F;
+constexpr float kBackobjectMoveYMax    = 0.2F;
 constexpr float kBackobjectDrawDepth   =  0.05F;
 constexpr unsigned kBackobjectKind     = 3U;
 constexpr RECT kTrimmingBackObject[]   = {
@@ -81,7 +81,9 @@ bool Game::init()
 
     backobject_container_->addBackObject(
         kTrimmingBackObject[rand() % kBackobjectKind],
-        kBackobjectMoveX, kBackobjectMoveY, kBackobjectDrawDepth);
+        (rand() % static_cast<int>(kBackobjectMoveXMax * 10.0F)) / 10.0F + 0.1F * (rand() % 2 ? 1 : -1),
+        (rand() % static_cast<int>(kBackobjectMoveYMax * 10.0F)) / 10.0F + 0.1F,
+        kBackobjectDrawDepth);
 
 	return true;
 }
@@ -98,7 +100,8 @@ bool Game::update()
     {
         backobject_container_->addBackObject(
             kTrimmingBackObject[rand() % kBackobjectKind],
-            (kBackobjectMoveX * (rand() % 2 ? 1 : -1)), kBackobjectMoveY,
+            (rand() % static_cast<int>(kBackobjectMoveXMax * 10.0F)) / 10.0F + 0.1F * (rand() % 2 ? 1 : -1),
+            (rand() % static_cast<int>(kBackobjectMoveYMax * 10.0F)) / 10.0F + 0.1F,
             kBackobjectDrawDepth);
 
     }

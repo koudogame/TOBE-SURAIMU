@@ -9,8 +9,8 @@
 
 
 /*===========================================================================*/
-constexpr float kAmountOfAlphaChange = 0.01F;
-constexpr float kAlphaMax            = 1.0F;
+constexpr float kAmountOfAlphaChange = 0.004F;
+constexpr float kAlphaMax            = 0.8F;
 constexpr float kAlphaMin            = 0.0F;
 
 /*===========================================================================*/
@@ -125,16 +125,21 @@ void BackObject::draw()
     {
         draw_position.x -= kWidth;
     }
+
+    kSprite->end();
+    kSprite->begin(kSprite->chengeMode());
     while( draw_position.x < getWindowWidth<float>() )
     {
         kSprite->draw( texture_, draw_position, &trimming_,
-                       1.0F, draw_depth_ );
+                       0.2F, draw_depth_ );
 
         kSprite->draw( texture_sub_, draw_position, &trimming_,
                        sub_alpha_, draw_depth_);
 
         draw_position.x += kWidth;
     }
+    kSprite->end();
+    kSprite->begin();
 }
 
 /*===========================================================================*/
@@ -147,7 +152,7 @@ void BackObject::reset(const RECT& Trimming,
     kManager->registerTask(this, TaskUpdate::kBackgroundUpdate);
     kManager->registerTask(this, TaskDraw::kBackground);
 
-    position_.x      = 0.0F;
+    position_.x      = static_cast<float>(rand() % ( Trimming.right - Trimming.left ));
     position_.y      = (Trimming.bottom - Trimming.top) * -1.0F;
     trimming_        = Trimming;
     scroll_x_        = ScrollX;

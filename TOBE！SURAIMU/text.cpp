@@ -34,7 +34,8 @@ void Text::drawNumber( const unsigned long long Number,
                        const Vector2& Position,
                        const long Width, const long Height,
                        const unsigned Digit,
-                       const float Alpha)
+                       const float Alpha,
+                       const float Interval)
 {
     Vector2 position = Position;
     position.x -= Width;
@@ -59,7 +60,7 @@ void Text::drawNumber( const unsigned long long Number,
         );
 
         temp /= 10ULL;
-        position.x -= Width;
+        position.x -= Width + Interval;
     }
 }
 
