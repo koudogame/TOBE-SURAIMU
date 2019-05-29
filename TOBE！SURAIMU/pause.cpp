@@ -73,7 +73,7 @@ int Pause::update()
     PadTracker pad = Pad::getInstance()->getTracker();
 
     // Œˆ’è
-    if( key.pressed.Enter || pad.b == PadTracker::PRESSED )
+    if( key.released.Space || pad.a == PadTracker::RELEASED )
     {
 		select_se_[ 1 ]->stop();
 		select_se_[ 1 ]->play( AudioContainer::Mode::kDefault );

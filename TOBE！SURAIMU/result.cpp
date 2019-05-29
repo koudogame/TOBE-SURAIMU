@@ -24,6 +24,7 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 
 /*===========================================================================*/
+const int kShowNum                  = 11U;
 constexpr unsigned kFrameWait       = 10U;
 constexpr long kMiniNumbersWidth    = 11U;
 constexpr long kMiniNumbersHeight   = 15L;
@@ -116,9 +117,10 @@ bool Result::init()
     position_base_.y = -getWindowHeight<float>();
 
 	//サウンドの取得
-	bgm_ = AudioLoader::getInstance()->getSound( L"Sound/title2-dova.wav" );
-	select_se_ = AudioLoader::getInstance()->getSound( L"Sound/select1-dova.wav" );
-	decision_se_ = AudioLoader::getInstance()->getSound( L"Sound/select2-dova.wav" );
+    AudioLoader* kAudio = AudioLoader::getInstance();
+	bgm_ = kAudio->getSound( L"Sound/title2-dova.wav" );
+	select_se_ = kAudio->getSound( L"Sound/select1-dova.wav" );
+	decision_se_ = kAudio->getSound( L"Sound/select2-dova.wav" );
 	bgm_->allReset();
 	bgm_->play( AudioContainer::Mode::kDefault , true );
 	return true;
@@ -131,6 +133,7 @@ void Result::destroy()
     if( created_ == false ) { return; }
     created_ = false;
 
+    // ランキングにスコアを登録
     RankingManager::getInstance()->registerScore(
         name_, score_.getScore(), score_.getHeight(), score_.getMaxCombo()
     );
@@ -186,6 +189,7 @@ void Result::draw()
 				   &kTrimming[ kTrmCursor ] , alpha_ , 1.0F );
 
     // ランキング
+    RankingManager* kRanking = RankingManager::getInstance();
     RankingManager::Data data;
     Vector2 position = position_base_ + kPositionFromBase[kPosRanking];
     unsigned rank = 1;
@@ -197,7 +201,7 @@ void Result::draw()
     }
 
     bool draw_player_ = false;
-    for( int i = 0; i < 11; ++i, ++rank )
+    for( int i = 0; i < kShowNum; ++i, ++rank )
     {
 
         if( rank == rank_ && draw_player_ == false )
@@ -212,7 +216,7 @@ void Result::draw()
         }
 
 
-        data = RankingManager::getInstance()->getData(rank);
+        data = kRanking->getData(rank);
         drawRankingElem(
             position,
             draw_player_ ? rank + 1 : rank, data.name.c_str(),

@@ -38,13 +38,11 @@ public:
 			if ((*itr)->isAlive() == false)
 			{
 				(*itr)->destroy();
-				free_list_.push_back((*itr));
+				free_list_.push_back(*itr);
 				itr = active_list_.erase(itr);
 			}
 			else
-			{
-				++itr;
-			}
+			{ ++itr; }
 		}
 	}
 
@@ -85,6 +83,7 @@ protected:
 		{
 			free_obj = new T();
 		}
+
 		active_list_.push_back(free_obj);
 		return free_obj;
 	}
