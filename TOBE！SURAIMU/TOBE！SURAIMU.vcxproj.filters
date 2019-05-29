@@ -212,12 +212,6 @@
     <ClCompile Include="combo.cpp">
       <Filter>Project\Game\Object\UI</Filter>
     </ClCompile>
-    <ClCompile Include="audio_container.cpp">
-      <Filter>Project\Game\Others\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="audio_loader.cpp">
-      <Filter>Project\Game\Others\sound</Filter>
-    </ClCompile>
     <ClCompile Include="back_object.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
@@ -262,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="score_number.cpp">
       <Filter>Project\Game\Others\Scoring</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Project\Game\Others\sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -378,12 +375,6 @@
     <ClInclude Include="back_object.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
-    <ClInclude Include="audio_container.h">
-      <Filter>Project\Game\Others\sound</Filter>
-    </ClInclude>
-    <ClInclude Include="audio_loader.h">
-      <Filter>Project\Game\Others\sound</Filter>
-    </ClInclude>
     <ClInclude Include="scoring.h">
       <Filter>Project\Game\Others\Scoring</Filter>
     </ClInclude>
@@ -427,6 +418,12 @@
       <Filter>Project\Game\Others\Scoring</Filter>
     </ClInclude>
     <ClInclude Include="scene_base.h" />
+    <ClInclude Include="Sound.h">
+      <Filter>Project\Game\Others\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\xwb.h">
+      <Filter>Project\Game\Others\sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

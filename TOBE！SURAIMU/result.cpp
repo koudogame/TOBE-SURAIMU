@@ -125,12 +125,6 @@ bool Result::init()
     position_base_.y = -getWindowHeight<float>();
 
 	//サウンドの取得
-    AudioLoader* kAudio = AudioLoader::getInstance();
-	bgm_ = kAudio->getSound( L"Sound/title2-dova.wav" );
-	select_se_ = kAudio->getSound( L"Sound/select1-dova.wav" );
-	decision_se_ = kAudio->getSound( L"Sound/select2-dova.wav" );
-	bgm_->allReset();
-	bgm_->play( AudioContainer::Mode::kDefault , true );
 	return true;
 }
 
@@ -322,9 +316,8 @@ SceneBase* Result::outToPlay()
             Easing::Mode::Out
         );
     position_base_.y -= offset;
-	bgm_->setVolume( 1.0F - count_ );
 
-	if( count_ >= 1.0F ) { bgm_->stop(); return new Endless(); }
+	if( count_ >= 1.0F ) {  return new Endless(); }
     else                 { return this; }
 }
 
@@ -340,9 +333,6 @@ SceneBase* Result::setName()
     // 決定
     if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
     {
-		decision_se_->resetPitch();
-		decision_se_->stop();
-		decision_se_->play( AudioContainer::Mode::kDefault );
 
         name_[index_name_] = kCharTable[index_char_];
 
@@ -368,9 +358,6 @@ SceneBase* Result::setName()
     {
 		if( index_name_ >= 1U )
 		{
-			decision_se_->setPitch( -1.0F );
-			decision_se_->stop();
-			decision_se_->play( AudioContainer::Mode::kDefault );
 			name_[ index_name_ ] = ' ';
 			--index_name_;
 			index_char_ = Text::getCharNum( name_[ index_name_ ] );
@@ -385,9 +372,6 @@ SceneBase* Result::setName()
         ( (key_state.Up || pad_state.IsLeftThumbStickUp()) &&
             ++count_frame_ >= kFrameWait ) )
     {
-		select_se_->stop();
-		select_se_->resetPitch();
-		select_se_->play( AudioContainer::Mode::kDefault );
         count_frame_ = 0U;
         // 循環させる
         if(--index_char_ < 0 ) { index_char_ = kCharNum - 1; }
@@ -401,9 +385,6 @@ SceneBase* Result::setName()
         ( (key_state.Down || pad_state.IsLeftThumbStickDown()) &&
             ++count_frame_ >= kFrameWait ) )
     {
-		select_se_->stop();
-		select_se_->resetPitch();
-		select_se_->play( AudioContainer::Mode::kDefault );
         count_frame_ = 0U;
         // 循環させる
         if(++index_char_ >= kCharNum ) { index_char_ = 0; }
@@ -424,9 +405,6 @@ SceneBase* Result::selectNext()
     // 決定
     if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
     {
-		decision_se_->resetPitch();
-		decision_se_->stop();
-		decision_se_->play( AudioContainer::Mode::kDefault );
         // 各項目にあった処理へ移る
         switch( select_ )
         {
@@ -444,15 +422,9 @@ SceneBase* Result::selectNext()
 			( select_ > kSelectOneMore ) )                             // ランク外  時
 		{
 			--select_;
-			select_se_->stop();
-			select_se_->resetPitch();
-			select_se_->play( AudioContainer::Mode::kDefault );
 		}
 		else
 		{
-			select_se_->stop();
-			select_se_->setPitch( -0.5F );
-			select_se_->play( AudioContainer::Mode::kDefault );
 		}
 	}
 	else if( key_tracker.pressed.Down ||
@@ -462,15 +434,9 @@ SceneBase* Result::selectNext()
 		if( select_ < kSelectTitle )
 		{
 			++select_;
-			select_se_->stop();
-			select_se_->resetPitch();
-			select_se_->play( AudioContainer::Mode::kDefault );
 		}
 		else
 		{
-			select_se_->stop();
-			select_se_->setPitch( -0.5F );
-			select_se_->play( AudioContainer::Mode::kDefault );
 		}
 	}
 

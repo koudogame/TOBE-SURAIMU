@@ -50,8 +50,6 @@ bool Pause::init()
 
     created_ = true;
 
-	select_se_[ 0 ] = AudioLoader::getInstance()->getSound( L"Sound/select1-dova.wav" );
-	select_se_[ 1 ] = AudioLoader::getInstance()->getSound( L"Sound/select2-dova.wav" );
     return true;
 }
 
@@ -75,8 +73,6 @@ int Pause::update()
     // Œˆ’è
     if( key.released.Space || pad.a == PadTracker::RELEASED )
     {
-		select_se_[ 1 ]->stop();
-		select_se_[ 1 ]->play( AudioContainer::Mode::kDefault );
         return select_;
     }
     else if( key.pressed.Up || pad.leftStickUp == PadTracker::PRESSED )
@@ -85,15 +81,9 @@ int Pause::update()
         {
             --select_;
             position_cursor_.y -= kCursorMove;
-			select_se_[ 0 ]->stop();
-			select_se_[ 0 ]->resetPitch();
-			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
         }
 		else
 		{
-			select_se_[ 0 ]->stop();
-			select_se_[ 0 ]->setPitch( -0.5F );
-			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
 		}
     }
     else if( key.pressed.Down || pad.leftStickDown == PadTracker::PRESSED )
@@ -102,16 +92,9 @@ int Pause::update()
         {
             ++select_;
             position_cursor_.y += kCursorMove;
-
-			select_se_[ 0 ]->stop();
-			select_se_[ 0 ]->resetPitch();
-			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
         }
 		else
 		{
-			select_se_[ 0 ]->stop();
-			select_se_[ 0 ]->setPitch( -0.5F );
-			select_se_[ 0 ]->play( AudioContainer::Mode::kDefault );
 		}
     }
 

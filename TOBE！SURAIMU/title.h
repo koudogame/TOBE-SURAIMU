@@ -2,7 +2,6 @@
 
 #include "scene_base.h"
 #include "title_object.h"
-#include "audio_loader.h"
 
 //-----------------------------------------------------------------------------
 // ƒ^ƒCƒgƒ‹
@@ -52,9 +51,6 @@ private:
 	TitleStatus object_status_[ ObjectNum::kObjectNum ];
 	std::unique_ptr<TitleObject> object_[ ObjectNum::kObjectNum ];
 
-	AudioContainer* title_bgm_;
-	AudioContainer* select_se_[2];
-	AudioContainer* scene_se_;
 	float volume_;
 	SceneBase* ( Title::* scene_ )( ) = nullptr;
 

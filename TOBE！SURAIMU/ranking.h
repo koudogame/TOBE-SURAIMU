@@ -3,7 +3,7 @@
 // 板場 温樹
 
 #include "scene_base.h"
-#include "audio_loader.h"
+
 
 //-----------------------------------------------------------------------------
 // ランキングシーン
@@ -28,7 +28,5 @@ private:
     float magnification_ = 1.0F;
     float offset_ = 0.0F;
 
-	AudioContainer* select_se_[2];
-	AudioContainer* scene_se_;
 	bool sound_flag_;
 };
