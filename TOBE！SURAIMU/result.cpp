@@ -13,6 +13,7 @@
 #include "ranking_manager.h"
 #include "title.h"
 #include "endless.h"
+#include "Sound.h"
 
 
 typedef unsigned long long ULL;
@@ -116,7 +117,10 @@ bool Result::init()
     position_base_.x = 0.0F;
     position_base_.y = -getWindowHeight<float>();
 
-	//サウンドの取得
+	//サウンドの再生
+	SOUND->stop( SoundId::kTitle );
+	SOUND->play( SoundId::kTitle , true );
+
 	return true;
 }
 
@@ -298,7 +302,7 @@ SceneBase* Result::outToPlay()
         );
     position_base_.y -= offset;
 
-	if( count_ >= 1.0F ) {  return new Endless(); }
+	if( count_ >= 1.0F ) { SOUND->stop( SoundId::kTitle ); return new Endless(); }
     else                 { return this; }
 }
 
@@ -312,65 +316,82 @@ SceneBase* Result::setName()
     PadTracker pad_tracker = Pad::getInstance()->getTracker();
 
     // 決定
-    if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
-    {
+	if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
+	{
+		SOUND->stop( SoundId::kDicision );
+		SOUND->setPitch( SoundId::kDicision , 0.0F );
+		SOUND->stop( SoundId::kSelect );
+		SOUND->play( SoundId::kDicision , false );
 
-        name_[index_name_] = kCharTable[index_char_];
+		name_[ index_name_ ] = kCharTable[ index_char_ ];
 
-        // 名前上限か、2文字目以降に' 'が入力されたら処理を変更
-        if( (index_name_ + 1U >= kNameMax) ||
-            (kCharTable[index_char_] == ' ' && index_name_ != 0) )
-        {
-            ++select_;
-            update_ = &Result::selectNext;
-        }
-        // 次の文字選択へ向けて初期化
-        else if( name_[0] != ' ')
-        {
-            // 次の文字を'A'で初期化
-            ++index_name_;
-            index_char_ = kCharNum - 1;
-            name_[index_name_] = kCharTable[index_char_];
+		// 名前上限か、2文字目以降に' 'が入力されたら処理を変更
+		if( ( index_name_ + 1U >= kNameMax ) ||
+			( kCharTable[ index_char_ ] == ' ' && index_name_ != 0 ) )
+		{
+			++select_;
+			update_ = &Result::selectNext;
+		}
+		// 次の文字選択へ向けて初期化
+		else if( name_[ 0 ] != ' ' )
+		{
+			// 次の文字を'A'で初期化
+			++index_name_;
+			index_char_ = kCharNum - 1;
+			name_[ index_name_ ] = kCharTable[ index_char_ ];
 
-        }
-    }
-    // 戻る
-    else if( key_tracker.pressed.Back || pad_tracker.b == PadTracker::PRESSED )
-    {
+		}
+	}
+	// 戻る
+	else if( key_tracker.pressed.Back || pad_tracker.b == PadTracker::PRESSED )
+	{
+		SOUND->stop( SoundId::kDicision );
+		SOUND->setPitch( SoundId::kDicision , -0.5F );
+		SOUND->stop( SoundId::kSelect );
+		SOUND->play( SoundId::kDicision , false );
+
 		if( index_name_ >= 1U )
 		{
 			name_[ index_name_ ] = ' ';
 			--index_name_;
 			index_char_ = Text::getCharNum( name_[ index_name_ ] );
 		}
-    }
-    // 選択
-    else if(
-        // 新規入力か
-        ( (key_tracker.pressed.Up ||
-            pad_tracker.leftStickUp == PadTracker::PRESSED) ) ||
-        // 一定時間の長押しで
-        ( (key_state.Up || pad_state.IsLeftThumbStickUp()) &&
-            ++count_frame_ >= kFrameWait ) )
-    {
-        count_frame_ = 0U;
-        // 循環させる
-        if(--index_char_ < 0 ) { index_char_ = kCharNum - 1; }
-        name_[index_name_] = kCharTable[index_char_];
-    }
-    else if(
-        // 新規入力か
-        ( (key_tracker.pressed.Down ||
-            pad_tracker.leftStickDown == PadTracker::PRESSED) ) ||
-        // 一定時間の長押しで
-        ( (key_state.Down || pad_state.IsLeftThumbStickDown()) &&
-            ++count_frame_ >= kFrameWait ) )
-    {
-        count_frame_ = 0U;
-        // 循環させる
-        if(++index_char_ >= kCharNum ) { index_char_ = 0; }
-        name_[index_name_] = kCharTable[index_char_];
-    }
+	}
+	// 選択
+	else if(
+		// 新規入力か
+		( ( key_tracker.pressed.Up ||
+			pad_tracker.leftStickUp == PadTracker::PRESSED ) ) ||
+		// 一定時間の長押しで
+			( ( key_state.Up || pad_state.IsLeftThumbStickUp() ) &&
+			  ++count_frame_ >= kFrameWait ) )
+	{
+		SOUND->stop( SoundId::kSelect );
+		SOUND->setPitch( SoundId::kSelect , 0.0F );
+		SOUND->play( SoundId::kSelect , false );
+
+		count_frame_ = 0U;
+		// 循環させる
+		if( --index_char_ < 0 ) { index_char_ = kCharNum - 1; }
+		name_[ index_name_ ] = kCharTable[ index_char_ ];
+	}
+	else if(
+		// 新規入力か
+		( ( key_tracker.pressed.Down ||
+			pad_tracker.leftStickDown == PadTracker::PRESSED ) ) ||
+		// 一定時間の長押しで
+			( ( key_state.Down || pad_state.IsLeftThumbStickDown() ) &&
+			  ++count_frame_ >= kFrameWait ) )
+	{
+		SOUND->stop( SoundId::kSelect );
+		SOUND->setPitch( SoundId::kSelect , 0.0F );
+		SOUND->play( SoundId::kSelect , false );
+
+		count_frame_ = 0U;
+		// 循環させる
+		if( ++index_char_ >= kCharNum ) { index_char_ = 0; }
+		name_[ index_name_ ] = kCharTable[ index_char_ ];
+	}
 
 
     return this;
@@ -380,21 +401,25 @@ SceneBase* Result::setName()
 // 次のモードを選択
 SceneBase* Result::selectNext()
 {
-    KeyTracker key_tracker = Key::getInstance()->getTracker();
-    PadTracker pad_tracker = Pad::getInstance()->getTracker();
+	KeyTracker key_tracker = Key::getInstance()->getTracker();
+	PadTracker pad_tracker = Pad::getInstance()->getTracker();
 
-    // 決定
-    if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
-    {
-        // 各項目にあった処理へ移る
-        switch( select_ )
-        {
-        case kSelectSetName: update_ = &Result::setName; break;
-        case kSelectOneMore: update_ = &Result::outToPlay; break;
-        case kSelectTitle:   update_ = &Result::outToTitle; break;
-        }
-    }
-    // 選択
+	// 決定
+	if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
+	{
+		SOUND->stop( SoundId::kDicision );
+		SOUND->setPitch( SoundId::kDicision , 0.0F );
+		SOUND->play( SoundId::kDicision , false );
+
+		// 各項目にあった処理へ移る
+		switch( select_ )
+		{
+			case kSelectSetName: update_ = &Result::setName; break;
+			case kSelectOneMore: update_ = &Result::outToPlay; break;
+			case kSelectTitle:   update_ = &Result::outToTitle; break;
+		}
+	}
+	// 選択
 	else if( key_tracker.pressed.Up ||
 			 pad_tracker.leftStickUp == PadTracker::PRESSED )
 	{
@@ -402,10 +427,16 @@ SceneBase* Result::selectNext()
 		if( ( rank_ <= kRegisteredNum && select_ > kSelectSetName ) || // ランクイン時
 			( select_ > kSelectOneMore ) )                             // ランク外  時
 		{
+			SOUND->stop( SoundId::kSelect );
+			SOUND->setPitch( SoundId::kSelect , 0.0F );
+			SOUND->play( SoundId::kSelect , false );
 			--select_;
 		}
 		else
 		{
+			SOUND->stop( SoundId::kSelect );
+			SOUND->setPitch( SoundId::kSelect , -0.5F );
+			SOUND->play( SoundId::kSelect , false );
 		}
 	}
 	else if( key_tracker.pressed.Down ||
@@ -414,14 +445,20 @@ SceneBase* Result::selectNext()
 		// 下限を超えないよう制御
 		if( select_ < kSelectTitle )
 		{
+			SOUND->stop( SoundId::kSelect );
+			SOUND->setPitch( SoundId::kSelect , 0.0F );
+			SOUND->play( SoundId::kSelect , false );
 			++select_;
 		}
 		else
 		{
+			SOUND->stop( SoundId::kSelect );
+			SOUND->setPitch( SoundId::kSelect , -0.5F );
+			SOUND->play( SoundId::kSelect , false );
 		}
 	}
 
-    return this;
+	return this;
 }
 
 

@@ -12,6 +12,7 @@
 #include "text.h"
 
 #include "title.h"
+#include "Sound.h"
 
 typedef unsigned long long ULL;
 
@@ -88,7 +89,6 @@ bool Ranking::init()
     magnification_ = 1.0F;
     offset_ = 0.0F;
 
-	//サウンドの読み込み
 	sound_flag_ = false;
 
     return true;
@@ -124,6 +124,10 @@ SceneBase* Ranking::update()
         magnification_ = 1.0F;
         addOffset( &offset_, -kLineHeight );
 		sound_flag_ = false;
+
+		SOUND->setPitch( SoundId::kSelect , 1.0F );
+		SOUND->stop( SoundId::kSelect );
+		SOUND->play( SoundId::kSelect , true );
     }
     // 下新規入力時、1列分下へスクロール
     else if( key_tracker.pressed.Down ||
@@ -132,13 +136,16 @@ SceneBase* Ranking::update()
         magnification_ = 1.0F;
         addOffset( &offset_, kLineHeight );
 		sound_flag_ = false;
+
+		SOUND->setPitch( SoundId::kSelect , 1.0F );
+		SOUND->stop( SoundId::kSelect );
+		SOUND->play( SoundId::kSelect , true );
     }
     // 上長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
     else if( key_state.Up || pad_state.IsLeftThumbStickUp() )
     {
         addOffset( &offset_, -kOffset * magnification_ );
         addMagnification( &magnification_ );
-
     }
     // 下長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
     else if( key_state.Down || pad_state.IsLeftThumbStickDown() )
@@ -149,6 +156,10 @@ SceneBase* Ranking::update()
     // Spaceかaボタンが離されたら決定
     else if(key_tracker.released.Space || pad_tracker.a ==PadTracker::RELEASED)
     {
+		SOUND->stop( SoundId::kSelect );
+		SOUND->stop( SoundId::kDicision );
+		SOUND->play( SoundId::kDicision , false );
+
         return new Title();
     }
 	else
@@ -160,6 +171,10 @@ SceneBase* Ranking::update()
 	if( (offset_ == kOffsetMax || offset_ == 0.0F) && !sound_flag_)
 	{
 		sound_flag_ = true;
+
+		SOUND->setPitch( SoundId::kSelect , -0.5F );
+		SOUND->stop( SoundId::kSelect );
+		SOUND->play( SoundId::kSelect , false );
 	}
 
     return this;
