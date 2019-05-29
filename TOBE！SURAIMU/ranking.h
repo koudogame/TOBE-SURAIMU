@@ -29,4 +29,9 @@ private:
     float offset_ = 0.0F;
 
 	bool sound_flag_;
+
+	//ƒTƒEƒ“ƒh
+	std::unique_ptr<SoundEffectInstance> bgm_;
+	std::unique_ptr<SoundEffectInstance> select_se_;
+	std::unique_ptr<SoundEffectInstance> dicision_se_;
 };

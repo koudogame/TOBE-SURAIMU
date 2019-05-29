@@ -6,6 +6,8 @@
 #include "key.h"
 #include "pad.h"
 
+#include "Sound.h"
+
 
 using KeyTracker = Keyboard::KeyboardStateTracker;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -73,6 +75,8 @@ int Pause::update()
     // Œˆ’è
     if( key.released.Space || pad.a == PadTracker::RELEASED )
     {
+		SOUND->stop( SoundId::kDicision );
+		SOUND->play( SoundId::kDicision , false );
         return select_;
     }
     else if( key.pressed.Up || pad.leftStickUp == PadTracker::PRESSED )
@@ -81,9 +85,15 @@ int Pause::update()
         {
             --select_;
             position_cursor_.y -= kCursorMove;
+			SOUND->stop( SoundId::kSelect );
+			SOUND->setPitch( SoundId::kSelect , 0.0F );
+			SOUND->play( SoundId::kSelect , false );
         }
 		else
 		{
+			SOUND->stop( SoundId::kSelect );
+			SOUND->setPitch( SoundId::kSelect , -0.5F );
+			SOUND->play( SoundId::kSelect , false );
 		}
     }
     else if( key.pressed.Down || pad.leftStickDown == PadTracker::PRESSED )
@@ -92,9 +102,15 @@ int Pause::update()
         {
             ++select_;
             position_cursor_.y += kCursorMove;
+			SOUND->stop( SoundId::kSelect );
+			SOUND->setPitch( SoundId::kSelect , 0.0F );
+			SOUND->play( SoundId::kSelect , false );
         }
 		else
 		{
+			SOUND->stop( SoundId::kSelect );
+			SOUND->setPitch( SoundId::kSelect , -0.5F );
+			SOUND->play( SoundId::kSelect , false );
 		}
     }
 

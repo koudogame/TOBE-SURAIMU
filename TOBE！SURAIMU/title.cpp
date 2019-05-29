@@ -9,6 +9,7 @@
 #include "ranking.h"
 #include "csvLoader.h"
 #include "easing.h"
+#include "Sound.h"
 
 
 const int kMenuSize = 256;
@@ -108,6 +109,9 @@ bool Title::init()
 		object_[ i ].get()->init( &object_status_[ i ] );
 
 	volume_ = 1.0F;
+
+	//ƒTƒEƒ“ƒh‚Ì¶¬
+	SOUND->play( SoundId::kTitle , true );
 	return true;
 }
 
@@ -156,9 +160,15 @@ void Title::input()
 		if( select_menu_ == Menu::kPlay )
 		{
 			select_menu_ = Menu::kRanking;
+			SOUND->setPitch( SoundId::kSelect , 0.0F );
+			SOUND->stop( SoundId::kSelect );
+			SOUND->play( SoundId::kSelect , false );
 		}
 		else
 		{
+			SOUND->setPitch( SoundId::kSelect , -0.5F );
+			SOUND->stop( SoundId::kSelect );
+			SOUND->play( SoundId::kSelect , false );
 		}
 	}
 	else if( key_.pressed.Up || pad_.leftStickUp == pad_.PRESSED )
@@ -166,9 +176,15 @@ void Title::input()
 		if( select_menu_ == Menu::kRanking )
 		{
 			select_menu_ = Menu::kPlay;
+			SOUND->setPitch( SoundId::kSelect , 0.0F );
+			SOUND->stop( SoundId::kSelect );
+			SOUND->play( SoundId::kSelect , false );
 		}
 		else
 		{
+			SOUND->setPitch( SoundId::kSelect , -0.5F );
+			SOUND->stop( SoundId::kSelect );
+			SOUND->play( SoundId::kSelect , false );
 		}
 
 	}
@@ -177,6 +193,11 @@ void Title::input()
 SceneBase* Title::playScene()
 {
 	volume_ -= 0.01F;
+	if( volume_ < 0.0F )volume_ = 0.0F;
+	SOUND->setVolume( SoundId::kScene , volume_ );
+	SOUND->setVolume( SoundId::kTitle , volume_ );
+	SOUND->play( SoundId::kScene , false );
+
 	for( int i = 0; i <= ObjectNum::kPlayer; i++ )
 		object_status_[ i ].position.y += kFall;
 
@@ -188,6 +209,9 @@ SceneBase* Title::playScene()
 
 	if( object_status_[ kRogo ].position.y > getWindowHeight<float>() )
 	{
+		SOUND->stop( SoundId::kScene );
+		SOUND->stop( SoundId::kTitle );
+		SOUND->setVolume( SoundId::kTitle , 1.0F );
 		return new Endless;
 	}
 	return this;
@@ -196,12 +220,17 @@ SceneBase* Title::playScene()
 SceneBase * Title::rankingScene()
 {
 	volume_ -= 0.01F;
+	SOUND->setVolume( SoundId::kScene , volume_ );
+	SOUND->play( SoundId::kScene , false );
 	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		object_status_[ i ].alpha = volume_;
 
 
 	if( volume_ < 0 )
+	{
+		SOUND->stop( SoundId::kScene );
 		return new Ranking;
+	}
 	return this;
 }
 
@@ -216,7 +245,8 @@ SceneBase * Title::selectScene()
 	if( key_.released.Space ||
 		pad_.a == pad_.PRESSED )
 	{
-
+		SOUND->stop( SoundId::kDicision );
+		SOUND->play( SoundId::kDicision , false );
 		switch( select_menu_ )
 		{
 			case Title::kPlay:

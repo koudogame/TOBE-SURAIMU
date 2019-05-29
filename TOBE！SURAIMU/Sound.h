@@ -15,11 +15,21 @@ public:
 public:
 	bool init();
 	void update();
-	inline std::unique_ptr<SoundEffectInstance> getSound( XACT_WAVEBANK_WAVEBANK ID ) { return wb.get()->CreateInstance( ID ); }
+
+	//ÉTÉEÉìÉhêßå‰ä÷êî
+public:
+	void play( int ID , bool LoopFlag );
+	void stop( int ID );
+	void pause( int ID );
+	void resume( int ID );
+	void setPan( int ID , float Pan );
+	void setPitch( int ID , float Pitch );
+	void setVolume( int ID , float Volume );
 
 private:
 	std::unique_ptr<AudioEngine> engine;
 	std::unique_ptr<WaveBank> wb;
+	std::vector<std::unique_ptr<SoundEffectInstance>> sound_list_;
 };
 
 #define SOUND Sound::getinstance()

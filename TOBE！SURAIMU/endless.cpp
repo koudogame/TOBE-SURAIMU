@@ -28,6 +28,8 @@
 #include "endless.h"
 #include "result.h"
 
+#include "Sound.h"
+
 using KeyTracker = Keyboard::KeyboardStateTracker;
 using PadTracker = GamePad::ButtonStateTracker;
 
@@ -130,6 +132,10 @@ bool Endless::init()
 	climb_ = 0.0F;
 
 	clock_->start();
+
+	//サウンドの再生
+	SOUND->stop( SoundId::kPlay );
+	SOUND->play( SoundId::kPlay , true );
 
 	return true;
 }
@@ -234,7 +240,7 @@ SceneBase* Endless::start()
         TaskManager::getInstance()->pause();
         update_ = &Endless::pause;
     }
-	else 
+	else
 	{
 	    // プレイヤーがジャンプしたらplay部へ
         if (player_->isJump())
@@ -278,6 +284,7 @@ SceneBase* Endless::play()
 	// プレイヤーが死んでいたらリザルト画面へ
 	if (player_->isAlive() == false)
 	{
+		SOUND->stop( SoundId::kPlay );
 		return new Result(ranking_->getRank(), *player_->getScore());
 	}
 
@@ -315,7 +322,7 @@ SceneBase* Endless::play()
         }
     }
 
-    
+
 
 	ranking_->setScore( player_->getScore()->getScore() );
 
@@ -362,6 +369,7 @@ SceneBase* Endless::pause()
 
     case Pause::kTitle    :
         kTaskManager->restart();
+		SOUND->stop( SoundId::kPlay );
         return new Title();
     }
 
