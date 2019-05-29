@@ -29,7 +29,8 @@ constexpr float kLineHeight       = 20.0F;
 constexpr float kMagnification    = 0.1F;
 constexpr float kMagnificationMax = 2.0F;
 constexpr float kOffset           = 5.0F;
-constexpr float kOffsetMax        = 2000.0F;
+constexpr float kOffsetMin        = -200.0F;
+constexpr float kOffsetMax        = 1800.0F;
 constexpr float kFieldMax         = 640.0F;
 constexpr float kIntervalNumber   = 1.0F;
 constexpr long kCharWidth         = 12L;
@@ -45,7 +46,7 @@ constexpr float kCoordinateX[] = {
     390.0F, 430.0F, 535.0F, 673.0F, 767.0F
 };
 
-constexpr Vector2 kPositionBase( 0.0F, 400.0F );
+constexpr Vector2 kPositionBase( 0.0F, 200.0F );
 enum { kFrame, kBack, kField };
 constexpr Vector2 kPosition[] = {
     { 120.0F,  21.0F },
@@ -257,5 +258,5 @@ void addOffset( float* const Val, const float Add )
     *Val += Add;
 
 	if( *Val > kOffsetMax ) { *Val = kOffsetMax;}
-    else if( *Val < 0.0F )  { *Val = 0.0F; }
+    else if( *Val < kOffsetMin )  { *Val = kOffsetMin; }
 }

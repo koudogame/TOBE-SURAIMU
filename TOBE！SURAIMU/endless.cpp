@@ -39,7 +39,7 @@ constexpr float kDispTimeMSPF = 500.0F / 16.0F;
 // “ïˆÕ“x‚ÉŠÖŒW
 constexpr unsigned kHeight = 0U;
 constexpr unsigned kThreshold = 1U;
-constexpr unsigned kLevelMax = 2U;
+constexpr unsigned kLevelMax = 4U;
 constexpr float kLevelTable[][2] = {
     {      0.0F, getWindowHeight<float>() * 0.25F },
     {   1000.0F, getWindowHeight<float>() * 0.35F },
