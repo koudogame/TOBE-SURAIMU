@@ -4,6 +4,10 @@
 
 #include "object_base.h"
 
+namespace {
+    constexpr float kPercentegeForMove = 0.5F;
+}
+
 //-----------------------------------------------------------------------------
 // 背景オブジェクト
 //-----------------------------------------------------------------------------
@@ -25,6 +29,7 @@ public:
     void draw() override;
 
     bool isAlive() override { return position_.y < getWindowHeight<float>(); }
+    void setMove(const float Move) override { position_.y += Move * kPercentegeForMove; } 
 
     void resetStates(const float Magnification) { magnification_ = Magnification; }
     void reset(const RECT& Trimming,
