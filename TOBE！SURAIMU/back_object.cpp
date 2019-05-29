@@ -9,10 +9,9 @@
 
 
 /*===========================================================================*/
-constexpr float kTextureWidth = 2048.0F;
-constexpr float kTextureHeight = 1024.0F;
 constexpr float kAmountOfAlphaChange = 0.01F;
-constexpr Vector2 kAnkerPoint(kTextureWidth / 2.0F, kTextureHeight / 2.0F);
+constexpr float kAlphaMax            = 1.0F;
+constexpr float kAlphaMin            = 0.0F;
 
 /*===========================================================================*/
 BackObject::BackObject()
@@ -34,11 +33,15 @@ bool BackObject::init(const RECT& Trimming,
     created_ = true;
 
     // 生成処理
-    texture_ = TextureLoder::getInstance()->load(L"Texture/wave.png");
-    if (texture_ == nullptr) { return false; }
+    TextureLoder* kLoader = TextureLoder::getInstance();
+    texture_ = kLoader->load(L"Texture/wave_base.png");
+    if( texture_ == nullptr )     { return false; }
+    texture_sub_ = kLoader->load(L"Texture/wave_sub.png");
+    if( texture_sub_ == nullptr ) { return false; }
 
-    TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackgroundUpdate);
-    TaskManager::getInstance()->registerTask(this, TaskDraw::kBackground);
+    TaskManager* kManager = TaskManager::getInstance();
+    kManager->registerTask(this, TaskUpdate::kBackgroundUpdate);
+    kManager->registerTask(this, TaskDraw::kBackground);
 
 
     // 初期化
@@ -55,7 +58,10 @@ void BackObject::destroy()
     created_ = false;
 
     TaskManager::getInstance()->unregisterObject(this);
-    TextureLoder::getInstance()->release(texture_);
+
+    TextureLoder* kLoader = TextureLoder::getInstance();
+    kLoader->release(texture_sub_);
+    kLoader->release(texture_);
 }
 
 /*===========================================================================*/
@@ -70,11 +76,37 @@ void BackObject::update()
     {
         position_.y = getWindowHeight<float>();
     }
-    // 右端が画面左端を超えたら、戻す
+    // 
     const long kWidth = trimming_.right - trimming_.left;
-    if( position_.x + kWidth < 0.0F )
+    if( position_.x < -kWidth )
+    {
+        position_.x += kWidth;
+    }
+    // 
+    else if( position_.x > kWidth )
     {
         position_.x -= kWidth;
+    }
+
+    // サブエフェクトのアルファ値を更新
+    if( is_add_subalpha_ )
+    {
+        sub_alpha_ += kAmountOfAlphaChange;
+        if( sub_alpha_ >= kAlphaMax )
+        {
+            sub_alpha_ = kAlphaMax;
+            is_add_subalpha_ = false;
+        }
+    }
+    else
+    {
+        sub_alpha_ -= kAmountOfAlphaChange;
+        if( sub_alpha_ <= kAlphaMin )
+        {
+            sub_alpha_ = kAlphaMin;
+            is_add_subalpha_ = true;
+
+        }
     }
 }
 
@@ -85,14 +117,23 @@ void BackObject::draw()
     Sprite* const kSprite = Sprite::getInstance();
 
     Vector2 draw_position = position_;
-    draw_position.x -= getWindowWidth<float>();
 
     // シームレスに描画
-    while(draw_position.x < getWindowWidth<float>())
-    {
-        kSprite->draw(texture_, draw_position, &trimming_);
+    const long kWidth = trimming_.right - trimming_.left;
 
-        draw_position.x += kTextureWidth;
+    while( draw_position.x > 0.0F )
+    {
+        draw_position.x -= kWidth;
+    }
+    while( draw_position.x < getWindowWidth<float>() )
+    {
+        kSprite->draw( texture_, draw_position, &trimming_,
+                       1.0F, draw_depth_ );
+
+        kSprite->draw( texture_sub_, draw_position, &trimming_,
+                       sub_alpha_, draw_depth_);
+
+        draw_position.x += kWidth;
     }
 }
 
@@ -102,14 +143,17 @@ void BackObject::reset(const RECT& Trimming,
     const float ScrollX, const float ScrollY ,
     const float Depth)
 {
-    position_.x    = 0.0F;
-    position_.y    = (Trimming.bottom - Trimming.top) * -1.0F;
-    trimming_      = Trimming;
-    scroll_x_      = ScrollX;
-    scroll_y_      = ScrollY;
-    draw_depth_    = Depth;
-    magnification_ = 1.0F;
-    is_add_red_1_  = true;
-    alpha_red_1_   = 1.0F;
-    alpha_red_2_   = 0.0F;
+    TaskManager* kManager = TaskManager::getInstance();
+    kManager->registerTask(this, TaskUpdate::kBackgroundUpdate);
+    kManager->registerTask(this, TaskDraw::kBackground);
+
+    position_.x      = 0.0F;
+    position_.y      = (Trimming.bottom - Trimming.top) * -1.0F;
+    trimming_        = Trimming;
+    scroll_x_        = ScrollX;
+    scroll_y_        = ScrollY;
+    draw_depth_      = Depth;
+    magnification_   = 1.0F;
+    is_add_subalpha_ = false;
+    sub_alpha_       = 1.0F;
 }

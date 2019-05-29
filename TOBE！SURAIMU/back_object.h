@@ -32,14 +32,16 @@ public:
                const float DrawDepth); 
 
 private:
-    bool created_        = false;
-    RECT trimming_       { 0L,0L,0L,0L };
-    float scroll_x_      = 0.0F;
-    float scroll_y_      = 0.0F;
-    float draw_depth_    = 0.0F;
-    float magnification_ = 0.0F;
+    bool created_         = false;
 
-    bool is_add_red_1_   = false;
-    float alpha_red_1_   = 0.0F;
-    float alpha_red_2_   = 0.0F;
+    ID3D11ShaderResourceView* texture_sub_ = nullptr;
+
+    RECT trimming_        { 0L,0L,0L,0L };
+    float scroll_x_       = 0.0F;
+    float scroll_y_       = 0.0F;
+    float draw_depth_     = 0.0F;
+    float magnification_  = 0.0F;
+
+    bool is_add_subalpha_ = false;
+    float sub_alpha_      = 0.0F;
 };

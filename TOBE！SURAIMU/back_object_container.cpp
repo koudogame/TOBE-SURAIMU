@@ -3,6 +3,7 @@
 
 #include "back_object_container.h"
 
+#include "task_manager.h"
 
 /*===========================================================================*/
 BackObjectContainer::BackObjectContainer()
@@ -17,12 +18,15 @@ BackObjectContainer::~BackObjectContainer()
 // 更新処理
 void BackObjectContainer::update()
 {
+    TaskManager* kManager = TaskManager::getInstance();
+
     // 死亡判定後のオブジェクトのdestroy関数を呼ばない( 後にreset関数で値を再設定する )
     for (auto itr = active_list_.begin(), end = active_list_.end();
         itr != end;)
     {
         if ((*itr)->isAlive() == false)
         {
+            kManager->unregisterObject(*itr);
             free_list_.push_back(*itr);
             itr = active_list_.erase(itr);
         }
