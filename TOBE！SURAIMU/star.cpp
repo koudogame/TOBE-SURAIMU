@@ -125,8 +125,14 @@ void Star::setFall()
 
 void Star::collision(Player* P)
 {
-	float old_angle = std::atan2( -P->getMove()->start.y , P->getMove()->start.x );
-	float new_angle = std::atan2( -P->getMove()->end.y , P->getMove()->end.x );
+	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , P->getMove()->start.x - position_.x );
+	float new_angle = std::atan2( -( P->getMove()->end.y - position_.y ) , P->getMove()->end.x - position_.x );
+
+	if( old_angle < 0.0F ) old_angle += XM_2PI;
+	if( new_angle < 0.0F ) new_angle += XM_2PI;
+
+	if( new_angle - old_angle > XM_PI )
+		new_angle += XM_2PI;
 	turn_ = static_cast< int >( std::copysign( 1.0F , new_angle - old_angle ) );
 
 	//’†S‚©‚ç‚ÌŠ„‡
