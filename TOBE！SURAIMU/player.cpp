@@ -7,6 +7,7 @@
 #include "calc.h"
 
 #include "easing.h"
+#include "Sound.h"
 
 //”»’è‘ÎÛƒNƒ‰ƒX
 #include "star.h"
@@ -210,7 +211,12 @@ void Player::collision( Star * StarObj)
 	{
 		if( score_.isStart() )
 		{
+			SOUND->stop( SoundId::kJump );
+			SOUND->stop( SoundId::kCllision );
+			SOUND->setPitch( SoundId::kCllision , collision_combo_pitch_ );
+			SOUND->play( SoundId::kCllision , false );
 			collision_combo_pitch_ += 0.2F;
+			if( collision_combo_pitch_ >= 1.0F )collision_combo_pitch_ = 1.0F;
 		}
 		rect_left_up_ = Vector2::Zero;
 		direction_id_ = Direction::kFlont;
@@ -237,6 +243,10 @@ void Player::collision( Wall * WallObj)
 {
 	if( score_.isStart() )
 	{
+		SOUND->stop( SoundId::kJump );
+		SOUND->stop( SoundId::kCllision );
+		SOUND->setPitch( SoundId::kCllision , 0.0F );
+		SOUND->play( SoundId::kCllision , false );
 	}
 	setGround( &kGround );
 
@@ -313,6 +323,8 @@ void Player::input()
 		{
 			if( !died_flag_ )
 			{
+				SOUND->stop( SoundId::kJump );
+				SOUND->play( SoundId::kJump , false );
 				flag_.set( Flag::kJump );
 				flag_.set( Flag::kStarCollision );
 				flag_.reset( Flag::kParticle );
@@ -438,6 +450,11 @@ bool Player::diedEffect()
 {
 	if( !died_flag_ )
 	{
+		SOUND->stop( SoundId::kJump );
+		SOUND->stop( SoundId::kCllision );
+		SOUND->stop( SoundId::kDied );
+		SOUND->play( SoundId::kDied , false );
+
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 45 ) , NameSpaceParticle::ParticleID::kCyan , 2.0F );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 75 ) , NameSpaceParticle::ParticleID::kMagenta , 2.0F );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 105 ) , NameSpaceParticle::ParticleID::kWall , 2.0F );

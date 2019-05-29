@@ -51,10 +51,11 @@ Star::~Star()
 bool Star::init( const Vector2 & Position , const float Angle  , const float Spin , const float Rate , const float Size )
 {
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kStarUpdate );
-	TaskManager::getInstance()->registerTask( this , TaskDraw::kObject );
+	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 
 	texture_ = TextureLoder::getInstance()->load( L"Texture/star.png" );
-	if( texture_ == nullptr )
+	overlay_texture_ = TextureLoder::getInstance()->load( L"Texture/star1.png" );
+	if( texture_ == nullptr || overlay_texture_ == nullptr )
 		return false;
 
 	s_particle_container_ = std::make_unique<FreeFallParticleContainer>();
@@ -106,6 +107,11 @@ void Star::draw()
 	trim.right = trim.left + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 	trim.bottom = trim.top + static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z );
 
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
+	Sprite::getInstance()->draw( overlay_texture_ , position_ , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - 90.0F ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ) );
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin();
 	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.9F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - 90.0F ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ) );
 }
 
@@ -125,8 +131,14 @@ void Star::setFall()
 
 void Star::collision(Player* P)
 {
-	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , ( P->getMove()->start.x - position_.x ) ) + XM_PI;
-	float new_angle = std::atan2( -( P->getMove()->end.y - position_.y ) , ( P->getMove()->end.x - position_.x ) ) + XM_PI;
+	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , P->getMove()->start.x - position_.x );
+	float new_angle = std::atan2( -( P->getMove()->end.y - position_.y ) , P->getMove()->end.x - position_.x );
+
+	if( old_angle < 0.0F ) old_angle += XM_2PI;
+	if( new_angle < 0.0F ) new_angle += XM_2PI;
+
+	if( new_angle - old_angle > XM_PI )
+		new_angle += XM_2PI;
 	turn_ = static_cast< int >( std::copysign( 1.0F , new_angle - old_angle ) );
 
 	//íÜêSÇ©ÇÁÇÃäÑçá
@@ -136,9 +148,9 @@ void Star::collision(Player* P)
 
 	spin_ += turn_ * rate_ * per * p_movement;
 	if( std::abs( spin_ ) < kMinSpin )
-		spin_ = static_cast< float >( std::copysign( kMinSpin , turn_ ) );
+		spin_ = static_cast< float >( std::copysign( kMinSpin , spin_ ) );
 	else if( std::abs( spin_ ) > kMaxSpin[ id_ ] )
-		spin_ = static_cast< float >( std::copysign( kMaxSpin[ id_ ] , turn_ ) );
+		spin_ = static_cast< float >( std::copysign( kMaxSpin[ id_ ] , spin_ ) );
 
 	particle_time_ = 0;
 }

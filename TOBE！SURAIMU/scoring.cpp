@@ -1,6 +1,7 @@
 #include "scoring.h"
 #include "textureLoder.h"
 #include "sprite.h"
+#include "Sound.h"
 
 const unsigned int kComboScore = 100;
 const unsigned int kDownScore = 1;
@@ -169,7 +170,11 @@ void Scoring::addRotate( float Angle )
 		//1‰ñ“]‚Å‰Á“_
 		if( rotation_ >= 360.0F )
 		{
+			SOUND->stop( SoundId::kSpinCombo );
+			SOUND->setPitch( SoundId::kSpinCombo , spin_combo_pitch_ );
+			SOUND->play( SoundId::kSpinCombo , false );
 			spin_combo_pitch_ += 0.2F;
+
 			if( spin_combo_pitch_ > 1.0 )
 				spin_combo_pitch_ = 1.0F;
 			rotation_ = 0;

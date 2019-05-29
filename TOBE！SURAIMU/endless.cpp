@@ -235,6 +235,8 @@ SceneBase* Endless::start()
     // ƒ|[ƒY‰æ–Ê‚Ö
     if( key.pressed.P || pad.start == PadTracker::PRESSED )
     {
+		SOUND->stop( SoundId::kDicision );
+		SOUND->play( SoundId::kDicision , false );
         is_pause_ = true;
         pause_->reset();
         TaskManager::getInstance()->pause();
@@ -270,6 +272,8 @@ SceneBase* Endless::play()
     PadTracker pad = Pad::getInstance()->getTracker();
     if( key.pressed.P || pad.start == PadTracker::PRESSED )
     {
+		SOUND->stop( SoundId::kDicision );
+		SOUND->play( SoundId::kDicision , false );
         clock_->stop();
         pause_->reset();
         TaskManager::getInstance()->pause();
@@ -347,6 +351,8 @@ SceneBase* Endless::pause()
     PadTracker pad = Pad::getInstance()->getTracker();
     if( key.pressed.P || pad.start == PadTracker::PRESSED )
     {
+		SOUND->stop( SoundId::kDicision );
+		SOUND->play( SoundId::kDicision , false );
         kTaskManager->restart();
         clock_->restart();
 
