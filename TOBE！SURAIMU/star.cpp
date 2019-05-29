@@ -125,8 +125,8 @@ void Star::setFall()
 
 void Star::collision(Player* P)
 {
-	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , ( P->getMove()->start.x - position_.x ) ) + XM_PI;
-	float new_angle = std::atan2( -( P->getMove()->end.y - position_.y ) , ( P->getMove()->end.x - position_.x ) ) + XM_PI;
+	float old_angle = std::atan2( -P->getMove()->start.y , P->getMove()->start.x );
+	float new_angle = std::atan2( -P->getMove()->end.y , P->getMove()->end.x );
 	turn_ = static_cast< int >( std::copysign( 1.0F , new_angle - old_angle ) );
 
 	//’†S‚©‚ç‚ÌŠ„‡
@@ -136,9 +136,9 @@ void Star::collision(Player* P)
 
 	spin_ += turn_ * rate_ * per * p_movement;
 	if( std::abs( spin_ ) < kMinSpin )
-		spin_ = static_cast< float >( std::copysign( kMinSpin , turn_ ) );
+		spin_ = static_cast< float >( std::copysign( kMinSpin , spin_ ) );
 	else if( std::abs( spin_ ) > kMaxSpin[ id_ ] )
-		spin_ = static_cast< float >( std::copysign( kMaxSpin[ id_ ] , turn_ ) );
+		spin_ = static_cast< float >( std::copysign( kMaxSpin[ id_ ] , spin_ ) );
 
 	particle_time_ = 0;
 }
