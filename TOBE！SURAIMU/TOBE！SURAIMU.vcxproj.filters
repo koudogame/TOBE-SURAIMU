@@ -108,14 +108,14 @@
     <Filter Include="Project\Game\Others\RankingManager">
       <UniqueIdentifier>{d69f8c63-0984-4062-9ba4-48328713dd2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Others\Pause">
-      <UniqueIdentifier>{ca5e6288-5a78-4c62-8ef1-db59f28d734c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Others\Collision">
       <UniqueIdentifier>{d79af6f7-4414-4c49-99c2-63e7f80ab6f9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Others\TaskManager">
       <UniqueIdentifier>{f11f552b-e0df-4b26-993c-f716098789ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Object\UI\Pause">
+      <UniqueIdentifier>{ca5e6288-5a78-4c62-8ef1-db59f28d734c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -252,7 +252,7 @@
       <Filter>Project\Game\Scene\Ranking</Filter>
     </ClCompile>
     <ClCompile Include="pause.cpp">
-      <Filter>Project\Game\Others\Pause</Filter>
+      <Filter>Project\Game\Object\UI\Pause</Filter>
     </ClCompile>
     <ClCompile Include="score_number.cpp">
       <Filter>Project\Game\Others\Scoring</Filter>
@@ -412,7 +412,7 @@
       <Filter>Project\Game\Scene\Ranking</Filter>
     </ClInclude>
     <ClInclude Include="pause.h">
-      <Filter>Project\Game\Others\Pause</Filter>
+      <Filter>Project\Game\Object\UI\Pause</Filter>
     </ClInclude>
     <ClInclude Include="score_number.h">
       <Filter>Project\Game\Others\Scoring</Filter>

@@ -26,7 +26,8 @@ void BackObjectContainer::update()
             free_list_.push_back(*itr);
             itr = active_list_.erase(itr);
         }
-        else { ++itr; }
+        else
+        { ++itr; }
     }
 }
 
@@ -55,9 +56,9 @@ bool BackObjectContainer::addBackObject(const RECT& Trimming,
     {
         back_obj->reset(
             Trimming,
-            ScrollX,
-            ScrollY,
+            ScrollX, ScrollY,
             DrawDepth);
+        active_list_.push_back(back_obj);
     }
 
 

@@ -34,7 +34,7 @@ public:
     inline const std::vector<Data>& getRanking() { return ranking_; }
 
     inline Data getData(const unsigned Rank) 
-        { assert((Rank - 1U) <= 99U && (Rank >= 1U)); return ranking_[Rank - 1]; }
+         { assert((Rank - 1U) < kRegisteredNum && (Rank >= 1U)); return ranking_[Rank - 1]; }
 
     void registerScore(const std::string& PlayerName,
                        const unsigned long long& Score,
