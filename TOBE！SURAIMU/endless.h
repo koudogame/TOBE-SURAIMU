@@ -42,6 +42,7 @@ private:
 
     void adjustObjectPosition(const float);
     bool checkAndCreateStar();
+    void changePattern();
 
 
 // オブジェクト
