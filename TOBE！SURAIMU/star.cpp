@@ -10,7 +10,7 @@
 //定数
 const int kStarMin = 60;
 const int kStarDifference = 30;
-const float kMinSpin = 1.0F;
+const float kMinSpin = 2.0F;
 const float kMaxSpin[ 3 ] =
 {
 	3.0F,
@@ -129,7 +129,7 @@ void Star::setFall()
 	fall_ = kFallSpeed;
 }
 
-void Star::collision(Player* P)
+void Star::collision( Player* P )
 {
 	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , P->getMove()->start.x - position_.x );
 	float new_angle = std::atan2( -( P->getMove()->end.y - position_.y ) , P->getMove()->end.x - position_.x );
@@ -143,17 +143,16 @@ void Star::collision(Player* P)
 	turn_ = static_cast< int >( std::copysign( 1.0F , new_angle - old_angle ) );
 
 	//中心からの割合
-	float per = (( P->getPosition() - position_ ).Length() / size_);
+	float per = ( ( P->getPosition() - position_ ).Length() / size_ );
 	//プレイヤーの移動量を取り出す
 	float p_movement = ( P->getMove()->end - P->getMove()->start ).Length();
 
-	if( static_cast< int >( std::copysign( 1.0F , spin_ ) ) == turn_ )
-	{
-		spin_ += turn_ * rate_ * per * p_movement;
+	spin_ += turn_ * rate_ * per * p_movement;
 
-		if( std::abs( spin_ ) > kMaxSpin[ id_ ] )
-			spin_ = static_cast< float >( std::copysign( kMaxSpin[ id_ ] , spin_ ) );
-	}
+	if( std::abs( spin_ ) < kMinSpin )
+		spin_ = static_cast< float >( std::copysign( kMinSpin , spin_ ) );
+	if( std::abs( spin_ ) > kMaxSpin[ id_ ] )
+		spin_ = static_cast< float >( std::copysign( kMaxSpin[ id_ ] , spin_ ) );
 
 	particle_time_ = 0;
 }
