@@ -62,7 +62,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	const HWND hWnd = CreateWindowEx(
 		ex_style,                   //  拡張ウィンドウスタイル
 		"ClassName",                //  クラス名
-		"StarProject",              //  ウィンドウタイトル
+		"SRASPITA",					//  ウィンドウタイトル
 		style,                      //  ウィンドウスタイル
 		CW_USEDEFAULT,              //  表示座標_x
 		CW_USEDEFAULT,              //  表示座標_y

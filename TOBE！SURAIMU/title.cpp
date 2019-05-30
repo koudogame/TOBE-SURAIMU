@@ -70,8 +70,18 @@ bool Title::init()
 	trim.right = trim.left + 300L;
 	trim.bottom = trim.top + 300L;
 	object_status_[ ObjectNum::kStar2 ].texture = TextureLoder::getInstance()->load( L"Texture/star.png" );
-	object_status_[ ObjectNum::kStar2 ].position = Vector2( 810.0F - 300.0F / 2.0F , 100.0F - 300.0F / 2.0F - getWindowHeight<float>() );
+	object_status_[ ObjectNum::kStar2 ].position = Vector2( 816.0F - 300.0F / 2.0F , 297.0F - 300.0F / 2.0F - getWindowHeight<float>() );
 	object_status_[ ObjectNum::kStar2 ].trim = trim;
+
+	//初期の星3
+	//マジックナンバー
+	trim.left = 150L + 226L;
+	trim.top = 0L;
+	trim.right = trim.left + 300L;
+	trim.bottom = trim.top + 300L;
+	object_status_[ ObjectNum::kStar3 ].texture = TextureLoder::getInstance()->load( L"Texture/star.png" );
+	object_status_[ ObjectNum::kStar3 ].position = Vector2( 465.0F - 300.0F / 2.0F , 142.0F - 300.0F / 2.0F - getWindowHeight<float>() );
+	object_status_[ ObjectNum::kStar3 ].trim = trim;
 
 	//プレイヤー
 	//マジックナンバー
@@ -140,7 +150,7 @@ void Title::draw()
 
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
-	for( int i = ObjectNum::kStar1; i <= ObjectNum::kStar2; i++ )
+	for( int i = ObjectNum::kStar1; i <= ObjectNum::kStar3; i++ )
 	{
 		Sprite::getInstance()->draw( overlay_texture_ , object_status_[ i ].position , &object_status_[ i ].trim , 1.0F , 1.0F );
 	}
@@ -149,6 +159,7 @@ void Title::draw()
 
 	Sprite::getInstance()->draw( object_status_[ ObjectNum::kStar1 ].texture , object_status_[ ObjectNum::kStar1 ].position , &object_status_[ ObjectNum::kStar1 ].trim , 1.0F , 1.0F );
 	Sprite::getInstance()->draw( object_status_[ ObjectNum::kStar2 ].texture , object_status_[ ObjectNum::kStar2 ].position , &object_status_[ ObjectNum::kStar2 ].trim , 1.0F , 1.0F);
+	Sprite::getInstance()->draw( object_status_[ ObjectNum::kStar3 ].texture , object_status_[ ObjectNum::kStar3 ].position , &object_status_[ ObjectNum::kStar3 ].trim , 1.0F , 1.0F );
 
 	for( int i = 0; i <= ObjectNum::kPlayer; i++ )
 		object_[ i ].get()->draw();
@@ -216,7 +227,7 @@ SceneBase* Title::playScene()
 	SOUND->setVolume( SoundId::kTitle , volume_ );
 	SOUND->play( SoundId::kScene , false );
 
-	for( int i = 0; i <= ObjectNum::kStar2; i++ )
+	for( int i = 0; i <= ObjectNum::kStar3; i++ )
 		object_status_[ i ].position.y += kFall;
 
 	float now_time_ = object_status_[ ObjectNum::kRogo ].position.y / getWindowHeight<float>();
