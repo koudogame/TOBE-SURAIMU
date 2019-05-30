@@ -138,6 +138,8 @@ bool Endless::init()
 	SOUND->stop( SoundId::kPlay );
 	SOUND->play( SoundId::kPlay , true );
 
+	description_ = TextureLoder::getInstance()->load( L"Texture/a_jump.png" );
+
 	return true;
 }
 // ¶¬ˆ—
@@ -208,6 +210,18 @@ void Endless::draw()
     {
         pause_->draw();
     }
+
+	if( player_->guide() > 0.0F )
+	{
+		Vector2 abuttom = Vector2( 320.0F - 200.0F , getWindowHeight<float>() - 128.0F );
+		Vector2 sthickbuttom = Vector2( 320.0F + 640.0F , getWindowHeight<float>() - 128.0F );
+
+		RECT a = { 0,0,256,128 };
+		RECT stick = { 256,0,512,128 };
+
+		Sprite::getInstance()->draw( description_ , abuttom , &a , 1.0F , 1.0F );
+		Sprite::getInstance()->draw( description_ , sthickbuttom , &stick , 1.0F , 1.0F );
+	}
 }
 
 /*===========================================================================*/

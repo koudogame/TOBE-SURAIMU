@@ -8,7 +8,6 @@ const float kSpeed = 6.0F;
 
 ScoreNumber::ScoreNumber()
 {
-	texture_ = TextureLoder::getInstance()->load( L"Texture/Rank_number.png" );
 	puluse_ = TextureLoder::getInstance()->load( L"Texture/totalscore_left.png" );
 	alpha_ = 1.0F;
 	position_ = Vector2( -kNumWidth , 0.0F );
@@ -17,9 +16,10 @@ ScoreNumber::ScoreNumber()
 ScoreNumber::~ScoreNumber()
 {}
 
-bool ScoreNumber::init( unsigned int Num )
+bool ScoreNumber::init( unsigned int Num , ID3D11ShaderResourceView* Handle )
 {
 	number_ = Num;
+	texture_ = Handle;
 	return true;
 }
 

@@ -47,6 +47,7 @@ public:
 	inline void addScore( const float AddScore ) { score_.addDefaultScore( AddScore ); }
 	inline void addLevel() { score_.addLevel(); }
 	inline Scoring* getScore() { return &score_; }
+	inline float guide() { return guide_alpha_; }
 
 
 private:

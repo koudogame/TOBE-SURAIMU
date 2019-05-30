@@ -7,7 +7,7 @@ public:
 	~ScoreNumber();
 
 public:
-	bool init( unsigned int Num );
+	bool init( unsigned int Num , ID3D11ShaderResourceView* Handle );
 	void update( const float DrawPositY );
 	void draw();
 	bool isAlive();

@@ -115,63 +115,69 @@ void Ranking::destroy()
 // 更新処理
 SceneBase* Ranking::update()
 {
-    KeyState   key_state = Key::getInstance()->getState();
-    KeyTracker key_tracker = Key::getInstance()->getTracker();
-    PadState   pad_state = Pad::getInstance()->getState();
-    PadTracker pad_tracker = Pad::getInstance()->getTracker();
+	KeyState   key_state = Key::getInstance()->getState();
+	KeyTracker key_tracker = Key::getInstance()->getTracker();
+	PadState   pad_state = Pad::getInstance()->getState();
+	PadTracker pad_tracker = Pad::getInstance()->getTracker();
 
-    // 上新規入力時、1列分上へスクロール
-    if( key_tracker.pressed.Up ||
-        pad_tracker.leftStickUp == PadTracker::PRESSED )
-    {
-        magnification_ = 1.0F;
-        addOffset( &offset_, -kLineHeight );
+	// 上新規入力時、1列分上へスクロール
+	if( key_tracker.pressed.Up ||
+		pad_tracker.leftStickUp == PadTracker::PRESSED )
+	{
+		magnification_ = 1.0F;
+		addOffset( &offset_ , -kLineHeight );
 		sound_flag_ = false;
 
 		SOUND->setPitch( SoundId::kSelect , 1.0F );
 		SOUND->stop( SoundId::kSelect );
 		SOUND->play( SoundId::kSelect , true );
-    }
-    // 下新規入力時、1列分下へスクロール
-    else if( key_tracker.pressed.Down ||
-        pad_tracker.leftStickDown == PadTracker::PRESSED )
-    {
-        magnification_ = 1.0F;
-        addOffset( &offset_, kLineHeight );
+	}
+	// 下新規入力時、1列分下へスクロール
+	else if( key_tracker.pressed.Down ||
+			 pad_tracker.leftStickDown == PadTracker::PRESSED )
+	{
+		magnification_ = 1.0F;
+		addOffset( &offset_ , kLineHeight );
 		sound_flag_ = false;
 
 		SOUND->setPitch( SoundId::kSelect , 1.0F );
 		SOUND->stop( SoundId::kSelect );
 		SOUND->play( SoundId::kSelect , true );
-    }
-    // 上長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
-    else if( key_state.Up || pad_state.IsLeftThumbStickUp() )
-    {
-        addOffset( &offset_, -kOffset * magnification_ );
-        addMagnification( &magnification_ );
-    }
-    // 下長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
-    else if( key_state.Down || pad_state.IsLeftThumbStickDown() )
-    {
-        addOffset( &offset_, kOffset * magnification_ ) ;
-        addMagnification( &magnification_ );
-    }
-    // Spaceかaボタンが離されたら決定
-    else if(key_tracker.released.Space || pad_tracker.a ==PadTracker::RELEASED)
-    {
+	}
+	// 上長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
+	else if( key_state.Up || pad_state.IsLeftThumbStickUp() )
+	{
+		addOffset( &offset_ , -kOffset * magnification_ );
+		addMagnification( &magnification_ );
+	}
+	// 下長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
+	else if( key_state.Down || pad_state.IsLeftThumbStickDown() )
+	{
+		addOffset( &offset_ , kOffset * magnification_ );
+		addMagnification( &magnification_ );
+	}
+	// Spaceかaボタンが離されたら決定
+	else if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
+	{
 		SOUND->stop( SoundId::kSelect );
 		SOUND->stop( SoundId::kDicision );
 		SOUND->play( SoundId::kDicision , false );
 
-        return new Title();
-    }
-	else
+		return new Title();
+	}
+	else if( (key_tracker.released.Up ||
+			 pad_tracker.leftStickUp == PadTracker::RELEASED ||
+			 key_tracker.released.Down ||
+			 pad_tracker.leftStickDown == PadTracker::RELEASED) && !sound_flag_ )
 	{
+		SOUND->stop( SoundId::kSelect );
+		SOUND->play( SoundId::kSelect , false );
 		sound_flag_ = false;
 	}
 
 
-	if( (offset_ == kOffsetMax || offset_ == 0.0F) && !sound_flag_)
+
+	if( ( offset_ == kOffsetMax || offset_ == kOffsetMin ) && !sound_flag_ )
 	{
 		sound_flag_ = true;
 
@@ -180,7 +186,7 @@ SceneBase* Ranking::update()
 		SOUND->play( SoundId::kSelect , false );
 	}
 
-    return this;
+	return this;
 }
 
 /*===========================================================================*/
