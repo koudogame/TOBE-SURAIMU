@@ -113,8 +113,8 @@ bool Result::init()
     update_ = &Result::in;
     alpha_ = 1.0F;
     count_ = 0.0F;
-    name_[0] = 'N'; name_[1] = 'A'; name_[2] = 'M'; name_[3] = 'E'; name_[4] = ' ';
-    for( int i = 5; i < kNameMax; ++i )
+    name_[0] = 'N'; name_[1] = 'A'; name_[2] = 'M';name_[3] = 'E';
+    for( int i = 4; i < kNameMax; ++i )
     {
         name_[i] = '\0';
     }
@@ -371,7 +371,7 @@ SceneBase* Result::setName()
 
 		if( index_name_ >= 1U )
 		{
-			name_[ index_name_ ] = '\0';
+			name_[ index_name_ ] = ' ';
 			--index_name_;
 			index_char_ = Text::getCharNum( name_[ index_name_ ] );
 		}
@@ -433,11 +433,8 @@ SceneBase* Result::selectNext()
 		// äeçÄñ⁄Ç…Ç†Ç¡ÇΩèàóùÇ÷à⁄ÇÈ
 		switch( select_ )
 		{
-			case kSelectSetName: update_ = &Result::setName;
-                                 name_[index_name_] = '\0';
-                                 --index_name_;
-                                                                break;
-			case kSelectOneMore: update_ = &Result::outToPlay;  break;
+			case kSelectSetName: update_ = &Result::setName; break;
+			case kSelectOneMore: update_ = &Result::outToPlay; break;
 			case kSelectTitle:   update_ = &Result::outToTitle; break;
 		}
 	}
