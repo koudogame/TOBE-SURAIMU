@@ -39,9 +39,9 @@ constexpr float kDispTimeMSPF = 500.0F / 16.0F;
 // 難易度に関係
 constexpr unsigned kHeight = 0U;
 constexpr unsigned kThreshold = 1U;
-constexpr unsigned kLevelMax = 4U;
+constexpr unsigned kLevelMax = 0U;
 constexpr float kLevelTable[][2] = {
-    {      0.0F, getWindowHeight<float>() * 0.65F },
+    {      0.0F, getWindowHeight<float>() * 0.25F },
     {   1000.0F, getWindowHeight<float>() * 0.65F },
     {   5000.0F, getWindowHeight<float>() * 0.65F },
     {   7500.0f, getWindowHeight<float>() * 0.65F },
@@ -100,7 +100,6 @@ bool Endless::init()
 		}
 	}
 
-
 	// プレイヤー初期化
 	CsvLoader file(L"State/player_state.csv");
 	Vector2 position;
@@ -130,6 +129,8 @@ bool Endless::init()
     offset_ = 0.0F;
     offset_one_frame_ = 0.0F;
 	climb_ = 0.0F;
+    // スター生成パターンファイルのリスト化
+    changePattern();
 
 	clock_->start();
 
@@ -162,10 +163,6 @@ bool Endless::create()
 
 	// 壁
 	wall_                  = new Wall();
-
-
-	// スター生成パターンファイルのリスト化
-	changePattern();
 
 	return true;
 }
@@ -295,19 +292,23 @@ SceneBase* Endless::play()
 	    adjustObjectPosition( kOver );
 
         // レベルアップ
-        if( level_ < kLevelMax && climb_ >= kLevelTable[level_ + 1U][kHeight] )
+        if( (level_ < kLevelMax) && (climb_ >= kLevelTable[level_ + 1U][kHeight]) )
         {
             ++level_;
 
             // スターの生成パターンを変化させる
-            star_container_->resetPattern();
+            changePattern();
 
+            // プレイヤーにレベルアップを知らせる
+            player_->addLevel();
+
+            // レベルアップに伴うスクロール閾値の変更( ゆっくりと変化させる )
             offset_ = kLevelTable[level_][kThreshold] - scroll_threshold_;
             offset_one_frame_ = offset_ / kDispTimeMSPF;
         }
 
 
-        if( (std::abs(offset_) - std::abs(offset_one_frame_)) < 0.0F )
+        if( (std::abs(offset_) < std::abs(offset_one_frame_)) )
         {
             scroll_threshold_ += offset_ - offset_one_frame_;
             offset_ = offset_one_frame_ = 0.0F;
@@ -315,6 +316,7 @@ SceneBase* Endless::play()
         else
         {
             scroll_threshold_ += offset_one_frame_;
+            offset_-= offset_one_frame_;
         }
     }
 
