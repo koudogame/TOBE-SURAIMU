@@ -38,7 +38,7 @@ bool Scoring::init()
 	spin_combo_pitch_ = 0.0F;
 	height_ = 0.0;
 	all_height_ = 0.0F;
-	level_ = 0;
+	level_ = 1;
 	scoring_flag_ = false;
 
 	return true;
