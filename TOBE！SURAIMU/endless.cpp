@@ -49,13 +49,13 @@ constexpr float kLevelTable[][2] = {
 };
 constexpr Vector2 kInitStarPosi[]   = {
     {640.0F, 600.0F},
-    {810.0F, 100.0F},
+    {816.0F, 297.0F},
+	{465.0F, 142.0F},
 };
-constexpr float kInitStarAngle[]    = { 90.0F, 90.0F, };
-constexpr float kInitStarFall[]     = {  2.0F, 1.0F, };
-constexpr float kInitStarSpin[]     = {  -3.0F, 3.0F, };
-constexpr float kInitStarSpinRate[] = { 0.001F, 0.005F, };
-constexpr float kInitStarSize[]     = { 90.0F, 120.0F, };
+constexpr float kInitStarAngle[]    = { 90.0F, 90.0F,90.0F, };
+constexpr float kInitStarSpin[]		= { -3.0F, 3.0F,3.0F };
+constexpr float kInitStarSpinRate[] = { 0.2F, 0.2F,0.2F };
+constexpr float kInitStarSize[]     = { 90.0F, 120.0F, 120.0F};
 
 
 /*===========================================================================*/
@@ -86,7 +86,7 @@ bool Endless::init()
     if( ranking_->init() == false ) { return false; }
 
 	// ‰ŠúƒXƒ^[‚Ì¶¬
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < 3; ++i)
 	{
 		if (star_container_->addStar(
 			kInitStarPosi[i],

@@ -35,6 +35,7 @@ private:
 		kPlayer ,
 		kStar1 ,
 		kStar2 ,
+		kStar3,
 		kWallRight,
 		kWallLeft,
 		kObjectNum

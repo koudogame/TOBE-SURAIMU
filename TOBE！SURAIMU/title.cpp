@@ -70,7 +70,17 @@ bool Title::init()
 	trim.right = trim.left + 300L;
 	trim.bottom = trim.top + 300L;
 	object_status_[ ObjectNum::kStar2 ].texture = TextureLoder::getInstance()->load( L"Texture/star.png" );
-	object_status_[ ObjectNum::kStar2 ].position = Vector2( 810.0F - 300.0F / 2.0F , 100.0F - 300.0F / 2.0F - getWindowHeight<float>() );
+	object_status_[ ObjectNum::kStar2 ].position = Vector2( 816.0F - 300.0F / 2.0F , 297.0F - 300.0F / 2.0F - getWindowHeight<float>() );
+	object_status_[ ObjectNum::kStar2 ].trim = trim;
+
+	//初期の星3
+	//マジックナンバー
+	trim.left = 150L + 226L;
+	trim.top = 0L;
+	trim.right = trim.left + 300L;
+	trim.bottom = trim.top + 300L;
+	object_status_[ ObjectNum::kStar2 ].texture = TextureLoder::getInstance()->load( L"Texture/star.png" );
+	object_status_[ ObjectNum::kStar2 ].position = Vector2( 465.0F - 300.0F / 2.0F , 142.0F - 300.0F / 2.0F - getWindowHeight<float>() );
 	object_status_[ ObjectNum::kStar2 ].trim = trim;
 
 	//プレイヤー
