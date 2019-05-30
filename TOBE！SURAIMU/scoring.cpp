@@ -29,6 +29,10 @@ bool Scoring::init()
 {
 	texture_ = TextureLoder::getInstance()->load( L"Texture/totalscore_left.png" );
 	num_texture_ = TextureLoder::getInstance()->load( L"Texture/result_score.png" );
+	add_num_texture_[kScore] = TextureLoder::getInstance()->load(L"Texture/Rank_number.png");
+	//add_num_texture_[kCombo] = TextureLoder::getInstance()->load( L"Texture/" );
+	//add_num_texture_[kHeight] = TextureLoder::getInstance()->load( L"Texture/" );
+
 	score_ = 0;
 	combo_ = 0;
 	max_combo_ = 0;
@@ -92,6 +96,10 @@ void Scoring::draw()
 void Scoring::destroy()
 {
 	TextureLoder::getInstance()->release( texture_ );
+	TextureLoder::getInstance()->release( num_texture_ );
+	TextureLoder::getInstance()->release( add_num_texture_[kScore] );
+	//TextureLoder::getInstance()->release( add_num_texture_[ kCombo ] );
+	//TextureLoder::getInstance()->release( add_num_texture_[ kHeight ] );
 }
 
 //ã¸—Ê‰ÁŽZ
@@ -108,7 +116,7 @@ void Scoring::addDefaultScore( const double AddScore )
 		{
 			if( all_height_ >= 1.0F )
 			{
-				createNumber( static_cast< unsigned int >( all_height_ ) *  kHeightScore * level_ );
+				createNumber( static_cast< unsigned int >( all_height_ ) *  kHeightScore * level_ , add_num_texture_[ kScore ] );
 				score_ += static_cast< unsigned long long >( all_height_ ) * static_cast< unsigned long long >( kHeightScore ) * static_cast< unsigned long long >( level_ );
 			}
 			all_height_ = 0.0F;
@@ -127,7 +135,7 @@ void Scoring::addCombo()
 	{
 		combo_++;
 		score_ += static_cast< unsigned long long >( combo_ ) * static_cast< unsigned long long >( kComboScore )* static_cast< unsigned long long >( level_ );
-		createNumber( combo_ * kComboScore * level_ );
+		createNumber( combo_ * kComboScore * level_ , add_num_texture_[ kScore ] );
 	}
 
 	if( combo_ > max_combo_ )
@@ -146,7 +154,7 @@ void Scoring::addTechnique()
 	if( scoring_flag_ )
 	{
 		score_ += static_cast< unsigned long long >( kTechniqueScore ) * static_cast< unsigned long long >( ++technique_combo_ )* static_cast< unsigned long long >( level_ );
-		createNumber( kTechniqueScore * technique_combo_ * level_ );
+		createNumber( kTechniqueScore * technique_combo_ * level_ , add_num_texture_[ kScore ] );
 	}
 }
 
@@ -182,7 +190,7 @@ void Scoring::addRotate( float Angle )
 			rotation_ = 0;
 			rotation_combo_++;
 			score_ += static_cast< unsigned long long >( rotation_combo_ ) * static_cast< unsigned long long >( kRotationScore )* static_cast< unsigned long long >( level_ );
-			createNumber( rotation_combo_ * kRotationScore * level_ );
+			createNumber( rotation_combo_ * kRotationScore * level_ , add_num_texture_[ kScore ] );
 		}
 	}
 }
@@ -199,7 +207,7 @@ void Scoring::resetRotate()
 void Scoring::addLength( const float Length )
 {
 	score_ += static_cast< unsigned long long >( static_cast< double >( Length ) * kLengthScore * level_ );
-	createNumber( static_cast< unsigned int >( Length * kLengthScore * level_ ) );
+	createNumber( static_cast< unsigned int >( Length * kLengthScore * level_ ) , add_num_texture_[ kScore ] );
 }
 
 void Scoring::addLevel()
@@ -209,12 +217,12 @@ void Scoring::addLevel()
 	SOUND->play( SoundId::kLevelUp , false );
 
 	score_ += static_cast< unsigned long long >( kLevelScore ) * static_cast< unsigned long long >( level_ );
-	createNumber( kLevelScore * level_ );
+	createNumber( kLevelScore * level_ , add_num_texture_[ kScore ] );
 }
 
-void Scoring::createNumber( unsigned int Num )
+void Scoring::createNumber( unsigned int Num ,ID3D11ShaderResourceView* Handle)
 {
 	addition_list_.push_front( std::make_shared<ScoreNumber>() );
-	addition_list_.front().get()->init( Num );
+	addition_list_.front().get()->init( Num , Handle );
 }
 

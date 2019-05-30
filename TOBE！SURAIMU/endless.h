@@ -59,4 +59,7 @@ private:
     float offset_ = 0.0F;;
     float offset_one_frame_ = 0.0F;
     float climb_ = 0.0F;
+
+	ID3D11ShaderResourceView* description_;
+
 };

@@ -66,7 +66,14 @@ private:
 	float rotation_;	                            //回転量
 	bool scoring_flag_;					            //スコアリング有効フラグ
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
-	ID3D11ShaderResourceView* num_texture_;			//数字のテクスチャ
+	ID3D11ShaderResourceView* num_texture_;
+	enum
+	{
+		kScore,
+		kCombo,
+		kHeight,
+	};
+	ID3D11ShaderResourceView* add_num_texture_[ 3 ];	//数字のテクスチャ
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
 
 	Numbers<unsigned int> combo_draw_;
@@ -77,6 +84,6 @@ private:
 	std::list<std::shared_ptr<ScoreNumber>> addition_list_;
 
 private:
-	void createNumber( unsigned int Num );
+	void createNumber( unsigned int Num , ID3D11ShaderResourceView* Handle );
 };
 
