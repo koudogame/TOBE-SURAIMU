@@ -373,17 +373,23 @@ SceneBase* Result::setName()
 
 		name_[ index_name_ ] = kCharTable[ index_char_ ];
 
-		// 名前上限か、2文字目以降に' 'が入力されたら処理を変更
-		if( ( index_name_ + 1U >= kNameMax ) ||
-			( kCharTable[ index_char_ ] == ' ' && index_name_ != 0 ) )
+		// 名前上限で入力終了
+		if( index_name_ + 1U >= kNameMax )
 		{
 			++select_;
 			update_ = &Result::selectNext;
 		}
+        // 2文字目以降' 'で入力終了
+        else if( name_[index_name_] == ' ' && index_name_ != 0 )
+        {
+            name_[index_name_] = '\0';
+            ++select_;
+            update_ = &Result::selectNext;
+        }
 		// 次の文字選択へ向けて初期化
 		else if( name_[ 0 ] != ' ' )
 		{
-			// 次の文字を'A'で初期化
+			// 次の文字を' 'で初期化
 			++index_name_;
 			index_char_ = kCharNum - 1;
 			name_[ index_name_ ] = kCharTable[ index_char_ ];
@@ -400,7 +406,7 @@ SceneBase* Result::setName()
 
 		if( index_name_ >= 1U )
 		{
-			name_[ index_name_ ] = '\0';
+			name_[index_name_] = '\0';
 			--index_name_;
 			index_char_ = Text::getCharNum( name_[ index_name_ ] );
 		}
@@ -462,10 +468,17 @@ SceneBase* Result::selectNext()
 		// 各項目にあった処理へ移る
 		switch( select_ )
 		{
-			case kSelectSetName: update_ = &Result::setName;
-                                 name_[index_name_] = '\0';
-                                 --index_name_;
+			case kSelectSetName: 
+                update_ = &Result::setName;
+                if( index_name_ > 0U && 
+                    index_name_ < (kNameMax - 1U)) 
+                { 
+                    name_[index_name_] = '\0';
+                    --index_name_; 
+                }
+                index_char_ = Text::getCharNum(name_[index_name_]);
                                                                 break;
+
 			case kSelectOneMore: update_ = &Result::outToPlay;  break;
 			case kSelectTitle:   update_ = &Result::outToTitle; break;
 		}
