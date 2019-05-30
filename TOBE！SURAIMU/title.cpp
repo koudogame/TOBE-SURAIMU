@@ -272,7 +272,7 @@ SceneBase * Title::selectScene()
 	input();
 
 	if( key_.released.Space ||
-		pad_.a == pad_.PRESSED )
+		pad_.a == pad_.RELEASED )
 	{
 		SOUND->stop( SoundId::kDicision );
 		SOUND->play( SoundId::kDicision , false );
