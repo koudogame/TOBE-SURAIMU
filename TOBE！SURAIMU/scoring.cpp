@@ -55,7 +55,7 @@ void Scoring::update()
 	for( const auto& itr : addition_list_ )
 	{
 		//マジックナンバー
-		itr.get()->update( 256.0F + itr_num * kMinNumHeight );
+		itr.get()->update( 200.0F + itr_num * kMinNumHeight );
 
 		if( !itr.get()->isAlive() )
 			delete_flag_ = true;
