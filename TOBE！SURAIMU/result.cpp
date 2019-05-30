@@ -373,19 +373,19 @@ SceneBase* Result::setName()
 
 		name_[ index_name_ ] = kCharTable[ index_char_ ];
 
-		// 名前上限で入力終了
-		if( index_name_ + 1U >= kNameMax )
-		{
-			++select_;
-			update_ = &Result::selectNext;
-		}
         // 2文字目以降' 'で入力終了
-        else if( name_[index_name_] == ' ' && index_name_ != 0 )
+		if( name_[index_name_] == ' ' && index_name_ != 0 )
         {
             name_[index_name_] = '\0';
             ++select_;
             update_ = &Result::selectNext;
         }
+		// 名前上限で入力終了
+        else if( index_name_ + 1U >= kNameMax )
+		{
+			++select_;
+			update_ = &Result::selectNext;
+		}
 		// 次の文字選択へ向けて初期化
 		else if( name_[ 0 ] != ' ' )
 		{
@@ -470,8 +470,8 @@ SceneBase* Result::selectNext()
 		{
 			case kSelectSetName: 
                 update_ = &Result::setName;
-                if( index_name_ > 0U && 
-                    index_name_ < (kNameMax - 1U)) 
+                if( (index_name_ > 0U && index_name_ < (kNameMax - 1U)) ||
+                    (index_name_ == kNameMax - 1U && name_[index_name_] == '\0') ) 
                 { 
                     name_[index_name_] = '\0';
                     --index_name_; 
