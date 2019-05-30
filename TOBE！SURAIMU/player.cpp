@@ -146,13 +146,6 @@ void Player::update()
 //ï`âÊ
 void Player::draw()
 {
-	slectDirection();
-	RECT trim;
-	trim.top = static_cast< int >( rect_left_up_.y );
-	trim.left = static_cast< int >( rect_left_up_.x );
-	trim.bottom = trim.top + kPlayerSize;
-	trim.right = trim.left + kPlayerSize;
-
 	float draw_angle;
 
 	if( flag_.test( Flag::kJump ) )
@@ -163,15 +156,29 @@ void Player::draw()
 	else
 		draw_angle = -gravity_angle_ - XM_PI / 2.0F;
 
-	Sprite::getInstance()->draw( texture_ , myshape_.position , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
-
-	score_.draw();
-
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
 	//ÉKÉCÉhÇÃï`âÊ
 	if( !flag_.test( Flag::kJump ) && guide_alpha_ > 0.0F )
 		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( 5.0F / 2.0F , 214.0F ) );
 	else if( guide_alpha_ <= 0.0F )
 		guide_alpha_ = 0.0F;
+	Sprite::getInstance()->end();
+	Sprite::getInstance()->begin();
+
+
+	slectDirection();
+	RECT trim;
+	trim.top = static_cast< int >( rect_left_up_.y );
+	trim.left = static_cast< int >( rect_left_up_.x );
+	trim.bottom = trim.top + kPlayerSize;
+	trim.right = trim.left + kPlayerSize;
+
+
+	Sprite::getInstance()->draw( texture_ , myshape_.position , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kPlayerSize / 2.0F , kPlayerSize / 2.0F ) );
+
+	score_.draw();
+
 }
 
 //ê∂ë∂ÉtÉâÉOÇÃï‘ãp
