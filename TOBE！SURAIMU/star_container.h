@@ -35,6 +35,7 @@ public:
     bool createStar();
     bool createStar(const std::wstring PatternFileCSV);
     void addPattern(const std::wstring PatternFileCSV) { pattern_.push_back(PatternFileCSV); }
+    void resetPattern() { pattern_.clear(); }
 
 private:
     std::deque<std::wstring> pattern_;

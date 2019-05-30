@@ -41,9 +41,9 @@ constexpr unsigned kHeight = 0U;
 constexpr unsigned kThreshold = 1U;
 constexpr unsigned kLevelMax = 4U;
 constexpr float kLevelTable[][2] = {
-    {      0.0F, getWindowHeight<float>() * 0.25F },
-    {   1000.0F, getWindowHeight<float>() * 0.35F },
-    {   5000.0F, getWindowHeight<float>() * 0.50F },
+    {      0.0F, getWindowHeight<float>() * 0.65F },
+    {   1000.0F, getWindowHeight<float>() * 0.65F },
+    {   5000.0F, getWindowHeight<float>() * 0.65F },
     {   7500.0f, getWindowHeight<float>() * 0.65F },
     {  10000.0F, getWindowHeight<float>() * 0.75F }
 };
@@ -165,20 +165,7 @@ bool Endless::create()
 
 
 	// スター生成パターンファイルのリスト化
-	std::wstring file_name;
-	CsvLoader file(L"State/pattern_list.csv");
-	for (int i = 0; ; ++i)
-	{
-		file_name = file.getString(0, i);
-		if (wcscmp(file_name.c_str(), L"") == 0)
-		{
-			break;
-		}
-
-        file_name.insert(0,L"State/");
-		star_container_->addPattern(file_name);
-	}
-
+	changePattern();
 
 	return true;
 }
@@ -310,7 +297,12 @@ SceneBase* Endless::play()
         // レベルアップ
         if( level_ < kLevelMax && climb_ >= kLevelTable[level_ + 1U][kHeight] )
         {
-            offset_ = kLevelTable[level_ + 1U][kThreshold] - scroll_threshold_;
+            ++level_;
+
+            // スターの生成パターンを変化させる
+            star_container_->resetPattern();
+
+            offset_ = kLevelTable[level_][kThreshold] - scroll_threshold_;
             offset_one_frame_ = offset_ / kDispTimeMSPF;
         }
 
@@ -413,4 +405,25 @@ bool Endless::checkAndCreateStar()
 
 
     return true;
+}
+
+/*===========================================================================*/
+// スターの生成パターンを設定する
+void Endless::changePattern()
+{
+    star_container_->resetPattern();
+
+    std::wstring file_name;
+    CsvLoader file(L"State/pattern_list.csv");
+    for (int i = 0; ; ++i)
+    {
+        file_name = file.getString(level_, i);
+        if (wcscmp(file_name.c_str(), L"") == 0)
+        {
+            break;
+        }
+
+        file_name.insert(0, L"State/");
+        star_container_->addPattern(file_name);
+    }
 }
