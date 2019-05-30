@@ -106,7 +106,7 @@ void Scoring::addDefaultScore( const double AddScore )
 		}
 		else
 		{
-			if( all_height_ > 0.0F )
+			if( all_height_ >= 1.0F )
 			{
 				createNumber( static_cast< unsigned int >( all_height_ ) *  kHeightScore * level_ );
 				score_ += static_cast< unsigned long long >( all_height_ ) * static_cast< unsigned long long >( kHeightScore ) * static_cast< unsigned long long >( level_ );
