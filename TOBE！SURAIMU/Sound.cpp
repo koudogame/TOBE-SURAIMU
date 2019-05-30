@@ -29,7 +29,10 @@ void Sound::update()
 
 void Sound::play( int ID , bool LoopFlag )
 {
+	if( LoopFlag )
+		return;
 	sound_list_[ ID ]->Play( LoopFlag );
+
 }
 
 void Sound::stop( int ID )

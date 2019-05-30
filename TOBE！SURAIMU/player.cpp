@@ -203,10 +203,9 @@ void Player::revision( const Vector2& CrossPoint , NameSpaceParticle::ParticleID
 	if( ID != NameSpaceParticle::ParticleID::kNonParticle )
 	{
 		dis_ = Calc::magnitude( CrossPoint , ground_->start ) / Calc::magnitude( ground_->end , ground_->start );
-		int temp = static_cast< int >( std::round( dis_ * 1000.0F ) );
-		dis_ = temp / 1000.0F;
 	}
 	setGravityAngle();
+
 	if( !flag_.test( Flag::kParticle ) )
 	{
 		addGroundParticle( ID );
@@ -379,16 +378,16 @@ void Player::setGravityAngle()
 
 	float temp_angle[ 2 ] =
 	{
-		std::atan2( -vect_ground.y,vect_ground.x ) - ( XM_PI / 2.0F ),
-		std::atan2( -vect_ground.y,vect_ground.x ) + ( XM_PI / 2.0F )
+		std::atan2( -vect_ground.y,vect_ground.x ) - XM_PIDIV2,
+		std::atan2( -vect_ground.y,vect_ground.x ) + XM_PIDIV2
 	};
 	temp_angle[ 0 ] = static_cast< float >( static_cast< int >( temp_angle[ 0 ] * 100 ) ) / 100.0F;
 	temp_angle[ 1 ] = static_cast< float >( static_cast< int >( temp_angle[ 1 ] * 100 ) ) / 100.0F;
 	//線分に対して±90度方向に半径分移動する
 	Vector2 temp_posit[ 2 ] =
 	{
-		( vect_ground + Vector2( std::cos( temp_angle[ 0 ] ) ,-std::sin( temp_angle[ 0 ] ) ) * 10.0F ),
-		( vect_ground + Vector2( std::cos( temp_angle[ 1 ] ) ,-std::sin( temp_angle[ 1 ] ) ) * 10.0F )
+		( Vector2( std::cos( temp_angle[ 0 ] ) ,-std::sin( temp_angle[ 0 ] ) ) * 10.0F ),
+		( Vector2( std::cos( temp_angle[ 1 ] ) ,-std::sin( temp_angle[ 1 ] ) ) * 10.0F )
 	};
 
 	//作成した各線分に対して外積を取り負の方向の角度を重力方向として採用

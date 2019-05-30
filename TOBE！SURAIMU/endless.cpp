@@ -132,6 +132,9 @@ bool Endless::init()
     // スター生成パターンファイルのリスト化
     changePattern();
 
+	//当たり判定の初期化
+	Collision::getInstance()->init();
+
 	clock_->start();
 
 	//サウンドの再生

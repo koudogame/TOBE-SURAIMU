@@ -21,6 +21,7 @@ public:
 //============================
 //ŠO•”ŒöŠJŠÖ”
 	static Collision* getInstance() { static Collision instance; return &instance; }
+	void init();
 	void collision( Player* , Star* );
 	void collision( Player* , Wall* );
 
@@ -38,5 +39,6 @@ private:
 private:
 	NameSpaceParticle::ParticleID id_;
 	bool onece_flag_;
+	bool start_flag_;
 };
 

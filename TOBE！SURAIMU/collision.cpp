@@ -7,9 +7,7 @@
 #include "wall.h"
 
 Collision::Collision()
-{
-	onece_flag_ = false;
-}
+{}
 
 
 Collision::~Collision()
@@ -18,8 +16,18 @@ Collision::~Collision()
 //----------------------------------------------------------------------------------------
 //ŠO•”ŒöŠJŠÖ”
 
+void Collision::init()
+{
+	onece_flag_ = false;
+	start_flag_ = false;
+}
+
 void Collision::collision( Player * P , Star * S )
 {
+	if( !P->isJump() && start_flag_ )
+		return;
+
+	start_flag_ = true;
 	id_ = S->getColor();
 
 	bool hit_flag = false;
@@ -63,7 +71,7 @@ void Collision::collision( Player * P , Star * S )
 			{
 				P->setGround( S->getShape( i ) );
 				P->revision( crossPoint( P->getMove() , S->getShape( i ) ) , id_ );
-					hit_flag = true;
+				hit_flag = true;
 			}
 			else
 			{
@@ -103,6 +111,8 @@ void Collision::collision( Player * P , Star * S )
 
 void Collision::collision( Player * P , Wall * W )
 {
+	if( !P->isJump() )
+		return;
 	for( int i = 0; i < 2; i++ )
 	{
 		if( judgment(P->getShape() , W->getShape( i ) ) || judgment( P->getMove() , W->getShape( i ) ))
