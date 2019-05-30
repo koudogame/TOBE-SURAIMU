@@ -15,6 +15,12 @@
 class RankingInEndless :
     public ObjectBase
 {
+// ランキングデータ構造体
+    struct Data {
+        unsigned rank;
+        std::string name;
+        unsigned long long score;
+    };
 public:
     RankingInEndless();
     ~RankingInEndless();
@@ -24,19 +30,20 @@ public:
     void update() override;
     void draw() override;
 
+    void drawData(
+        const Data& Data,
+        Vector2 Position,
+        const RECT* const TrimminaBar,
+        const float Alpha);
+
     inline void setScore(unsigned long long Score) { player_.score = Score; }
     inline void setMove(const float) override {}
     inline unsigned getRank() { return player_.rank; }
 
-// ランキングデータ構造体
-    struct Data {
-        unsigned rank;
-        std::string name;
-        unsigned long long score;
-    };
 private:
     ID3D11ShaderResourceView* texture_bar_ = nullptr;
     ID3D11ShaderResourceView* texture_number_ = nullptr;
+    ID3D11ShaderResourceView* texture_number_forplayer_ = nullptr;
     ID3D11ShaderResourceView* texture_text_ = nullptr;
 
 

@@ -39,23 +39,28 @@ constexpr long kMiniCharacterHeight  = 16L;
 constexpr long kCharacterWidth       = 21L;
 constexpr long kCharacterHeight      = 32L;
 constexpr float kIntervalRankingElem = 22.0F;
-enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankIn };
+constexpr float kAmountAlphaChangeForRankIn = 0.04F;
+constexpr float kAlphaMaxRankIn      = 1.0F;
+constexpr float kAlphaMinRankIn      = 0.0F;
+enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankInLine, kTrimRankIn };
 const RECT kTrimming[] =
 {
     {   0L,   0L, 680L, 720L },
     { 665L,   0L, 921L,  16L },
     { 683L,  85L, 700L, 141L },
-    {   0L, 720L, 642L, 922L },
+    {   0L, 720L, 642L, 915L },
+    {   0L, 916L,  66L, 929L },
 };
 
-enum { kPosBackground, kPosScore, kPosHeight, kPosCombo, kPosRankIn,
-                kPosRank, kPosName, kPosNameCursor, kPosRanking };
+enum { kPosBackground, kPosScore, kPosHeight, kPosCombo, kPosRankInLine,
+                kPosRankIn, kPosRank, kPosName, kPosNameCursor, kPosRanking };
 constexpr Vector2 kPositionFromBase[] {
     { 307.0F,   0.0F }, // back
     { 740.0F, 148.0F }, // score
     { 417.0F, 222.0F }, // height
     { 898.0F, 221.0F }, // combo
-    { 319.0F, 100.0F }, // rankin
+    { 319.0F, 100.0F }, // rank in line
+    {   0.0F,   0.0F }, // rank in
     { 885.0F, 130.0F }, // rank
     { 556.0F, 262.0F }, // name
     { 558.0F, 247.0F }, // name cursor
@@ -124,6 +129,8 @@ bool Result::init()
     select_ = rank_ <= kRegisteredNum ? kSelectSetName : kSelectOneMore;
     position_base_.x = 0.0F;
     position_base_.y = -getWindowHeight<float>();
+    is_add_alpha_rankin_ = false;
+    alpha_rankin_ = 1.0F;
 
 	//サウンドの再生
 	SOUND->stop( SoundId::kTitle );
@@ -157,6 +164,22 @@ void Result::destroy()
 // 更新処理
 SceneBase* Result::update()
 {
+    if( is_add_alpha_rankin_ ){
+        if( (alpha_rankin_ += kAmountAlphaChangeForRankIn) >= kAlphaMaxRankIn)
+        {
+            is_add_alpha_rankin_ = false;
+            alpha_rankin_ = kAlphaMaxRankIn; 
+        }
+    }
+    else{
+        if( (alpha_rankin_ -= kAmountAlphaChangeForRankIn) <= kAlphaMinRankIn)
+        {
+            is_add_alpha_rankin_ = true;
+            alpha_rankin_ = kAlphaMinRankIn;
+        }
+
+    }
+
     return (this->*update_)();
 }
 
@@ -221,10 +244,16 @@ void Result::draw()
     bool draw_player_ = false;
     for( int i = 0; i <= kShowNum; ++i, ++rank )
     {
-
+        // ランキングにプレイヤーを描画
         if( rank == rank_ && draw_player_ == false )
         {
             draw_player_ = true;
+
+            position.x -= 80.0F;
+            kSprite->draw( texture_, position, &kTrimming[kTrimRankIn],
+                           alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_);
+            position.x += 80.0F;
+
             drawRankingElem(
                 position,
                 rank, name_,
@@ -248,8 +277,8 @@ void Result::draw()
     {
         // 下線
         kSprite->draw( texture_,
-                       position_base_ + kPositionFromBase[kPosRankIn],
-					   &kTrimming[ kTrmRankIn ] , alpha_ , 1.0F );
+                       position_base_ + kPositionFromBase[kPosRankInLine],
+					   &kTrimming[ kTrmRankInLine ] , alpha_ , 1.0F );
 
         // 名前
         Text::drawString( name_,

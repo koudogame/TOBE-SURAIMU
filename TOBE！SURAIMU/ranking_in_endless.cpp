@@ -15,12 +15,16 @@
 /*===========================================================================*/
 constexpr long kTextNumberWidth = 11L;
 constexpr long kTextStringWidth = 12L;
+constexpr long kWidthPlayerRank = 20L;
+constexpr long kHeightPlayerRank = 32L;
 constexpr long kTextHeight = 16L;
 constexpr long kLineHeight = 25L;
 constexpr char kPlayerName[] = "YOU";
 constexpr long kDispTimeMSPF = 250L / 16L;
-constexpr float kBasePositionX = 1000.0F;
+constexpr float kBasePositionX = 1020.0F;
 constexpr float kBasePositionY = getWindowHeight<float>() / 2.0F;
+constexpr float kDeltaPositionPlayerRankX = 10.0F;
+constexpr float kDeltaPositionPlayerRankY = 9.0F;
 constexpr float kBarCoordinateX = 960.0F;
 constexpr float kIntervalRankToName = kTextStringWidth * 2.0F;
 constexpr float kIntervalNameToBar = -5.0F;
@@ -31,14 +35,6 @@ const RECT kTrimming[] = {
     { 0L,  0L, 415L, 24L },
     { 0L, 24L, 415L, 48L }
 };
-
-void drawData(const RankingInEndless::Data&,
-              Vector2 Position,
-              ID3D11ShaderResourceView* const TextureText,
-              ID3D11ShaderResourceView* const TextureNumber,
-              ID3D11ShaderResourceView* const TextureBar,
-              const RECT * const TrimmingBar,
-              const float Aplha = 1.0F);
 
 /*===========================================================================*/
 RankingInEndless::RankingInEndless() :
@@ -62,6 +58,8 @@ bool RankingInEndless::init()
     texture_bar_ = TextureLoder::getInstance()->load(L"Texture/mini_ranking_bar.png");
     texture_number_ = TextureLoder::getInstance()->load(L"Texture/Rank_Number.png");
     if( texture_number_ == nullptr ) { return false; }
+    texture_number_forplayer_ = TextureLoder::getInstance()->load(L"Texture/play_rank_2.png");
+    if(texture_number_forplayer_ == nullptr ) { return false; }
     texture_text_ = TextureLoder::getInstance()->load(L"Texture/Rank_Name.png");
     if( texture_text_ == nullptr ) { return false; }
 
@@ -102,10 +100,12 @@ void RankingInEndless::destroy()
 
 
     // テクスチャ開放
-    TextureLoder::getInstance()->release(texture_text_);
-    TextureLoder::getInstance()->release(texture_number_);
-    TextureLoder::getInstance()->release(texture_bar_);
-    TextureLoder::getInstance()->release(texture_);
+    TextureLoder* kTextureLoader = TextureLoder::getInstance();
+    kTextureLoader->release(texture_text_);
+    kTextureLoader->release(texture_number_forplayer_);
+    kTextureLoader->release(texture_number_);
+    kTextureLoader->release(texture_bar_);
+    kTextureLoader->release(texture_);
 }
 
 /*===========================================================================*/
@@ -160,19 +160,18 @@ void RankingInEndless::draw()
     draw_position.x = kBasePositionX;
     draw_position.y = kBasePositionY;
     drawData( player_, draw_position,
-              texture_text_, texture_number_, texture_bar_,
-              &kTrimming[kPlayerBar] );
+              &kTrimming[kPlayerBar], 0.8F );
 
     // その他プレイヤーのデータを描画
     draw_position = position_;
+    draw_position.y -= 10.0F;
     for( int i = 0; i < kRegisteredNum; ++i, draw_position.y += kLineHeight )
     {
         if( draw_position.y < 0.0F ) { continue; }
         if( draw_position.y > getWindowHeight<float>() )  { break; }
-        if( i + 1 == player_.rank ) { draw_position.y += kLineHeight; }
+        if( i + 1 == player_.rank ) { draw_position.y += kLineHeight + 20.0F; }
 
         drawData( ranking_[i], draw_position,
-                  texture_text_, texture_number_, texture_bar_,
                   &kTrimming[kNormalBar], 0.8F );
     }
 
@@ -180,33 +179,41 @@ void RankingInEndless::draw()
 	Sprite::getInstance()->draw( texture_ , Vector2::Zero , nullptr , 1.0F , 0.95F );
 }
 
-
 /*===========================================================================*/
-void drawData(
-    const RankingInEndless::Data& Data,
+void RankingInEndless::drawData(
+    const Data& Data,
     Vector2 Position,
-    ID3D11ShaderResourceView* const Text,
-    ID3D11ShaderResourceView* const Number,
-    ID3D11ShaderResourceView* const Bar,
     const RECT* const TrimminaBar,
     const float Alpha)
 {
-    // ランク外の時、ランクは描画しない
-    if( Data.rank <= kRegisteredNum )
+    // プレイヤーのランクは大きめのテクスチャ
+    if( Data.rank == player_.rank)
+    {
+        if( Data.rank != (kRegisteredNum + 1U ) )
+        {
+            Vector2 position_for_playerrank = Position;
+            position_for_playerrank.x += kDeltaPositionPlayerRankX;
+            position_for_playerrank.y -= kDeltaPositionPlayerRankY;
+            Text::drawNumber( Data.rank,
+                texture_number_forplayer_, position_for_playerrank,
+                kWidthPlayerRank, kHeightPlayerRank, 1U, Alpha);
+        }
+    }
+    else
     {
         Text::drawNumber( Data.rank,
-            Number, Position, kTextNumberWidth, kTextHeight, 1U, Alpha);
+            texture_number_, Position, kTextNumberWidth, kTextHeight, 1U, Alpha );
     }
 
     Position.x += kIntervalRankToName;
     Text::drawString( Data.name,
-        Text, Position, kTextStringWidth, kTextHeight, Alpha);
+        texture_text_, Position, kTextStringWidth, kTextHeight, Alpha);
 
     Position.x = kDrawPositionXScore;
     Text::drawNumber( Data.score,
-        Number, Position, kTextNumberWidth, kTextHeight, kScoreDigits, Alpha);
+        texture_number_, Position, kTextNumberWidth, kTextHeight, kScoreDigits, Alpha);
 
     Position.x = kBarCoordinateX;
     Position.y += kIntervalNameToBar;
-    Sprite::getInstance()->draw( Bar, Position, TrimminaBar, Alpha, 0.5F );
+    Sprite::getInstance()->draw( texture_bar_, Position, TrimminaBar, Alpha, 0.5F );
 }

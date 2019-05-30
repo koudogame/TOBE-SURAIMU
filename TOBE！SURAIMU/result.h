@@ -60,4 +60,7 @@ private:
     int select_;
     Vector2 position_base_;
 
+    bool is_add_alpha_rankin_ = false;
+    float alpha_rankin_ = 0.0F;
+
 };
