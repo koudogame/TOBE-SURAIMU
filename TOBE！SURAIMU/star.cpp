@@ -27,7 +27,7 @@ const Vector3 kStarInformation[ 3 ] = {
 
 const float kStarColorThreshold[ 2 ] =
 {
-	0.4F,
+	0.5F,
 	0.8F
 };
 
@@ -66,9 +66,9 @@ bool Star::init( const Vector2 & Position , const float Angle  , const float Spi
 	rate_ = Rate;
 	size_ = Size;
 
-	if( Rate <= kStarColorThreshold[ 0 ] )
+	if( Rate < kStarColorThreshold[ 0 ] )
 		id_ = NameSpaceParticle::ParticleID::kCyan;
-	else if( Rate <= kStarColorThreshold[ 1 ] )
+	else if( Rate < kStarColorThreshold[ 1 ] )
 		id_ = NameSpaceParticle::ParticleID::kYellow;
 	else
 		id_ = NameSpaceParticle::ParticleID::kMagenta;
