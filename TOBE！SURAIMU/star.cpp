@@ -147,11 +147,13 @@ void Star::collision(Player* P)
 	//プレイヤーの移動量を取り出す
 	float p_movement = ( P->getMove()->end - P->getMove()->start ).Length();
 
-	spin_ += turn_ * rate_ * per * p_movement;
-	if( std::abs( spin_ ) < kMinSpin )
-		spin_ = static_cast< float >( std::copysign( kMinSpin , spin_ ) );
-	else if( std::abs( spin_ ) > kMaxSpin[ id_ ] )
-		spin_ = static_cast< float >( std::copysign( kMaxSpin[ id_ ] , spin_ ) );
+	if( static_cast< int >( std::copysign( 1.0F , spin_ ) ) == turn_ )
+	{
+		spin_ += turn_ * rate_ * per * p_movement;
+
+		if( std::abs( spin_ ) > kMaxSpin[ id_ ] )
+			spin_ = static_cast< float >( std::copysign( kMaxSpin[ id_ ] , spin_ ) );
+	}
 
 	particle_time_ = 0;
 }

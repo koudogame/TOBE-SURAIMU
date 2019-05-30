@@ -47,6 +47,7 @@ public:
 	void addLength( const float Length );
 	//レベルアップ
 	void addLevel();
+	inline unsigned int getLevel() { return level_; }
 	//スコアの取得
 	inline unsigned long long getScore() { return score_; }
 	//最大コンボ数の取得

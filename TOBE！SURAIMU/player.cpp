@@ -18,6 +18,7 @@ const int kFlicTime = 18;
 const int kParticleTime = 1;
 const int kBottomOn = 3;
 const int kBottomOff = 1;
+const float kDeathLine = 1000.0F;
 
 //コンストラクタ
 Player::Player()
@@ -184,7 +185,7 @@ void Player::draw()
 //生存フラグの返却
 bool Player::isAlive()
 {
-	if( myshape_.position.y > 900.0F )
+	if( myshape_.position.y > kDeathLine )
 		return diedEffect();
 
 	return true;
@@ -234,7 +235,8 @@ void Player::collision( Star * StarObj)
 		direction_id_ = Direction::kFlont;
 		timer = 0;
 		score_.addCombo();
-		guide_alpha_ -= 0.1F;
+		if( score_.getLevel() >= 2 )
+			guide_alpha_ -= 0.1F;
 
 		if( owner_ == StarObj )
 			score_.addTechnique();
