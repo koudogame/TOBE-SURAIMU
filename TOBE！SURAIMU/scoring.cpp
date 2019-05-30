@@ -9,6 +9,7 @@ const unsigned int kTechniqueScore = 1000;
 const unsigned int kRotationScore = 100;
 const unsigned int kLengthScore = 100;
 const unsigned int kHeightScore = 10;
+const unsigned int kLevelScore = 5000;
 const int kNumWidth = 20;
 const int kNumHeight = 32;
 const int kMinNumWidth = 11;
@@ -37,6 +38,7 @@ bool Scoring::init()
 	spin_combo_pitch_ = 0.0F;
 	height_ = 0.0;
 	all_height_ = 0.0F;
+	level_ = 0;
 	scoring_flag_ = false;
 
 	return true;
@@ -106,8 +108,8 @@ void Scoring::addDefaultScore( const double AddScore )
 		{
 			if( all_height_ > 0.0F )
 			{
-				createNumber( static_cast< unsigned int >( all_height_ ) *  kHeightScore );
-				score_ += static_cast< unsigned long long >( all_height_ ) * static_cast< unsigned long long >( kHeightScore );
+				createNumber( static_cast< unsigned int >( all_height_ ) *  kHeightScore * level_ );
+				score_ += static_cast< unsigned long long >( all_height_ ) * static_cast< unsigned long long >( kHeightScore ) * static_cast< unsigned long long >( level_ );
 			}
 			all_height_ = 0.0F;
 		}
@@ -124,8 +126,8 @@ void Scoring::addCombo()
 	if( scoring_flag_ )
 	{
 		combo_++;
-		score_ += static_cast< unsigned long long >( combo_ ) * static_cast< unsigned long long >( kComboScore );
-		createNumber( combo_ * kComboScore );
+		score_ += static_cast< unsigned long long >( combo_ ) * static_cast< unsigned long long >( kComboScore )* static_cast< unsigned long long >( level_ );
+		createNumber( combo_ * kComboScore * level_ );
 	}
 
 	if( combo_ > max_combo_ )
@@ -143,8 +145,8 @@ void Scoring::addTechnique()
 {
 	if( scoring_flag_ )
 	{
-		score_ += static_cast< unsigned long long >( kTechniqueScore ) * static_cast< unsigned long long >( ++technique_combo_ );
-		createNumber( kTechniqueScore * technique_combo_ );
+		score_ += static_cast< unsigned long long >( kTechniqueScore ) * static_cast< unsigned long long >( ++technique_combo_ )* static_cast< unsigned long long >( level_ );
+		createNumber( kTechniqueScore * technique_combo_ * level_ );
 	}
 }
 
@@ -157,7 +159,7 @@ void Scoring::resettechnique()
 void Scoring::addDown()
 {
 	if( scoring_flag_ )
-		score_ += static_cast< unsigned long long >( kDownScore );
+		score_ += static_cast< unsigned long long >( kDownScore ) * static_cast< unsigned long long >( level_ );
 }
 
 //âÒì]äpâ¡éZ
@@ -179,8 +181,8 @@ void Scoring::addRotate( float Angle )
 				spin_combo_pitch_ = 1.0F;
 			rotation_ = 0;
 			rotation_combo_++;
-			score_ += static_cast< unsigned long long >( rotation_combo_ ) * static_cast< unsigned long long >( kRotationScore );
-			createNumber( rotation_combo_ * kRotationScore );
+			score_ += static_cast< unsigned long long >( rotation_combo_ ) * static_cast< unsigned long long >( kRotationScore )* static_cast< unsigned long long >( level_ );
+			createNumber( rotation_combo_ * kRotationScore * level_ );
 		}
 	}
 }
@@ -196,8 +198,18 @@ void Scoring::resetRotate()
 //êØÇÃãóó£Ç≈â¡ì_
 void Scoring::addLength( const float Length )
 {
-	score_ += static_cast< unsigned long long >( static_cast< double >( Length ) * kLengthScore );
-	createNumber( static_cast< unsigned int >( Length * kLengthScore ) );
+	score_ += static_cast< unsigned long long >( static_cast< double >( Length ) * kLengthScore * level_ );
+	createNumber( static_cast< unsigned int >( Length * kLengthScore * level_ ) );
+}
+
+void Scoring::addLevel()
+{
+	level_++;
+	SOUND->stop( SoundId::kLevelUp );
+	SOUND->play( SoundId::kLevelUp , false );
+
+	score_ += static_cast< unsigned long long >( kLevelScore ) * static_cast< unsigned long long >( level_ );
+	createNumber( kLevelScore * level_ );
 }
 
 void Scoring::createNumber( unsigned int Num )
