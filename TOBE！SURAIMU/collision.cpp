@@ -7,7 +7,9 @@
 #include "wall.h"
 
 Collision::Collision()
-{}
+{
+	onece_flag_ = false;
+}
 
 
 Collision::~Collision()
@@ -19,6 +21,7 @@ Collision::~Collision()
 void Collision::collision( Player * P , Star * S )
 {
 	id_ = S->getColor();
+
 	bool hit_flag = false;
 	for( int i = 0; i < kStarLineNum; i++ )
 	{
@@ -81,12 +84,18 @@ void Collision::collision( Player * P , Star * S )
 		{
 			P->collision( S );
 			S->collision( P );
+			onece_flag_ = true;
 		}
 		else
 		{
 			if( !P->isCollision() )
 			{
 				P->collision( S );
+				if( !onece_flag_ )
+				{
+					S->collision( P );
+					onece_flag_ = true;
+				}
 			}
 		}
 	}
@@ -102,6 +111,7 @@ void Collision::collision( Player * P , Wall * W )
 			P->setGround( W->getShape( i ) );
 			P->revision( crossPoint( P->getShape() , W->getShape( i ) ) , NameSpaceParticle::ParticleID::kWall );
 			P->collision( W );
+			onece_flag_ = false;
 			break;
 		}
 	}

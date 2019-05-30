@@ -37,5 +37,6 @@ private:
 	//ƒƒ“ƒo•Ï”
 private:
 	NameSpaceParticle::ParticleID id_;
+	bool onece_flag_;
 };
 
