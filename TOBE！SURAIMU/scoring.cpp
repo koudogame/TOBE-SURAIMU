@@ -55,7 +55,7 @@ void Scoring::update()
 	for( const auto& itr : addition_list_ )
 	{
 		//マジックナンバー
-		itr.get()->update( 84.0F + itr_num * kMinNumHeight );
+		itr.get()->update( 256.0F + itr_num * kMinNumHeight );
 
 		if( !itr.get()->isAlive() )
 			delete_flag_ = true;
@@ -72,7 +72,7 @@ void Scoring::draw()
 {
 	//トータルスコアの下地描画
 	//マジックナンバー
-	RECT trim{ 0,0,300,64 };
+	RECT trim{ 0,0,300,256 };
 	Sprite::getInstance()->draw( texture_ , Vector2(10.0F,20.0F) , &trim , 1.0F , 0.9F );
 	//トータルスコアの描画
 	Vector2 draw_position( 225.0F , 32.0F );
@@ -86,6 +86,35 @@ void Scoring::draw()
 		draw_position.x -= kNumWidth;
 		temp /= 10;
 	} while( temp > 0ULL );
+
+	//高さの描画
+	draw_position.y += 50.0F;
+	draw_position.x = 225.0F;
+	unsigned int temp_ = static_cast< unsigned int >( height_ );
+	do
+	{
+		trim.left = kNumWidth * ( temp_ % 10 );
+		trim.right = trim.left + kNumWidth;
+		trim.bottom = trim.top + kNumHeight;
+		Sprite::getInstance()->draw( num_texture_ , draw_position , &trim , 1.0F , 1.0F );
+		draw_position.x -= kNumWidth;
+		temp_ /= 10;
+	} while( temp_ > 0ULL );
+
+	//コンボの描画
+	draw_position.y += 50.0F;
+	draw_position.x = 225.0F;
+	temp_ = combo_;
+	do
+	{
+		trim.left = kNumWidth * ( temp_ % 10 );
+		trim.right = trim.left + kNumWidth;
+		trim.bottom = trim.top + kNumHeight;
+		Sprite::getInstance()->draw( num_texture_ , draw_position , &trim , 1.0F , 1.0F );
+		draw_position.x -= kNumWidth;
+		temp_ /= 10;
+	} while( temp_ > 0ULL );
+
 
 	//加点の描画
 	for( const auto& itr : addition_list_ )
