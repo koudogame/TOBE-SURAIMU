@@ -5,6 +5,7 @@ enum SoundId
     kCllision,
     kDied,
     kJump,
+	kLevelUp,
     kPlay,
     kScene,
     kSelect,
@@ -13,4 +14,4 @@ enum SoundId
     kTitle,
 };
 
-#define XACT_WAVEBANK_WAVEBANK_ENTRY_COUNT 9
+#define XACT_WAVEBANK_WAVEBANK_ENTRY_COUNT 10

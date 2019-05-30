@@ -36,6 +36,7 @@ public:
 	inline void setGround( Line* const Ground ) { ground_ = Ground; }
 	inline bool isCollision() { return flag_.test( Flag::kStarCollision ); }
 	inline bool isJump() { return flag_.test( Flag::kJump ); }
+	inline bool isTechnique() { return flag_.test( Flag::kTechnique ); }
 	inline ObjectBase* getOwner() { return owner_; }
 	void revision( const Vector2& CrossPoint, NameSpaceParticle::ParticleID ID );
 	void collision( class Star* );
@@ -44,6 +45,7 @@ public:
 	void resetStatus( const float Magnification ) { magnification_ = Magnification; }
 	inline void onStartFlag() { score_.start(); }
 	inline void addScore( const float AddScore ) { score_.addDefaultScore( AddScore ); }
+	inline void addLevel() { score_.addLevel(); }
 	inline Scoring* getScore() { return &score_; }
 
 

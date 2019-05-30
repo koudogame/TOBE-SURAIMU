@@ -45,12 +45,15 @@ public:
 	void resetRotate();
 	//距離の加点
 	void addLength( const float Length );
+	//レベルアップ
+	void addLevel();
 	//スコアの取得
 	inline unsigned long long getScore() { return score_; }
 	//最大コンボ数の取得
 	inline unsigned int getMaxCombo() { return max_combo_; }
 	//上った距離の取得
 	inline double getHeight() { return height_; }
+
 
 	//メンバ変数
 private:
@@ -67,6 +70,7 @@ private:
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
 
 	Numbers<unsigned int> combo_draw_;
+	unsigned int level_;
 
 	double all_height_;
 
