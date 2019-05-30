@@ -45,7 +45,6 @@ private:
 	float angle_[ kStarLineNum ];		//Šp“x
 	float fall_;		    //—Ž‰º‚Ì‘¬‚³
 	float spin_;		    //‰ñ“]‘¬“x
-	int turn_;		        //‰ñ“]•ûŒü
 	float size_;	        //‘å‚«‚³
 	float rate_;	        //‰ñ“]”{—¦
 	Line myshape_[ kStarLineNum ];

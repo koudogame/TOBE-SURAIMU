@@ -38,7 +38,6 @@ Star::Star()
 
 	fall_ = 0;
 	spin_ = 0;
-	turn_ = 1;
 	rate_ = 0;
 	size_ = 0;
 }
@@ -140,14 +139,12 @@ void Star::collision( Player* P )
 	if( std::abs( new_angle - old_angle ) > XM_PI )
 		new_angle < old_angle ? new_angle += XM_2PI : old_angle += XM_2PI;
 
-	turn_ = static_cast< int >( std::copysign( 1.0F , new_angle - old_angle ) );
-
 	//中心からの割合
 	float per = ( ( P->getPosition() - position_ ).Length() / size_ );
 	//プレイヤーの移動量を取り出す
 	float p_movement = ( P->getMove()->end - P->getMove()->start ).Length();
 
-	spin_ += turn_ * rate_ * per * p_movement;
+	spin_ += std::copysign( rate_ * per * p_movement , new_angle - old_angle );
 
 	if( std::abs( spin_ ) < kMinSpin )
 		spin_ = static_cast< float >( std::copysign( kMinSpin , spin_ ) );
