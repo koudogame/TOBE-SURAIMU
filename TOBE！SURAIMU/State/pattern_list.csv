@@ -1,5 +1,12 @@
-pattern_normal_1.csv
-pattern_normal_2.csv
-pattern_normal_3.csv
-pattern_normal_4.csv
-pattern_normal_5.csv
+pattern_easy_1.csv,pattern_normal_1.csv,pattern_hard_1.csv
+pattern_easy_2.csv,pattern_normal_2.csv,pattern_hard_2.csv
+pattern_easy_3.csv,pattern_normal_3.csv,pattern_hard_3.csv
+pattern_easy_4.csv,pattern_normal_4.csv,pattern_hard_4.csv
+pattern_easy_1.csv,pattern_normal_5.csv,pattern_hard_5.csv
+pattern_easy_2.csv,pattern_normal_6.csv,pattern_hard_6.csv
+pattern_easy_3.csv,pattern_normal_7.csv,pattern_hard_7.csv
+pattern_easy_4.csv,pattern_normal_8.csv,pattern_hard_8.csv
+pattern_easy_1.csv,pattern_normal_9.csv,pattern_hard_9.csv
+pattern_easy_2.csv,pattern_normal_1.csv,pattern_hard_10.csv
+pattern_easy_3.csv,pattern_normal_2.csv,pattern_hard_11.csv
+pattern_easy_4.csv,pattern_normal_3.csv,pattern_hard_12.csv
