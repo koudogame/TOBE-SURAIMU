@@ -461,6 +461,8 @@ bool Player::diedEffect()
 		SOUND->stop( SoundId::kDied );
 		SOUND->play( SoundId::kDied , false );
 
+		g_particle_container_->destroy();
+
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 45 ) , NameSpaceParticle::ParticleID::kCyan , 2.0F );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 75 ) , NameSpaceParticle::ParticleID::kMagenta , 2.0F );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 105 ) , NameSpaceParticle::ParticleID::kWall , 2.0F );
