@@ -33,7 +33,7 @@ public:
 	//ŠO•”—˜—pŠÖ”
 	inline Circle* getShape() { return &myshape_; }
 	inline Line* getMove() { return &move_vector_; }
-	inline void setGround( Line* const Ground ) { ground_ = Ground; }
+	inline void setGround( Line* const Ground ) { died_flag_ ? ground_ = &kGround : ground_ = Ground; }
 	inline bool isCollision() { return flag_.test( Flag::kStarCollision ); }
 	inline bool isJump() { return flag_.test( Flag::kJump ); }
 	inline bool isTechnique() { return flag_.test( Flag::kTechnique ); }

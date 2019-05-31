@@ -186,7 +186,11 @@ void Player::draw()
 bool Player::isAlive()
 {
 	if( myshape_.position.y > kDeathLine )
+	{
+		owner_ = nullptr;
+		ground_ = &kGround;
 		return diedEffect();
+	}
 
 	return true;
 }
@@ -242,7 +246,7 @@ void Player::collision( Star * StarObj)
 		else
 			score_.resettechnique();
 	}
-	owner_ = StarObj;
+	died_flag_ ? owner_ = nullptr : owner_ = StarObj;
 	now_amount_ = 0.0F;
 	if( flag_.test( Flag::kJump ) )
 		score_.addLength( ( myshape_.position - owner_->getPosition() ).Length() / dynamic_cast< Star* >( owner_ )->getSize() );
@@ -474,16 +478,12 @@ bool Player::diedEffect()
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 135 ) , NameSpaceParticle::ParticleID::kYellow , 2.0F );
 		died_flag_ = true;
 
-		owner_ = nullptr;
-		ground_ = &kGround;
-
 		score_.stop();
 		flag_.set( Flag::kJump );
 	}
 
 	if( g_particle_container_->active().size() == 0 )
 		return false;
-
 
 	return true;
 }
