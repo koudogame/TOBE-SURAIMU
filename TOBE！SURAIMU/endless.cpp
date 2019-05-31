@@ -257,13 +257,12 @@ SceneBase* Endless::start()
 		    clock_->start();
 		    player_->onStartFlag();
         }
-
-	    // ¯‚Æ‚ÌÕ“Ëˆ—
-	    for (auto& star : star_container_->active())
-	    {
-    		Collision::getInstance()->collision(player_, star);
-	    }
 	}
+    // ¯‚Æ‚ÌÕ“Ëˆ—
+    for (auto& star : star_container_->active())
+    {
+        Collision::getInstance()->collision(player_, star);
+    }
 
 	return this;
 }
