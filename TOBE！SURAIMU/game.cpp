@@ -16,7 +16,7 @@ constexpr long kBackgroundSize = 1024L;     // ”wŒic‰¡ƒTƒCƒY
 constexpr RECT kTrimmingBackground{         // ”wŒiØ‚èæ‚è”ÍˆÍ
 	0L, 0L, 1024L, 1024L };
 constexpr RECT kTrimmingEffect{             // ”wŒiƒGƒtƒFƒNƒgØ‚èæ‚è”ÍˆÍ
-	0L, 3184L, 1280L, 3904L };
+	0L, 1024L, 1280L, 1744L };
 
 constexpr float kBackgroundSpeed[]     = { 0.25F, 0.4F, 1.0F };
 constexpr float kBackgroundDrawDepth[] = { 0.03F, 0.01F, 0.02F };
@@ -73,7 +73,7 @@ bool Game::init()
 	}
 
 	RECT trim;
-	trim.bottom = 4096;
+	trim.bottom = 1024;
 	trim.right = 4096;
 	trim.left = trim.right - 1024;
 	trim.top = trim.bottom - 1024;
