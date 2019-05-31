@@ -28,6 +28,7 @@ public:
 		const float SpinRate,
 		const float Size
 	);
+    void update() override;
 
     void resetStates(const float Magnification);
     void setMove(const float MoveY);
@@ -38,5 +39,7 @@ public:
     void resetPattern() { pattern_.clear(); }
 
 private:
+    Star* getFreeObjAndInsert() override;
+
     std::deque<std::wstring> pattern_;
 };

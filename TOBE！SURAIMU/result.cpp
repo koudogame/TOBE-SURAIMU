@@ -470,6 +470,7 @@ SceneBase* Result::selectNext()
 		{
 			case kSelectSetName: 
                 update_ = &Result::setName;
+
                 if( (index_name_ > 0U && index_name_ < (kNameMax - 1U)) ||
                     (index_name_ == kNameMax - 1U && name_[index_name_] == '\0') ) 
                 { 

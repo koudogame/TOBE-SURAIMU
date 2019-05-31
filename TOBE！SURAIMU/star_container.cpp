@@ -33,9 +33,30 @@ Star* StarContainer::addStar(
 		Size
 	);
 
-	return star;
+ 	return star;
 }
 
+
+/*===========================================================================*/
+// 更新処理
+void StarContainer::update()
+{
+    for( auto itr = active_list_.begin(), end = active_list_.end();
+         itr != end; )
+    {
+        // 死んだら開放
+        if( (*itr)->isAlive() == false )
+        {
+            (*itr)->destroy();
+            safe_delete(*itr);
+            itr = active_list_.erase(itr);
+        }
+        else 
+        {
+            ++itr;
+        }
+    }
+}
 
 /*===========================================================================*/
 // スターのステータスに倍率をかける
@@ -93,4 +114,14 @@ bool StarContainer::createStar(const std::wstring FileCSV)
         ++count;
     }
     return true;
+}
+
+/*===========================================================================*/
+// フリーなオブジェクトを生成して返却
+Star* StarContainer::getFreeObjAndInsert()
+{
+    Star* free = new Star();
+    active_list_.push_back(free);
+
+    return free;
 }
