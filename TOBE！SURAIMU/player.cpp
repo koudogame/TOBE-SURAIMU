@@ -23,8 +23,8 @@ const float kDeathLine = 1000.0F;
 //コンストラクタ
 Player::Player()
 {
-	kGround.start = Vector2( 0.0F , getWindowHeight<float>() );
-	kGround.end = Vector2( getWindowWidth<float>() , getWindowHeight<float>() );
+	kGround.start = Vector2( 0.0F , getWindowHeight<float>()*2.0F );
+	kGround.end = Vector2( getWindowWidth<float>() , getWindowHeight<float>()*2.0F );
 }
 
 //デストラクタ
@@ -37,14 +37,13 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 {
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kPlayerUpdate );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kObject );
-	myshape_ = Circle( Posit , 5.0F );
+	myshape_ = Circle( Posit , 5.5F );
 	//定数の定義
 	kJumpAmount = Jump;
 	kAddVolume = AddVol;
 	kDecay = Decay;
 	kGravity = Gravity;
 	kSpeed = Speed;
-	kRLBoostPower = RLBoost;
 	ground_ = &kGround;
 	texture_ = TextureLoder::getInstance()->load( L"Texture/character.png" );
 	guide_ = TextureLoder::getInstance()->load( L"Texture/guide.png" );
@@ -117,6 +116,9 @@ void Player::update()
 	if( flag_.test( Flag::kJump ) )
 		now_amount_ += (kAddVolume * magnification_);
 
+	if( now_amount_ >= 1.0F )
+		now_amount_ = 1.0F;
+
 	if( Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ < kGravity )
 	{
 		flag_.reset( Flag::kStarCollision );
@@ -126,9 +128,6 @@ void Player::update()
 			score_.resetCombo();
 		}
 	}
-
-	//ブースト力の減少
-	boost_power_ = boost_power_ > ( kSpeed*magnification_ ) ? boost_power_ - ( kDecay *magnification_ ) : ( kSpeed*magnification_ );
 
 	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * ( Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ );
 	prev_jump_moveamount_ = Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out );
@@ -299,10 +298,10 @@ void Player::input()
 	{
 		//右入力
 		if( stick.x > 0.3F || key.lastState.Right )
-			myshape_.position.x += boost_power_;
+			myshape_.position.x += kSpeed;
 		//左入力
 		else if( stick.x < -0.3F || key.lastState.Left )
-			myshape_.position.x -= boost_power_;
+			myshape_.position.x -= kSpeed;
 
 		//下入力
 		if( stick.y < -0.3F || key.lastState.Down )
@@ -314,14 +313,6 @@ void Player::input()
 		}
 		else
 			bottom_input_ = kBottomOff;
-
-		//ブースト入力
-		if(( pad_tracker.a == pad_tracker.PRESSED || key.pressed.Space) &&
-			!flag_.test(Flag::kBoost))
-		{
-			flag_.set( Flag::kBoost );
-			boost_power_ = ( kRLBoostPower*magnification_ );
-		}
 	}
 	//接地中
 	else

@@ -57,7 +57,6 @@ private:
 	float kDecay;
 	float kGravity;
 	float kSpeed;
-	float kRLBoostPower;
 	Line kGround;
 
 private:
@@ -76,7 +75,6 @@ private:
 	};
 	std::bitset<6> flag_;
 	float now_amount_;
-	float boost_power_;
 	float gravity_angle_;
 	float jumping_angle_;
 	float ditrection_angle_;
