@@ -29,9 +29,7 @@ Player::Player()
 
 //デストラクタ
 Player::~Player()
-{
-	TextureLoder::getInstance()->release( texture_ );
-}
+{}
 
 
 //初期化
