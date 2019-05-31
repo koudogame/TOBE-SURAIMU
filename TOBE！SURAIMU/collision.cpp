@@ -45,27 +45,7 @@ void Collision::collision( Player * P , Star * S )
 
 	for( int i = 0; i < kStarLineNum; i++ )
 	{
-		//‰~‚Æü‚Ì“–‚½‚è”»’è
-		if( judgment( P->getShape() , S->getShape( i ) ) )
-		{
-			if( P->getOwner() != S )
-			{
-				P->setGround( S->getShape( i ) );
-				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) , id_ );
-				hit_flag = true;
-			}
-			else
-			{
-				if( !P->isCollision() )
-				{
-					P->setGround( S->getShape( i ) );
-					P->revision( crossPoint( P->getShape() , S->getShape( i ) ) , id_ );
-					hit_flag = true;
-				}
-
-			}
-		}
-		else if( judgment( P->getMove() , S->getShape( i ) ) )
+		if( judgment( P->getMove() , S->getShape( i ) ) )
 		{
 			if( P->getOwner() != S )
 			{
@@ -79,6 +59,26 @@ void Collision::collision( Player * P , Star * S )
 				{
 					P->setGround( S->getShape( i ) );
 					P->revision( crossPoint( P->getMove() , S->getShape( i ) ) , id_ );
+					hit_flag = true;
+				}
+
+			}
+		}
+		//‰~‚Æü‚Ì“–‚½‚è”»’è
+		else if( judgment( P->getShape() , S->getShape( i ) ) )
+		{
+			if( P->getOwner() != S )
+			{
+				P->setGround( S->getShape( i ) );
+				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) , id_ );
+				hit_flag = true;
+			}
+			else
+			{
+				if( !P->isCollision() )
+				{
+					P->setGround( S->getShape( i ) );
+					P->revision( crossPoint( P->getShape() , S->getShape( i ) ) , id_ );
 					hit_flag = true;
 				}
 

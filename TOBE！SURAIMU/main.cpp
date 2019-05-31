@@ -7,6 +7,8 @@
 #include "pad.h"
 #include "sound.h"
 
+#include "resource.h"
+
 //  プロトタイプ宣言
 LRESULT CALLBACK WinProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
@@ -40,6 +42,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wnd.hCursor = LoadCursor(NULL, IDC_ARROW);                            //  カーソル形状
 	wnd.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);         //  デフォルトの背景色
 	wnd.lpfnWndProc = WinProc;                                              //  ウィンドウプロシージャへの関数ポインタ
+	wnd.hIcon = LoadIcon( hInstance , MAKEINTRESOURCE( IDI_ICON1 ) );
+	wnd.hIconSm = LoadIcon( hInstance , MAKEINTRESOURCE( IDI_ICON1 ) );
 
 	//  登録
 	if (!RegisterClassEx(&wnd))
