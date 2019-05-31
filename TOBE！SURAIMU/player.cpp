@@ -473,6 +473,10 @@ bool Player::diedEffect()
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 105 ) , NameSpaceParticle::ParticleID::kWall , 2.0F );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 135 ) , NameSpaceParticle::ParticleID::kYellow , 2.0F );
 		died_flag_ = true;
+
+		owner_ = nullptr;
+		ground_ = &kGround;
+
 		score_.stop();
 		flag_.set( Flag::kJump );
 	}

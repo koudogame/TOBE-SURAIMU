@@ -130,8 +130,15 @@ void Star::setFall()
 
 void Star::collision( Player* P )
 {
+	Vector2 movement = P->getMove()->end - P->getMove()->start;
+
+	movement.Normalize();
+
+	movement = movement * 30;
+
+	Vector2 move_end = P->getMove()->start + movement;
 	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , P->getMove()->start.x - position_.x );
-	float new_angle = std::atan2( -( P->getMove()->end.y - position_.y ) , P->getMove()->end.x - position_.x );
+	float new_angle = std::atan2( -( move_end.y - position_.y ) , move_end.x - position_.x );
 
 	if( old_angle < 0.0F ) old_angle += XM_2PI;
 	if( new_angle < 0.0F ) new_angle += XM_2PI;
@@ -139,7 +146,10 @@ void Star::collision( Player* P )
 	if( std::abs( new_angle - old_angle ) > XM_PI )
 		new_angle < old_angle ? new_angle += XM_2PI : old_angle += XM_2PI;
 
-	//中心からの割合
+	if( std::abs( new_angle - old_angle ) > XM_PIDIV2 )
+		return;
+
+		//中心からの割合
 	float per = ( ( P->getPosition() - position_ ).Length() / size_ );
 	//プレイヤーの移動量を取り出す
 	float p_movement = ( P->getMove()->end - P->getMove()->start ).Length();
