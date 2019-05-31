@@ -182,7 +182,7 @@ void Player::draw()
 //¶‘¶ƒtƒ‰ƒO‚Ì•Ô‹p
 bool Player::isAlive()
 {
-	if( myshape_.position.y > kDeathLine )
+	if( myshape_.position.y > kDeathLine || died_flag_ )
 	{
 		owner_ = nullptr;
 		ground_ = &kGround;
