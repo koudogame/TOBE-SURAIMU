@@ -35,7 +35,6 @@ private:
     bool created_ = false;
 
     ID3D11ShaderResourceView* texture_ = nullptr;
-    ID3D11ShaderResourceView* texture_back_ = nullptr;
     Vector2 position_cursor_;
     int select_ = kContinue;
 

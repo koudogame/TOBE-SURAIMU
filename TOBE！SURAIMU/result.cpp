@@ -30,6 +30,8 @@ constexpr unsigned kScoreDigits      = 10U;
 constexpr unsigned kHeightDigits     = 6U;
 constexpr unsigned kComboDigits      = 2U;
 constexpr unsigned kFrameWait        = 10U;
+constexpr long kBigNumbersWidth      = 20L;
+constexpr long kBigNumbersHeight     = 32L;
 constexpr long kMiniNumbersWidth     = 11U;
 constexpr long kMiniNumbersHeight    = 15L;
 constexpr long kNumbersWidth         = 20L;
@@ -61,7 +63,7 @@ constexpr Vector2 kPositionFromBase[] {
     { 898.0F, 221.0F }, // combo
     { 319.0F, 100.0F }, // rank in line
     {   0.0F,   0.0F }, // rank in
-    { 885.0F, 130.0F }, // rank
+    { 890.0F, 120.0F }, // rank
     { 556.0F, 262.0F }, // name
     { 558.0F, 247.0F }, // name cursor
     { 436.0F, 456.0F }, // ranking
@@ -106,6 +108,8 @@ bool Result::init()
     if( texture_              == nullptr )        { return false; }
     texture_char_ =         kLoader->load(L"Texture/result_name.png");
     if( texture_char_         == nullptr )        { return false; }
+    texture_numbers_big_ =     kLoader->load(L"Texture/play_rank_2.png");
+    if( texture_numbers_big_     == nullptr )        { return false; }
     texture_char_mini_ =    kLoader->load(L"Texture/rank_name.png");
     if( texture_char_mini_    == nullptr)         { return false; }
     texture_numbers_ =      kLoader->load(L"Texture/result_score.png");
@@ -118,12 +122,12 @@ bool Result::init()
     update_ = &Result::in;
     alpha_ = 1.0F;
     count_ = 0.0F;
-    name_[0] = 'N'; name_[1] = 'A'; name_[2] = 'M'; name_[3] = 'E'; name_[4] = ' ';
-    for( int i = 5; i < kNameMax; ++i )
+    name_[0] = ' ';
+    for( int i = 1; i < kNameMax; ++i )
     {
         name_[i] = '\0';
     }
-    index_name_ = 4U;
+    index_name_ = 0U;
     index_char_ = kCharNum - 1;
     count_frame_ = 0U;
     select_ = rank_ <= kRegisteredNum ? kSelectSetName : kSelectOneMore;
@@ -146,7 +150,11 @@ void Result::destroy()
     if( created_ == false ) { return; }
     created_ = false;
 
-    // ランキングにスコアを登録
+    // ランキングにスコアを登録( 万が一、名前入力をしないで終了していたら"NAME"にする )
+    if( name_ [0] == ' ' )
+    {
+        name_[0] = 'N'; name_[1] = 'A'; name_[2] = 'M'; name_[3] = 'E';
+    }
     RankingManager::getInstance()->registerScore(
         name_, score_.getScore(), score_.getHeight(), score_.getMaxCombo()
     );
@@ -156,6 +164,7 @@ void Result::destroy()
     kLoader->release(texture_numbers_mini_);
     kLoader->release(texture_numbers_);
     kLoader->release(texture_char_mini_);
+    kLoader->release(texture_numbers_big_);
     kLoader->release(texture_char_);
     kLoader->release(texture_);
 }
@@ -289,9 +298,9 @@ void Result::draw()
 
         // ランク
         Text::drawNumber( rank_,
-                          texture_numbers_mini_,
+                          texture_numbers_big_,
                           position_base_ + kPositionFromBase[kPosRank],
-                          kMiniNumbersWidth, kMiniNumbersHeight,
+                          kBigNumbersWidth, kBigNumbersHeight,
                           1U, alpha_ );
 
         // 名前カーソル( 名前選択時にのみ描画 )
@@ -373,10 +382,19 @@ SceneBase* Result::setName()
 
 		name_[ index_name_ ] = kCharTable[ index_char_ ];
 
-        // 2文字目以降' 'で入力終了
-		if( name_[index_name_] == ' ' && index_name_ != 0 )
+        // ' 'で入力終了
+		if( name_[index_name_] == ' ' )
         {
-            name_[index_name_] = '\0';
+            // 何も入力がなかったら"NAME"で初期化
+            if( index_name_ == 0 )
+            {
+                name_[0] = 'N'; name_[1] = 'A'; name_[2] = 'M'; name_[3] = 'E';
+                index_name_ = 4;
+            }
+            else
+            {
+                name_[index_name_] = '\0';
+            }
             ++select_;
             update_ = &Result::selectNext;
         }

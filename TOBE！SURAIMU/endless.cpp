@@ -223,8 +223,8 @@ void Endless::draw()
 		RECT stick = { 0,0,256,128 };
 		RECT a = { 256,0,512,128 };
 
-		Sprite::getInstance()->draw( description_ , abuttom , &a , 1.0F , 1.0F );
-		Sprite::getInstance()->draw( description_ , sthickbuttom , &stick , 1.0F , 1.0F );
+		Sprite::getInstance()->draw( description_ , abuttom , &a , 1.0F , 0.95F );
+		Sprite::getInstance()->draw( description_ , sthickbuttom , &stick , 1.0F , 0.95F );
 	}
 }
 

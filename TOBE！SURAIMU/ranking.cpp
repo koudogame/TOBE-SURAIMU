@@ -43,20 +43,20 @@ constexpr unsigned kComboDigits   = 2U;
 
 enum { kRank, kName, kScore, kHeight, kCombo, };
 constexpr float kCoordinateX[] = {
-    390.0F, 430.0F, 535.0F, 673.0F, 767.0F
+    410.0F, 450.0F, 575.0F, 713.0F, 807.0F
 };
 
 constexpr Vector2 kPositionBase( 0.0F, 200.0F );
 enum { kFrame, kBack, kField };
 constexpr Vector2 kPosition[] = {
-    { 120.0F,  21.0F },
-    { 370.0F,  43.0F },
-    { 638.0F, 200.0F },
+    { 140.0F,  21.0F },
+    { 140.0F,  70.0F },
+    { 680.0F, 200.0F },
 };
 const RECT kTrimming[] = {
-    {    0L,    0L, 1133L,  678L },
-    { 1133L,    0L, 1674L,  635L },
-    {    0L,  678L,  196L,   690L },
+    {    0L,    0L, 1145L,  681L },
+    {    0L,  681L, 1145L, 1313L },
+    { 1145L,    0L,  1341L,  12L },
 };
 
 

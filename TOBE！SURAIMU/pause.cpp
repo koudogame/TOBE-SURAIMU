@@ -23,9 +23,12 @@ const Vector2 kPosition( getWindowWidth<float>() / 2.0F - kWidth / 2.0F,
                          getWindowHeight<float>() / 2.0F - kHeight / 2.0F );
 const Vector2 kPositionCursorStart( getWindowWidth<float>() / 2.0F - kCursorWidth / 2.0F,
                                     345.0F );
-
-const RECT kTrimming{ 0L, 0L, 270L, 270L };
-const RECT kTrimmingCursor{ 0L, 270L, 269L, 289L };
+enum { kPause, kBack, kCursor };
+const RECT kTrimming[] = {
+    { 0L, 0L, 270L, 270L },
+    { 270L, 0L, 1550L, 720L },
+    { 0L, 270L, 269L, 289L },
+};
 
 /*===========================================================================*/
 Pause::Pause()
@@ -45,8 +48,6 @@ bool Pause::init()
 
     texture_      = TextureLoder::getInstance()->load(L"Texture/pause.png");
     if( texture_ == nullptr )      { return false; }
-    texture_back_ = TextureLoder::getInstance()->load(L"Texture/pause_back.png");
-    if( texture_back_ == nullptr ) { return false; }
 
     reset();
 
@@ -61,7 +62,6 @@ void Pause::destroy()
 {
     if( created_ == false ) { return; }
 
-    if( texture_back_ ) { TextureLoder::getInstance()->release(texture_back_);}
     if( texture_ )      { TextureLoder::getInstance()->release(texture_); }
 }
 
@@ -124,11 +124,11 @@ void Pause::draw() const
 {
     Sprite* kSprite = Sprite::getInstance();
 
-	kSprite->draw( texture_back_ , Vector2::Zero , nullptr , 1.0F , 1.0F );
+	kSprite->draw( texture_ , Vector2::Zero , &kTrimming[kBack] , 1.0F , 1.0F );
 
-    kSprite->draw( texture_, kPosition, &kTrimming, 1.0F, 1.0F );
+    kSprite->draw( texture_, kPosition, &kTrimming[kPause], 1.0F, 1.0F );
 
-    kSprite->draw( texture_, position_cursor_, &kTrimmingCursor, 1.0F, 1.0F );
+    kSprite->draw( texture_, position_cursor_, &kTrimming[kCursor], 1.0F, 1.0F );
 
 }
 

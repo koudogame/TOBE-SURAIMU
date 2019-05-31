@@ -51,9 +51,10 @@ private:
     unsigned count_frame_ = 0U;
 
 // ‚»‚Ì‘¼
-    ID3D11ShaderResourceView* texture_char_ = nullptr;
-    ID3D11ShaderResourceView* texture_char_mini_ = nullptr;
-    ID3D11ShaderResourceView* texture_numbers_ = nullptr;
+    ID3D11ShaderResourceView* texture_char_         = nullptr;
+    ID3D11ShaderResourceView* texture_char_mini_    = nullptr;
+    ID3D11ShaderResourceView* texture_numbers_      = nullptr;
+    ID3D11ShaderResourceView* texture_numbers_big_  = nullptr;
     ID3D11ShaderResourceView* texture_numbers_mini_ = nullptr;
     unsigned rank_ = 101U;
     Scoring score_;
