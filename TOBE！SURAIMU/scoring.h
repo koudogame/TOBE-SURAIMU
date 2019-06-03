@@ -2,7 +2,6 @@
 //========================================
 //CreatorName:YamadaHaruhisa
 
-#include "numbers.h"
 
 #include "score_number.h"
 
@@ -77,7 +76,6 @@ private:
 	ID3D11ShaderResourceView* add_num_texture_[ 3 ];	//数字のテクスチャ
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
 
-	Numbers<unsigned int> combo_draw_;
 	unsigned int level_;
 
 	double all_height_;

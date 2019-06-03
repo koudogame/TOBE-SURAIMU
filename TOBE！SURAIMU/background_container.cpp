@@ -15,6 +15,9 @@ BackgroundContainer::~BackgroundContainer()
 
 /*===========================================================================*/
 // 背景の追加
+// Trimming : 画像切り取り範囲
+// Scroll   : y座標の1フレームでのスクロール量
+// Depth    : Sprite深度値
 bool BackgroundContainer::addBackground(const RECT& Trimming,
                                         const float Scroll,
                                         const float DrawDepth)

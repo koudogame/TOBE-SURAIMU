@@ -57,9 +57,6 @@
     <Filter Include="Project\Game\Scene\Endless">
       <UniqueIdentifier>{c8a74af1-e0c3-4137-bdbe-0db01a778c18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Scene\Timeattack">
-      <UniqueIdentifier>{ed500ba7-d457-4df0-9eea-e571f4b883ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Others\easing">
       <UniqueIdentifier>{034a96b2-fc3c-4c8d-8a89-81d926b23016}</UniqueIdentifier>
     </Filter>
@@ -90,9 +87,6 @@
     <Filter Include="Project\Game\Object\Particle\Stay">
       <UniqueIdentifier>{567c1266-7f5e-4580-8d2e-1786cce9a3e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Others\Numbers">
-      <UniqueIdentifier>{85e7533d-dec2-43d6-929f-94ede6466930}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Others\Time">
       <UniqueIdentifier>{079fb69a-dfa5-4512-abe7-0883d4743ac9}</UniqueIdentifier>
     </Filter>
@@ -105,9 +99,6 @@
     <Filter Include="Project\Game\Scene\Ranking">
       <UniqueIdentifier>{dc5a65bf-c0f7-4f4d-bfa6-97881e2e6b1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Others\RankingManager">
-      <UniqueIdentifier>{d69f8c63-0984-4062-9ba4-48328713dd2e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Others\Collision">
       <UniqueIdentifier>{d79af6f7-4414-4c49-99c2-63e7f80ab6f9}</UniqueIdentifier>
     </Filter>
@@ -116,6 +107,9 @@
     </Filter>
     <Filter Include="Project\Game\Object\UI\Pause">
       <UniqueIdentifier>{ca5e6288-5a78-4c62-8ef1-db59f28d734c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\RankingManager">
+      <UniqueIdentifier>{dae19ff1-6db2-4d7e-9dc6-eec608c35180}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -173,9 +167,6 @@
     <ClCompile Include="wall.cpp">
       <Filter>Project\Game\Object\Wall</Filter>
     </ClCompile>
-    <ClCompile Include="time_attack.cpp">
-      <Filter>Project\Game\Scene\Timeattack</Filter>
-    </ClCompile>
     <ClCompile Include="endless.cpp">
       <Filter>Project\Game\Scene\Endless</Filter>
     </ClCompile>
@@ -230,9 +221,6 @@
     <ClCompile Include="stay_particle_container.cpp">
       <Filter>Project\Game\Object\Particle\Stay</Filter>
     </ClCompile>
-    <ClCompile Include="numbers.cpp">
-      <Filter>Project\Game\Others\Numbers</Filter>
-    </ClCompile>
     <ClCompile Include="timer.cpp">
       <Filter>Project\Game\Others\Time</Filter>
     </ClCompile>
@@ -245,9 +233,6 @@
     <ClCompile Include="title_object.cpp">
       <Filter>Project\Game\Object\TitleObj</Filter>
     </ClCompile>
-    <ClCompile Include="ranking_manager.cpp">
-      <Filter>Project\Game\Others\RankingManager</Filter>
-    </ClCompile>
     <ClCompile Include="ranking.cpp">
       <Filter>Project\Game\Scene\Ranking</Filter>
     </ClCompile>
@@ -259,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>Project\Game\Others\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="ranking_manager.cpp">
+      <Filter>Project\Game\Others\RankingManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -323,9 +311,6 @@
     <ClInclude Include="wall.h">
       <Filter>Project\Game\Object\Wall</Filter>
     </ClInclude>
-    <ClInclude Include="time_attack.h">
-      <Filter>Project\Game\Scene\Timeattack</Filter>
-    </ClInclude>
     <ClInclude Include="endless.h">
       <Filter>Project\Game\Scene\Endless</Filter>
     </ClInclude>
@@ -387,9 +372,6 @@
     <ClInclude Include="ranking_in_endless.h">
       <Filter>Project\Game\Object\UI</Filter>
     </ClInclude>
-    <ClInclude Include="numbers.h">
-      <Filter>Project\Game\Others\Numbers</Filter>
-    </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>Project\Game\Others\Time</Filter>
     </ClInclude>
@@ -404,9 +386,6 @@
     </ClInclude>
     <ClInclude Include="title_object.h">
       <Filter>Project\Game\Object\TitleObj</Filter>
-    </ClInclude>
-    <ClInclude Include="ranking_manager.h">
-      <Filter>Project\Game\Others\RankingManager</Filter>
     </ClInclude>
     <ClInclude Include="ranking.h">
       <Filter>Project\Game\Scene\Ranking</Filter>
@@ -423,6 +402,9 @@
     </ClInclude>
     <ClInclude Include="Sound\xwb.h">
       <Filter>Project\Game\Others\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ranking_manager.h">
+      <Filter>Project\Game\Others\RankingManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

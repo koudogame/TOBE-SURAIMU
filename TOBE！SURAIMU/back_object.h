@@ -5,7 +5,7 @@
 #include "object_base.h"
 
 namespace {
-    constexpr float kPercentegeForMove = 0.5F;
+    constexpr float kPercentegeForMove = 0.5F;  // ˆÚ“®Š„‡
 }
 
 //-----------------------------------------------------------------------------

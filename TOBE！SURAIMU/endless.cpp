@@ -35,27 +35,41 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
 // 処理に関係
-constexpr float kDispTimeMSPF = 500.0F / 16.0F;
-// 難易度に関係
-constexpr unsigned kHeight = 0U;
-constexpr unsigned kThreshold = 1U;
-constexpr unsigned kLevelMax = 2U;
-constexpr float kLevelTable[][2] = {
-    {      0.0F, getWindowHeight<float>() * 0.35F },
-    {   5000.0F, getWindowHeight<float>() * 0.50F },
-    {  20000.0F, getWindowHeight<float>() * 0.65F },
-    {   7500.0f, getWindowHeight<float>() * 0.65F },
-    {  10000.0F, getWindowHeight<float>() * 0.75F }
+constexpr float kWindowWidth  = getWindowWidth<float>();
+constexpr float kWindowHeight = getWindowHeight<float>();
+
+enum { kAButton, kStick };
+constexpr Vector2 kPosition[] = {
+    { kWindowWidth - 272.0F, kWindowHeight - 128.0F },
+    { 32.0F, kWindowHeight - 128.0F }
 };
-constexpr Vector2 kInitStarPosi[]   = {
+const RECT kTrimming[] = {
+    { 256L, 0L, 512L, 128L },
+    {   0L, 0L, 256L, 128L }
+};
+
+constexpr float kDispTimeMSPF = 500.0F / 16.0F;                 // 難易度上昇時、スクロールにかける時間( ミリ秒/フレーム )
+// 難易度に関係
+constexpr unsigned kLevelMax = 2U;                              // レベル上限
+constexpr unsigned kHeight = 0U;                                // レベルテーブル : 高さ
+constexpr unsigned kThreshold = 1U;                             // レベルテーブル : 閾値
+constexpr float kLevelTable[][2] = {                            // レベルテーブル
+    {      0.0F, kWindowHeight * 0.35F },
+    {   5000.0F, kWindowHeight * 0.50F },
+    {  20000.0F, kWindowHeight * 0.65F },
+    {   7500.0f, kWindowHeight * 0.65F },
+    {  10000.0F, kWindowHeight * 0.75F }
+};
+
+constexpr Vector2 kInitStarPosi[]   = {                         // 初期スター位置
     {640.0F, 600.0F},
     {816.0F, 297.0F},
 	{465.0F, 142.0F},
 };
-constexpr float kInitStarAngle[]    = { 90.0F, 90.0F,90.0F, };
-constexpr float kInitStarSpin[]		= { -3.0F, 3.0F,3.0F };
-constexpr float kInitStarSpinRate[] = { 0.2F, 0.2F,0.2F };
-constexpr float kInitStarSize[]     = { 90.0F, 120.0F, 120.0F};
+constexpr float kInitStarAngle[]    = { 90.0F, 90.0F,90.0F, };  // 初期スター角度
+constexpr float kInitStarSpin[]		= { -3.0F, 3.0F,3.0F };     // 初期スター回転速度
+constexpr float kInitStarSpinRate[] = { 0.2F, 0.2F,0.2F };      // 初期スター回転割合
+constexpr float kInitStarSize[]     = { 90.0F, 120.0F, 120.0F}; // 初期スター大きさ
 
 
 /*===========================================================================*/
@@ -65,19 +79,29 @@ Endless::Endless()
 
 Endless::~Endless()
 {
-	// 開放忘れ対応
-	if (do_create_ == false)
-	{
-		destroy();
-	}
+    destroy();
 }
 
 /*===========================================================================*/
 // 初期化処理
 bool Endless::init()
 {
-	// 生成処理
-	if (do_create_ && create() == false) { return false; }
+    destroy();
+    created_ = true;
+
+
+    clock_          = new Timer<Milliseconds>();
+
+    pause_          = new Pause();
+
+    ranking_        = new RankingInEndless();
+
+    star_container_ = new StarContainer();
+
+    player_         = new Player();
+
+    wall_           = new Wall();
+
 
     // ポーズ初期化
     if( pause_->init() == false ) { return false; }
@@ -145,55 +169,24 @@ bool Endless::init()
 
 	return true;
 }
-// 生成処理
-bool Endless::create()
-{
-	if (do_create_ == false) { return true; }
-	do_create_ = false;
-
-	// 時計
-	clock_                 = new Timer<Milliseconds>();
-
-    // ポーズ
-    pause_                 = new Pause();
-
-    // ランキング
-    ranking_               = new RankingInEndless();
-
-	// スターコンテナ
-	star_container_        = new StarContainer();
-
-	// プレイヤー
-	player_                = new Player();
-
-	// 壁
-	wall_                  = new Wall();
-
-	return true;
-}
-
 /*===========================================================================*/
 // 終了処理
 void Endless::destroy()
 {
-	do_create_ = true;
+    if( created_ == false ) { return; }
+    created_ = false;
 
-	// 壁
+
 	wall_->destroy();                  safe_delete(wall_);
 
-	// プレイヤー
 	player_->destroy();                safe_delete(player_);
 
-	// スターコンテナ
 	star_container_->destroy();        safe_delete(star_container_);
 
-    // ランキング
     ranking_->destroy();               safe_delete(ranking_);
 
-    // ポーズ
     pause_->destroy();                 safe_delete(pause_);
 
-	// 時計
 	safe_delete(clock_);
 }
 
@@ -216,15 +209,13 @@ void Endless::draw()
 
 	if( player_->guide() > 0.0F )
 	{
-		//マジックナンバー
-		Vector2 sthickbuttom = Vector2( 160.0F - 128.0F , getWindowHeight<float>() - 128.0F );
-		Vector2 abuttom = Vector2( getWindowWidth<float>() - 160.0F - 128.0F + 16.0F , getWindowHeight<float>() - 128.0F );
+		Sprite::getInstance()->draw( 
+            description_, kPosition[kAButton], &kTrimming[kAButton],
+            1.0F , 0.95F );
 
-		RECT stick = { 0,0,256,128 };
-		RECT a = { 256,0,512,128 };
-
-		Sprite::getInstance()->draw( description_ , abuttom , &a , 1.0F , 0.95F );
-		Sprite::getInstance()->draw( description_ , sthickbuttom , &stick , 1.0F , 0.95F );
+		Sprite::getInstance()->draw( 
+            description_, kPosition[kStick], &kTrimming[kStick], 
+            1.0F , 0.95F );
 	}
 }
 
@@ -234,6 +225,8 @@ SceneBase* Endless::start()
 {
     KeyTracker key = Key::getInstance()->getTracker();
     PadTracker pad = Pad::getInstance()->getTracker();
+
+
     // ポーズ画面へ
     if( key.pressed.P || pad.start == PadTracker::PRESSED )
     {
@@ -360,7 +353,9 @@ SceneBase* Endless::pause()
 
     KeyTracker key = Key::getInstance()->getTracker();
     PadTracker pad = Pad::getInstance()->getTracker();
-    if( key.pressed.P || pad.start == PadTracker::PRESSED )
+
+
+    if( pad.start == PadTracker::PRESSED || key.pressed.P )
     {
 		SOUND->stop( SoundId::kDicision );
 		SOUND->play( SoundId::kDicision , false );
@@ -371,6 +366,8 @@ SceneBase* Endless::pause()
         is_pause_ = false;
     }
 
+
+    // ポーズからの戻り値で処理を分岐
     switch( pause_->update() )
     {
     case Pause::kContinue :

@@ -41,15 +41,17 @@ public:
     inline unsigned getRank() { return player_.rank; }
 
 private:
-    ID3D11ShaderResourceView* texture_bar_ = nullptr;
-    ID3D11ShaderResourceView* texture_number_ = nullptr;
+    bool created_ = false;
+
+    ID3D11ShaderResourceView* texture_bar_              = nullptr;
+    ID3D11ShaderResourceView* texture_number_           = nullptr;
     ID3D11ShaderResourceView* texture_number_forplayer_ = nullptr;
-    ID3D11ShaderResourceView* texture_text_ = nullptr;
+    ID3D11ShaderResourceView* texture_text_             = nullptr;
 
 
     std::vector<Data> ranking_;
     Data player_;
 
     float displacement_ = 0.0F;
-    float disp_frame_ = 0.0F;
+    float disp_frame_   = 0.0F;
 };

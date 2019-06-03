@@ -1,4 +1,6 @@
 
+// 板場 温樹
+
 #include "pause.h"
 
 #include "textureLoder.h"
@@ -14,20 +16,25 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 
 /*===========================================================================*/
-constexpr long kWidth = 270L;
-constexpr long kHeight = 270L;
-constexpr long kCursorWidth = 270L;
+constexpr float kWindowWidth     = getWindowWidth<float>();
+constexpr float kWindowHeight    = getWindowHeight<float>();
+constexpr float kWindowWidthHarf = kWindowWidth / 2.0F;
+
+constexpr long kWidth        = 270L;
+constexpr long kHeight       = 270L;
+constexpr long kCursorWidth  = 270L;
 constexpr long kCursorHeight = 16L;
-constexpr float kCursorMove = 48.0F;
-const Vector2 kPosition( getWindowWidth<float>() / 2.0F - kWidth / 2.0F,
-                         getWindowHeight<float>() / 2.0F - kHeight / 2.0F );
-const Vector2 kPositionCursorStart( getWindowWidth<float>() / 2.0F - kCursorWidth / 2.0F,
+constexpr float kCursorMove  = 48.0F;
+
+const Vector2 kPosition( kWindowWidthHarf - (kWidth  / 2.0F),
+                         (kWindowHeight / 2.0F) - (kHeight / 2.0F) );
+const Vector2 kPositionCursorStart( kWindowWidthHarf - (kCursorWidth / 2.0F),
                                     345.0F );
 enum { kPause, kBack, kCursor };
 const RECT kTrimming[] = {
-    { 0L, 0L, 270L, 270L },
-    { 270L, 0L, 1550L, 720L },
-    { 0L, 270L, 269L, 289L },
+    {   0L,   0L,  270L, 270L },
+    { 270L,   0L, 1550L, 720L },
+    {   0L, 270L,  269L, 289L },
 };
 
 /*===========================================================================*/
@@ -45,13 +52,13 @@ Pause::~Pause()
 bool Pause::init()
 {
     destroy();
+    created_ = true;
 
     texture_      = TextureLoder::getInstance()->load(L"Texture/pause.png");
     if( texture_ == nullptr )      { return false; }
 
     reset();
 
-    created_ = true;
 
     return true;
 }
@@ -61,6 +68,7 @@ bool Pause::init()
 void Pause::destroy()
 {
     if( created_ == false ) { return; }
+    created_ = false;
 
     if( texture_ )      { TextureLoder::getInstance()->release(texture_); }
 }
@@ -73,13 +81,14 @@ int Pause::update()
     PadTracker pad = Pad::getInstance()->getTracker();
 
     // 決定
-    if( key.released.Space || pad.a == PadTracker::RELEASED )
+    if( pad.a == PadTracker::RELEASED || key.released.Space )
     {
 		SOUND->stop( SoundId::kDicision );
 		SOUND->play( SoundId::kDicision , false );
         return select_;
     }
-    else if( key.pressed.Up || pad.leftStickUp == PadTracker::PRESSED )
+    // 上選択
+    else if( pad.leftStickUp == PadTracker::PRESSED || key.pressed.Up )
     {
         if( select_ > kContinue )
         {
@@ -96,7 +105,8 @@ int Pause::update()
 			SOUND->play( SoundId::kSelect , false );
 		}
     }
-    else if( key.pressed.Down || pad.leftStickDown == PadTracker::PRESSED )
+    // 下選択
+    else if( pad.leftStickDown == PadTracker::PRESSED || key.pressed.Down )
     {
         if( select_ < kTitle )
         {
@@ -124,16 +134,19 @@ void Pause::draw() const
 {
     Sprite* kSprite = Sprite::getInstance();
 
-	kSprite->draw( texture_ , Vector2::Zero , &kTrimming[kBack] , 1.0F , 1.0F );
+    // 背景
+	kSprite->draw( texture_ , Vector2::Zero ,  &kTrimming[kBack] , 1.0F , 1.0F );
 
-    kSprite->draw( texture_, kPosition, &kTrimming[kPause], 1.0F, 1.0F );
+    // ポーズ本体
+    kSprite->draw( texture_, kPosition,        &kTrimming[kPause], 1.0F, 1.0F );
 
+    // カーソル
     kSprite->draw( texture_, position_cursor_, &kTrimming[kCursor], 1.0F, 1.0F );
 
 }
 
 /*===========================================================================*/
-// リセット
+// メンバリセット
 void Pause::reset()
 {
     select_ = kContinue;
