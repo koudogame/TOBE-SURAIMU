@@ -111,6 +111,9 @@
     <Filter Include="Project\Game\Others\RankingManager">
       <UniqueIdentifier>{dae19ff1-6db2-4d7e-9dc6-eec608c35180}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Scene\Battle">
+      <UniqueIdentifier>{c8faea38-69f3-4933-9bb6-74102db013c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -247,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="ranking_manager.cpp">
       <Filter>Project\Game\Others\RankingManager</Filter>
+    </ClCompile>
+    <ClCompile Include="battle.cpp">
+      <Filter>Project\Game\Scene\Battle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -396,7 +402,6 @@
     <ClInclude Include="score_number.h">
       <Filter>Project\Game\Others\Scoring</Filter>
     </ClInclude>
-    <ClInclude Include="scene_base.h" />
     <ClInclude Include="Sound.h">
       <Filter>Project\Game\Others\sound</Filter>
     </ClInclude>
@@ -405,6 +410,12 @@
     </ClInclude>
     <ClInclude Include="ranking_manager.h">
       <Filter>Project\Game\Others\RankingManager</Filter>
+    </ClInclude>
+    <ClInclude Include="battle.h">
+      <Filter>Project\Game\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="scene_base.h">
+      <Filter>Project\Game\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
