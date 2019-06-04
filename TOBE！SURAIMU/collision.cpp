@@ -22,6 +22,7 @@ void Collision::init()
 	start_flag_ = false;
 }
 
+//プレイヤー対星
 void Collision::collision( Player * P , Star * S )
 {
 	if( !P->isJump() && start_flag_ )
@@ -45,6 +46,7 @@ void Collision::collision( Player * P , Star * S )
 
 	for( int i = 0; i < kStarLineNum; i++ )
 	{
+		//線と線の当たり判定
 		if( judgment( P->getMove() , S->getShape( i ) ) )
 		{
 			if( P->getOwner() != S )
@@ -86,6 +88,7 @@ void Collision::collision( Player * P , Star * S )
 		}
 	}
 
+	//判定があったら
 	if( hit_flag )
 	{
 		if( P->getOwner() != S )
@@ -109,6 +112,7 @@ void Collision::collision( Player * P , Star * S )
 	}
 }
 
+//プレイヤー対壁
 void Collision::collision( Player * P , Wall * W )
 {
 	if( !P->isJump() )

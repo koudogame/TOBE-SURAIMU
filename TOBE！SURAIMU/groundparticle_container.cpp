@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "groundParticle_container.h"
 
-const int kTextureSize = 64;
+const int kTextureSize = 64;		//テクスチャサイズ
 
 //コンストラクタ
 GroundParticleContainer::GroundParticleContainer()
@@ -32,6 +32,7 @@ GroundParticle * GroundParticleContainer::addParticle(const Vector2 Position , c
 	return g_particle;
 }
 
+//移動量の追加
 void GroundParticleContainer::setMove( const float Over )
 {
 	std::list<GroundParticle*> list = this->active();

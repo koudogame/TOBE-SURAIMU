@@ -87,7 +87,7 @@ bool TimeAttack::init()
 		&speed,
 		&rl_boost);
 	fclose(player_state);
-	if (player_->init(position, jump, add_vol, decay, gravity, speed, rl_boost) == false)
+	if( player_->init( position , jump , add_vol , gravity , speed ) == false )
 	{
 		return false;
 	}

@@ -13,16 +13,20 @@ class Collision
 {
 public:
 	~Collision();
-private:
 	//singleton
+private:
 	Collision();
+public:
+	static Collision* getInstance() { static Collision instance; return &instance; }
 
 public:
 //============================
 //外部公開関数
-	static Collision* getInstance() { static Collision instance; return &instance; }
+	//初期化
 	void init();
+	//判定(プレイヤー対星)
 	void collision( Player* , Star* );
+	//判定( プレイヤー対壁 )
 	void collision( Player* , Wall* );
 
 private:
@@ -37,8 +41,8 @@ private:
 
 	//メンバ変数
 private:
-	NameSpaceParticle::ParticleID id_;
-	bool onece_flag_;
-	bool start_flag_;
+	NameSpaceParticle::ParticleID id_;		//パーティクルID
+	bool onece_flag_;						//
+	bool start_flag_;						//ゲーム開始かどうかのフラグ
 };
 

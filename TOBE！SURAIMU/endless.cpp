@@ -112,7 +112,7 @@ bool Endless::init()
 	float speed      = file.getNumber_f(6, 1);
 	float rl_boost   = file.getNumber_f(7, 1);
 	if (player_->init(
-		position,jump,add_vol,decay,gravity,speed,rl_boost) == false)
+		position,jump,add_vol,gravity,speed) == false)
 	{
 		return false;
 	}

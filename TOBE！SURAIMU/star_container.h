@@ -30,7 +30,6 @@ public:
 	);
     void update() override;
 
-    void resetStates(const float Magnification);
     void setMove(const float MoveY);
 
     bool createStar();

@@ -11,6 +11,7 @@ StayParticleContainer::StayParticleContainer( Vector2* Posit )
 StayParticleContainer::~StayParticleContainer()
 {}
 
+//パーティクルの追加
 StayParticle * StayParticleContainer::addParticle( const int TurnDirection )
 {
 	//空コンテナを取得

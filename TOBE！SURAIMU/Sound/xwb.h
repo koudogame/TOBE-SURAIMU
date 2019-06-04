@@ -1,5 +1,6 @@
 #pragma once
 
+//ƒTƒEƒ“ƒhID
 enum SoundId
 {
     kCllision,
