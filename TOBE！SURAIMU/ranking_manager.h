@@ -8,13 +8,14 @@ constexpr unsigned kRegisteredNum = 100U;
 // ランキング情報管理クラス
 //-----------------------------------------------------------------------------
 // --説明--
-// getInstance関数でインスタンスを取得する
-// getRanking関数でランキングのコンテナを取得する( 書き換え不可 )
-// getScore関数で引数で受け取った順位のスコアを取得する(1U ~ kRegisteredNum)
-// registerScore関数でランキングにスコアを登録する( ランキング外は登録されない )
+// getInstance関数   : 実体へのインスタンスを取得する
+// getRanking関数    : ランキングデータを取得する( 書き換え不可 )
+// getData関数       : 指定した順位のデータを取得する
+// registerScore関数 : ランキングにデータを登録する( ランキング外は登録されない )
 class RankingManager
 {
 private:
+    // Singleton
     RankingManager();
 public:
     ~RankingManager();

@@ -3,6 +3,8 @@
 
 #include "ranking_manager.h"
 
+
+/*===========================================================================*/
 constexpr unsigned kNameMax = 10U;
 constexpr unsigned kRangeOfStart = (kRegisteredNum + 1U) / 2U;
 

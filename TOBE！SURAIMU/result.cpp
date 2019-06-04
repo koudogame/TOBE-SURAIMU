@@ -25,33 +25,34 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 
 /*===========================================================================*/
-constexpr unsigned kShowNum          = 10U;
-constexpr unsigned kScoreDigits      = 10U;
-constexpr unsigned kHeightDigits     = 6U;
-constexpr unsigned kComboDigits      = 2U;
-constexpr unsigned kFrameWait        = 10U;
-constexpr long kBigNumbersWidth      = 20L;
-constexpr long kBigNumbersHeight     = 32L;
-constexpr long kMiniNumbersWidth     = 11U;
-constexpr long kMiniNumbersHeight    = 15L;
-constexpr long kNumbersWidth         = 20L;
-constexpr long kNumbersHeight        = 32L;
-constexpr long kMiniCharacterWidth   = 12L;
-constexpr long kMiniCharacterHeight  = 16L;
-constexpr long kCharacterWidth       = 21L;
-constexpr long kCharacterHeight      = 32L;
-constexpr float kIntervalRankingElem = 22.0F;
-constexpr float kAmountAlphaChangeForRankIn = 0.04F;
-constexpr float kAlphaMaxRankIn      = 1.0F;
-constexpr float kAlphaMinRankIn      = 0.0F;
+constexpr unsigned kShowNum                 = 10U;      // 描画数
+constexpr unsigned kScoreDigits             = 10U;      // スコア桁数
+constexpr unsigned kHeightDigits            = 6U;       // 高さ桁数
+constexpr unsigned kComboDigits             = 2U;       // コンボ桁数
+constexpr unsigned kFrameWait               = 10U;      // 長押し時、待機フレーム数
+constexpr long kBigNumbersWidth             = 20L;      // 大数字横幅
+constexpr long kBigNumbersHeight            = 32L;      // 大数字縦幅
+constexpr long kMiniNumbersWidth            = 11U;      // 小数字横幅
+constexpr long kMiniNumbersHeight           = 15L;      // 小数字縦幅
+constexpr long kNumbersWidth                = 20L;      // 数字横幅
+constexpr long kNumbersHeight               = 32L;      // 数字縦幅
+constexpr long kMiniCharacterWidth          = 12L;      // 小文字横幅
+constexpr long kMiniCharacterHeight         = 16L;      // 小文字縦幅
+constexpr long kCharacterWidth              = 21L;      // 文字横幅
+constexpr long kCharacterHeight             = 32L;      // 文字縦幅
+constexpr float kIntervalRankingElem        = 22.0F;    // ランキング要素の間
+constexpr float kAmountAlphaChangeForRankIn = 0.04F;    // "RankIn"のアルファ値の変化量
+constexpr float kAlphaMaxRankIn             = 1.0F;     // "RankIn"のアルファ値上限
+constexpr float kAlphaMinRankIn             = 0.0F;     // "RankIn"のアルファ値下限
+
 enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankInLine, kTrimRankIn };
 const RECT kTrimming[] =
 {
-    {   0L,   0L, 680L, 720L },
-    { 665L,   0L, 921L,  16L },
-    { 683L,  85L, 700L, 141L },
-    {   0L, 720L, 642L, 915L },
-    {   0L, 916L,  66L, 929L },
+    {   0L,   0L, 680L, 720L }, // back
+    { 665L,   0L, 921L,  16L }, // cursor
+    { 683L,  85L, 700L, 141L }, // name cursor
+    {   0L, 720L, 642L, 915L }, // rankin line
+    {   0L, 916L,  66L, 929L }, // rankin
 };
 
 enum { kPosBackground, kPosScore, kPosHeight, kPosCombo, kPosRankInLine,
@@ -61,8 +62,8 @@ constexpr Vector2 kPositionFromBase[] {
     { 740.0F, 148.0F }, // score
     { 417.0F, 222.0F }, // height
     { 898.0F, 221.0F }, // combo
-    { 319.0F, 100.0F }, // rank in line
-    {   0.0F,   0.0F }, // rank in
+    { 319.0F, 100.0F }, // rankin line
+    {   0.0F,   0.0F }, // rankin
     { 890.0F, 120.0F }, // rank
     { 556.0F, 262.0F }, // name
     { 558.0F, 247.0F }, // name cursor
@@ -71,14 +72,14 @@ constexpr Vector2 kPositionFromBase[] {
 
 enum { kSelectSetName, kSelectOneMore, kSelectTitle, };
 constexpr Vector2 kPositionCursorFromBase[] = {
-    {515.0F, 287.0F},
-    {515.0F, 352.0F},
-    {515.0F, 417.0F},
+    {515.0F, 287.0F}, // set name
+    {515.0F, 352.0F}, // one more
+    {515.0F, 417.0F}, // title
 };
 
-enum { kName, kScore, kHeight, kCombo };
+enum { kName,  kScore, kHeight, kCombo };
 constexpr float kDrawPositionX[] = {
-    472.0F, 690.0F, 790.0F, 842.0F
+       472.0F, 690.0F, 790.0F,  842.0F
 };
 
 
@@ -104,18 +105,23 @@ bool Result::init()
 
     // テクスチャ読み込み
     TextureLoder*           kLoader = TextureLoder::getInstance();
-	texture_ =              kLoader->load(L"Texture/result.png");
-    if( texture_              == nullptr )        { return false; }
-    texture_char_ =         kLoader->load(L"Texture/result_name.png");
-    if( texture_char_         == nullptr )        { return false; }
-    texture_numbers_big_ =     kLoader->load(L"Texture/play_rank_2.png");
-    if( texture_numbers_big_     == nullptr )        { return false; }
-    texture_char_mini_ =    kLoader->load(L"Texture/rank_name.png");
-    if( texture_char_mini_    == nullptr)         { return false; }
-    texture_numbers_ =      kLoader->load(L"Texture/result_score.png");
-    if( texture_numbers_      == nullptr )        { return false; }
-    texture_numbers_mini_ = kLoader->load(L"Texture/Rank_number.png");
-    if( texture_numbers_mini_ == nullptr )        { return false; }
+	texture_                     = kLoader->load(L"Texture/result.png");
+    if( texture_                 == nullptr )   { return false; }
+
+    texture_char_                = kLoader->load(L"Texture/result_name.png");
+    if( texture_char_            == nullptr )   { return false; }
+
+    texture_numbers_big_         = kLoader->load(L"Texture/play_rank_2.png");
+    if( texture_numbers_big_     == nullptr )   { return false; }
+
+    texture_char_mini_           = kLoader->load(L"Texture/rank_name.png");
+    if( texture_char_mini_       == nullptr)    { return false; }
+
+    texture_numbers_             = kLoader->load(L"Texture/result_score.png");
+    if( texture_numbers_         == nullptr )   { return false; }
+
+    texture_numbers_mini_        = kLoader->load(L"Texture/Rank_number.png");
+    if( texture_numbers_mini_    == nullptr )   { return false; }
 
 
     // メンバ初期化
@@ -173,6 +179,7 @@ void Result::destroy()
 // 更新処理
 SceneBase* Result::update()
 {
+    // ランクインのアルファ値を変更
     if( is_add_alpha_rankin_ ){
         if( (alpha_rankin_ += kAmountAlphaChangeForRankIn) >= kAlphaMaxRankIn)
         {
@@ -230,6 +237,7 @@ void Result::draw()
     RankingManager* kRanking = RankingManager::getInstance();
     RankingManager::Data data;
     Vector2 position = position_base_ + kPositionFromBase[kPosRanking];
+
 
     // ランキングの描画順位を決定
     unsigned rank = 0U;

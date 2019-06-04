@@ -25,21 +25,21 @@ void addMagnification(float* const Val);
 void addOffset(float* const Val, const float AddVal);
 
 /*===========================================================================*/
-constexpr float kLineHeight       = 20.0F;
-constexpr float kMagnification    = 0.1F;
-constexpr float kMagnificationMax = 2.0F;
-constexpr float kOffset           = 5.0F;
-constexpr float kOffsetMin        = -200.0F;
-constexpr float kOffsetMax        = 1800.0F;
-constexpr float kFieldMax         = 640.0F;
-constexpr float kIntervalNumber   = 1.0F;
-constexpr long kCharWidth         = 12L;
-constexpr long kCharHeight        = 16L;
-constexpr long kNumWidth          = 10L;
-constexpr long kNumHeight         = 16L;
-constexpr unsigned kScoreDigits   = 10U;
-constexpr unsigned kHeightDigits  = 6U;
-constexpr unsigned kComboDigits   = 2U;
+constexpr float kLineHeight       = 20.0F;      // 1行の縦幅
+constexpr float kMagnification    = 0.1F;       // スクロール倍率
+constexpr float kMagnificationMax = 2.0F;       // 倍率上限
+constexpr float kOffset           = 5.0F;       // 描画オフセット
+constexpr float kOffsetMin        = -200.0F;    // オフセット下限
+constexpr float kOffsetMax        = 1800.0F;    // オフセット上限
+constexpr float kFieldMax         = 640.0F;     // 描画位置上限( 下 )
+constexpr float kIntervalNumber   = 1.0F;       // 数字の間
+constexpr long kCharWidth         = 12L;        // 文字横幅
+constexpr long kCharHeight        = 16L;        // 文字縦幅
+constexpr long kNumWidth          = 10L;        // 数字横幅
+constexpr long kNumHeight         = 16L;        // 数字縦幅
+constexpr unsigned kScoreDigits   = 10U;        // スコア桁数
+constexpr unsigned kHeightDigits  = 6U;         // 高さ桁数
+constexpr unsigned kComboDigits   = 2U;         // コンボ桁数
 
 enum { kRank, kName, kScore, kHeight, kCombo, };
 constexpr float kCoordinateX[] = {

@@ -2,7 +2,6 @@
 //========================================
 //CreatorName:YamadaHaruhisa
 
-#include "numbers.h"
 
 #include "score_number.h"
 

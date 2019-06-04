@@ -153,6 +153,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="battle.h" />
+    <ClInclude Include="ranking_manager.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="background.h" />
     <ClInclude Include="background_container.h" />
@@ -170,12 +172,10 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="groundParticle.h" />
     <ClInclude Include="groundParticle_container.h" />
-    <ClInclude Include="numbers.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="particle_containerr.h" />
     <ClInclude Include="pause.h" />
     <ClInclude Include="ranking.h" />
-    <ClInclude Include="ranking_manager.h" />
     <ClInclude Include="ranking_in_endless.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="freeFallParticle.h" />
@@ -187,7 +187,6 @@
     <ClInclude Include="stay_particle_container.h" />
     <ClInclude Include="text.h" />
     <ClInclude Include="timer.h" />
-    <ClInclude Include="time_attack.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="object_base.h" />
     <ClInclude Include="object_container_base.h" />
@@ -213,6 +212,7 @@
     <ClCompile Include="background_container.cpp" />
     <ClCompile Include="back_object.cpp" />
     <ClCompile Include="back_object_container.cpp" />
+    <ClCompile Include="battle.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="combo.cpp" />
     <ClCompile Include="commonstates.cpp" />
@@ -224,15 +224,14 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="groundParticle.cpp" />
     <ClCompile Include="groundparticle_container.cpp" />
-    <ClCompile Include="numbers.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="particle_container.cpp" />
     <ClCompile Include="freeFallParticle.cpp" />
     <ClCompile Include="freeFallParticle_container.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="ranking.cpp" />
-    <ClCompile Include="ranking_manager.cpp" />
     <ClCompile Include="ranking_in_endless.cpp" />
+    <ClCompile Include="ranking_manager.cpp" />
     <ClCompile Include="score_number.cpp" />
     <ClCompile Include="scoring.cpp" />
     <ClCompile Include="Sound.cpp" />
@@ -240,7 +239,6 @@
     <ClCompile Include="stay_particle_container.cpp" />
     <ClCompile Include="text.cpp" />
     <ClCompile Include="timer.cpp" />
-    <ClCompile Include="time_attack.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pad.cpp" />

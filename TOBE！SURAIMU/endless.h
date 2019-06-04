@@ -32,8 +32,7 @@ public:
 
 private:
 // ŠÖ”‚ÆŠÖ”—p‚Ì•Ï”
-    bool create();
-    bool do_create_ = true;
+    bool created_ = false;
 
     SceneBase* start();
     SceneBase* play();

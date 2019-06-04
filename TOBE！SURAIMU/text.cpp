@@ -64,6 +64,8 @@ void Text::drawNumber( const unsigned long long Number,
     }
 }
 
+/*===========================================================================*/
+// 引数の文字のキャラテーブル上の値を返す
 int Text::getCharNum( const char Char )
 {
     for( int i = 0; i < kCharNum; ++i )

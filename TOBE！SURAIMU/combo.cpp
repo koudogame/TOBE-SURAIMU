@@ -9,7 +9,6 @@
 #include "task_manager.h"
 #include "timer.h"
 
-#include "numbers.h"
 
 const long long kLifeTimeMs = 3000LL;
 
@@ -78,15 +77,7 @@ void Combo::update()
 // •`‰æˆ—
 void Combo::draw()
 {
-    Numbers<long long> combo(combo_);
 
-    if (combo_ > 0LL)
-    {
-        combo.draw(
-            texture_,
-            Vector2(320.0F, 0.0F),
-            64L, 128L);
-    }
 }
 
 /*===========================================================================*/

@@ -83,8 +83,8 @@ void BackObjectContainer::setMove(const float Move)
 // フリーリストに要素があったらそれを返却
 BackObject* BackObjectContainer::getFreeObject()
 {
-    // 要素が無い
     if (free_list_.size() == 0) { return nullptr; }
+
 
     BackObject* free = free_list_.back();
     free_list_.pop_back();

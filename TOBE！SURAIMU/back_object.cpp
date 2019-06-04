@@ -9,9 +9,9 @@
 
 
 /*===========================================================================*/
-constexpr float kAmountOfAlphaChange = 0.004F;
-constexpr float kAlphaMax            = 0.8F;
-constexpr float kAlphaMin            = 0.0F;
+constexpr float kAmountOfAlphaChange = 0.004F;  // アルファ値変化量( 1フレーム )
+constexpr float kAlphaMax            = 0.8F;    // アルファ値上限
+constexpr float kAlphaMin            = 0.0F;    // アルファ値下限
 
 /*===========================================================================*/
 BackObject::BackObject()
@@ -25,6 +25,10 @@ BackObject::~BackObject()
 
 /*===========================================================================*/
 // 初期化処理
+// Trimming : 画像切り取り範囲
+// ScrollX  : x座標の1フレームでのスクロール量
+// ScrollY  : y座標の1フレームでのスクロール量
+// Depth    : Sprite深度値
 bool BackObject::init(const RECT& Trimming,
                       const float ScrollX, const float ScrollY,
                       const float Depth)
@@ -32,20 +36,17 @@ bool BackObject::init(const RECT& Trimming,
     destroy();
     created_ = true;
 
-    // 生成処理
+
     TextureLoder* kLoader = TextureLoder::getInstance();
-    texture_ = kLoader->load(L"Texture/wave_base.png");
-    if( texture_ == nullptr )     { return false; }
-    texture_sub_ = kLoader->load(L"Texture/wave_sub.png");
-    if( texture_sub_ == nullptr ) { return false; }
 
-    TaskManager* kManager = TaskManager::getInstance();
-    kManager->registerTask(this, TaskUpdate::kBackgroundUpdate);
-    kManager->registerTask(this, TaskDraw::kBackground);
+    texture_         = kLoader->load(L"Texture/wave_base.png");
+    if( texture_     == nullptr )     { return false; }
+    texture_sub_     = kLoader->load(L"Texture/wave_sub.png");
+    if( texture_sub_ == nullptr )     { return false; }
 
 
-    // 初期化
     reset(Trimming, ScrollX, ScrollY, Depth);
+
 
     return true;
 }
@@ -57,7 +58,9 @@ void BackObject::destroy()
     if(created_ == false) { return; }
     created_ = false;
 
+
     TaskManager::getInstance()->unregisterObject(this);
+
 
     TextureLoder* kLoader = TextureLoder::getInstance();
     kLoader->release(texture_sub_);
@@ -71,24 +74,27 @@ void BackObject::update()
     position_.x += scroll_x_ * magnification_;
     position_.y += scroll_y_ * magnification_;
 
-    // 画面外へ行ったらそこで止める
+
+    // y座標が画面外( 下 )へ行ったらそこで止める
     if( position_.y > getWindowHeight<float>() )
     {
         position_.y = getWindowHeight<float>();
     }
-    // 
+
+
+    // x座標が画面外へ行ったら、戻す
     const long kWidth = trimming_.right - trimming_.left;
     if( position_.x < -kWidth )
     {
         position_.x += kWidth;
     }
-    // 
     else if( position_.x > kWidth )
     {
         position_.x -= kWidth;
     }
 
-    // サブエフェクトのアルファ値を更新
+
+    // サブエフェクトのアルファ値を変更
     if( is_add_subalpha_ )
     {
         sub_alpha_ += kAmountOfAlphaChange;
@@ -118,14 +124,15 @@ void BackObject::draw()
 
     Vector2 draw_position = position_;
 
-    // シームレスに描画
+    // 描画位置のx座標が画面外( 左 )になるまで移動させる
     const long kWidth = trimming_.right - trimming_.left;
-
     while( draw_position.x > 0.0F )
     {
         draw_position.x -= kWidth;
     }
 
+
+    // シームレスに描画( 左から右へ ) *加算合成
     kSprite->end();
     kSprite->begin(kSprite->chengeMode());
     while( draw_position.x < getWindowWidth<float>() )
@@ -142,15 +149,22 @@ void BackObject::draw()
     kSprite->begin();
 }
 
+
 /*===========================================================================*/
-// 再設定
+// メンバの設定
+// Trimming : 画像切り取り範囲
+// ScrollX  : x座標への1フレームでのスクロール量
+// ScrollY  : y座標への1フレームでのスクロール量
+// Depth    : Sprite深度値
 void BackObject::reset(const RECT& Trimming,
     const float ScrollX, const float ScrollY ,
     const float Depth)
 {
+
     TaskManager* kManager = TaskManager::getInstance();
     kManager->registerTask(this, TaskUpdate::kBackgroundUpdate);
     kManager->registerTask(this, TaskDraw::kBackground);
+
 
     position_.x      = static_cast<float>(rand() % ( Trimming.right - Trimming.left ));
     position_.y      = (Trimming.bottom - Trimming.top) * -1.0F;

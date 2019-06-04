@@ -26,33 +26,37 @@ enum class TaskDraw
 // タスクマネージャー
 //-----------------------------------------------------------------------------
 // --説明--
-// タスクの登録はregisterTask関数を使用
-// オブジェクトごとタスクを削除する場合unregisterObject関数を使用
-// 各タスクIDは列挙体「TaskUpdate」か「TaskDraw」に定義されている
-// タスクはIDにより昇順に実行される
+// getInstance関数    : 実体へのインスタンスを返却
+// registerTask関数   : タスクを登録する( 引数でタスクの種類を指定する )
+// unregisterTask関数 : タスクの登録を解除する
+// allUpdate関数      : 登録されている全ての「更新」タスクを実行する
+// allDraw関数        : 登録されている全ての「描画」タスクを実行する
+// allSetOver関数     : 登録されている登録されている全てのオブジェクトにスクロール処理をする
+// pause関数          : 更新をrestart関数が呼ばれるまで一時停止する
+// restart関数        : 更新を再開する
 class TaskManager
 {
-	//singleton
 private:
+	//singleton
 	TaskManager();
-public:
-	static TaskManager* getInstance() { static TaskManager instance; return &instance; }
 
 public:
 	~TaskManager();
 
-public:
+
+	static TaskManager* getInstance() { static TaskManager instance; return &instance; }
+
+
 	void registerTask(ObjectBase* const, const TaskUpdate);
 	void registerTask(ObjectBase* const, const TaskDraw);
-
 	void unregisterObject(ObjectBase* const);
 
-    inline void pause()   { pause_ = true; }
-    inline void restart() { pause_ = false; }
+
 	void allUpdate();
 	void allDraw();
-
 	void allSetOver( const float Over );
+    inline void pause()   { pause_ = true; }
+    inline void restart() { pause_ = false; }
 
 
 private:
@@ -65,7 +69,7 @@ private:
 	template <typename T>
 	void execute(std::list<std::pair<T, ObjectBase*>>* const, void(ObjectBase::*)());
 
-private:
+
     bool pause_ = false;
 	std::list<std::pair<TaskUpdate, ObjectBase*>> update_list_;
 	std::list<std::pair<TaskDraw, ObjectBase*>> draw_list_;

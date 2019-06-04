@@ -20,6 +20,9 @@ Background::~Background()
 
 /*===========================================================================*/
 // 初期化処理
+// Trimming : 画像切り取り範囲
+// Scroll   : y座標の1フレームでのスクロール量
+// Depth    : Sprite深度値
 bool Background::init(const RECT& Trimming, const float Scroll, const float Depth)
 {
     // テクスチャ読み込み
@@ -47,10 +50,8 @@ bool Background::init(const RECT& Trimming, const float Scroll, const float Dept
 // 終了処理
 void Background::destroy()
 {
-    // タスク
     TaskManager::getInstance()->unregisterObject(this);
 
-    // テクスチャ開放
     TextureLoder::getInstance()->release(texture_);
 }
 
@@ -59,6 +60,8 @@ void Background::destroy()
 void Background::update()
 {
     position_.y += scroll_ * magnification_;
+
+    // y座標が画面外( 下 )へ行ったら上へ戻す
     if (position_.y > getWindowHeight<float>())
     {
         position_.y = getWindowHeight<float>() - kTextureSize + scroll_;
@@ -71,9 +74,13 @@ void Background::draw()
 {
     Sprite* const kSprite = Sprite::getInstance();
 
+
+    // 描画モード"加算合成"
     kSprite->end();
     kSprite->begin(kSprite->chengeMode());
     Vector2 draw_position = position_;
+
+    // 画面が埋まるまで縦に描画
     while (draw_position.y + kTextureSize > 0.0F)
     {
         kSprite->draw(texture_, draw_position, &trimming_, 1.0F, depth_);
@@ -82,4 +89,5 @@ void Background::draw()
     }
     kSprite->end();
     kSprite->begin();
+    // ！描画モード"加算合成"
 }

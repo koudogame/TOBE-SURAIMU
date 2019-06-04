@@ -10,20 +10,23 @@
 #include "shape.h"
 
 /*===========================================================================*/
-constexpr float kWallWidth = 32.0F;                     // 壁横幅
-constexpr float kWallHeight = 88.0F;                    // 壁縦幅
-constexpr float kWallWidthHarf = kWallWidth / 2.0F;     // 壁横幅半分
-constexpr float kDistanceToCenter = 320.0F;             // 中央との距離
-const float kCenterX = getWindowWidth<float>() / 2.0F;  // 画面中央x座標
-const float kPositionXLeft  = kCenterX - kDistanceToCenter; // 左の壁x座標
-const float kPositionXRight = kCenterX + kDistanceToCenter; // 右の壁x座標
+constexpr float kWindowWidth  = getWindowWidth<float>();
+constexpr float kWindowHeight = getWindowHeight<float>();
 
-const Line kCollisionLeftWall{                              // 左の壁衝突判定範囲
+constexpr float kWallWidth        = 32.0F;                        // 壁横幅
+constexpr float kWallHeight       = 88.0F;                        // 壁縦幅
+constexpr float kWallWidthHarf    = kWallWidth / 2.0F;            // 壁横幅半分
+constexpr float kDistanceToCenter = 320.0F;                       // 中央との距離
+const float kCenterX              = kWindowWidth / 2.0F;          // 画面中央x座標
+const float kPositionXLeft        = kCenterX - kDistanceToCenter; // 左の壁x座標
+const float kPositionXRight       = kCenterX + kDistanceToCenter; // 右の壁x座標
+
+const Line kCollisionLeftWall{                                    // 左の壁衝突判定範囲
 	Vector2(kPositionXLeft, 0.0F), Vector2(kPositionXLeft, 2000.0F) };
-const Line kCollisionRightWall{                             // 右の壁衝突判定範囲
+const Line kCollisionRightWall{                                   // 右の壁衝突判定範囲
     Vector2(kPositionXRight, 2000.0F),Vector2(kPositionXRight, 0.0F) };
 
-const float kDrawPositionXLeftWall = kPositionXLeft - kWallWidthHarf;   // 左の壁描画x座標
+const float kDrawPositionXLeftWall  = kPositionXLeft - kWallWidthHarf;  // 左の壁描画x座標
 const float kDrawPositionXRightWall = kPositionXRight - kWallWidthHarf; // 右の壁描画x座標
 
 constexpr RECT kTrimmingWall { 0L, 0L, 32L, 88L };     // 壁切り取り範囲
@@ -35,23 +38,29 @@ Wall::Wall()
 
 Wall::~Wall()
 {
-	// 開放忘れ対処
-	if (do_create_ == false)
-	{
-		destroy();
-	}
+	destroy();
 }
 
 /*===========================================================================*/
 // 初期化処理
 bool Wall::init()
 {
-	// 生成
-	if (do_create_ && create() == false) { return false; }
+    destroy();
+    created_ = true;
+
+	// テクスチャ
+	texture_ = TextureLoder::getInstance()->load(L"Texture/wall.png");
+	if (texture_ == nullptr) { return false; }
+
+	// 形
+	myshape_ = new Line[2]();
+
+
 
 	// タスクの登録
-	TaskManager::getInstance()->registerTask(this, TaskUpdate::kWallUpdate);
-	TaskManager::getInstance()->registerTask(this, TaskDraw::kObject);
+    TaskManager* kManager = TaskManager::getInstance();
+	kManager->registerTask(this, TaskUpdate::kWallUpdate);
+	kManager->registerTask(this, TaskDraw::kObject);
 
 	// 形の設定
 	myshape_[0] = kCollisionLeftWall;
@@ -63,29 +72,13 @@ bool Wall::init()
 
 	return true;
 }
-// 生成処理
-bool Wall::create()
-{
-	do_create_ = false;
-
-
-	// テクスチャ
-	texture_ = TextureLoder::getInstance()->load(L"Texture/wall.png");
-	if (texture_ == nullptr) { return false; }
-
-	// 形
-	myshape_ = new (std::nothrow) Line[2]();
-	if (myshape_ == nullptr) { return false; }
-
-	return true;
-}
 
 /*===========================================================================*/
 // 終了処理
 void Wall::destroy()
 {
-	do_create_ = true;
-
+    if( created_ == false ) { return; }
+    created_ = false;
 
 	// 形
 	safe_delete_array(myshape_);
@@ -93,7 +86,7 @@ void Wall::destroy()
 	// テクスチャ
 	TextureLoder::getInstance()->release(texture_);
 
-	// タスクの登録
+	// タスク
 	TaskManager::getInstance()->unregisterObject(this);
 }
 
@@ -113,13 +106,15 @@ void Wall::draw()
 
     Vector2 draw_position;
     draw_position.y = position_.y;
-    while (draw_position.y <= getWindowHeight<float>())
+
+    // 上から下へシームレスに描画
+    while (draw_position.y <= kWindowHeight)
     {
         // 左壁
         draw_position.x = kDrawPositionXLeftWall;
 		kSprite->draw( texture_ , draw_position , &kTrimmingWall , 1.0F , 1.0F );
 
-        // 右壁
+        // 右壁( 左右反転 )
         draw_position.x = kDrawPositionXRightWall;
         kSprite->draw(texture_, draw_position, &kTrimmingWall,
             1.0F, 1.0F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero,

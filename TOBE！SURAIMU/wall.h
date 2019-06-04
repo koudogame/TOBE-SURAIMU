@@ -25,10 +25,8 @@ public:
 
 	virtual Line* getShape(const unsigned GetNum);
 
-public:
-	bool do_create_ = true;
-	bool create();
-
 private:
+    bool created_ = false;
+
 	Line *myshape_;
 };
