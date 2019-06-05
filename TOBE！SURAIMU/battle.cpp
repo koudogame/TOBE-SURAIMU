@@ -47,7 +47,7 @@ bool Battle::init()
     {
         player_.push_back( new Player() );
 
-        if( player_.back()->init(kPlayerPosition[i]) == false )
+        if( player_.back()->init(kPlayerPosition[i], i) == false )
         {
             return false;
         }
@@ -95,7 +95,7 @@ void Battle::destroy()
 // XVˆ—
 SceneBase* Battle::update()
 {
-    Space::getInstance()->collision();
+    //Space::getInstance()->collision();
 
     return this;
 }
