@@ -121,6 +121,7 @@ private:
 	float guide_alpha_;					//ガイドのアルファ値
 
 	Scoring score_;	//スコア
+	int player_no_;
 
 private:
 	//描画系
