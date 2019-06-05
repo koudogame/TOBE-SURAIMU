@@ -23,6 +23,12 @@ const float kGuideHeight = 214.0F;	//ガイドのテクスチャの高さ
 const float kGuideWidth = 5.0F;		//ガイドのテクスチャの幅
 const int kMaxPlayer = 4;			//最大プレイ人数
 
+//プレイヤーのステータス
+constexpr float kJumpAmount = 800.0F;            // プレイヤージャンプ力
+constexpr float kAddVolume = 0.005F;            // プレイヤー増加量
+constexpr float kGravity = 5.0F;              // プレイヤー重力
+constexpr float kSpeed = 5.0F;              // プレイヤー速さ
+
 //コンストラクタ
 Player::Player()
 {
@@ -36,23 +42,9 @@ Player::~Player()
 
 
 //初期化
-bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol , const float Gravity , const float Speed )
+bool Player::init( const Vector2 & Posit, const int PlayerNo)
 {
-	player_no_ = -1;
-	static int conect_check = 0;
-
-	if (conect_check > kMaxPlayer)
-		conect_check = 0;
-
-	if (conect_check <= kMaxPlayer)
-	{
-		if (Pad::getInstance()->getState(conect_check).connected)
-			player_no_ = conect_check;
-		
-		conect_check++;
-	}
-	if (player_no_ == -1)
-		return true;
+	player_no_ = PlayerNo;
 
 	//タスクへの追加
 	TaskManager::getInstance()->registerTask(this, TaskUpdate::kPlayerUpdate);
@@ -60,10 +52,6 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 
 	myshape_ = Circle( Posit , 5.5F );
 	//定数の定義
-	kJumpAmount = Jump;
-	kAddVolume = AddVol;
-	kGravity = Gravity;
-	kSpeed = Speed;
 	ground_ = &kGround;
 	//テクスチャの読み込み
 	texture_ = TextureLoder::getInstance()->load( L"Texture/character.png" );

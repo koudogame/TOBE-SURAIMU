@@ -19,10 +19,6 @@ constexpr Vector2 kPlayerPosition[kPlayerMax] = {   // プレイヤーの初期位置
     { 650.0F, 0.0F }, // Player 3
     { 800.0F, 0.0F }, // Player 4
 };
-constexpr float kPlayerJump    = 800.0F;            // プレイヤージャンプ力
-constexpr float kPlayerAddVol  = 0.005F;            // プレイヤー増加量
-constexpr float kPlayerGravity = 5.0F;              // プレイヤー重力
-constexpr float kPlayerSpeed   = 5.0F;              // プレイヤー速さ
 
 
 /*===========================================================================*/
