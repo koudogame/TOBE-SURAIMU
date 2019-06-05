@@ -183,6 +183,7 @@
     <ClInclude Include="score_number.h" />
     <ClInclude Include="scoring.h" />
     <ClInclude Include="Sound\xwb.h" />
+    <ClInclude Include="space.h" />
     <ClInclude Include="stay_particle.h" />
     <ClInclude Include="stay_particle_container.h" />
     <ClInclude Include="text.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="score_number.cpp" />
     <ClCompile Include="scoring.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="space.cpp" />
     <ClCompile Include="stay_particle.cpp" />
     <ClCompile Include="stay_particle_container.cpp" />
     <ClCompile Include="text.cpp" />

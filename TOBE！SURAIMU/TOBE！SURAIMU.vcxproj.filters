@@ -114,6 +114,9 @@
     <Filter Include="Project\Game\Scene\Battle">
       <UniqueIdentifier>{c8faea38-69f3-4933-9bb6-74102db013c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Others\Space">
+      <UniqueIdentifier>{15db0afd-e5fc-4603-a616-b10961066151}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -253,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="battle.cpp">
       <Filter>Project\Game\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="space.cpp">
+      <Filter>Project\Game\Others\Space</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -416,6 +422,9 @@
     </ClInclude>
     <ClInclude Include="scene_base.h">
       <Filter>Project\Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="space.h">
+      <Filter>Project\Game\Others\Space</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
