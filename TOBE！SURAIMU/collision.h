@@ -24,6 +24,8 @@ public:
 //外部公開関数
 	//初期化
 	void init();
+	//当たり判定
+	void collision(ObjectBase* Obj1, ObjectBase* Obj2);
 	//判定(プレイヤー対星)
 	void collision( Player* , Star* );
 	inline void collision(Star* S, Player* P) { collision(P, S); }

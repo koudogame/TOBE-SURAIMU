@@ -28,6 +28,8 @@ public:
 	void draw() override;
 	//生存確認
 	bool isAlive() override;
+	//自身のID返却
+	inline ObjectID getID() override { return ObjectID::kStar; }
 
 public:
 	//外部利用関数

@@ -23,17 +23,19 @@ public:
 	//引数...初期位置:最大移動量:入力量の追加量:重力:左右の移動量
 	bool init(const Vector2& Posit,const float Jump = 30.0F,const float AddVol = 0.001F,const float Gravity = 0.5F,const float Speed = 5.0F );
 	//破棄
-	void destroy();
+	void destroy()override;
 	//更新
-	void update();
+	void update()override;
 	//描画
-	void draw();
+	void draw() override;
 	//生存確認
-	bool isAlive();
+	bool isAlive() override;
 	//移動量の追加
-	void setMove( const float Over );
+	void setMove( const float Over ) override;
 	//現在の位置の取得
-	Vector2 getPosition() const { return myshape_.position; }
+	Vector2 getPosition() const override { return myshape_.position; }
+	//自身のIDの返却
+	inline ObjectID getID() override { return ObjectID::kPlayer; }
 
 public:
 	//外部利用関数

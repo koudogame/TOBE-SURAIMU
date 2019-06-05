@@ -22,6 +22,59 @@ void Collision::init()
 	start_flag_ = false;
 }
 
+//ìñÇΩÇËîªíË
+void Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
+{
+	switch (Obj1->getID())
+	{
+	case ObjectID::kPlayer:
+		switch (Obj2->getID())
+		{
+		case ObjectID::kPlayer:
+			collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Player*>(Obj2));
+			break;
+		case ObjectID::kStar:
+			collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Star*>(Obj2));
+			break;
+
+		case ObjectID::kWall:
+			collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Wall*>(Obj2));
+			break;
+
+		default:
+			return;
+		}
+		break;
+
+	case ObjectID::kStar:
+		switch (Obj1->getID())
+		{
+		case ObjectID::kPlayer:
+			collision(dynamic_cast<Player*>(Obj2), dynamic_cast<Star*>(Obj1));
+			break;
+
+		default:
+			return;
+		}
+		break;
+
+	case ObjectID::kWall:
+		switch (Obj1->getID())
+		{
+		case ObjectID::kPlayer:
+			collision(dynamic_cast<Player*>(Obj2), dynamic_cast<Wall*>(Obj1));
+			break;
+
+		default:
+			return;
+		}
+		break;
+
+	default:
+		return;
+	}
+}
+
 //ÉvÉåÉCÉÑÅ[ëŒêØ
 void Collision::collision( Player * P , Star * S )
 {
