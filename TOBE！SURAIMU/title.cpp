@@ -18,6 +18,28 @@ const int kLayer = 3;
 const int kFall = 6;
 const int kWallWidth = 32;
 const float kWallHeight = 88.0F;
+const Vector2 kObjectposition[] =
+{
+	Vector2::Zero,
+	Vector2( 385.0F , 350.0F ),
+	Vector2( 600.0F - 46.0F / 2.0F , 565.0F - 46.0F / 2.0F - getWindowHeight<float>() ),
+	Vector2( 640.0F - 226.F / 2.0F , 600.0F - 226.F / 2.0F - getWindowHeight<float>() ),
+	Vector2( 816.0F - 300.0F / 2.0F , 297.0F - 300.0F / 2.0F - getWindowHeight<float>() ),
+	Vector2( 465.0F - 300.0F / 2.0F , 142.0F - 300.0F / 2.0F - getWindowHeight<float>() ),
+	Vector2( getWindowWidth<float>(), 0.0F ),
+	Vector2( -kWallWidth , 0.0F )
+};
+const RECT kObjectTrim[] =
+{
+	{ 0,0,getWindowWidth<int>(),getWindowHeight<int>() },
+	{0,getWindowHeight<int>(),kMenuSize * 2,getWindowWidth<int>() + kMenuSize},
+	{0,0,46,46},
+	{150,0,150 + 226,226},
+	{150 + 226,0,150 + 226 + 300,300},
+	{150 + 226,0,150 + 226 + 300,300},
+	{0,0,static_cast<long>(kWallWidth),static_cast<long>(kWallHeight)},
+	{0,0,static_cast<long>(kWallWidth),static_cast<long>(kWallHeight)},
+};
 
 
 /*===========================================================================*/
@@ -40,81 +62,47 @@ bool Title::init()
 	scene_ = &Title::selectScene;
 
 	//ロゴ
-	RECT trim = { 0,0,getWindowWidth<int>(),getWindowHeight<int>() };
 	object_status_[ ObjectNum::kRogo ].texture = TextureLoder::getInstance()->load( L"Texture/title.png" );
-	object_status_[ ObjectNum::kRogo ].position = Vector2::Zero;
-	object_status_[ ObjectNum::kRogo ].trim = trim;
+	object_status_[ ObjectNum::kRogo ].position = kObjectposition[ ObjectNum::kRogo ];;
+	object_status_[ ObjectNum::kRogo ].trim = kObjectTrim[ ObjectNum::kRogo ];
 	//カーソル
-	//マジックナンバー
-	trim.top = trim.bottom;
-	trim.bottom += kMenuSize;
-	trim.right = kMenuSize * 2;
 	object_status_[ ObjectNum::kCusur ].texture = TextureLoder::getInstance()->load( L"Texture/title.png" );
-	object_status_[ ObjectNum::kCusur ].position = Vector2( 385.0F , 350.0F );
-	object_status_[ ObjectNum::kCusur ].trim = trim;
+	object_status_[ ObjectNum::kCusur ].position = kObjectposition[ ObjectNum::kCusur ];
+	object_status_[ ObjectNum::kCusur ].trim = kObjectTrim[ ObjectNum::kCusur ];
 
 	//初期の星１
-	//マジックナンバー
-	trim.left = 150L;
-	trim.top = 0L;
-	trim.right = trim.left + 226L;
-	trim.bottom = trim.top + 226L;
 	object_status_[ ObjectNum::kStar1 ].texture = TextureLoder::getInstance()->load( L"Texture/star.png" );
-	object_status_[ ObjectNum::kStar1 ].position = Vector2( 640.0F - 226.F / 2.0F , 600.0F - 226.F / 2.0F - getWindowHeight<float>() );
-	object_status_[ ObjectNum::kStar1 ].trim = trim;
+	object_status_[ ObjectNum::kStar1 ].position = kObjectposition[ ObjectNum::kStar1 ];
+	object_status_[ ObjectNum::kStar1 ].trim = kObjectTrim[ ObjectNum::kStar1 ];
 
 	//初期の星2
-	//マジックナンバー
-	trim.left = 150L + 226L;
-	trim.top = 0L;
-	trim.right = trim.left + 300L;
-	trim.bottom = trim.top + 300L;
 	object_status_[ ObjectNum::kStar2 ].texture = TextureLoder::getInstance()->load( L"Texture/star.png" );
-	object_status_[ ObjectNum::kStar2 ].position = Vector2( 816.0F - 300.0F / 2.0F , 297.0F - 300.0F / 2.0F - getWindowHeight<float>() );
-	object_status_[ ObjectNum::kStar2 ].trim = trim;
+	object_status_[ ObjectNum::kStar2 ].position = kObjectposition[ ObjectNum::kStar2 ];
+	object_status_[ ObjectNum::kStar2 ].trim = kObjectTrim[ ObjectNum::kStar2 ];
 
 	//初期の星3
-	//マジックナンバー
-	trim.left = 150L + 226L;
-	trim.top = 0L;
-	trim.right = trim.left + 300L;
-	trim.bottom = trim.top + 300L;
 	object_status_[ ObjectNum::kStar3 ].texture = TextureLoder::getInstance()->load( L"Texture/star.png" );
-	object_status_[ ObjectNum::kStar3 ].position = Vector2( 465.0F - 300.0F / 2.0F , 142.0F - 300.0F / 2.0F - getWindowHeight<float>() );
-	object_status_[ ObjectNum::kStar3 ].trim = trim;
+	object_status_[ ObjectNum::kStar3 ].position = kObjectposition[ ObjectNum::kStar3 ];
+	object_status_[ ObjectNum::kStar3 ].trim = kObjectTrim[ ObjectNum::kStar3 ];
 
 	//プレイヤー
 	//マジックナンバー
 	CsvLoader file( L"State/player_state.csv" );
-	trim.left = 0;
-	trim.top = 0;
-	trim.right = trim.left + 46L;
-	trim.bottom = trim.top + 46L;
 	object_status_[ ObjectNum::kPlayer ].texture = TextureLoder::getInstance()->load( L"Texture/character.png" );
-	object_status_[ ObjectNum::kPlayer ].position = Vector2( file.getNumber_f( 0 , 1 ) - 46.0F / 2.0F , file.getNumber_f( 1 , 1 ) - 46.0F / 2.0F - getWindowHeight<float>() );
-	object_status_[ ObjectNum::kPlayer ].trim = trim;
+	object_status_[ ObjectNum::kPlayer ].position = kObjectposition[ ObjectNum::kPlayer ];
+	object_status_[ ObjectNum::kPlayer ].trim = kObjectTrim[ ObjectNum::kPlayer ];
 
 	//壁( 右 )
-	trim.left = 0L;
-	trim.top = 0L;
-	trim.right = trim.left + kWallWidth;
-	trim.bottom = trim.top + static_cast<int>(kWallHeight);
 	object_status_[ ObjectNum::kWallRight ].texture = TextureLoder::getInstance()->load( L"Texture/wall.png" );
-	object_status_[ ObjectNum::kWallRight ].position = Vector2( getWindowWidth<float>(), 0.0F );
-	object_status_[ ObjectNum::kWallRight ].trim = trim;
+	object_status_[ ObjectNum::kWallRight ].position = kObjectposition[ ObjectNum::kWallRight ];
+	object_status_[ ObjectNum::kWallRight ].trim = kObjectTrim[ ObjectNum::kWallRight ];
 
 	//壁( 左 )
-	trim.left = 0L;
-	trim.top = 0L;
-	trim.right = trim.left + kWallWidth;
-	trim.bottom = trim.top + static_cast<int>(kWallHeight);
 	object_status_[ ObjectNum::kWallLeft ].texture = TextureLoder::getInstance()->load( L"Texture/wall.png" );
-	object_status_[ ObjectNum::kWallLeft ].position = Vector2( -kWallWidth , 0.0F );
-	object_status_[ ObjectNum::kWallLeft ].trim = trim;
+	object_status_[ ObjectNum::kWallLeft ].position = kObjectposition[ ObjectNum::kWallLeft ];
+	object_status_[ ObjectNum::kWallLeft ].trim = kObjectTrim[ ObjectNum::kWallLeft ];
 
 	overlay_texture_ = TextureLoder::getInstance()->load( L"Texture/star1.png" );
-
-	next_flag_ = false;
 
 	for( int i = 0; i < ObjectNum::kObjectNum; i++ )
 		object_[ i ].get()->init( &object_status_[ i ] );
@@ -233,7 +221,7 @@ SceneBase* Title::playScene()
 	float now_time_ = object_status_[ ObjectNum::kRogo ].position.y / getWindowHeight<float>();
 	if( now_time_ >= 1.0F )
 		now_time_ = 1.0F;
-	object_status_[ kWallRight ].position.x = getWindowWidth<float>() - Easing::getInstance()->expo( 320.0F + kWallWidth / 2.0F , now_time_ , Easing::Mode::In );
+	object_status_[ kWallRight ].position.x = getWindowWidth<float>() - Easing::getInstance()->expo( getWindowWidth<float>() / 4.0F + kWallWidth / 2.0F , now_time_ , Easing::Mode::In );
 	object_status_[ kWallLeft ].position.x = -kWallWidth + Easing::getInstance()->expo( 320.0F + kWallWidth / 2.0F, now_time_ , Easing::Mode::In );
 
 	if( object_status_[ kRogo ].position.y > getWindowHeight<float>() )
@@ -287,7 +275,7 @@ SceneBase * Title::selectScene()
 		}
 	}
 	else
-		object_status_[ ObjectNum::kCusur ].position.y = 350.0F + kCusurInterval * select_menu_;
+		object_status_[ ObjectNum::kCusur ].position.y = kObjectposition[ ObjectNum::kCusur ].y + kCusurInterval * select_menu_;
 
 	return this;
 }

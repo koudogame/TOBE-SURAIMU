@@ -2,8 +2,6 @@
 #include "textureLoder.h"
 #include "sprite.h"
 
-const int kFall = 10;
-
 TitleObject::TitleObject()
 {}
 
@@ -11,12 +9,14 @@ TitleObject::TitleObject()
 TitleObject::~TitleObject()
 {}
 
+//‰Šú‰»
 bool TitleObject::init( TitleStatus* TitleObjectStatus )
 {
 	status_ = TitleObjectStatus;
 	return true;
 }
 
+//•`‰æ
 void TitleObject::draw()
 {
 	Sprite::getInstance()->draw( status_->texture , status_->position , &status_->trim , status_->alpha , 1.0F );

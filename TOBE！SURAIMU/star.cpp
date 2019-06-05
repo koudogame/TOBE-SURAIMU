@@ -8,24 +8,26 @@
 #include "player.h"
 
 //定数
-const int kStarMin = 60;
-const int kStarDifference = 30;
-const float kMinSpin = 2.0F;
-const float kMaxSpin[ 3 ] =
+const int kStarMin = 60;			//最小サイズ
+const int kStarDifference = 30;		//星のサイズの差分
+const float kMinSpin = 2.0F;		//最低回転量
+const int kStarWhileAngle = 72;		//頂点間の角度
+const float kDeathLine = 1200.0F;	//星の死亡ライン
+const float kMaxSpin[ 3 ] =			//最大回転量
 {
 	3.0F,
 	6.0F,
 	9.0F
 };
-const int kParticleTime = 3;
-const float kFallSpeed = 2.0F;
-const Vector3 kStarInformation[ 3 ] = {
+const int kParticleTime = 3;		//パーティクルの生成時間
+const float kFallSpeed = 2.0F;		//星の落下速度
+const Vector3 kStarInformation[ 3 ] = {	//星の切り取り情報( x,y,size )
 	Vector3( 0.0F,0.0F,150.0F ),
 	Vector3( 150.0F,0.0F,226.0F ),
 	Vector3( 150.0F + 226.0F,0.0F,300.F )
 };
 
-const float kStarColorThreshold[ 2 ] =
+const float kStarColorThreshold[ 2 ] =		//色変更の閾値
 {
 	0.5F,
 	0.8F
@@ -45,16 +47,21 @@ Star::Star()
 Star::~Star()
 {}
 
+//初期化
 bool Star::init( const Vector2 & Position , const float Angle  , const float Spin , const float Rate , const float Size )
 {
+	//タスクへの登録
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kStarUpdate );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 
+	//テクスチャの読み込み
 	texture_ = TextureLoder::getInstance()->load( L"Texture/star.png" );
 	overlay_texture_ = TextureLoder::getInstance()->load( L"Texture/star1.png" );
+
 	if( texture_ == nullptr || overlay_texture_ == nullptr )
 		return false;
 
+	//落下パーティクルコンテナの取得
 	s_particle_container_ = std::make_unique<FreeFallParticleContainer>();
 
 	position_ = Position;
@@ -72,31 +79,35 @@ bool Star::init( const Vector2 & Position , const float Angle  , const float Spi
 
 	particle_time_ = 0;
 	create_point_ = 0;
-	magnification_ = 1.0F;
 
 	setAngle();
 
 	return true;
 }
 
+//破棄
 void Star::destroy()
 {
 	s_particle_container_.get()->destroy();
 	TaskManager::getInstance()->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
+	TextureLoder::getInstance()->release( overlay_texture_ );
 }
 
+//更新
 void Star::update()
 {
 	s_particle_container_.get()->update();
 
-	position_.y += (fall_*magnification_);
-	angle_[ 0 ] += (spin_ * magnification_ );
+	position_.y += fall_;
+	angle_[ 0 ] += spin_;
 	setAngle();
 }
 
+//描画
 void Star::draw()
 {
+	//切り取り範囲
 	RECT trim;
 	trim.left = static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].x );
 	trim.top = static_cast< long >( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].y ) +
@@ -106,26 +117,29 @@ void Star::draw()
 
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
-	Sprite::getInstance()->draw( overlay_texture_ , position_ , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - 90.0F ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ) );
+	Sprite::getInstance()->draw( overlay_texture_ , position_ , &trim , 1.0F , 1.0F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - XMConvertToDegrees(XM_PIDIV2) ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ) );
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin();
-	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.9F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - 90.0F ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ , &trim , 1.0F , 0.9F , Vector2( 1.0F , 1.0F ) , -( angle_[ 0 ] - XMConvertToDegrees( XM_PIDIV2 ) ) , Vector2( kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F , kStarInformation[ ( static_cast< int >( size_ ) - kStarMin ) / kStarDifference ].z / 2.0F ) );
 }
 
+//生存確認
 bool Star::isAlive()
 {
 	//画面外で死亡
-	if( position_.y > 1200.0F )
+	if( position_.y > kDeathLine )
 		return false;
 
 	return true;
 }
 
+//落下の実装
 void Star::setFall()
 {
 	fall_ = kFallSpeed;
 }
 
+//当たり判定
 void Star::collision( Player* P )
 {
 	Vector2 movement = P->getMove()->end - P->getMove()->start;
@@ -138,16 +152,18 @@ void Star::collision( Player* P )
 	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , P->getMove()->start.x - position_.x );
 	float new_angle = std::atan2( -( move_end.y - position_.y ) , move_end.x - position_.x );
 
+	//360度に変更
 	if( old_angle < 0.0F ) old_angle += XM_2PI;
 	if( new_angle < 0.0F ) new_angle += XM_2PI;
 
+	//0度をまたいでいる場合0360度を加算
 	if( std::abs( new_angle - old_angle ) > XM_PI )
 		new_angle < old_angle ? new_angle += XM_2PI : old_angle += XM_2PI;
 
 	if( std::abs( new_angle - old_angle ) > XM_PIDIV2 )
 		return;
 
-		//中心からの割合
+	//中心からの割合
 	float per = ( ( P->getPosition() - position_ ).Length() / size_ );
 	//プレイヤーの移動量を取り出す
 	float p_movement = ( P->getMove()->end - P->getMove()->start ).Length();
@@ -162,12 +178,14 @@ void Star::collision( Player* P )
 	particle_time_ = 0;
 }
 
+//落下のパーティクル生成
 void Star::addFreeFallParticle()
 {
 	if( ++particle_time_ >= kParticleTime )
 	{
 		if( fall_ >= 1.0F )
 		{
+			//1フレームに1つの頂点から生成
 			s_particle_container_.get()->addParticle( myshape_[ create_point_++ ].start , id_ );
 			particle_time_ = 0;
 			if( create_point_ >= kStarLineNum )
@@ -176,11 +194,12 @@ void Star::addFreeFallParticle()
 	}
 }
 
+//角度の設定
 void Star::setAngle()
 {
 	//他の角度の指定
 	for( int i = 0; i < kStarLineNum; i++ )
-		angle_[ i ] = angle_[ 0 ] + 72 * ( i * 2 );
+		angle_[ i ] = angle_[ 0 ] + kStarWhileAngle * ( i * 2 );
 
 	for( int i = 0; i < kStarLineNum; i++ )
 	{

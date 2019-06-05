@@ -1,4 +1,8 @@
 #pragma once
+//*******************************************************************
+//CreatorFR“c@°‹v
+
+//ƒeƒNƒXƒ`ƒƒ‚Ìî•ñ‚ğŠi”[‚·‚é\‘¢‘Ì
 struct TitleStatus
 {
 	Vector2 position;
@@ -7,6 +11,7 @@ struct TitleStatus
 	float alpha = 1.0F;
 };
 
+//class
 class TitleObject
 {
 public:
@@ -15,10 +20,12 @@ public:
 
 	//Œp³ŠÖ”
 public:
+	//‰Šú‰»
 	bool init( TitleStatus* TitleObjectStatus );
+	//•`‰æ
 	void draw();
 
 private:
-	TitleStatus* status_;
+	TitleStatus* status_;		//î•ñŠi”[—p•Ï”
 };
 

@@ -1,6 +1,6 @@
 #include "freeFallParticle_container.h"
 
-const int kTextureSize = 64;
+const int kTextureSize = 64;		//テクスチャサイズ
 
 FreeFallParticleContainer::FreeFallParticleContainer()
 {}
@@ -9,6 +9,7 @@ FreeFallParticleContainer::FreeFallParticleContainer()
 FreeFallParticleContainer::~FreeFallParticleContainer()
 {}
 
+//パーティクルの追加
 FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Position, NameSpaceParticle::ParticleID ID )
 {
 	//空コンテナを取得
@@ -25,8 +26,10 @@ FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Posit
 	return s_particle;
 }
 
+//移動量の追加
 void FreeFallParticleContainer::setMove( const float Over )
 {
+	//全アクティブリストに移動量を追加する
 	std::list<FreeFallParticle*> list = this->active();
 
 	for( auto& itr : list )

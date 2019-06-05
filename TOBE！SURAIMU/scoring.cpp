@@ -14,6 +14,10 @@ const int kNumWidth = 20;
 const int kNumHeight = 32;
 const int kMinNumWidth = 11;
 const int kMinNumHeight = 20;
+const float kScoreHeight = 50.0F;
+const Vector2 kBasePosition = Vector2( 10.0F , 20.0F );
+const Vector2 kTotalPosition = Vector2( 225.0F , 32.0F );
+const RECT kBaseTrim = { 0 , 0 , 300 , 256 };
 
 Scoring::Scoring()
 {}
@@ -71,25 +75,25 @@ void Scoring::update()
 void Scoring::draw()
 {
 	//トータルスコアの下地描画
-	//マジックナンバー
-	RECT trim{ 0,0,300,256 };
-	Sprite::getInstance()->draw( texture_ , Vector2(10.0F,20.0F) , &trim , 1.0F , 0.9F );
+	RECT trim = kBaseTrim;
+	Sprite::getInstance()->draw( texture_ , kBasePosition , &trim , 1.0F , 0.9F );
+
 	//トータルスコアの描画
-	Vector2 draw_position( 225.0F , 32.0F );
 	unsigned long long temp = score_;
+	Vector2 draw_position = kTotalPosition;
 	do
 	{
 		trim.left = kNumWidth * ( temp % 10 );
 		trim.right = trim.left + kNumWidth;
 		trim.bottom = trim.top + kNumHeight;
-		Sprite::getInstance()->draw( num_texture_ , draw_position , &trim , 1.0F , 1.0F );
+		Sprite::getInstance()->draw( num_texture_ , kTotalPosition , &trim , 1.0F , 1.0F );
 		draw_position.x -= kNumWidth;
 		temp /= 10;
 	} while( temp > 0ULL );
 
 	//高さの描画
-	draw_position.y += 50.0F;
-	draw_position.x = 225.0F;
+	draw_position.x = kTotalPosition.x;
+	draw_position.y += kScoreHeight;
 	unsigned int temp_ = static_cast< unsigned int >( height_ );
 	do
 	{
@@ -102,8 +106,8 @@ void Scoring::draw()
 	} while( temp_ > 0ULL );
 
 	//コンボの描画
-	draw_position.y += 50.0F;
-	draw_position.x = 225.0F;
+	draw_position.x = kTotalPosition.x;
+	draw_position.y += kScoreHeight;
 	temp_ = combo_;
 	do
 	{
@@ -207,7 +211,7 @@ void Scoring::addRotate( float Angle )
 		rotation_ += Angle;
 
 		//1回転で加点
-		if( rotation_ >= 360.0F )
+		if( XMConvertToRadians(rotation_) >= XM_2PI )
 		{
 			SOUND->stop( SoundId::kSpinCombo );
 			SOUND->setPitch( SoundId::kSpinCombo , spin_combo_pitch_ );

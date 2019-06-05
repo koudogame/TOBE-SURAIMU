@@ -51,20 +51,10 @@ void StarContainer::update()
             safe_delete(*itr);
             itr = active_list_.erase(itr);
         }
-        else 
+        else
         {
             ++itr;
         }
-    }
-}
-
-/*===========================================================================*/
-// スターのステータスに倍率をかける
-void StarContainer::resetStates(const float Magnification)
-{
-    for (auto& star : active_list_)
-    {
-        star->resetStatus(Magnification);
     }
 }
 

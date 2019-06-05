@@ -13,12 +13,14 @@
 #include "star.h"
 #include "wall.h"
 
-const int kPlayerSize = 46;
-const int kFlicTime = 18;
-const int kParticleTime = 1;
-const int kBottomOn = 3;
-const int kBottomOff = 1;
-const float kDeathLine = 1000.0F;
+const int kPlayerSize = 46;		    //テクスチャサイズ
+const int kFlicTime = 18;		    //アニメーション更新時間
+const int kParticleTime = 1;	    //パーティクルの生成クールフレーム
+const int kBottomOn = 3;		    //下入力時の重力倍率
+const int kBottomOff = 1;		    //下入力なしの重力倍率
+const float kDeathLine = 1000.0F;	//死亡ライン
+const float kGuideHeight = 214.0F;	//ガイドのテクスチャの高さ
+const float kGuideWidth = 5.0F;		//ガイドのテクスチャの幅
 
 //コンストラクタ
 Player::Player()
@@ -33,28 +35,31 @@ Player::~Player()
 
 
 //初期化
-bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol , const float Decay , const float Gravity , const float Speed ,const float RLBoost )
+bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol , const float Gravity , const float Speed )
 {
+	//タスクへの追加
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kPlayerUpdate );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kObject );
 	myshape_ = Circle( Posit , 5.5F );
 	//定数の定義
 	kJumpAmount = Jump;
 	kAddVolume = AddVol;
-	kDecay = Decay;
 	kGravity = Gravity;
 	kSpeed = Speed;
 	ground_ = &kGround;
+	//テクスチャの読み込み
 	texture_ = TextureLoder::getInstance()->load( L"Texture/character.png" );
 	guide_ = TextureLoder::getInstance()->load( L"Texture/guide.png" );
 
 	if( texture_ == nullptr )
 		return false;
 
+	//パーティクルコンテナの取得
 	g_particle_container_ = std::make_unique< GroundParticleContainer>();
 	f_particle_container_ = std::make_unique<FreeFallParticleContainer>();
 	s_particle_container_ = std::make_unique<StayParticleContainer>( &myshape_.position );
 
+	//プレイヤーのパーティクル追加
 	for( int i = 0; i < 2; i++ )
 		s_particle_container_.get()->addParticle( i );
 
@@ -64,7 +69,6 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 	now_amount_ = 0.0F;
 	particle_time_ = 0;
 	prev_jump_moveamount_ = 0;
-	magnification_ = 1.0F;
 	bottom_input_ = kBottomOff;
 
 	timer = 0;
@@ -90,8 +94,10 @@ void Player::destroy()
 
 	score_.destroy();
 
+	//テクスチャの開放
 	TaskManager::getInstance()->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );
+	TextureLoder::getInstance()->release( guide_ );
 }
 
 //更新
@@ -114,7 +120,7 @@ void Player::update()
 
 	//ジャンプ量を増やす
 	if( flag_.test( Flag::kJump ) )
-		now_amount_ += (kAddVolume * magnification_);
+		now_amount_ += kAddVolume;
 
 	if( now_amount_ >= 1.0F )
 		now_amount_ = 1.0F;
@@ -149,16 +155,16 @@ void Player::draw()
 	if( flag_.test( Flag::kJump ) )
 	{
 		Vector2 movement = move_vector_.end - move_vector_.start;
-		draw_angle = XM_PI / 2.0F - std::atan2( -movement.y , movement.x );
+		draw_angle = XM_PIDIV2 - std::atan2( -movement.y , movement.x );
 	}
 	else
-		draw_angle = -gravity_angle_ - XM_PI / 2.0F;
+		draw_angle = -gravity_angle_ - XM_PIDIV2;
 
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
 	//ガイドの描画
 	if( !flag_.test( Flag::kJump ) && guide_alpha_ > 0.0F )
-		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( 5.0F / 2.0F , 214.0F ) );
+		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kGuideWidth / 2.0F , kGuideHeight ) );
 	else if( guide_alpha_ <= 0.0F )
 		guide_alpha_ = 0.0F;
 	Sprite::getInstance()->end();
@@ -192,6 +198,7 @@ bool Player::isAlive()
 	return true;
 }
 
+//移動量の追加
 void Player::setMove( const float Over )
 {
 	myshape_.position.y += Over;
@@ -353,12 +360,10 @@ void Player::gravity()
 	if( ground_ == &kGround )
 	{
 		setGravityAngle();
-		myshape_.position += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * (kGravity *magnification_ * bottom_input_);
+		myshape_.position += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * ( kGravity * bottom_input_ );
 	}
 	else
-	{
 		revision( ground_->start + ( ground_->end - ground_->start ) * dis_ , NameSpaceParticle::ParticleID::kNonParticle );
-	}
 
 }
 
@@ -425,6 +430,7 @@ void Player::addGroundParticle( NameSpaceParticle::ParticleID ID)
 {
 	if( score_.isStart() )
 	{
+		//衝突時のパーティクルの生成
 		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) , ID );
 		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) , ID );
 		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) , ID );
@@ -439,6 +445,7 @@ void Player::addFreeFallParticle()
 	{
 		if( ++particle_time_ >= kParticleTime )
 		{
+			//ジャンプ時のパーティクル生成
 			f_particle_container_.get()->addParticle( myshape_.position , NameSpaceParticle::ParticleID::kPlayer );
 			particle_time_ = 0;
 		}
@@ -461,8 +468,10 @@ bool Player::diedEffect()
 		SOUND->stop( SoundId::kDied );
 		SOUND->play( SoundId::kDied , false );
 
+		//元あったパーティクルは全消去
 		g_particle_container_->destroy();
 
+		//死亡時のパーティクル( 衝突時のものを流用( Scale 2.0F ) )を生成
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 45 ) , NameSpaceParticle::ParticleID::kCyan , 2.0F );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 75 ) , NameSpaceParticle::ParticleID::kMagenta , 2.0F );
 		g_particle_container_->addParticle( Vector2( myshape_.position.x , getWindowHeight<float>() ) , XMConvertToRadians( 105 ) , NameSpaceParticle::ParticleID::kWall , 2.0F );

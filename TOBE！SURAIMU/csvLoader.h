@@ -1,6 +1,6 @@
 #pragma once
 //========================================
-//CreatorName:YamadaHaruhisa
+//CreatorName:R“c@°‹v
 
 class CsvLoader
 {

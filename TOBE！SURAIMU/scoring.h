@@ -75,14 +75,15 @@ private:
 	};
 	ID3D11ShaderResourceView* add_num_texture_[ 3 ];	//数字のテクスチャ
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
+	unsigned int level_;							//ゲームレベル
 
-	unsigned int level_;
+	double all_height_;								//減衰までの上昇値
 
-	double all_height_;
-
-	std::list<std::shared_ptr<ScoreNumber>> addition_list_;
+	std::list<std::shared_ptr<ScoreNumber>> addition_list_;			//加点リスト
 
 private:
+	//描画加点の生成
+	//引数...描画数値：テクスチャハンドル
 	void createNumber( unsigned int Num , ID3D11ShaderResourceView* Handle );
 };
 
