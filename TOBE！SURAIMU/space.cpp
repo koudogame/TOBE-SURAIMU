@@ -10,8 +10,7 @@
 /*===========================================================================*/
 constexpr unsigned kMask        = 0x03; // マスク用
 
-//constexpr RECT kRange{ 305L, -840L, 975L, 1000L };
-constexpr RECT kRange{ 0L, 0L, 1280L, 720L };
+constexpr RECT kRange{ 305L, -840L, 975L, 1000L };
 constexpr unsigned kDivideLevel = 3U;   // 空間分割レベル
 constexpr unsigned kDivideNum   = 4U;   // 分割数
 const unsigned kBlockNum =              // 空間ブロック数
@@ -110,7 +109,7 @@ void Space::collision()
     for( int child = kBlockNum - 1, parent = 0; child >= 0; --child )
     {
         // ルート空間までの親と衝突判定
-        for( parent = child; ; parent >> 2 )
+        for( parent = child; ; parent >>= 2 )
         {
             // 判定処理
             for( auto child_obj : space_[child] ){

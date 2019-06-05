@@ -25,6 +25,10 @@ public:
     virtual void setMove(const float Over) { position_.y += Over; }
 
 
+    template <typename T>
+    T* getPtrToMyself() = 0;
+
+
 protected:
 	ID3D11ShaderResourceView* texture_ = nullptr;
 	Vector2 position_;
