@@ -280,6 +280,19 @@ void Player::collision( Wall * WallObj)
 	flag_.set( Flag::kWallParticle );
 }
 
+void Player::collision( Player * Playerobj)
+{
+	if( score_.isStart() )
+	{
+		SOUND->stop( SoundId::kCllision );
+		SOUND->setPitch( SoundId::kCllision , 0.0F );
+		SOUND->play( SoundId::kCllision , false );
+	}
+
+	//Šp“x•ÏX
+	jumping_angle_ = XM_PI - jumping_angle_;
+}
+
 //‰ñ“]Šp‚ğ•Ô‹p
 float Player::getRotate()
 {
