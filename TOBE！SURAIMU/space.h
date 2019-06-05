@@ -23,17 +23,14 @@ private:
 public:
     ~Space();
 
-    static Space* getInstance()
-    {
-        static Space instance; return &instance;
-    }
+    static Space* getInstance() { static Space instance; return &instance;  }
 
 
     void registration( ObjectBase* const Object,
-                       const Vector2& Origin,
-                       const float Radius );
-    void unregistration( ObjectBase* const Object );
+                       const Vector2&    Origin,
+                       const float       Radius );
 
+    void unregistration( ObjectBase* const Object );
 
 
     void collision();

@@ -11,6 +11,8 @@
 #include "easing.h"
 #include "Sound.h"
 
+#include "battle.h"
+
 
 const int kMenuSize = 256;
 const int kCusurInterval = 80;
@@ -229,7 +231,7 @@ SceneBase* Title::playScene()
 		SOUND->stop( SoundId::kScene );
 		SOUND->stop( SoundId::kTitle );
 		SOUND->setVolume( SoundId::kTitle , 1.0F );
-		return new Endless;
+		return new Battle;
 	}
 	return this;
 }
