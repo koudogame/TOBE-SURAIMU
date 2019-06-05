@@ -115,7 +115,8 @@ void Space::collision()
             for( auto child_obj : space_[child] ){
                 for( auto parent_obj : space_[parent] )
                 {
-                    // TODO : Õ“Ë‚ÌŒŸo
+                    kCollision->collision(
+                        child_obj, parent_obj );
                 }
             }
 
