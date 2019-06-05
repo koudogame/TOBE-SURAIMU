@@ -78,10 +78,6 @@ public:
 
 private:
 	//定数化変数
-	float kJumpAmount;		//最大ジャンプ量
-	float kAddVolume;		//入力量の増加量
-	float kGravity;			//重力量
-	float kSpeed;			//左右の移動量
 	Line kGround;			//地面
 
 private:
