@@ -26,8 +26,12 @@ public:
 	void init();
 	//判定(プレイヤー対星)
 	void collision( Player* , Star* );
+	inline void collision(Star* S, Player* P) { collision(P, S); }
 	//判定( プレイヤー対壁 )
 	void collision( Player* , Wall* );
+	inline void collision(Wall* W, Player* P) { collision(P, W); }
+	//判定( プレイヤー対プレイヤー)
+	void collision( Player* , Player* );
 
 private:
 	//当たり判定

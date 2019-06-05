@@ -131,6 +131,20 @@ void Collision::collision( Player * P , Wall * W )
 	}
 }
 
+//プレイヤー対プレイヤー
+void Collision::collision( Player * P1, Player * P2)
+{
+	if( !P1->isJump() || !P2->isJump() )
+		return;
+
+	//円と円の当たり判定
+	if( judgment( P1->getShape() , P2->getShape() ) )
+	{
+		P1->collision( P2 );
+		P2->collision( P1 );
+	}
+}
+
 
 //外部公開関数 End
 //----------------------------------------------------------------------------------------

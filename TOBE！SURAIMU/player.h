@@ -57,6 +57,8 @@ public:
 	void collision( class Star* );
 	//判定後の処理( 壁 )
 	void collision( class Wall* );
+	//判定後の処理( プレイヤー )
+	void collision( class Player* );
 	//回転角の取得
 	float getRotate();
 	//スコアリングの開始
