@@ -31,6 +31,9 @@ public:
     bool isAlive() override { return position_.y < getWindowHeight<float>(); }
     void setMove(const float Move) override { position_.y += Move * kPercentegeForMove; } 
 
+    template <typename T>
+    T* getPtrToMyself() { return this; }
+
     void resetStates(const float Magnification) { magnification_ = Magnification; }
     void reset(const RECT& Trimming,
                const float ScrollX, const float ScrollY,

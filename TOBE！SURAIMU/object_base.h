@@ -5,6 +5,14 @@
 class TaskManager;
 
 
+enum ObjectID
+{
+    kNone,
+    kPlayer,
+    kStar,
+    kWall,
+};
+
 //-----------------------------------------------------------------------------
 // オブジェクトの基底クラス
 //-----------------------------------------------------------------------------
@@ -24,10 +32,7 @@ public:
     virtual Vector2 getPosition() const { return position_; }
     virtual void setMove(const float Over) { position_.y += Over; }
 
-
-    template <typename T>
-    T* getPtrToMyself() = 0;
-
+    virtual ObjectID getID() { return ObjectID::kNone; }
 
 protected:
 	ID3D11ShaderResourceView* texture_ = nullptr;
