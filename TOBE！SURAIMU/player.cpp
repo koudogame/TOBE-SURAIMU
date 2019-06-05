@@ -38,9 +38,26 @@ Player::~Player()
 //初期化
 bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol , const float Gravity , const float Speed )
 {
+	player_no_ = -1;
+	static int conect_check = 0;
+
+	if (conect_check > kMaxPlayer)
+		conect_check = 0;
+
+	if (conect_check <= kMaxPlayer)
+	{
+		if (Pad::getInstance()->getState(conect_check).connected)
+			player_no_ = conect_check;
+		
+		conect_check++;
+	}
+	if (player_no_ == -1)
+		return true;
+
 	//タスクへの追加
-	TaskManager::getInstance()->registerTask( this , TaskUpdate::kPlayerUpdate );
-	TaskManager::getInstance()->registerTask( this , TaskDraw::kObject );
+	TaskManager::getInstance()->registerTask(this, TaskUpdate::kPlayerUpdate);
+	TaskManager::getInstance()->registerTask(this, TaskDraw::kObject);
+
 	myshape_ = Circle( Posit , 5.5F );
 	//定数の定義
 	kJumpAmount = Jump;
@@ -81,15 +98,8 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 
 
 	died_flag_ = false;
-	static int conect_check = 0;
 
-	if (conect_check <= kMaxPlayer)
-	{
-		if (Pad::getInstance()->getState(conect_check).connected)
-			player_no_ = conect_check;
-		
-		conect_check++;
-	}
+
 
 	return true;
 }
