@@ -21,7 +21,7 @@ public:
 	//継承関数
 	//初期化
 	//引数...初期位置:最大移動量:入力量の追加量:重力:左右の移動量
-	bool init(const Vector2& Posit,const float Jump = 30.0F,const float AddVol = 0.001F,const float Gravity = 0.5F,const float Speed = 5.0F );
+	bool init(const Vector2& Posit, const int PlayerNo);
 	//破棄
 	void destroy()override;
 	//更新
