@@ -21,6 +21,7 @@ const int kBottomOff = 1;		    //下入力なしの重力倍率
 const float kDeathLine = 1000.0F;	//死亡ライン
 const float kGuideHeight = 214.0F;	//ガイドのテクスチャの高さ
 const float kGuideWidth = 5.0F;		//ガイドのテクスチャの幅
+const int kMaxPlayer = 4;			//最大プレイ人数
 
 //コンストラクタ
 Player::Player()
@@ -80,6 +81,15 @@ bool Player::init( const Vector2 & Posit , const float Jump , const float AddVol
 
 
 	died_flag_ = false;
+	static int conect_check = 0;
+
+	if (conect_check <= kMaxPlayer)
+	{
+		if (Pad::getInstance()->getState(conect_check).connected)
+			player_no_ = conect_check;
+		
+		conect_check++;
+	}
 
 	return true;
 }
@@ -308,8 +318,8 @@ float Player::getRotate()
 //入力処理
 void Player::input()
 {
-	GamePad::State pad = Pad::getInstance()->getState();
-	GamePad::ButtonStateTracker pad_tracker = Pad::getInstance()->getTracker();
+	GamePad::State pad = Pad::getInstance()->getState(player_no_);
+	GamePad::ButtonStateTracker pad_tracker = Pad::getInstance()->getTracker(player_no_);
 	Keyboard::KeyboardStateTracker key = Key::getInstance()->getTracker();
 	Vector2 stick( pad.thumbSticks.leftX , pad.thumbSticks.leftY );
 
