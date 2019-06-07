@@ -9,26 +9,29 @@
 
 #include "easing.h"
 #include "Sound.h"
+#include "space.h"
 
 //判定対象クラス
 #include "star.h"
 #include "wall.h"
 
-const int kPlayerSize = 46;		    //テクスチャサイズ
-const int kFlicTime = 18;		    //アニメーション更新時間
-const int kParticleTime = 1;	    //パーティクルの生成クールフレーム
-const int kBottomOn = 3;		    //下入力時の重力倍率
-const int kBottomOff = 1;		    //下入力なしの重力倍率
-const float kDeathLine = 1000.0F;	//死亡ライン
-const float kGuideHeight = 214.0F;	//ガイドのテクスチャの高さ
-const float kGuideWidth = 5.0F;		//ガイドのテクスチャの幅
-const int kMaxPlayer = 4;			//最大プレイ人数
+const int kPlayerSize = 46;		                //テクスチャサイズ
+const int kFlicTime = 18;		                //アニメーション更新時間
+const int kParticleTime = 1;	                //パーティクルの生成クールフレーム
+const int kBottomOn = 3;		                //下入力時の重力倍率
+const int kBottomOff = 1;		                //下入力なしの重力倍率
+const float kDeathLine = 1000.0F;	            //死亡ライン
+const float kGuideHeight = 214.0F;	            //ガイドのテクスチャの高さ
+const float kGuideWidth = 5.0F;		            //ガイドのテクスチャの幅
+const int kMaxPlayer = 4;			            //最大プレイ人数
 
 //プレイヤーのステータス
-constexpr float kJumpAmount = 800.0F;            // プレイヤージャンプ力
-constexpr float kAddVolume = 0.005F;            // プレイヤー増加量
-constexpr float kGravity = 5.0F;              // プレイヤー重力
-constexpr float kSpeed = 5.0F;              // プレイヤー速さ
+constexpr float kJumpAmount = 800.0F;           //プレイヤージャンプ力
+constexpr float kAddVolume = 0.005F;            //プレイヤー増加量
+constexpr float kGravity = 5.0F;                //プレイヤー重力
+constexpr float kSpeed = 5.0F;                  //プレイヤー速さ
+constexpr float kReboundBasePower = 5.0F;		//プレイヤーの反発力
+constexpr float kReboundDecay = 0.5F;			//プレイヤーの反発力の減衰量
 
 //コンストラクタ
 Player::Player()
@@ -79,6 +82,8 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo)
 	particle_time_ = 0;
 	prev_jump_moveamount_ = 0;
 	bottom_input_ = kBottomOff;
+	rebound_angle_ = 0.0F;
+	rebound_power_ = 0.0F;
 
 	timer = 0;
 	guide_alpha_ = 1.0F;
@@ -91,6 +96,7 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo)
 	died_flag_ = false;
 
 
+	Space::getInstance()->registration(this, myshape_.position, myshape_.radius);
 
 	return true;
 }
@@ -98,6 +104,7 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo)
 //破棄
 void Player::destroy()
 {
+	Space::getInstance()->unregistration( this );
 	//全パーティクル削除
 	g_particle_container_.get()->destroy();
 	f_particle_container_.get()->destroy();
@@ -114,6 +121,9 @@ void Player::destroy()
 //更新
 void Player::update()
 {
+
+	Space::getInstance()->registration(this, myshape_.position, myshape_.radius);
+
 	//全パーティクルの更新処理
 	g_particle_container_.get()->update();
 	f_particle_container_.get()->update();
@@ -148,6 +158,11 @@ void Player::update()
 
 	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * ( Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ );
 	prev_jump_moveamount_ = Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out );
+
+	//プレイヤーと衝突した場合に反発させる
+	myshape_.position += Vector2(std::cos(rebound_angle_), -std::sin(rebound_angle_)) * rebound_power_;
+	if ((rebound_power_ -= kReboundDecay) <= 0.0F)
+		rebound_power_ = 0.0F;
 
 	//重力をかける
 	gravity();
@@ -239,7 +254,6 @@ void Player::revision( const Vector2& CrossPoint , NameSpaceParticle::ParticleID
 //星との当たり判定後の処理
 void Player::collision( Star * StarObj)
 {
-
 	if( owner_ != StarObj || flag_.test( Flag::kTechnique ) )
 	{
 		if( score_.isStart() )
@@ -293,7 +307,8 @@ void Player::collision( Wall * WallObj)
 	flag_.set( Flag::kWallParticle );
 }
 
-void Player::collision( Player * Playerobj)
+//プレイヤーとの当たり判定
+void Player::collision( Player * PlayerObj)
 {
 	if( score_.isStart() )
 	{
@@ -301,9 +316,9 @@ void Player::collision( Player * Playerobj)
 		SOUND->setPitch( SoundId::kCllision , 0.0F );
 		SOUND->play( SoundId::kCllision , false );
 	}
-
-	//角度変更
-	jumping_angle_ = XM_PI - jumping_angle_;
+	Vector2 rebound_direction = PlayerObj->getPosition() - myshape_.position;
+	rebound_angle_ = std::atan2(-rebound_direction.y, rebound_direction.x);
+	rebound_power_ = kReboundBasePower;
 }
 
 //回転角を返却
