@@ -95,7 +95,7 @@ void Battle::destroy()
 // XVˆ—
 SceneBase* Battle::update()
 {
-    //Space::getInstance()->collision();
+    Space::getInstance()->collision();
 
     return this;
 }

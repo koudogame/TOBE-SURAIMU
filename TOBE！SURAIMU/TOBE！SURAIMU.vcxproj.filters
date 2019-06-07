@@ -117,6 +117,9 @@
     <Filter Include="Project\Game\Others\Space">
       <UniqueIdentifier>{15db0afd-e5fc-4603-a616-b10961066151}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\Player\AI">
+      <UniqueIdentifier>{3b985f52-44b6-4497-b39f-4575806744cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -259,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="space.cpp">
       <Filter>Project\Game\Others\Space</Filter>
+    </ClCompile>
+    <ClCompile Include="player_demo.cpp">
+      <Filter>Project\Game\Object\Player\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -425,6 +431,9 @@
     </ClInclude>
     <ClInclude Include="space.h">
       <Filter>Project\Game\Others\Space</Filter>
+    </ClInclude>
+    <ClInclude Include="player_demo.h">
+      <Filter>Project\Game\Object\Player\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

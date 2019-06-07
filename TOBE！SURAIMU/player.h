@@ -76,11 +76,11 @@ public:
 	inline float guide() { return guide_alpha_; }
 
 
-private:
+protected:
 	//定数化変数
 	Line kGround;			//地面
 
-private:
+protected:
 	//処理系
 	//メンバ変数
 	Line move_vector_;		//移動ベクトル
@@ -119,7 +119,7 @@ private:
 	Scoring score_;	//スコア
 	int player_no_;
 
-private:
+protected:
 	//描画系
 	enum Direction
 	{
@@ -135,10 +135,10 @@ private:
 
 	int timer;		//アニメーション時間管理
 
-private:
+protected:
 	//内部利用関数
 	//入力
-	void input();
+	virtual void input();
 	//重力をかける
 	void gravity();
 	//重力方向の算出

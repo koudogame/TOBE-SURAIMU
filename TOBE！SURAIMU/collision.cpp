@@ -187,7 +187,7 @@ void Collision::collision( Player * P , Wall * W )
 //プレイヤー対プレイヤー
 void Collision::collision( Player * P1, Player * P2)
 {
-	if( !P1->isJump() || !P2->isJump() )
+	if( !P1->isJump() || !P2->isJump() || P1 == P2 )
 		return;
 
 	//円と円の当たり判定

@@ -5,6 +5,7 @@
 #include "pad.h"
 #include "key.h"
 #include "calc.h"
+#include "space.h"
 
 #include "easing.h"
 #include "Sound.h"
@@ -49,6 +50,8 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo)
 	//タスクへの追加
 	TaskManager::getInstance()->registerTask(this, TaskUpdate::kPlayerUpdate);
 	TaskManager::getInstance()->registerTask(this, TaskDraw::kObject);
+
+    Space::getInstance()->registration(this, Posit, 11.5F);
 
 	myshape_ = Circle( Posit , 5.5F );
 	//定数の定義
@@ -153,6 +156,8 @@ void Player::update()
 
 	if( !flag_.test( Flag::kJump ) )
 		score_.addRotate( XMConvertToDegrees( getRotate() ) );
+
+    Space::getInstance()->registration(this, myshape_.position, myshape_.radius);
 }
 
 //描画

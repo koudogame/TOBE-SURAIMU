@@ -3,6 +3,7 @@
 #include "sprite.h"
 #include "task_manager.h"
 #include "calc.h"
+#include "space.h"
 
 //衝突対象クラス
 #include "player.h"
@@ -53,6 +54,8 @@ bool Star::init( const Vector2 & Position , const float Angle  , const float Spi
 	//タスクへの登録
 	TaskManager::getInstance()->registerTask( this , TaskUpdate::kStarUpdate );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
+
+    Space::getInstance()->registration(this, Position, Size);
 
 	//テクスチャの読み込み
 	texture_ = TextureLoder::getInstance()->load( L"Texture/star.png" );
