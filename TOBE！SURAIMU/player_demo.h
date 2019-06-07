@@ -30,6 +30,7 @@ public:
 
     Circle* getShape() { return &range_; }
     ObjectBase* getDiscStar() { return target_; }
+	ObjectID getID(){ return ObjectID::kSerch; }
 
 private:
     ObjectBase* target_     = nullptr;

@@ -1,11 +1,6 @@
 #include "collision.h"
 #include "calc.h"
 
-//判定対象
-#include "player.h"
-#include "star.h"
-#include "wall.h"
-
 Collision::Collision()
 {}
 
@@ -23,7 +18,7 @@ void Collision::init()
 }
 
 //当たり判定
-void Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
+bool Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
 {
 	switch (Obj1->getID())
 	{
@@ -31,55 +26,62 @@ void Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
 		switch (Obj2->getID())
 		{
 		case ObjectID::kPlayer:
-			collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Player*>(Obj2));
-			break;
+			return collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Player*>(Obj2));
+
 		case ObjectID::kStar:
-			collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Star*>(Obj2));
-			break;
+			return collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Star*>(Obj2));
 
 		case ObjectID::kWall:
-			collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Wall*>(Obj2));
-			break;
+			return collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Wall*>(Obj2));
 
 		default:
-			return;
+			return false;
 		}
 		break;
 
 	case ObjectID::kStar:
-		switch (Obj1->getID())
+		switch (Obj2->getID())
 		{
 		case ObjectID::kPlayer:
-			collision(dynamic_cast<Player*>(Obj2), dynamic_cast<Star*>(Obj1));
-			break;
+			return collision(dynamic_cast<Player*>(Obj2), dynamic_cast<Star*>(Obj1));
 
+		case ObjectID::kSerch:
+			return collision(dynamic_cast<SerchRangeForStar*>(Obj2), dynamic_cast<Star*>(Obj1));
 		default:
-			return;
+			return false;
 		}
 		break;
 
 	case ObjectID::kWall:
-		switch (Obj1->getID())
+		switch (Obj2->getID())
 		{
 		case ObjectID::kPlayer:
-			collision(dynamic_cast<Player*>(Obj2), dynamic_cast<Wall*>(Obj1));
-			break;
+			return collision(dynamic_cast<Player*>(Obj2), dynamic_cast<Wall*>(Obj1));
 
 		default:
-			return;
+			return false;
 		}
 		break;
 
+	case ObjectID::kSerch:
+		switch (Obj2->getID())
+		{
+		case ObjectID::kStar:
+			return collision(dynamic_cast<SerchRangeForStar*>(Obj1), dynamic_cast<Star*>(Obj2));
+		}
+
 	default:
-		return;
+		return false;
 	}
+
+	return false;
 }
 
 //プレイヤー対星
-void Collision::collision( Player * P , Star * S )
+bool Collision::collision( Player * P , Star * S )
 {
 	if( !P->isJump() && start_flag_ )
-		return;
+		return false;
 
 	start_flag_ = true;
 	id_ = S->getColor();
@@ -92,7 +94,7 @@ void Collision::collision( Player * P , Star * S )
 		{
 			if( !P->isCollision() )
 			{
-				return;
+				return false;
 			}
 		}
 	}
@@ -162,14 +164,17 @@ void Collision::collision( Player * P , Star * S )
 				}
 			}
 		}
+		return true;
 	}
+
+	return false;
 }
 
 //プレイヤー対壁
-void Collision::collision( Player * P , Wall * W )
+bool Collision::collision( Player * P , Wall * W )
 {
 	if( !P->isJump() )
-		return;
+		return false;
 	for( int i = 0; i < 2; i++ )
 	{
 		if( judgment(P->getShape() , W->getShape( i ) ) || judgment( P->getMove() , W->getShape( i ) ))
@@ -180,15 +185,18 @@ void Collision::collision( Player * P , Wall * W )
 			P->collision( W );
 			onece_flag_ = false;
 			break;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 //プレイヤー対プレイヤー
-void Collision::collision( Player * P1, Player * P2)
+bool Collision::collision( Player * P1, Player * P2)
 {
 	if( !P1->isJump() || !P2->isJump() || P1 == P2 )
-		return;
+		return true;
 
 	//円と円の当たり判定
 	if( judgment( P1->getShape() , P2->getShape() ) )
@@ -196,6 +204,19 @@ void Collision::collision( Player * P1, Player * P2)
 		P1->collision( P2 );
 		P2->collision( P1 );
 	}
+	return true;
+}
+
+bool Collision::collision(SerchRangeForStar * SRS, Star * S)
+{
+	for (int i = 0; i < kStarLineNum; i++)
+		if (judgment(SRS->getShape(), S->getShape(i)))
+		{
+			SRS->collision(S);
+			return true;
+		}
+
+	return false;
 }
 
 
