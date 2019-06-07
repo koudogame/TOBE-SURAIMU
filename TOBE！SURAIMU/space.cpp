@@ -15,8 +15,12 @@ constexpr unsigned kDivideNum   = 4U;   // 分割数
 const unsigned kBlockNum =              // 空間ブロック数
     (static_cast<unsigned>(std::pow( kDivideNum, kDivideLevel + 1U)) - 1U) /
                           (kDivideNum - 1U );
+const int kBlockNumLevel2 = 
+    (static_cast<int>( std::pow( kDivideNum, 3)) - 1) / (kDivideNum - 1U);
+
 
 int toMorton( const RECT& Range, const Vector2& Point );
+int toMorton( const RECT& Range, const Vector2& TopLeft, const Vector2& BottomRight );
 int bitStep ( short Num );
 
 /*===========================================================================*/
@@ -40,51 +44,15 @@ void Space::registration( ObjectBase* const Obj,       // オブジェクトのアドレス
 {
     unregistration( Obj );
 
+    const int kBlock = toMorton(
+        range_, 
+        Vector2{ Origin.x - Radius, Origin.y - Radius },
+        Vector2{ Origin.x + Radius, Origin.y + Radius }
+    );
+    if( kBlock < 0 ) { return; }
 
-    // 2頂点から、モートン番号を求める
-    const Vector2 kTopLeft    ( Origin.x - Radius, Origin.y - Radius );
-    const Vector2 kBottomRight( Origin.x + Radius, Origin.y + Radius );
-
-    if( kTopLeft.x < kRange.left || kTopLeft.y < kRange.top ||
-        kBottomRight.x > kRange.right || kBottomRight.y > kRange.bottom )
-    {
-        // 範囲外オブジェクトは登録しない
-        return;
-    }
-
-    const int kXorMorton =
-        toMorton( range_, kTopLeft ) ^ toMorton( range_, kBottomRight );
-
-
-    // 所属空間の空間レベルを求める
-    int level = kDivideLevel;
-    if( kXorMorton != 0 )
-    {
-        level = 0;
-
-        for( int i = kDivideLevel - 1; i > 0; ++i )
-        {
-            // 所属空間が判明
-            if( kXorMorton | ( kMask << (i * 2) ) )
-            {
-                break;
-            }
-            // 空間レベルを子へ
-            else
-            {
-                ++level;
-            }
-        }
-    }
-
-
-    // 空間へ登録
-    int block = (static_cast<unsigned>(std::pow(kDivideNum, level)) - 1U ) / 
-                (kDivideNum - 1U);
-    block += toMorton(range_, kTopLeft) >> ((kDivideLevel - level) * 2);
-
-    object_list_[Obj] = &space_[block];
-    space_[block].push_back( Obj );
+    object_list_[Obj] = &space_[kBlock];
+    space_[kBlock].push_back( Obj );
 }
 
 /*===========================================================================*/
@@ -133,7 +101,44 @@ ObjectBase* Space::judgeCollision( ObjectBase* const Object,    // 依頼者
                                    const float       Radius,    // 判定範囲半径
                                    const ObjectID    Target )   // 衝突判定対象
 {
+    const int kBelongBlock = toMorton(
+        range_,
+        { Origin.x - Radius, Origin.y - Radius },
+        { Origin.x + Radius, Origin.y + Radius }
+    );
     
+    if( kBelongBlock >= 0 )
+    {
+        std::deque<std::list<ObjectBase*>*> judge_block;
+
+        // 衝突の判定を行う空間をリスト化
+        for(int block = kBelongBlock; block < kBlockNumLevel2 - 1; block <<= 2)
+        {
+            for( int i = 0; i < kDivideNum; ++i )
+            {
+                judge_block.push_back( &space_[block + i] );
+            }
+        }
+        for( int block = kBelongBlock; block > 0; block >>= 2 )
+        {
+            judge_block.push_back( &space_[block] );
+        }
+
+        // 衝突判定
+        Collision* const kCollision = Collision::getInstance();
+        for( auto block : judge_block )
+        {
+            for( auto object : *block )
+            {
+                if( object->getID() == Target &&
+                    kCollision->collision(Object, object) )
+                {
+                    return object;
+                }
+            }
+        }
+
+    }
 
     return nullptr;
 }
@@ -158,6 +163,50 @@ int toMorton( const RECT& Range, const Vector2& Point )
 
     return bitStep(kMortonX) | (bitStep(kMortonY) << 1);
 }
+// 矩形を範囲内のモートン番号へ
+int toMorton( const RECT& Range, const Vector2& TopLeft, const Vector2& BottomRight )
+{
+    // 2頂点から、モートン番号を求める
+    if (TopLeft.x < Range.left || TopLeft.y < Range.top ||
+        BottomRight.x > Range.right || BottomRight.y > Range.bottom)
+    {
+        // 範囲外オブジェクトは番号を与えない
+        return -1;
+    }
+
+    const int kXorMorton =
+        toMorton(Range, TopLeft) ^ toMorton(Range, BottomRight);
+
+
+    // 所属空間の空間レベルを求める
+    int level = kDivideLevel;
+    if (kXorMorton != 0)
+    {
+        level = 0;
+
+        for (int i = kDivideLevel - 1; i > 0; ++i)
+        {
+            // 所属空間が判明
+            if (kXorMorton | (kMask << (i * 2)))
+            {
+                break;
+            }
+            // 空間レベルを子へ
+            else
+            {
+                ++level;
+            }
+        }
+    }
+
+
+    // 空間へ登録
+    int block = (static_cast<unsigned>(std::pow(kDivideNum, level)) - 1U) /
+        (kDivideNum - 1U);
+    return block += toMorton(Range, TopLeft) >> ((kDivideLevel - level) * 2);
+}
+
+
 // 引数の数字を1ビット飛ばしにした数値を返却
 int bitStep( short Num )
 {

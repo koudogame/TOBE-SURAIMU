@@ -1,8 +1,41 @@
 #pragma once
 
 #include "player.h"
+#include "star.h"
 
-class Star;
+class SerchRangeForStar :
+    public ObjectBase
+{
+public:
+    void destroy() {}
+    void update() {}
+    void draw() {}
+
+
+    SerchRangeForStar() = default;
+    SerchRangeForStar( const Vector2& RangeOrigin, const float RangeRadius )
+    {
+        set( RangeOrigin, RangeRadius );
+    }
+
+    void collision( Star* const Star ) { target_ = dynamic_cast<ObjectBase*>(Star); }
+
+    void set( const Vector2& Origin, const float Radius)
+    {
+        range_.position = Origin;
+        range_.radius = Radius;
+    }
+    void setOrigin( const Vector2& Origin ) { range_.position = Origin; }
+    void setRadius( const float Radius )    { range_.radius = Radius; }
+
+    Circle* getShape() { return &range_; }
+    ObjectBase* getDiscStar() { return target_; }
+
+private:
+    ObjectBase* target_     = nullptr;
+    Circle range_   { {0.0F, 0.0F}, 0.0F };
+};
+
 
 //-----------------------------------------------------------------------------
 // デモプレイ用AI
@@ -15,7 +48,8 @@ class DemoPlayer :
 private:
     void input() override;
 
-    void serchStar();
+    ObjectBase* serch();
 
-    Star* purpose_ = nullptr;
+    SerchRangeForStar serch_range_;
+    ObjectBase* purpose_ = nullptr;
 };
