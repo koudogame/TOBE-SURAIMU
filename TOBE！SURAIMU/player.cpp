@@ -31,7 +31,8 @@ constexpr float kAddVolume = 0.005F;            //プレイヤー増加量
 constexpr float kGravity = 5.0F;                //プレイヤー重力
 constexpr float kSpeed = 5.0F;                  //プレイヤー速さ
 constexpr float kReboundBasePower = 5.0F;		//プレイヤーの反発力
-constexpr float kReboundDecay = 0.5F;			//プレイヤーの反発力の減衰量
+constexpr float kReboundDecay = 0.05F;			//プレイヤーの反発力の減衰量
+constexpr float kMaxChangeAngle = XMConvertToRadians(70);		//左右の最大変角度
 
 //コンストラクタ
 Player::Player()
@@ -77,7 +78,7 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo)
 
 	//各変数の初期化
 	setGravityAngle();
-	movement_angle_ = -XM_PIDIV2;
+	base_angle_ = movement_angle_ = -XM_PIDIV2;
 	now_amount_ = 0.0F;
 	particle_time_ = 0;
 	prev_jump_moveamount_ = 0;
@@ -134,8 +135,6 @@ void Player::update()
 
  	move_vector_.start = myshape_.position;
 
-	//入力時処理
-	input();
 
 	//ジャンプ量を増やす
 	if( flag_.test( Flag::kJump ) )
@@ -146,10 +145,13 @@ void Player::update()
 
 	float move_power = Easing::getInstance()->expo(kJumpAmount, now_amount_, Easing::Mode::Out) - prev_jump_moveamount_ - kGravity * bottom_input_;
 
+	//入力時処理
+	input(move_power);
+
 	if (move_power < 0 && now_amount_ > 0.0F)
 	{
 		if (!flag_.test(Flag::kOnce))
-			movement_angle_ = -XM_PIDIV2;
+			base_angle_ = movement_angle_ = -XM_PIDIV2;
 
 		flag_.reset(Flag::kStarCollision);
 		if (flag_.test(Flag::kJump))
@@ -167,6 +169,7 @@ void Player::update()
 
 	if (!flag_.test(Flag::kJump))
 		revision(ground_->start + (ground_->end - ground_->start) * dis_, NameSpaceParticle::ParticleID::kNonParticle);
+
 
 	move_vector_.end = myshape_.position;
 
@@ -193,7 +196,7 @@ void Player::draw()
 	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
 	//ガイドの描画
 	if( !flag_.test( Flag::kJump ) && guide_alpha_ > 0.0F )
-		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( movement_angle_ ) , Vector2( kGuideWidth / 2.0F , kGuideHeight ) );
+		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kGuideWidth / 2.0F , kGuideHeight ) );
 	else if( guide_alpha_ <= 0.0F )
 		guide_alpha_ = 0.0F;
 	Sprite::getInstance()->end();
@@ -300,7 +303,7 @@ void Player::collision( Wall * WallObj)
 	setGround( &kGround );
 
 	//角度変更
-	movement_angle_ = XM_PI - movement_angle_;
+	base_angle_ = movement_angle_ = XM_PI - movement_angle_;
 	flag_.reset( Flag::kStarCollision );
 	flag_.set( Flag::kTechnique );
 	if( !flag_.test( Flag::kWallParticle ) )
@@ -332,43 +335,56 @@ float Player::getRotate()
 //----------------------------------------------
 //内部利用関数
 //入力処理
-void Player::input()
+void Player::input(float MoveSing)
 {
-	GamePad::State pad = Pad::getInstance()->getState(player_no_);
 	GamePad::ButtonStateTracker pad_tracker = Pad::getInstance()->getTracker(player_no_);
 	Keyboard::KeyboardStateTracker key = Key::getInstance()->getTracker();
-	Vector2 stick( pad.thumbSticks.leftX , pad.thumbSticks.leftY );
 
 	//ジャンプ中
 	if( flag_.test( Flag::kJump ) )
 	{
 		//右入力
-		if (stick.x > 0.3F || key.lastState.Right)
+		if (pad_tracker.leftStickRight == pad_tracker.HELD || key.lastState.Right)
 		{
-			if (movement_angle_ >= 0.0F)
+			if (MoveSing >= 0.0F)
 			{
 				movement_angle_ -= XMConvertToRadians(kSpeed);
+
+				if (movement_angle_ < base_angle_ - kMaxChangeAngle)
+					movement_angle_ = base_angle_ - kMaxChangeAngle;
 			}
 			else
 			{
 				movement_angle_ += XMConvertToRadians(kSpeed);
+				if (movement_angle_ > -XM_PIDIV2 + kMaxChangeAngle)
+					movement_angle_ = -XM_PIDIV2 + kMaxChangeAngle;
 			}
 		}
 		//左入力
-		else if (stick.x < -0.3F || key.lastState.Left)
+		else if (pad_tracker.leftStickLeft == pad_tracker.HELD || key.lastState.Left)
 		{
-			if (movement_angle_ >= 0.0F)
+			if (MoveSing >= 0.0F)
 			{
 				movement_angle_ += XMConvertToRadians(kSpeed);
+
+				if (movement_angle_ > base_angle_ + kMaxChangeAngle)
+					movement_angle_ = base_angle_ + kMaxChangeAngle;
 			}
 			else
 			{
 				movement_angle_ -= XMConvertToRadians(kSpeed);
+
+				if (movement_angle_ < -XM_PIDIV2 - kMaxChangeAngle)
+					movement_angle_ = -XM_PIDIV2 - kMaxChangeAngle;
 			}
+		}
+		else
+		{
+			movement_angle_ = base_angle_;
 		}
 
 		//下入力
-		if( stick.y < -0.3F || key.lastState.Down )
+		if(pad_tracker.leftStickDown == pad_tracker.HELD || key.lastState.Down )
 		{
 			bottom_input_ = kBottomOn;
 			score_.addDown();
@@ -399,10 +415,11 @@ void Player::input()
 				flag_.set( Flag::kJump );
 				flag_.set( Flag::kStarCollision );
 				flag_.reset( Flag::kParticle );
+				flag_.reset(Flag::kOnce);
 				direction_id_ = Direction::kFlay;
 				particle_time_ = 0;
 				now_amount_ = 0.0F;
-				movement_angle_ = movement_angle_ + XM_PI;
+				base_angle_ = movement_angle_ = movement_angle_ + XM_PI;
 				ground_ = &kGround;
 				prev_jump_moveamount_ = 0;
 				score_.resetRotate();
