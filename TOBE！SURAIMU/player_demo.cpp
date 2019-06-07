@@ -43,7 +43,7 @@ void DemoPlayer::input()
                 direction_id_ = Direction::kFlay;
                 particle_time_ = 0;
                 now_amount_ = 0.0F;
-                jumping_angle_ = gravity_angle_ + XM_PI;
+				movement_angle_ = movement_angle_ + XM_PI;
                 ground_ = &kGround;
                 prev_jump_moveamount_ = 0;
                 score_.resetRotate();
@@ -65,7 +65,7 @@ void DemoPlayer::input()
 ObjectBase* DemoPlayer::serch()
 {
     ObjectBase* purpose = Space::getInstance()->
-        judgeCollision( 
+        judgeCollision(
             &serch_range_,
             serch_range_.getShape()->position,
             serch_range_.getShape()->radius,

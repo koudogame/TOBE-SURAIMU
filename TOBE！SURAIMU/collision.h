@@ -25,15 +25,15 @@ public:
 	//初期化
 	void init();
 	//当たり判定
-	void collision(ObjectBase* Obj1, ObjectBase* Obj2);
+	bool collision(ObjectBase* Obj1, ObjectBase* Obj2);
 	//判定(プレイヤー対星)
-	void collision( Player* , Star* );
-	inline void collision(Star* S, Player* P) { collision(P, S); }
+	bool collision( Player* , Star* );
+	inline bool collision(Star* S, Player* P) { collision(P, S); }
 	//判定( プレイヤー対壁 )
-	void collision( Player* , Wall* );
-	inline void collision(Wall* W, Player* P) { collision(P, W); }
+	bool collision( Player* , Wall* );
+	inline bool collision(Wall* W, Player* P) { collision(P, W); }
 	//判定( プレイヤー対プレイヤー)
-	void collision( Player* , Player* );
+	bool collision( Player* , Player* );
 
 private:
 	//当たり判定
