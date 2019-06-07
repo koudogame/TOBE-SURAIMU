@@ -77,13 +77,11 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo)
 
 	//各変数の初期化
 	setGravityAngle();
-	jumping_angle_ = gravity_angle_ + XM_PI;
+	movement_angle_ = -XM_PIDIV2;
 	now_amount_ = 0.0F;
 	particle_time_ = 0;
 	prev_jump_moveamount_ = 0;
 	bottom_input_ = kBottomOff;
-	rebound_angle_ = 0.0F;
-	rebound_power_ = 0.0F;
 
 	timer = 0;
 	guide_alpha_ = 1.0F;
@@ -146,26 +144,29 @@ void Player::update()
 	if( now_amount_ >= 1.0F )
 		now_amount_ = 1.0F;
 
-	if( Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ < kGravity )
+	float move_power = Easing::getInstance()->expo(kJumpAmount, now_amount_, Easing::Mode::Out) - prev_jump_moveamount_ - kGravity * bottom_input_;
+
+	if (move_power < 0 && now_amount_ > 0.0F)
 	{
-		flag_.reset( Flag::kStarCollision );
-		if( flag_.test( Flag::kJump ) )
+		if (!flag_.test(Flag::kOnce))
+			movement_angle_ = -XM_PIDIV2;
+
+		flag_.reset(Flag::kStarCollision);
+		if (flag_.test(Flag::kJump))
 		{
 			collision_combo_pitch_ = 0.0F;
 			score_.resetCombo();
 		}
+		flag_.set(Flag::kOnce);
+
+		move_power = std::abs(move_power);
 	}
 
-	myshape_.position += Vector2( std::cos( jumping_angle_ ) , -std::sin( jumping_angle_ ) ) * ( Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out ) - prev_jump_moveamount_ );
+	myshape_.position += Vector2(std::cos(movement_angle_), -std::sin(movement_angle_)) * move_power;
 	prev_jump_moveamount_ = Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out );
 
-	//プレイヤーと衝突した場合に反発させる
-	myshape_.position += Vector2(std::cos(rebound_angle_), -std::sin(rebound_angle_)) * rebound_power_;
-	if ((rebound_power_ -= kReboundDecay) <= 0.0F)
-		rebound_power_ = 0.0F;
-
-	//重力をかける
-	gravity();
+	if (!flag_.test(Flag::kJump))
+		revision(ground_->start + (ground_->end - ground_->start) * dis_, NameSpaceParticle::ParticleID::kNonParticle);
 
 	move_vector_.end = myshape_.position;
 
@@ -186,13 +187,13 @@ void Player::draw()
 		draw_angle = XM_PIDIV2 - std::atan2( -movement.y , movement.x );
 	}
 	else
-		draw_angle = -gravity_angle_ - XM_PIDIV2;
+		draw_angle = -movement_angle_ - XM_PIDIV2;
 
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
 	//ガイドの描画
 	if( !flag_.test( Flag::kJump ) && guide_alpha_ > 0.0F )
-		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( draw_angle ) , Vector2( kGuideWidth / 2.0F , kGuideHeight ) );
+		Sprite::getInstance()->draw( guide_ , myshape_.position , nullptr , guide_alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , XMConvertToDegrees( movement_angle_ ) , Vector2( kGuideWidth / 2.0F , kGuideHeight ) );
 	else if( guide_alpha_ <= 0.0F )
 		guide_alpha_ = 0.0F;
 	Sprite::getInstance()->end();
@@ -247,7 +248,7 @@ void Player::revision( const Vector2& CrossPoint , NameSpaceParticle::ParticleID
 		addGroundParticle( ID );
 		flag_.set( Flag::kParticle );
 	}
-	myshape_.position += Vector2( cos( gravity_angle_ + XM_PI ) , -sin( gravity_angle_ + XM_PI ) ) * myshape_.radius;
+	myshape_.position += Vector2( cos(revition_angle_ + XM_PI ) , -sin(revition_angle_ + XM_PI ) ) * myshape_.radius;
 	move_vector_.end = myshape_.position;
 }
 
@@ -299,7 +300,7 @@ void Player::collision( Wall * WallObj)
 	setGround( &kGround );
 
 	//角度変更
-	jumping_angle_ = XM_PI - jumping_angle_;
+	movement_angle_ = XM_PI - movement_angle_;
 	flag_.reset( Flag::kStarCollision );
 	flag_.set( Flag::kTechnique );
 	if( !flag_.test( Flag::kWallParticle ) )
@@ -316,9 +317,6 @@ void Player::collision( Player * PlayerObj)
 		SOUND->setPitch( SoundId::kCllision , 0.0F );
 		SOUND->play( SoundId::kCllision , false );
 	}
-	Vector2 rebound_direction = PlayerObj->getPosition() - myshape_.position;
-	rebound_angle_ = std::atan2(-rebound_direction.y, rebound_direction.x);
-	rebound_power_ = kReboundBasePower;
 }
 
 //回転角を返却
@@ -345,11 +343,29 @@ void Player::input()
 	if( flag_.test( Flag::kJump ) )
 	{
 		//右入力
-		if( stick.x > 0.3F || key.lastState.Right )
-			myshape_.position.x += kSpeed;
+		if (stick.x > 0.3F || key.lastState.Right)
+		{
+			if (movement_angle_ >= 0.0F)
+			{
+				movement_angle_ -= XMConvertToRadians(kSpeed);
+			}
+			else
+			{
+				movement_angle_ += XMConvertToRadians(kSpeed);
+			}
+		}
 		//左入力
-		else if( stick.x < -0.3F || key.lastState.Left )
-			myshape_.position.x -= kSpeed;
+		else if (stick.x < -0.3F || key.lastState.Left)
+		{
+			if (movement_angle_ >= 0.0F)
+			{
+				movement_angle_ += XMConvertToRadians(kSpeed);
+			}
+			else
+			{
+				movement_angle_ -= XMConvertToRadians(kSpeed);
+			}
+		}
 
 		//下入力
 		if( stick.y < -0.3F || key.lastState.Down )
@@ -366,6 +382,7 @@ void Player::input()
 	else
 	{
 		direction_id_ = Direction::kFlont;
+		movement_angle_ = revition_angle_;
 		//ジャンプ入力
 		if( pad_tracker.a == pad_tracker.HELD || key.lastState.Space )
 		{
@@ -385,7 +402,7 @@ void Player::input()
 				direction_id_ = Direction::kFlay;
 				particle_time_ = 0;
 				now_amount_ = 0.0F;
-				jumping_angle_ = gravity_angle_ + XM_PI;
+				movement_angle_ = movement_angle_ + XM_PI;
 				ground_ = &kGround;
 				prev_jump_moveamount_ = 0;
 				score_.resetRotate();
@@ -401,7 +418,7 @@ void Player::gravity()
 	if( ground_ == &kGround )
 	{
 		setGravityAngle();
-		myshape_.position += Vector2( std::cos( gravity_angle_ ) , -std::sin( gravity_angle_ ) ) * ( kGravity * bottom_input_ );
+		myshape_.position += Vector2( std::cos( movement_angle_ ) , -std::sin(movement_angle_) ) * ( kGravity * bottom_input_ );
 	}
 	else
 		revision( ground_->start + ( ground_->end - ground_->start ) * dis_ , NameSpaceParticle::ParticleID::kNonParticle );
@@ -435,11 +452,11 @@ void Player::setGravityAngle()
 	temp_posit[ 1 ].Normalize();
 	if( Calc::cross( vect_ground , temp_posit[ 0 ] ) > 0 )
 	{
-		gravity_angle_ = temp_angle[ 0 ];
+		revition_angle_ = temp_angle[ 0 ];
 		return;
 	}
 
-	gravity_angle_ = temp_angle[ 1 ];
+	revition_angle_ = temp_angle[ 1 ];
 }
 
 //プレイヤーの状態から切り取り範囲を選択
@@ -472,10 +489,10 @@ void Player::addGroundParticle( NameSpaceParticle::ParticleID ID)
 	if( score_.isStart() )
 	{
 		//衝突時のパーティクルの生成
-		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 45.0F ) , ID );
-		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI + XMConvertToRadians( 15.0F ) , ID );
-		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 45.0F ) , ID );
-		g_particle_container_.get()->addParticle( myshape_.position , gravity_angle_ + XM_PI - XMConvertToRadians( 15.0F ) , ID );
+		g_particle_container_.get()->addParticle( myshape_.position , revition_angle_ + XM_PI + XMConvertToRadians( 45.0F ) , ID );
+		g_particle_container_.get()->addParticle( myshape_.position , revition_angle_ + XM_PI + XMConvertToRadians( 15.0F ) , ID );
+		g_particle_container_.get()->addParticle( myshape_.position , revition_angle_ + XM_PI - XMConvertToRadians( 45.0F ) , ID );
+		g_particle_container_.get()->addParticle( myshape_.position , revition_angle_ + XM_PI - XMConvertToRadians( 15.0F ) , ID );
 	}
 }
 

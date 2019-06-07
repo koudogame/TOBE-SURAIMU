@@ -94,13 +94,14 @@ protected:
 		kParticle,
 		kTechnique,
 		kWallParticle,
+		kOnce,
 		kFlag
 	};
 	std::bitset<kFlag> flag_;		//フラグ
 	float now_amount_;				//入力量
-	float gravity_angle_;			//重力方向
-	float jumping_angle_;			//ジャンプ方向
 	float ditrection_angle_;		//テクスチャの角度
+	float movement_angle_;			//移動方向
+	float revition_angle_;			//補正方向
 	Line* ground_;					//地面
 	ObjectBase* owner_;				//現住する星
 	Circle myshape_;				//自分の形
@@ -118,8 +119,6 @@ protected:
 
 	Scoring score_;	//スコア
 	int player_no_;
-	float rebound_power_;
-	float rebound_angle_;
 
 protected:
 	//描画系
