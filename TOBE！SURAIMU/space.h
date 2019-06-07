@@ -2,16 +2,16 @@
 
 // 板場 温樹
 
-class ObjectBase;
+#include "object_base.h"
 
 //-----------------------------------------------------------------------------
 // 空間クラス
 //-----------------------------------------------------------------------------
 // --説明--
 // 4分木空間分割法でオブジェクトの衝突判定の無駄をなくす。
-// 移動に対応していないので、移動する場合は再登録する( registration関数は何度呼んでも良い )。
+// 移動に対応していないので、移動する場合は再登録する( registration関数は連続で呼んでも良い )。
 // 
-// getInstance関数    : オブジェクトの実体へのポインタを取得する
+// getInstance関数    : Spaceクラスの実体へのポインタを取得する
 // registration関数   : オブジェクトを空間に登録する
 // unregistration関数 : オブジェクトを空間から登録解除する
 // collision関数      : 空間に所属する全オブジェクトの衝突判定を行う
@@ -34,6 +34,10 @@ public:
 
 
     void collision();
+    ObjectBase* judgeCollision( ObjectBase* const Object,
+                                const Vector2&    Origin,
+                                const float       Radius,
+                                const ObjectID    Target );
 
 private:
     RECT range_ = { 0L, 0L, 0L, 0L };

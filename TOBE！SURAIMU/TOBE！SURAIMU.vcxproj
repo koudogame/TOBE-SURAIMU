@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="battle.h" />
+    <ClInclude Include="player_demo.h" />
     <ClInclude Include="ranking_manager.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="background.h" />
@@ -230,6 +231,7 @@
     <ClCompile Include="freeFallParticle.cpp" />
     <ClCompile Include="freeFallParticle_container.cpp" />
     <ClCompile Include="pause.cpp" />
+    <ClCompile Include="player_demo.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="ranking_in_endless.cpp" />
     <ClCompile Include="ranking_manager.cpp" />

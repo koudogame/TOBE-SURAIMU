@@ -3,7 +3,6 @@
 
 #include "space.h"
 
-#include "object_base.h"
 #include "collision.h"
 
 
@@ -36,8 +35,8 @@ Space::~Space()
 /*===========================================================================*/
 // オブジェクトを空間に登録
 void Space::registration( ObjectBase* const Obj,       // オブジェクトのアドレス
-                          const Vector2&    Origin,    // 原点
-                          const float       Radius )   // 半径
+                          const Vector2&    Origin,    // 判定範囲原点
+                          const float       Radius )   // 判定範囲半径
 {
     unregistration( Obj );
 
@@ -84,6 +83,7 @@ void Space::registration( ObjectBase* const Obj,       // オブジェクトのアドレス
                 (kDivideNum - 1U);
     block += toMorton(range_, kTopLeft) >> ((kDivideLevel - level) * 2);
 
+    object_list_[Obj] = &space_[block];
     space_[block].push_back( Obj );
 }
 
@@ -124,6 +124,18 @@ void Space::collision()
             if( parent == 0 ) { break; }
         }
     }
+}
+
+/*===========================================================================*/
+// 引数のオブジェクトが、指定されたオブジェクトと衝突しているか判定
+ObjectBase* Space::judgeCollision( ObjectBase* const Object,    // 依頼者
+                                   const Vector2&    Origin,    // 判定範囲原点
+                                   const float       Radius,    // 判定範囲半径
+                                   const ObjectID    Target )   // 衝突判定対象
+{
+    
+
+    return nullptr;
 }
 
 
