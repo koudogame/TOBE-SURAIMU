@@ -118,6 +118,8 @@ private:
 
 	Scoring score_;	//ƒXƒRƒA
 	int player_no_;
+	float rebound_power_;
+	float rebound_angle_;
 
 private:
 	//•`‰æŒn

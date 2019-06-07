@@ -39,10 +39,7 @@ constexpr float kWindowWidth  = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
 
 enum { kAButton, kStick };
-constexpr Vector2 kPosition[] = {
-    { kWindowWidth - 272.0F, kWindowHeight - 128.0F },
-    { 32.0F, kWindowHeight - 128.0F }
-};
+constexpr Vector2 kPosition = Vector2(kWindowWidth - 272.0F, kWindowHeight - 128.0F);
 const RECT kTrimming[] = {
     { 256L, 0L, 512L, 128L },
     {   0L, 0L, 256L, 128L }
@@ -208,13 +205,19 @@ void Endless::draw()
 
 	if( player_->guide() > 0.0F )
 	{
-		Sprite::getInstance()->draw( 
-            description_, kPosition[kAButton], &kTrimming[kAButton],
-            1.0F , 0.95F );
+		if (player_->isJump())
+		{
+			Sprite::getInstance()->draw(
+				description_, kPosition, &kTrimming[kStick],
+				1.0F, 1.0F);
+		}
+		else if(!player_->isJump())
+		{
+			Sprite::getInstance()->draw(
+				description_, kPosition, &kTrimming[kAButton],
+				1.0F, 1.0F);
+		}
 
-		Sprite::getInstance()->draw( 
-            description_, kPosition[kStick], &kTrimming[kStick], 
-            1.0F , 0.95F );
 	}
 }
 
