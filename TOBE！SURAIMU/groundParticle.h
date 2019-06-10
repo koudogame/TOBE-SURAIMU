@@ -20,11 +20,13 @@ public:
 	//更新
 	void update()override;
 	//描画
-	void draw()override;
+	void draw() override;
 	//生存確認
 	bool isAlive() override;
 
 private:
+    ID3D11ShaderResourceView* texture_; //テクスチャ
+    Vector2 position_;      //座標
 	Vector2 velocity_;		//速度
 	RECT triming_;			//切り取り範囲
 	float angle_;			//移動角度

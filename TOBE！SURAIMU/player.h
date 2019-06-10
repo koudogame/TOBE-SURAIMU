@@ -33,9 +33,9 @@ public:
 	//移動量の追加
 	void setMove( const float Over ) override;
 	//現在の位置の取得
-	Vector2 getPosition() const override { return myshape_.position; }
+	const Vector2& getPosition() const override { return myshape_.position; }
 	//自身のIDの返却
-	inline ObjectID getID() override { return ObjectID::kPlayer; }
+	inline ObjectID getID() const override { return ObjectID::kPlayer; }
 
 public:
 	//外部利用関数
@@ -84,6 +84,7 @@ protected:
 	//処理系
 	//メンバ変数
 	Line move_vector_;		//移動ベクトル
+    ID3D11ShaderResourceView* texture_; //テクスチャ
 
 	//フラグ
 	enum Flag
@@ -140,7 +141,7 @@ protected:
 protected:
 	//内部利用関数
 	//入力
-	void input(float MoveSing);
+	virtual void input(float MoveSing);
 	//重力をかける
 	void gravity();
 	//重力方向の算出

@@ -25,6 +25,8 @@ public:
 
     
 protected:
+    ID3D11ShaderResourceView* texture_ = nullptr;
+    Vector2 position_{ 0.0F, 0.0F };
     RECT trimming_{0L, 0L, 0L, 0L};
     float magnification_ = 1.0F;
     float scroll_ = 1.0F;

@@ -22,6 +22,7 @@ public:
 	void draw() override;
 
 private:
+    ID3D11ShaderResourceView* texture_; //テクスチャ
 	int	turn_;		    //回転方向
 	float angle_;	    //角度
 	Vector2* position_;	//座標

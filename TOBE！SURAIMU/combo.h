@@ -33,7 +33,8 @@ public:
     void addCombo();
 
 private:
-    const Timer<Milliseconds>* clock_ = nullptr;
+    ID3D11ShaderResourceView* texture_ = nullptr;
+    const Timer<Milliseconds>* clock_  = nullptr;
     long long prev_time_ms_ = 0;
     float magnification_ = 1.0F;
     long long life_time_ = 0;

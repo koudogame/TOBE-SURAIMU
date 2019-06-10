@@ -26,6 +26,8 @@ public:
 	bool isAlive() override;
 
 private:
+    ID3D11ShaderResourceView* texture_; // テクスチャ
+    Vector2 position_;  //座標
 	RECT triming_;		//切り取り範囲
 	float alpha_;	    //アルファ値
 	float angle_;	    //角度

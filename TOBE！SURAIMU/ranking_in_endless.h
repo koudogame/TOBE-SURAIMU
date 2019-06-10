@@ -43,11 +43,12 @@ public:
 private:
     bool created_ = false;
 
+    ID3D11ShaderResourceView* texture_                  = nullptr;
     ID3D11ShaderResourceView* texture_bar_              = nullptr;
     ID3D11ShaderResourceView* texture_number_           = nullptr;
     ID3D11ShaderResourceView* texture_number_forplayer_ = nullptr;
     ID3D11ShaderResourceView* texture_text_             = nullptr;
-
+    Vector2 position_ { 0.0F, 0.0F };
 
     std::vector<Data> ranking_;
     Data player_;

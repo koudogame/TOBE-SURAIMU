@@ -34,10 +34,6 @@ public:
 
 
     void collision();
-    ObjectBase* judgeCollision( ObjectBase* const Object,
-                                const Vector2&    Origin,
-                                const float       Radius,
-                                const ObjectID    Target );
 
 private:
     RECT range_ = { 0L, 0L, 0L, 0L };

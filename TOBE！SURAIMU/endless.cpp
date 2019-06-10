@@ -22,6 +22,7 @@
 #include "back_object_container.h"
 #include "star_container.h"
 #include "player.h"
+#include "demo_player.h"
 #include "wall.h"
 
 #include "title.h"
@@ -95,7 +96,7 @@ bool Endless::init()
 
     star_container_ = new StarContainer();
 
-    player_         = new Player();
+    player_         = new DemoPlayer();
 
     wall_           = new Wall();
 
@@ -132,7 +133,7 @@ bool Endless::init()
 	float gravity    = file.getNumber_f(5, 1);
 	float speed      = file.getNumber_f(6, 1);
 	float rl_boost   = file.getNumber_f(7, 1);
-	if (player_->init(position, 0) == false)
+	if (dynamic_cast<DemoPlayer*>(player_)->init(position) == false)
 	{
 		return false;
 	}
