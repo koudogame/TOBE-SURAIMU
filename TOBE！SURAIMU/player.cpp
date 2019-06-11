@@ -78,7 +78,7 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo)
 
 	//Še•Ï”‚Ì‰Šú‰»
 	setGravityAngle();
-	base_angle_ = movement_angle_ = -XM_PIDIV2;
+	revition_angle_ = base_angle_ = movement_angle_ = -XM_PIDIV2;
 	now_amount_ = 0.0F;
 	particle_time_ = 0;
 	prev_jump_moveamount_ = 0;
@@ -135,11 +135,6 @@ void Player::update()
 
  	move_vector_.start = myshape_.position;
 
-	if (movement_angle_ > XM_PI)
-		movement_angle_ -= XM_2PI;
-	else if (movement_angle_ < -XM_PI)
-		movement_angle_ += XM_2PI;
-
 	//ƒWƒƒƒ“ƒv—Ê‚ð‘‚â‚·
 	if( flag_.test( Flag::kJump ) )
 		now_amount_ += kAddVolume;
@@ -171,9 +166,9 @@ void Player::update()
 			score_.resetCombo();
 		}
 
-		move_power = std::abs(move_power);
 	}
 
+	move_power = std::abs(move_power);
 	myshape_.position += Vector2(std::cos(movement_angle_), -std::sin(movement_angle_)) * move_power;
 	prev_jump_moveamount_ = Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out );
 
