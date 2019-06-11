@@ -135,6 +135,10 @@ void Player::update()
 
  	move_vector_.start = myshape_.position;
 
+	if (movement_angle_ > XM_PI)
+		movement_angle_ -= XM_2PI;
+	else if (movement_angle_ < -XM_PI)
+		movement_angle_ += XM_2PI;
 
 	//ジャンプ量を増やす
 	if( flag_.test( Flag::kJump ) )
@@ -151,7 +155,14 @@ void Player::update()
 	if (move_power < 0 && now_amount_ > 0.0F)
 	{
 		if (!flag_.test(Flag::kOnce))
-			base_angle_ = movement_angle_ = -XM_PIDIV2;
+		{
+			//movement_angle_ += std::abs(movement_angle_) >= XM_PIDIV2 ? XMConvertToRadians(kGravity) : -XMConvertToRadians(kGravity);
+			if (std::abs(movement_angle_) >= XM_PIDIV2 ? -XM_PIDIV2 > movement_angle_ : -XM_PIDIV2 > movement_angle_)
+			{
+				//movement_angle_ = base_angle_ = -XM_PIDIV2;
+				flag_.set(Flag::kOnce);
+			}
+		}
 
 		flag_.reset(Flag::kStarCollision);
 		if (flag_.test(Flag::kJump))
@@ -159,7 +170,6 @@ void Player::update()
 			collision_combo_pitch_ = 0.0F;
 			score_.resetCombo();
 		}
-		flag_.set(Flag::kOnce);
 
 		move_power = std::abs(move_power);
 	}
@@ -167,7 +177,7 @@ void Player::update()
 	myshape_.position += Vector2(std::cos(movement_angle_), -std::sin(movement_angle_)) * move_power;
 	prev_jump_moveamount_ = Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out );
 
-	if (!flag_.test(Flag::kJump))
+	if (!flag_.test(Flag::kJump) && owner_ != nullptr)
 		revision(ground_->start + (ground_->end - ground_->start) * dis_, NameSpaceParticle::ParticleID::kNonParticle);
 
 
@@ -304,6 +314,8 @@ void Player::collision( Wall * WallObj)
 
 	//角度変更
 	base_angle_ = movement_angle_ = XM_PI - movement_angle_;
+	if (!flag_.test(Flag::kOnce))
+		base_angle_ = -XM_PIDIV2;
 	flag_.reset( Flag::kStarCollision );
 	flag_.set( Flag::kTechnique );
 	if( !flag_.test( Flag::kWallParticle ) )
@@ -346,41 +358,12 @@ void Player::input(float MoveSing)
 		//右入力
 		if (pad_tracker.leftStickRight == pad_tracker.HELD || key.lastState.Right)
 		{
-			if (MoveSing >= 0.0F)
-			{
 				movement_angle_ -= XMConvertToRadians(kSpeed);
-
-				if (movement_angle_ < base_angle_ - kMaxChangeAngle)
-					movement_angle_ = base_angle_ - kMaxChangeAngle;
-			}
-			else
-			{
-				movement_angle_ += XMConvertToRadians(kSpeed);
-				if (movement_angle_ > -XM_PIDIV2 + kMaxChangeAngle)
-					movement_angle_ = -XM_PIDIV2 + kMaxChangeAngle;
-			}
 		}
 		//左入力
 		else if (pad_tracker.leftStickLeft == pad_tracker.HELD || key.lastState.Left)
 		{
-			if (MoveSing >= 0.0F)
-			{
 				movement_angle_ += XMConvertToRadians(kSpeed);
-
-				if (movement_angle_ > base_angle_ + kMaxChangeAngle)
-					movement_angle_ = base_angle_ + kMaxChangeAngle;
-			}
-			else
-			{
-				movement_angle_ -= XMConvertToRadians(kSpeed);
-
-				if (movement_angle_ < -XM_PIDIV2 - kMaxChangeAngle)
-					movement_angle_ = -XM_PIDIV2 - kMaxChangeAngle;
-			}
-		}
-		else
-		{
-			movement_angle_ = base_angle_;
 		}
 
 		//下入力
@@ -425,7 +408,6 @@ void Player::input(float MoveSing)
 				score_.resetRotate();
 			}
 		}
-		flag_.reset( Flag::kBoost );
 	}
 }
 
