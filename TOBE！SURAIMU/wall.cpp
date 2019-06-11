@@ -6,6 +6,7 @@
 #include "release.h"
 #include "textureLoder.h"
 #include "sprite.h"
+#include "space.h"
 #include "task_manager.h"
 #include "shape.h"
 
@@ -56,6 +57,11 @@ bool Wall::init()
 	myshape_ = new Line[2]();
 
 
+    // ‹óŠÔ‚Ö‚Ì“o˜^
+    Space::getInstance()->registration( 
+        this,
+        { kWindowWidth / 2.0F , kWindowHeight / 2.0F},
+        350.0F );
 
 	// ƒ^ƒXƒN‚Ì“o˜^
     TaskManager* kManager = TaskManager::getInstance();
@@ -88,6 +94,9 @@ void Wall::destroy()
 
 	// ƒ^ƒXƒN
 	TaskManager::getInstance()->unregisterObject(this);
+
+    // ‹óŠÔ
+    Space::getInstance()->unregistration(this);
 }
 
 /*===========================================================================*/
