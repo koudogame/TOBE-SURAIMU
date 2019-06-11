@@ -47,7 +47,7 @@ class DemoPlayer :
     public Player
 {
 private:
-    void input() override;
+	void input();
 
     ObjectBase* serch();
 

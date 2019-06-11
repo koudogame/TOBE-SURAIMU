@@ -89,7 +89,6 @@ protected:
 	enum Flag
 	{
 		kJump,
-		kBoost,
 		kStarCollision,
 		kParticle,
 		kTechnique,
