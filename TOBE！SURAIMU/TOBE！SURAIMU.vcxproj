@@ -154,8 +154,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="battle.h" />
-    <ClInclude Include="player_demo.h" />
+    <ClInclude Include="demo_player.h" />
     <ClInclude Include="ranking_manager.h" />
+    <ClInclude Include="sercher_base.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="background.h" />
     <ClInclude Include="background_container.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="space.h" />
     <ClInclude Include="stay_particle.h" />
     <ClInclude Include="stay_particle_container.h" />
+    <ClInclude Include="star_sercher.h" />
     <ClInclude Include="text.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="key.h" />
@@ -231,7 +233,7 @@
     <ClCompile Include="freeFallParticle.cpp" />
     <ClCompile Include="freeFallParticle_container.cpp" />
     <ClCompile Include="pause.cpp" />
-    <ClCompile Include="player_demo.cpp" />
+    <ClCompile Include="demo_player.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="ranking_in_endless.cpp" />
     <ClCompile Include="ranking_manager.cpp" />

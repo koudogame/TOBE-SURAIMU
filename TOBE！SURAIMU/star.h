@@ -29,7 +29,7 @@ public:
 	//生存確認
 	bool isAlive() override;
 	//自身のID返却
-	inline ObjectID getID() override { return ObjectID::kStar; }
+	inline ObjectID getID() const override { return ObjectID::kStar; }
 
 public:
 	//外部利用関数
@@ -55,6 +55,7 @@ private:
 
 private:
 	//メンバ変数
+    Vector2 position_;                  //座標
 	float angle_[ kStarLineNum ];		//角度
 	float fall_;		    //落下の速さ
 	float spin_;		    //回転速度
@@ -67,6 +68,7 @@ private:
 	int create_point_;	//パーティクルの生成位置
 	NameSpaceParticle::ParticleID id_;	//パーティクルID
 
+    ID3D11ShaderResourceView* texture_;         //星のテクスチャ
 	ID3D11ShaderResourceView* overlay_texture_;	//星の加算合成テクスチャ
 };
 

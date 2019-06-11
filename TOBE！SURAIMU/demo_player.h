@@ -46,11 +46,15 @@ private:
 class DemoPlayer :
     public Player
 {
+public:
+    bool init( const Vector2& Posit ) ;
+
 private:
-	void input();
+    void input( float MoveSin ) override;
 
-    ObjectBase* serch();
+    void setPurpose();
 
+    bool is_jumping_ = false;
     SerchRangeForStar serch_range_;
     ObjectBase* purpose_ = nullptr;
 };

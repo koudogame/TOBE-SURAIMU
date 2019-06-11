@@ -9,7 +9,7 @@
 /*===========================================================================*/
 constexpr unsigned kMask        = 0x03; // マスク用
 
-constexpr RECT kRange{ 305L, -840L, 975L, 1000L };
+constexpr RECT kRange{ 0L, -840L, 1280L, 1000L };
 constexpr unsigned kDivideLevel = 3U;   // 空間分割レベル
 constexpr unsigned kDivideNum   = 4U;   // 分割数
 const unsigned kBlockNum =              // 空間ブロック数
@@ -92,55 +92,6 @@ void Space::collision()
             if( parent == 0 ) { break; }
         }
     }
-}
-
-/*===========================================================================*/
-// 引数のオブジェクトが、指定されたオブジェクトと衝突しているか判定
-ObjectBase* Space::judgeCollision( ObjectBase* const Object,    // 依頼者
-                                   const Vector2&    Origin,    // 判定範囲原点
-                                   const float       Radius,    // 判定範囲半径
-                                   const ObjectID    Target )   // 衝突判定対象
-{
-    const int kBelongBlock = toMorton(
-        range_,
-        { Origin.x - Radius, Origin.y - Radius },
-        { Origin.x + Radius, Origin.y + Radius }
-    );
-    
-    if( kBelongBlock >= 0 )
-    {
-        std::deque<std::list<ObjectBase*>*> judge_block;
-
-        // 衝突の判定を行う空間をリスト化
-        for(int block = kBelongBlock; block < kBlockNumLevel2 - 1; block <<= 2)
-        {
-            for( int i = 0; i < kDivideNum; ++i )
-            {
-                judge_block.push_back( &space_[block + i] );
-            }
-        }
-        for( int block = kBelongBlock; block > 0; block >>= 2 )
-        {
-            judge_block.push_back( &space_[block] );
-        }
-
-        // 衝突判定
-        Collision* const kCollision = Collision::getInstance();
-        for( auto block : judge_block )
-        {
-            for( auto object : *block )
-            {
-                if( object->getID() == Target &&
-                    kCollision->collision(Object, object) )
-                {
-                    return object;
-                }
-            }
-        }
-
-    }
-
-    return nullptr;
 }
 
 

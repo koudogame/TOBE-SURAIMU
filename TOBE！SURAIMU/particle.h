@@ -38,6 +38,7 @@ public:
 
 protected:
 	ID3D11ShaderResourceView* texture_;
+	Vector2 position_;
 	Vector2 velocity_;
 
 	const Timer<Milliseconds>* clock_ = nullptr;

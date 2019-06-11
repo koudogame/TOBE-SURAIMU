@@ -6,7 +6,7 @@
 #include "space.h"
 
 //衝突対象クラス
-#include "player_demo.h"
+#include "demo_player.h"
 
 //定数
 const int kStarMin = 60;			//最小サイズ
@@ -91,6 +91,8 @@ bool Star::init( const Vector2 & Position , const float Angle  , const float Spi
 //破棄
 void Star::destroy()
 {
+    Space::getInstance()->unregistration(this);
+
 	s_particle_container_.get()->destroy();
 	TaskManager::getInstance()->unregisterObject( this );
 	TextureLoder::getInstance()->release( texture_ );

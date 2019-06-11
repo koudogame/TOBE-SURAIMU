@@ -42,8 +42,9 @@ public:
 private:
     bool created_         = false;
 
+    ID3D11ShaderResourceView* texture_     = nullptr;
     ID3D11ShaderResourceView* texture_sub_ = nullptr;
-
+    Vector2 position_     { 0.0F, 0.0F };
     RECT trimming_        { 0L,0L,0L,0L };
     float scroll_x_       = 0.0F;
     float scroll_y_       = 0.0F;

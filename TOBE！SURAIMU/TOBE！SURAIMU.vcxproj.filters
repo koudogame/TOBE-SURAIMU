@@ -120,6 +120,9 @@
     <Filter Include="Project\Game\Object\Player\AI">
       <UniqueIdentifier>{3b985f52-44b6-4497-b39f-4575806744cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\Sercher">
+      <UniqueIdentifier>{b1dbc8ed-691d-4992-8e8f-c503742b8b2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -263,7 +266,7 @@
     <ClCompile Include="space.cpp">
       <Filter>Project\Game\Others\Space</Filter>
     </ClCompile>
-    <ClCompile Include="player_demo.cpp">
+    <ClCompile Include="demo_player.cpp">
       <Filter>Project\Game\Object\Player\AI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -432,8 +435,14 @@
     <ClInclude Include="space.h">
       <Filter>Project\Game\Others\Space</Filter>
     </ClInclude>
-    <ClInclude Include="player_demo.h">
+    <ClInclude Include="demo_player.h">
       <Filter>Project\Game\Object\Player\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="star_sercher.h">
+      <Filter>Project\Game\Object\Sercher</Filter>
+    </ClInclude>
+    <ClInclude Include="sercher_base.h">
+      <Filter>Project\Game\Object\Sercher</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

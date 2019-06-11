@@ -9,7 +9,7 @@
 #include "player.h"
 #include "star.h"
 #include "wall.h"
-#include "player_demo.h"
+#include "demo_player.h"
 
 class Player;
 class Star;

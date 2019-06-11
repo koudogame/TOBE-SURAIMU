@@ -28,5 +28,7 @@ public:
 private:
     bool created_ = false;
 
+    ID3D11ShaderResourceView* texture_ = nullptr;
+    Vector2 position_                  { 0.0F, 0.0F };
 	Line *myshape_;
 };
