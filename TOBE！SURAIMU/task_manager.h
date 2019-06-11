@@ -8,6 +8,7 @@ enum class TaskUpdate
     kBackgroundUpdate,
 	kStarUpdate,
 	kPlayerUpdate,
+    kSercherUpdate,
 	kWallUpdate,
 	kParticleUpdate,
     kComboUpdate,

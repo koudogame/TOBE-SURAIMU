@@ -269,6 +269,9 @@
     <ClCompile Include="demo_player.cpp">
       <Filter>Project\Game\Object\Player\AI</Filter>
     </ClCompile>
+    <ClCompile Include="sercher.cpp">
+      <Filter>Project\Game\Object\Sercher</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -438,10 +441,7 @@
     <ClInclude Include="demo_player.h">
       <Filter>Project\Game\Object\Player\AI</Filter>
     </ClInclude>
-    <ClInclude Include="star_sercher.h">
-      <Filter>Project\Game\Object\Sercher</Filter>
-    </ClInclude>
-    <ClInclude Include="sercher_base.h">
+    <ClInclude Include="sercher.h">
       <Filter>Project\Game\Object\Sercher</Filter>
     </ClInclude>
   </ItemGroup>

@@ -21,13 +21,13 @@ public:
 	//継承関数
 	//初期化
 	//引数...初期位置:最大移動量:入力量の追加量:重力:左右の移動量
-	bool init(const Vector2& Posit, const int PlayerNo);
+	virtual bool init(const Vector2& Posit, const int PlayerNo);
 	//破棄
-	void destroy()override;
+	virtual void destroy()override;
 	//更新
-	void update()override;
+	virtual void update()override;
 	//描画
-	void draw() override;
+	virtual void draw() override;
 	//生存確認
 	bool isAlive() override;
 	//移動量の追加

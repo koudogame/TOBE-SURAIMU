@@ -156,7 +156,7 @@
     <ClInclude Include="battle.h" />
     <ClInclude Include="demo_player.h" />
     <ClInclude Include="ranking_manager.h" />
-    <ClInclude Include="sercher_base.h" />
+    <ClInclude Include="sercher.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="background.h" />
     <ClInclude Include="background_container.h" />
@@ -188,7 +188,6 @@
     <ClInclude Include="space.h" />
     <ClInclude Include="stay_particle.h" />
     <ClInclude Include="stay_particle_container.h" />
-    <ClInclude Include="star_sercher.h" />
     <ClInclude Include="text.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="key.h" />
@@ -239,6 +238,7 @@
     <ClCompile Include="ranking_manager.cpp" />
     <ClCompile Include="score_number.cpp" />
     <ClCompile Include="scoring.cpp" />
+    <ClCompile Include="sercher.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="space.cpp" />
     <ClCompile Include="stay_particle.cpp" />
