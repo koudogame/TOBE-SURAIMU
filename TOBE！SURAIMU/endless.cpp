@@ -16,7 +16,7 @@
 #include "timer.h"
 #include "pause.h"
 #include "ranking_in_endless.h"
-#include "collision.h"
+#include "space.h"
 #include "task_manager.h"
 #include "background_container.h"
 #include "back_object_container.h"
@@ -133,7 +133,7 @@ bool Endless::init()
 	float gravity    = file.getNumber_f(5, 1);
 	float speed      = file.getNumber_f(6, 1);
 	float rl_boost   = file.getNumber_f(7, 1);
-	if (dynamic_cast<DemoPlayer*>(player_)->init(position) == false)
+	if (dynamic_cast<DemoPlayer*>(player_)->init(position, 0) == false)
 	{
 		return false;
 	}
@@ -152,9 +152,6 @@ bool Endless::init()
 	climb_ = 0.0F;
     // スター生成パターンファイルのリスト化
     changePattern();
-
-	//当たり判定の初期化
-	Collision::getInstance()->init();
 
 	clock_->start();
 
@@ -254,11 +251,7 @@ SceneBase* Endless::start()
 		    player_->onStartFlag();
         }
 	}
-    // 星との衝突処理
-    for (auto& star : star_container_->active())
-    {
-        Collision::getInstance()->collision(player_, star);
-    }
+    Space::getInstance()->collision();
 
 	return this;
 }
@@ -340,12 +333,7 @@ SceneBase* Endless::play()
 
 
 	// 衝突処理
-	Collision* const kCollision = Collision::getInstance();
-	for (auto& star : star_container_->active())
-	{
-		kCollision->collision(player_, star);
-	}
-	kCollision->collision(player_, wall_);
+    Space::getInstance()->collision();
 
 	return this;
 }

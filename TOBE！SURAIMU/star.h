@@ -35,6 +35,8 @@ public:
 	//外部利用関数
 	//落下の速さの適用
 	void setFall();
+    //座標の取得
+    inline const Vector2& getPosition() const override { return position_; }
 	//形の取得
 	//引数...取得線分
 	inline Line* getShape( const int GetNum ) { return &myshape_[ GetNum ]; }

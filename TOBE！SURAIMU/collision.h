@@ -10,11 +10,11 @@
 #include "star.h"
 #include "wall.h"
 #include "demo_player.h"
+#include "sercher.h"
 
 class Player;
 class Star;
 class Wall;
-class SerchRangeForStar;
 
 class Collision
 {
@@ -44,18 +44,19 @@ public:
 	//判定( プレイヤー対プレイヤー)
 	bool collision( Player* , Player* );
 	//判定( CPUの判定範囲対星 )
-	bool collision(SerchRangeForStar*, Star*);
-	inline bool collision(Star* S, SerchRangeForStar* SRS) { return collision(SRS, S); }
+	bool collision(Sercher*, Star*);
+	inline bool collision(Star* S, Sercher* SRS) { return collision(SRS, S); }
+
 
 private:
 	//当たり判定
-	bool judgment( Circle* , Circle* );
-	bool judgment( Circle* , Line* );
-	bool judgment( Line* , Line* );
+	bool judgment( const Circle* const, const Circle* const );
+	bool judgment( const Circle* const, const Line* const );
+	bool judgment( const Line* const , const Line* const );
 
 	//交点を求める
-	Vector2 crossPoint( Circle* , Line* );
-	Vector2 crossPoint( Line* , Line* );
+	Vector2 crossPoint( const Circle* const, const Line* const );
+	Vector2 crossPoint( const Line* const, const Line* const );
 
 	//メンバ変数
 private:

@@ -46,7 +46,7 @@ bool Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
 			return collision(dynamic_cast<Player*>(Obj2), dynamic_cast<Star*>(Obj1));
 
 		case ObjectID::kSerch:
-			return collision(dynamic_cast<SerchRangeForStar*>(Obj2), dynamic_cast<Star*>(Obj1));
+			return collision(dynamic_cast<Sercher*>(Obj2), dynamic_cast<Star*>(Obj1));
 		default:
 			return false;
 		}
@@ -67,7 +67,7 @@ bool Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
 		switch (Obj2->getID())
 		{
 		case ObjectID::kStar:
-			return collision(dynamic_cast<SerchRangeForStar*>(Obj1), dynamic_cast<Star*>(Obj2));
+			return collision(dynamic_cast<Sercher*>(Obj1), dynamic_cast<Star*>(Obj2));
 		}
 
 	default:
@@ -207,10 +207,10 @@ bool Collision::collision( Player * P1, Player * P2)
 	return true;
 }
 
-bool Collision::collision(SerchRangeForStar * SRS, Star * S)
+bool Collision::collision(Sercher * SRS, Star * S)
 {
 	for (int i = 0; i < kStarLineNum; i++)
-		if (judgment(SRS->getShape(), S->getShape(i)))
+		if (judgment(&SRS->getRange(), S->getShape(i)))
 		{
 			SRS->collision(S);
 			return true;
@@ -230,7 +230,7 @@ bool Collision::collision(SerchRangeForStar * SRS, Star * S)
 //---“–‚½‚è”»’è---
 
 //‰~‚Æ‰~‚Ì“–‚½‚è”»’è
-bool Collision::judgment(  Circle * C1,  Circle * C2)
+bool Collision::judgment( const Circle * const C1 , const Circle * const C2 )
 {
 	//2“_ŠÔ‚Ì‹——£‚ª2‚Â‚Ì‰~‚Ì”¼Œa‚æ‚è¬‚³‚¢ê‡HIT
 	if( Calc::magnitude( C1->position , C2->position ) < ( C1->radius + C2->radius ) )
@@ -240,7 +240,7 @@ bool Collision::judgment(  Circle * C1,  Circle * C2)
 }
 
 //‰~‚Æü‚Ì“–‚½‚è”»’è
-bool Collision::judgment(  Circle * C,  Line * L)
+bool Collision::judgment( const Circle * const C, const Line * const L)
 {
 	//‰~‚Æü•ª‚Ì”»’è
 	//”»’è—p‚ÌƒxƒNƒgƒ‹‚ð¶¬
@@ -265,7 +265,7 @@ bool Collision::judgment(  Circle * C,  Line * L)
 }
 
 //ü‚Æü‚Ì“–‚½‚è”»’è
-bool Collision::judgment(  Line * L1,  Line * L2)
+bool Collision::judgment( const Line * const L1,  const Line * const L2)
 {
 	//‘ÎÛ‚ª”»’è”ÍˆÍ“à‚©‚Ç‚¤‚©‚Ìƒ`ƒFƒbƒN
 	Vector2 check_start[ 3 ]
@@ -303,7 +303,7 @@ bool Collision::judgment(  Line * L1,  Line * L2)
 
 //---Œð“_‚ð‹‚ß‚é---
 
-Vector2 Collision::crossPoint(  Circle * C ,  Line * L )
+Vector2 Collision::crossPoint( const Circle * const C , const Line * const L )
 {
 	//‰~‚Æü•ª
 	//”»’è—p‚ÌƒxƒNƒgƒ‹‚ð¶¬
@@ -319,7 +319,7 @@ Vector2 Collision::crossPoint(  Circle * C ,  Line * L )
 	return L->start + checker[ 1 ] * k;
 }
 
-Vector2 Collision::crossPoint(  Line * L1,  Line * L2)
+Vector2 Collision::crossPoint( const Line * const L1, const Line * const L2)
 {
 	//•ªŽq
 	float mol[ 2 ];
