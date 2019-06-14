@@ -71,94 +71,90 @@ void AIMover::update()
 
     sercher_->setOrigin( myshape_.position );
     sercher_->update();
+
+    if( flag_.test(kJump) )
+    {
+        auto purposes = sercher_->getList();
+        const size_t purposes_num = purposes.size();
+
+        if (purposes_num > 0U) {
+            purpose_ = purposes[rand() % purposes_num];
+        }
+    }
 }
 
 
 /*===========================================================================*/
 // 入力処理
-void AIMover::input( float Sin )
+void AIMover::inputjump()
 {
-    const float kAngle = TODEGREES(revition_angle_ + XM_PI);
+    const float kAngle = TODEGREES(base_angle_ + XM_PI);
 
-    // 接地中
-    if( !flag_.test(kJump)) {
-        direction_id_ = Direction::kFlont;
-        movement_angle_ = revition_angle_;
+    direction_id_ = Direction::kFlont;
         
+    purpose_ = nullptr;
+
+    //ジャンプ                           /*誤差*/
+    if( std::abs(kAngle - jump_angle_) <= 5.0F &&
+        !died_flag_)
+    {
+        SOUND->stop(SoundId::kJump);
+        SOUND->play(SoundId::kJump, false);
+        flag_.set(Flag::kJump);
+        flag_.set(Flag::kStarCollision);
+        flag_.reset(Flag::kParticle);
+        flag_.reset(Flag::kOnce);
+        direction_id_ = Direction::kFlay;
+        particle_time_ = 0;
+        now_amount_ = 0.0F;
+        base_angle_ += XM_PI;
+        ground_ = &kGround;
+        prev_jump_moveamount_ = 0;
+        score_.resetRotate();
+
+        // 次のジャンプ角度を設定する
+        jump_angle_ = getRandJumpAngle();
+    }
+}
+
+void AIMover::inputmove()
+{
+    Vector2 kPurPosi = purpose_->getPosition();
+    if (kPurPosi.y > getWindowHeight<float>())
+    {
         purpose_ = nullptr;
-
-        //ジャンプ                           /*誤差*/
-        if( std::abs(kAngle - jump_angle_) <= 5.0F &&
-            !died_flag_)
-        {
-            SOUND->stop(SoundId::kJump);
-            SOUND->play(SoundId::kJump, false);
-            flag_.set(Flag::kJump);
-            flag_.set(Flag::kStarCollision);
-            flag_.reset(Flag::kParticle);
-            flag_.reset(Flag::kOnce);
-            direction_id_ = Direction::kFlay;
-            particle_time_ = 0;
-            now_amount_ = 0.0F;
-            base_angle_ = movement_angle_ = movement_angle_ + XM_PI;
-            ground_ = &kGround;
-            prev_jump_moveamount_ = 0;
-            score_.resetRotate();
-
-            // 次のジャンプ角度を設定する
-            jump_angle_ = getRandJumpAngle();
-        }
+        return;
     }
-    // 目的を設定する
-    else if( purpose_ == nullptr )
+
+    const float kDistance = Calc::magnitude(kPurPosi - myshape_.position);
+
+    // 目的地との距離が大きいかつ、自分が上にいたら下移動
+    if (kDistance > 300.0F)
     {
-        auto purposes = sercher_->getList();
-        const size_t purposes_num = purposes.size();
-
-        if( purposes_num > 0U ){
-            purpose_ = purposes[ rand() % purposes_num ];
-        }
-    }
-    // 目的へ移動する
-    else
-    {
-        Vector2 kPurPosi = purpose_->getPosition();
-        if( kPurPosi.y > getWindowHeight<float>() )
+        if (kPurPosi.y > myshape_.position.y)
         {
-            purpose_ = nullptr;
-            return;
+            bottom_input_ = kBottomOn;
+            score_.addDown();
+            score_.resetCombo();
+            flag_.reset(Flag::kStarCollision);
         }
-
-        const float kDistance = Calc::magnitude( kPurPosi - myshape_.position );
-
-        // 目的地との距離が大きいかつ、自分が上にいたら下移動
-        if( kDistance > 300.0F  )
-        {
-            if( kPurPosi.y > myshape_.position.y )
-            {
-                bottom_input_ = kBottomOn;
-                score_.addDown();
-                score_.resetCombo();
-                flag_.reset(Flag::kStarCollision);
-            }
-            else
-            {
-                bottom_input_ = kBottomOff;
-            }
-        }
-        // 目的地との距離が小さいかつ、横に離れていたら横移動
         else
         {
-            // 右移動
-            if( (kPurPosi.x - myshape_.position.x) > 20.0F )
-            {
-                movement_angle_ -= TORADIANS( kSpeed );
-            }
-            // 左移動
-            else if( (kPurPosi.x - myshape_.position.x) < 20.0F )
-            {
-                movement_angle_ += TORADIANS( kSpeed );
-            }
+            bottom_input_ = kBottomOff;
+        }
+    }
+    // 目的地との距離が小さいかつ、横に離れていたら横移動
+    else
+    {
+        // 右移動
+        if ((kPurPosi.x - myshape_.position.x) > 20.0F)
+        {
+            base_angle_ -= TORADIANS(kSpeed);
+        }
+        // 左移動
+        else if ((kPurPosi.x - myshape_.position.x) < 20.0F)
+        {
+            base_angle_ += TORADIANS(kSpeed);
         }
     }
 }

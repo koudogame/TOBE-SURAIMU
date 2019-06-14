@@ -21,7 +21,8 @@ public:
     void update() override;
 
 private:
-    void input( float MoveSin ) override;
+    void inputjump() override;
+    void inputmove() override;
 
     float getRandJumpAngle();
 

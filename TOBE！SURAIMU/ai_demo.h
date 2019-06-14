@@ -21,7 +21,8 @@ public:
     void update() override;
 
 private:
-    //void input(  ) override;
+    void inputjump() override;
+    void inputmove() override;
 
     bool is_jumping_        = false;
     Sercher *sercher_       = nullptr;

@@ -71,7 +71,7 @@ void AIDemo::destroy()
 void AIDemo::update()
 {
     // スター検索範囲を正面に設定
-    float angle = revition_angle_ + XM_PI;
+    float angle = base_angle_ + XM_PI;
     sercher_->setOrigin( {
         myshape_.position.x + std::cos(angle) * kSerchRangeRadius,
         myshape_.position.y - std::sin(angle) * kSerchRangeRadius
@@ -83,7 +83,7 @@ void AIDemo::update()
 
 /*===========================================================================*/
 // 入力処理
-void AIDemo::input( float Sin )
+void AIDemo::inputjump()
 {
     if( !flag_.test(kJump) )
     {
@@ -94,7 +94,6 @@ void AIDemo::input( float Sin )
         }
 
         direction_id_ = Direction::kFlont;
-        movement_angle_ = revition_angle_;
 
         // 目標を設定
         const std::deque<ObjectBase*>& kTargets = sercher_->getList();
@@ -117,7 +116,7 @@ void AIDemo::input( float Sin )
             //ジャンプ
             if (!died_flag_) {
                 float angle = Calc::angle( purpose_->getPosition() - getPosition() );
-                angle -= revition_angle_ + XM_PI;
+                angle -= base_angle_ + XM_PI;
                 angle *= kToDegree;
                 if( angle >= kJumpAngleMin && angle <= kJumpAngleMax )
                 {
@@ -131,7 +130,7 @@ void AIDemo::input( float Sin )
                     direction_id_ = Direction::kFlay;
                     particle_time_ = 0;
                     now_amount_ = 0.0F;
-                    base_angle_ = movement_angle_ = movement_angle_ + XM_PI;
+                    base_angle_ += XM_PI;
                     ground_ = &kGround;
                     prev_jump_moveamount_ = 0;
                     score_.resetRotate();
@@ -140,4 +139,7 @@ void AIDemo::input( float Sin )
         }
     }
 }
+
+void AIDemo::inputmove()
+{}
 

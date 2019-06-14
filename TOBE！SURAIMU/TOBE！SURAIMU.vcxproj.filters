@@ -117,14 +117,14 @@
     <Filter Include="Project\Game\Others\Space">
       <UniqueIdentifier>{15db0afd-e5fc-4603-a616-b10961066151}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Object\Player\AI">
-      <UniqueIdentifier>{3b985f52-44b6-4497-b39f-4575806744cc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Object\Sercher">
       <UniqueIdentifier>{b1dbc8ed-691d-4992-8e8f-c503742b8b2e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\BonusIcon">
       <UniqueIdentifier>{3f549ffe-f27c-4d5f-afd0-46dfc1347a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Object\AI">
+      <UniqueIdentifier>{3b985f52-44b6-4497-b39f-4575806744cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -270,10 +270,10 @@
       <Filter>Project\Game\Object\Sercher</Filter>
     </ClCompile>
     <ClCompile Include="ai_demo.cpp">
-      <Filter>Project\Game\Object\Player\AI</Filter>
+      <Filter>Project\Game\Object\AI</Filter>
     </ClCompile>
     <ClCompile Include="ai_mover.cpp">
-      <Filter>Project\Game\Object\Player\AI</Filter>
+      <Filter>Project\Game\Object\AI</Filter>
     </ClCompile>
     <ClCompile Include="spin_icon.cpp">
       <Filter>Project\Game\Object\BonusIcon</Filter>
@@ -451,10 +451,10 @@
       <Filter>Project\Game\Object\Sercher</Filter>
     </ClInclude>
     <ClInclude Include="ai_mover.h">
-      <Filter>Project\Game\Object\Player\AI</Filter>
+      <Filter>Project\Game\Object\AI</Filter>
     </ClInclude>
     <ClInclude Include="ai_demo.h">
-      <Filter>Project\Game\Object\Player\AI</Filter>
+      <Filter>Project\Game\Object\AI</Filter>
     </ClInclude>
     <ClInclude Include="spin_icon.h">
       <Filter>Project\Game\Object\BonusIcon</Filter>
