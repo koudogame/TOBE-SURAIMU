@@ -1,6 +1,9 @@
 
 #include "sercher.h"
 
+#include <GeometricPrimitive.h>
+#include "direct3d.h"
+
 #include "task_manager.h"
 #include "space.h"
 #include "star.h"
@@ -25,7 +28,9 @@ bool Sercher::init( const Vector2& Origin, const float Radius,
                     const ObjectID Target )
 {
     TaskManager::getInstance()->registerTask(
-        this, TaskUpdate::kSercherUpdate);
+        this, TaskUpdate::kSercher);
+    TaskManager::getInstance()->registerTask(
+        this, TaskDraw::kObject);
     Space::getInstance()->registration(this, Origin, Radius);
 
 
@@ -49,6 +54,8 @@ void Sercher::destroy()
 // XVˆ—
 void Sercher::update()
 {
+    collision_list_.clear();
+
     Space::getInstance()->registration( this, getOrigin(), getRadius() );
 }
 
@@ -60,4 +67,9 @@ void Sercher::collision( ObjectBase* const Object )
     {
         collision_list_.push_back( Object );
     }
+}
+
+
+void Sercher::draw()
+{
 }

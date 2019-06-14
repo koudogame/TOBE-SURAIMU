@@ -31,7 +31,7 @@ bool Background::init(const RECT& Trimming, const float Scroll, const float Dept
 
 
     // ƒ^ƒXƒN‚Ì“o˜^
-    TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackgroundUpdate);
+    TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackground);
     TaskManager::getInstance()->registerTask(this, TaskDraw::kBackground);
 
 

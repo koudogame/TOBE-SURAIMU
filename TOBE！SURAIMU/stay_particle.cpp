@@ -25,7 +25,7 @@ bool StayParticle::init( Vector2* Posit , const int TurnDirection )
 	position_ = Posit;
 
 	//ƒ^ƒXƒN‚Ö‚Ì“o˜^
-	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
+	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticle );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 	return true;
 }

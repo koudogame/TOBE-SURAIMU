@@ -61,11 +61,11 @@ bool Wall::init()
     Space::getInstance()->registration( 
         this,
         { kWindowWidth / 2.0F , kWindowHeight / 2.0F},
-        350.0F );
+        100.0F );
 
 	// タスクの登録
     TaskManager* kManager = TaskManager::getInstance();
-	kManager->registerTask(this, TaskUpdate::kWallUpdate);
+	kManager->registerTask(this, TaskUpdate::kWall);
 	kManager->registerTask(this, TaskDraw::kObject);
 
 	// 形の設定

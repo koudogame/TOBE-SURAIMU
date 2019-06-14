@@ -6,7 +6,7 @@
 #include "space.h"
 
 //Õ“Ë‘ÎÛƒNƒ‰ƒX
-#include "demo_player.h"
+#include "ai_demo.h"
 
 //’è”
 const int kStarMin = 60;			//Å¬ƒTƒCƒY
@@ -52,7 +52,7 @@ Star::~Star()
 bool Star::init( const Vector2 & Position , const float Angle  , const float Spin , const float Rate , const float Size )
 {
 	//ƒ^ƒXƒN‚Ö‚Ì“o˜^
-	TaskManager::getInstance()->registerTask( this , TaskUpdate::kStarUpdate );
+	TaskManager::getInstance()->registerTask( this , TaskUpdate::kStar );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 
     Space::getInstance()->registration(this, Position, Size);
@@ -107,6 +107,8 @@ void Star::update()
 	position_.y += fall_;
 	angle_[ 0 ] += spin_;
 	setAngle();
+
+    Space::getInstance()->registration( this, position_, size_ );
 }
 
 //•`‰æ
@@ -183,7 +185,7 @@ void Star::collision( Player* P )
 	particle_time_ = 0;
 }
 
-void Star::collision(DemoPlayer * P)
+void Star::collision(AIDemo * P)
 {
 	Vector2 movement = P->getMove()->end - P->getMove()->start;
 

@@ -33,7 +33,7 @@ bool Particle::init(
 	if (texture_ == nullptr) { return false; }
 
 	// ƒ^ƒXƒN‚Ì“o˜^
-	TaskManager::getInstance()->registerTask(this, TaskUpdate::kParticleUpdate);
+	TaskManager::getInstance()->registerTask(this, TaskUpdate::kParticle);
 	TaskManager::getInstance()->registerTask(this, TaskDraw::kParticle);
 
 

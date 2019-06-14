@@ -53,10 +53,10 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo)
 	player_no_ = PlayerNo;
 
 	//タスクへの追加
-	TaskManager::getInstance()->registerTask(this, TaskUpdate::kPlayerUpdate);
+	TaskManager::getInstance()->registerTask(this, TaskUpdate::kPlayer);
 	TaskManager::getInstance()->registerTask(this, TaskDraw::kObject);
 
-    Space::getInstance()->registration(this, Posit, 11.5F);
+    Space::getInstance()->registration(this, Posit, 5.5F);
 
 	myshape_ = Circle( Posit , 5.5F );
 	//定数の定義
@@ -121,9 +121,6 @@ void Player::destroy()
 //更新
 void Player::update()
 {
-
-	Space::getInstance()->registration(this, myshape_.position, myshape_.radius);
-
 	//全パーティクルの更新処理
 	g_particle_container_.get()->update();
 	f_particle_container_.get()->update();

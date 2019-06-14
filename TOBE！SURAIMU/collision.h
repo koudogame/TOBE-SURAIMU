@@ -9,7 +9,7 @@
 #include "player.h"
 #include "star.h"
 #include "wall.h"
-#include "demo_player.h"
+#include "ai_demo.h"
 #include "sercher.h"
 
 class Player;
@@ -36,8 +36,8 @@ public:
 	//判定(プレイヤー対星)
 	bool collision( Player* , Star* );
 	inline bool collision(Star* S, Player* P) { return collision(P, S); }
-	inline bool collision(DemoPlayer* P, Star*S){ return collision(dynamic_cast<Player*>(P), S); }
-	inline bool collision(Star* S, DemoPlayer* P) { return collision(dynamic_cast<Player*>(P), S); }
+	inline bool collision(AIDemo* P, Star*S){ return collision(dynamic_cast<Player*>(P), S); }
+	inline bool collision(Star* S, AIDemo* P) { return collision(dynamic_cast<Player*>(P), S); }
 	//判定( プレイヤー対壁 )
 	bool collision( Player* , Wall* );
 	inline bool collision(Wall* W, Player* P) { return collision(P, W); }

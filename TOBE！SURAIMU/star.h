@@ -42,7 +42,7 @@ public:
 	inline Line* getShape( const int GetNum ) { return &myshape_[ GetNum ]; }
 	//判定後の処理( プレイヤー )
 	void collision( class Player* P );
-	void collision( class DemoPlayer* P );
+	void collision( class AIDemo* P );
 	//落下パーティクルの生成
 	void addFreeFallParticle();
 	//サイズの取得

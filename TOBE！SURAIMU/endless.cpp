@@ -22,7 +22,6 @@
 #include "back_object_container.h"
 #include "star_container.h"
 #include "player.h"
-#include "demo_player.h"
 #include "wall.h"
 
 #include "title.h"
@@ -30,6 +29,10 @@
 #include "result.h"
 
 #include "Sound.h"
+
+
+#include "ai_demo.h"
+#include "ai_mover.h"
 
 using KeyTracker = Keyboard::KeyboardStateTracker;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -226,6 +229,7 @@ SceneBase* Endless::start()
     KeyTracker key = Key::getInstance()->getTracker();
     PadTracker pad = Pad::getInstance()->getTracker();
 
+    Space::getInstance()->collision();
 
     // ƒ|[ƒY‰æ–Ê‚Ö
     if( key.pressed.P || pad.start == PadTracker::PRESSED )
@@ -251,7 +255,6 @@ SceneBase* Endless::start()
 		    player_->onStartFlag();
         }
 	}
-    Space::getInstance()->collision();
 
 	return this;
 }
@@ -329,7 +332,6 @@ SceneBase* Endless::play()
 
 
 	ranking_->setScore( player_->getScore()->getScore() );
-
 
 
 	// Õ“Ëˆ—

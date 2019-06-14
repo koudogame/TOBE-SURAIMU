@@ -153,9 +153,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ai_mover.h" />
     <ClInclude Include="battle.h" />
-    <ClInclude Include="demo_player.h" />
+    <ClInclude Include="ai_demo.h" />
+    <ClInclude Include="bonus_icon_base.h" />
+    <ClInclude Include="combo_icon.h" />
     <ClInclude Include="ranking_manager.h" />
+    <ClInclude Include="reflect_icon.h" />
     <ClInclude Include="sercher.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="background.h" />
@@ -164,7 +168,6 @@
     <ClInclude Include="back_object_container.h" />
     <ClInclude Include="calc.h" />
     <ClInclude Include="collision.h" />
-    <ClInclude Include="combo.h" />
     <ClInclude Include="commonstates.h" />
     <ClInclude Include="container.h" />
     <ClInclude Include="csvLoader.h" />
@@ -186,6 +189,7 @@
     <ClInclude Include="scoring.h" />
     <ClInclude Include="Sound\xwb.h" />
     <ClInclude Include="space.h" />
+    <ClInclude Include="spin_icon.h" />
     <ClInclude Include="stay_particle.h" />
     <ClInclude Include="stay_particle_container.h" />
     <ClInclude Include="text.h" />
@@ -211,13 +215,14 @@
     <ClInclude Include="wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ai_mover.cpp" />
     <ClCompile Include="background.cpp" />
     <ClCompile Include="background_container.cpp" />
     <ClCompile Include="back_object.cpp" />
     <ClCompile Include="back_object_container.cpp" />
     <ClCompile Include="battle.cpp" />
     <ClCompile Include="collision.cpp" />
-    <ClCompile Include="combo.cpp" />
+    <ClCompile Include="combo_icon.cpp" />
     <ClCompile Include="commonstates.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="csvLoader.cpp" />
@@ -232,15 +237,17 @@
     <ClCompile Include="freeFallParticle.cpp" />
     <ClCompile Include="freeFallParticle_container.cpp" />
     <ClCompile Include="pause.cpp" />
-    <ClCompile Include="demo_player.cpp" />
+    <ClCompile Include="ai_demo.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="ranking_in_endless.cpp" />
     <ClCompile Include="ranking_manager.cpp" />
+    <ClCompile Include="reflect.cpp" />
     <ClCompile Include="score_number.cpp" />
     <ClCompile Include="scoring.cpp" />
     <ClCompile Include="sercher.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="space.cpp" />
+    <ClCompile Include="spin_icon.cpp" />
     <ClCompile Include="stay_particle.cpp" />
     <ClCompile Include="stay_particle_container.cpp" />
     <ClCompile Include="text.cpp" />
