@@ -25,6 +25,6 @@ public:
     virtual const Vector2& getPosition() const override { return position_; }
 
 protected:
-    ID3D11ShaderResourceView* texture_;
+    ID3D11ShaderResourceView* texture_ = nullptr;
     Vector2 position_ { 0.0F, 0.0F };
 };
