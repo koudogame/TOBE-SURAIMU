@@ -7,7 +7,7 @@ const float kMinFall = 0.0F;		//最小落下速度
 const int kTextureSize = 64;		//テクスチャサイズ
 const int kRotate = 5;				//回転角
 const int kStarWhileAngle = 72;		//星の頂点の角度の差
-const float kFall = 5.0F;
+const float kFall = 2.0F;
 const float kFalldecay = 0.05F;
 
 FreeFallParticle::FreeFallParticle()

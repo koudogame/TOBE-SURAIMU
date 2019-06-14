@@ -23,7 +23,7 @@ public:
     void update() override;
 
 private:
-    void input( float MoveSin ) override;
+    //void input(  ) override;
 
     bool is_jumping_        = false;
     Sercher *sercher_ = nullptr;

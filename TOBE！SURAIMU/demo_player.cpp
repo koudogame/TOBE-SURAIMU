@@ -1,4 +1,4 @@
-
+#if 0
 // 基底クラス作成者 : 山田 晴久
 // 板場 温樹
 
@@ -34,7 +34,7 @@ bool DemoPlayer::init( const Vector2& Position, const int PlayerNo )
     Player::init( Position , PlayerNo);
 
     is_jumping_ = false;
-    sercher_ = new Sercher( 
+    sercher_ = new Sercher(
         Vector2{ Position.x, Position.y - kSerchRangeRadius },
         kSerchRangeRadius,
         ObjectID::kStar);
@@ -51,10 +51,10 @@ void DemoPlayer::destroy()
 {
     Player::destroy();
 
-    if( sercher_ ) 
+    if( sercher_ )
     {
         sercher_->destroy();
-        safe_delete( sercher_ ); 
+        safe_delete( sercher_ );
     }
 }
 
@@ -120,3 +120,4 @@ void DemoPlayer::input( float Sin )
     }
 }
 
+#endif

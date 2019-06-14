@@ -100,9 +100,6 @@ protected:
 	std::bitset<kFlag> flag_;		//フラグ
 	float now_amount_;				//入力量
 	float ditrection_angle_;		//テクスチャの角度
-	float movement_angle_;			//移動方向
-	float base_angle_;				//左右の移動に対する基準値
-	float revition_angle_;			//補正方向
 	Line* ground_;					//地面
 	ObjectBase* owner_;				//現住する星
 	Circle myshape_;				//自分の形
@@ -120,6 +117,10 @@ protected:
 
 	Scoring score_;	//スコア
 	int player_no_;
+
+	float base_angle_;
+	Vector2 movement_;
+	Vector2 offset_;
 
 protected:
 	//描画系
@@ -140,9 +141,8 @@ protected:
 protected:
 	//内部利用関数
 	//入力
-	virtual void input(float MoveSing);
-	//重力をかける
-	void gravity();
+	virtual void inputjump();
+	virtual void intputmove();
 	//重力方向の算出
 	void setGravityAngle();
 	//**注意**
