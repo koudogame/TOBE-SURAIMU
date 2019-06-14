@@ -135,8 +135,12 @@ void Player::update()
 	movement_ = Vector2::Zero;
 
 	if (!flag_.test(Flag::kJump))
+	{
 		//“ü—Íˆ—
 		inputjump();
+		if(ground_ != &kGround)
+			revision(ground_->start + (ground_->end - ground_->start) * dis_, NameSpaceParticle::ParticleID::kNonParticle);
+	}
 
 	//ƒWƒƒƒ“ƒv—Ê‚ğ‘‚â‚·
 	if( flag_.test( Flag::kJump ) )
@@ -151,7 +155,7 @@ void Player::update()
 	prev_jump_moveamount_ = Easing::getInstance()->expo( kJumpAmount , now_amount_ , Easing::Mode::Out );
 
 	if (flag_.test(Flag::kJump))
-		intputmove();
+		inputmove();
 
 	if (!flag_.test(Flag::kJump) && owner_ != nullptr)
 		revision(ground_->start + (ground_->end - ground_->start) * dis_, NameSpaceParticle::ParticleID::kNonParticle);
@@ -164,13 +168,6 @@ void Player::update()
 		score_.addRotate( XMConvertToDegrees( getRotate() ) );
 
     Space::getInstance()->registration(this, myshape_.position, myshape_.radius);
-
-	if (myshape_.position.y > 720.0F)
-	{
-		myshape_.position.y = 720.0F;
-		base_angle_ = XM_PIDIV2;
-		flag_.reset();
-	}
 }
 
 //•`‰æ
@@ -333,7 +330,6 @@ float Player::getRotate()
 void Player::inputjump()
 {
 	offset_ = Vector2::Zero;
-	revision(ground_->start + (ground_->end - ground_->start) * dis_, NameSpaceParticle::ParticleID::kNonParticle);
 
 	GamePad::ButtonStateTracker pad_tracker = Pad::getInstance()->getTracker(player_no_);
 	Keyboard::KeyboardStateTracker key = Key::getInstance()->getTracker();
@@ -365,7 +361,7 @@ void Player::inputjump()
 	}
 }
 
-void Player::intputmove()
+void Player::inputmove()
 {
 	GamePad::ButtonStateTracker pad_tracker = Pad::getInstance()->getTracker(player_no_);
 	Keyboard::KeyboardStateTracker key = Key::getInstance()->getTracker();

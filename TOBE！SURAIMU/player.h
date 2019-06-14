@@ -142,7 +142,7 @@ protected:
 	//“à•”—˜—pŠÖ”
 	//“ü—Í
 	virtual void inputjump();
-	virtual void intputmove();
+	virtual void inputmove();
 	//d—Í•ûŒü‚ÌZo
 	void setGravityAngle();
 	//**’ˆÓ**
