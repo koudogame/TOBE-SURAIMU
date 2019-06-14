@@ -34,5 +34,6 @@ private:
 	float move_amount_;	//ˆÚ“®—Ê
 	int rotate_;		//‰ñ“]Šp
 	bool turn_;		    //‰ñ“]•ûŒü
+	float fall_;
 };
 

@@ -7,6 +7,8 @@ const float kMinFall = 0.0F;		//最小落下速度
 const int kTextureSize = 64;		//テクスチャサイズ
 const int kRotate = 5;				//回転角
 const int kStarWhileAngle = 72;		//星の頂点の角度の差
+const float kFall = 5.0F;
+const float kFalldecay = 0.05F;
 
 FreeFallParticle::FreeFallParticle()
 {}
@@ -32,6 +34,7 @@ bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming )
 	turn_ = rand() % 2 ? true : false;
 	rotate_ = rand() % kStarWhileAngle;
 	triming_ = Triming;
+	fall_ = kFall;
 
 	return true;
 }
@@ -48,6 +51,11 @@ void FreeFallParticle::update()
 {
 	alpha_ -= 0.01F;
 	rotate_ += turn_ ? kRotate : -kRotate;
+	position_.y += fall_;
+	fall_ -= kFalldecay;
+
+	if (fall_ < 0.0F)
+		fall_ = 0.0F;
 }
 
 //描画
