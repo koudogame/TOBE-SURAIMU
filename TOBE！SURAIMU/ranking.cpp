@@ -122,7 +122,8 @@ SceneBase* Ranking::update()
 
 	// 上新規入力時、1列分上へスクロール
 	if( key_tracker.pressed.Up ||
-		pad_tracker.leftStickUp == PadTracker::PRESSED )
+		pad_tracker.leftStickUp == PadTracker::PRESSED ||
+        pad_tracker.dpadUp      == PadTracker::PRESSED )
 	{
 		magnification_ = 1.0F;
 		addOffset( &offset_ , -kLineHeight );
@@ -134,7 +135,8 @@ SceneBase* Ranking::update()
 	}
 	// 下新規入力時、1列分下へスクロール
 	else if( key_tracker.pressed.Down ||
-			 pad_tracker.leftStickDown == PadTracker::PRESSED )
+			 pad_tracker.leftStickDown == PadTracker::PRESSED ||
+             pad_tracker.dpadDown      == PadTracker::PRESSED )
 	{
 		magnification_ = 1.0F;
 		addOffset( &offset_ , kLineHeight );
@@ -145,13 +147,17 @@ SceneBase* Ranking::update()
 		SOUND->play( SoundId::kSelect , true );
 	}
 	// 上長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
-	else if( key_state.Up || pad_state.IsLeftThumbStickUp() )
+	else if( key_state.Up ||
+             pad_state.IsLeftThumbStickUp(),
+             pad_state.dpad.up )
 	{
 		addOffset( &offset_ , -kOffset * magnification_ );
 		addMagnification( &magnification_ );
 	}
 	// 下長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
-	else if( key_state.Down || pad_state.IsLeftThumbStickDown() )
+	else if( key_state.Down || 
+             pad_state.IsLeftThumbStickDown(),
+             pad_state.dpad.down )
 	{
 		addOffset( &offset_ , kOffset * magnification_ );
 		addMagnification( &magnification_ );
@@ -165,10 +171,12 @@ SceneBase* Ranking::update()
 
 		return new Title();
 	}
-	else if( (key_tracker.released.Up ||
-			 pad_tracker.leftStickUp == PadTracker::RELEASED ||
+	else if((key_tracker.released.Up ||
 			 key_tracker.released.Down ||
-			 pad_tracker.leftStickDown == PadTracker::RELEASED) && !sound_flag_ )
+			 pad_tracker.leftStickUp   == PadTracker::RELEASED ||
+			 pad_tracker.leftStickDown == PadTracker::RELEASED ||
+             pad_tracker.dpadUp        == PadTracker::RELEASED ||
+             pad_tracker.dpadDown      == PadTracker::RELEASED) && !sound_flag_ )
 	{
 		SOUND->stop( SoundId::kSelect );
 		SOUND->play( SoundId::kSelect , false );

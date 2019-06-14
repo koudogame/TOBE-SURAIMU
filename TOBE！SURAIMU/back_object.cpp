@@ -162,7 +162,7 @@ void BackObject::reset(const RECT& Trimming,
 {
 
     TaskManager* kManager = TaskManager::getInstance();
-    kManager->registerTask(this, TaskUpdate::kBackgroundUpdate);
+    kManager->registerTask(this, TaskUpdate::kBackground);
     kManager->registerTask(this, TaskDraw::kBackground);
 
 

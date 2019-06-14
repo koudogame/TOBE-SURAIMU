@@ -80,9 +80,6 @@ bool Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
 //ƒvƒŒƒCƒ„[‘Î¯
 bool Collision::collision( Player * P , Star * S )
 {
-	if( !P->isJump() && start_flag_ )
-		return false;
-
 	start_flag_ = true;
 	id_ = S->getColor();
 

@@ -25,6 +25,8 @@ public:
 
 	virtual Line* getShape(const unsigned GetNum);
 
+    virtual ObjectID getID() const override { return ObjectID::kWall; }
+
 private:
     bool created_ = false;
 

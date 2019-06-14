@@ -440,11 +440,16 @@ SceneBase* Result::setName()
 	// 選択
 	else if(
 		// 新規入力か
-		( ( key_tracker.pressed.Up ||
-			pad_tracker.leftStickUp == PadTracker::PRESSED ) ) ||
+		( (key_tracker.pressed.Up || key_tracker.pressed.Left ||
+		   pad_tracker.leftStickUp   == PadTracker::PRESSED || 
+           pad_tracker.leftStickLeft == PadTracker::PRESSED ||
+           pad_tracker.dpadUp        == PadTracker::PRESSED ||
+           pad_tracker.dpadLeft      == PadTracker::PRESSED) ) ||
 		// 一定時間の長押しで
-			( ( key_state.Up || pad_state.IsLeftThumbStickUp() ) &&
-			  ++count_frame_ >= kFrameWait ) )
+		( (key_state.Up || key_state.Left ||
+           pad_state.IsLeftThumbStickUp() ||pad_state.IsLeftThumbStickLeft()||
+           pad_state.dpad.up || pad_state.dpad.left) &&
+		   ++count_frame_ >= kFrameWait ) )
 	{
 		SOUND->stop( SoundId::kSelect );
 		SOUND->setPitch( SoundId::kSelect , 0.0F );
@@ -457,11 +462,17 @@ SceneBase* Result::setName()
 	}
 	else if(
 		// 新規入力か
-		( ( key_tracker.pressed.Down ||
-			pad_tracker.leftStickDown == PadTracker::PRESSED ) ) ||
+		( (key_tracker.pressed.Down || key_tracker.pressed.Right ||
+		   pad_tracker.leftStickDown  == PadTracker::PRESSED ||
+           pad_tracker.leftStickRight == PadTracker::PRESSED || 
+           pad_tracker.dpadDown       == PadTracker::PRESSED ||
+           pad_tracker.dpadRight      == PadTracker::PRESSED) ) ||
 		// 一定時間の長押しで
-			( ( key_state.Down || pad_state.IsLeftThumbStickDown() ) &&
-			  ++count_frame_ >= kFrameWait ) )
+		( (key_state.Down || key_state.Right ||
+           pad_state.IsLeftThumbStickDown()  ||
+           pad_state.IsLeftThumbStickRight() ||
+           pad_state.dpad.down || pad_state.dpad.right) &&
+		   ++count_frame_ >= kFrameWait ) )
 	{
 		SOUND->stop( SoundId::kSelect );
 		SOUND->setPitch( SoundId::kSelect , 0.0F );
@@ -469,7 +480,7 @@ SceneBase* Result::setName()
 
 		count_frame_ = 0U;
 		// 循環させる
-		if( ++index_char_ >= kCharNum ) { index_char_ = 0; }
+		if( ++index_char_ >= kCharNum ) { index_char_ = Text::getCharNum('A'); }
 		name_[ index_name_ ] = kCharTable[ index_char_ ];
 	}
 
@@ -512,7 +523,8 @@ SceneBase* Result::selectNext()
 	}
 	// 選択
 	else if( key_tracker.pressed.Up ||
-			 pad_tracker.leftStickUp == PadTracker::PRESSED )
+			 pad_tracker.leftStickUp == PadTracker::PRESSED ||
+             pad_tracker.dpadUp      == PadTracker::PRESSED )
 	{
 		// 上限を超えないよう制御
 		if( ( rank_ <= kRegisteredNum && select_ > kSelectSetName ) || // ランクイン時
@@ -531,7 +543,8 @@ SceneBase* Result::selectNext()
 		}
 	}
 	else if( key_tracker.pressed.Down ||
-			 pad_tracker.leftStickDown == PadTracker::PRESSED )
+			 pad_tracker.leftStickDown == PadTracker::PRESSED ||
+             pad_tracker.dpadDown )
 	{
 		// 下限を超えないよう制御
 		if( select_ < kSelectTitle )

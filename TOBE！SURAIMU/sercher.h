@@ -27,12 +27,12 @@ public:
              const ObjectID Target );
 
     virtual bool init( const Vector2& Origin, const float Radius,
-                       const ObjectID Target = kNone);
-
+                       const ObjectID Target );
+    
     virtual void destroy() override;
 
     virtual void update() override;
-    virtual void draw() override {}
+    virtual void draw() override ;
 
     void collision( ObjectBase* const Object );
 
@@ -47,6 +47,7 @@ public:
     void setTarget( const ObjectID Target ) { target_ = Target; }
 
 // ÉQÉbÉ^Å[
+    ObjectID       getID()     const override { return ObjectID::kSerch; }
     const Circle&  getRange()  const { return range_; }
     const Vector2& getOrigin() const { return getRange().position; }
           float    getRadius() const { return getRange().radius; }

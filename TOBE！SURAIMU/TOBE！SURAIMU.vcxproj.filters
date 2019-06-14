@@ -123,6 +123,9 @@
     <Filter Include="Project\Game\Object\Sercher">
       <UniqueIdentifier>{b1dbc8ed-691d-4992-8e8f-c503742b8b2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\BonusIcon">
+      <UniqueIdentifier>{3f549ffe-f27c-4d5f-afd0-46dfc1347a80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -212,9 +215,6 @@
     <ClCompile Include="csvLoader.cpp">
       <Filter>Project\Game\Others\CSV</Filter>
     </ClCompile>
-    <ClCompile Include="combo.cpp">
-      <Filter>Project\Game\Object\UI</Filter>
-    </ClCompile>
     <ClCompile Include="back_object.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
@@ -266,11 +266,23 @@
     <ClCompile Include="space.cpp">
       <Filter>Project\Game\Others\Space</Filter>
     </ClCompile>
-    <ClCompile Include="demo_player.cpp">
-      <Filter>Project\Game\Object\Player\AI</Filter>
-    </ClCompile>
     <ClCompile Include="sercher.cpp">
       <Filter>Project\Game\Object\Sercher</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_demo.cpp">
+      <Filter>Project\Game\Object\Player\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_mover.cpp">
+      <Filter>Project\Game\Object\Player\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="spin_icon.cpp">
+      <Filter>Project\Game\Object\BonusIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="reflect.cpp">
+      <Filter>Project\Game\Object\BonusIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="combo_icon.cpp">
+      <Filter>Project\Game\Object\BonusIcon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -372,9 +384,6 @@
     <ClInclude Include="freeFallParticle_container.h">
       <Filter>Project\Game\Object\Particle\FreeFall</Filter>
     </ClInclude>
-    <ClInclude Include="combo.h">
-      <Filter>Project\Game\Object\UI</Filter>
-    </ClInclude>
     <ClInclude Include="csvLoader.h">
       <Filter>Project\Game\Others\CSV</Filter>
     </ClInclude>
@@ -438,11 +447,26 @@
     <ClInclude Include="space.h">
       <Filter>Project\Game\Others\Space</Filter>
     </ClInclude>
-    <ClInclude Include="demo_player.h">
-      <Filter>Project\Game\Object\Player\AI</Filter>
-    </ClInclude>
     <ClInclude Include="sercher.h">
       <Filter>Project\Game\Object\Sercher</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_mover.h">
+      <Filter>Project\Game\Object\Player\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_demo.h">
+      <Filter>Project\Game\Object\Player\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="spin_icon.h">
+      <Filter>Project\Game\Object\BonusIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="reflect_icon.h">
+      <Filter>Project\Game\Object\BonusIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="combo_icon.h">
+      <Filter>Project\Game\Object\BonusIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="bonus_icon_base.h">
+      <Filter>Project\Game\Object\BonusIcon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

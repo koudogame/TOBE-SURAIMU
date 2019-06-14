@@ -75,7 +75,7 @@ bool RankingInEndless::init()
     if( texture_text_            == nullptr ) { return false; }
 
 
-    TaskManager::getInstance()->registerTask(this, TaskUpdate::kRankingUpdate);
+    TaskManager::getInstance()->registerTask(this, TaskUpdate::kRanking);
     TaskManager::getInstance()->registerTask(this, TaskDraw::kObject);
 
 

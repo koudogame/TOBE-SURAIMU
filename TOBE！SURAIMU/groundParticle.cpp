@@ -16,7 +16,7 @@ GroundParticle::~GroundParticle()
 bool GroundParticle::init( const Vector2 & Posit , const RECT & Triming , const float Angle ,const float Scale)
 {
 	//タスクへの追加
-	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticleUpdate );
+	TaskManager::getInstance()->registerTask( this , TaskUpdate::kParticle );
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 	//テクスチャの読み込み
 	texture_ = TextureLoder::getInstance()->load( L"Texture/Particle.png" );

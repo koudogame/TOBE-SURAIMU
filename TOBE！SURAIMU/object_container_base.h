@@ -1,7 +1,7 @@
 
-#pragma once
-
 // ”Âê ‰·÷
+
+#pragma once
 
 #include "release.h"
 
@@ -88,7 +88,7 @@ protected:
 		return free_obj;
 	}
 
-protected:
+// ƒƒ“ƒo•Ï”
 	std::list<T*> active_list_;
 	std::vector<T*> free_list_;
 };

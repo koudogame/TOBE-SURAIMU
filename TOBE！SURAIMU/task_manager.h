@@ -5,14 +5,14 @@ class ObjectBase;
 // 更新タスクID
 enum class TaskUpdate
 {
-    kBackgroundUpdate,
-	kStarUpdate,
-	kPlayerUpdate,
-    kSercherUpdate,
-	kWallUpdate,
-	kParticleUpdate,
-    kComboUpdate,
-    kRankingUpdate,
+    kBackground,
+	kStar,
+	kPlayer,
+    kSercher,
+	kWall,
+	kParticle,
+    kBonusIcon,
+    kRanking,
 };
 // 描画タスクID
 enum class TaskDraw

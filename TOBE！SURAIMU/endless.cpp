@@ -22,7 +22,6 @@
 #include "back_object_container.h"
 #include "star_container.h"
 #include "player.h"
-#include "demo_player.h"
 #include "wall.h"
 
 #include "title.h"
@@ -30,6 +29,10 @@
 #include "result.h"
 
 #include "Sound.h"
+
+
+#include "ai_demo.h"
+#include "ai_mover.h"
 
 using KeyTracker = Keyboard::KeyboardStateTracker;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -96,7 +99,7 @@ bool Endless::init()
 
     star_container_ = new StarContainer();
 
-    player_         = new DemoPlayer();
+    player_         = new AIMover();
 
     wall_           = new Wall();
 
@@ -133,7 +136,7 @@ bool Endless::init()
 	float gravity    = file.getNumber_f(5, 1);
 	float speed      = file.getNumber_f(6, 1);
 	float rl_boost   = file.getNumber_f(7, 1);
-	if (dynamic_cast<DemoPlayer*>(player_)->init(position, 0) == false)
+	if (dynamic_cast<AIMover*>(player_)->init(position, 0) == false)
 	{
 		return false;
 	}
@@ -226,6 +229,7 @@ SceneBase* Endless::start()
     KeyTracker key = Key::getInstance()->getTracker();
     PadTracker pad = Pad::getInstance()->getTracker();
 
+    Space::getInstance()->collision();
 
     // É|Å[ÉYâÊñ Ç÷
     if( key.pressed.P || pad.start == PadTracker::PRESSED )
@@ -251,7 +255,6 @@ SceneBase* Endless::start()
 		    player_->onStartFlag();
         }
 	}
-    Space::getInstance()->collision();
 
 	return this;
 }
@@ -329,7 +332,6 @@ SceneBase* Endless::play()
 
 
 	ranking_->setScore( player_->getScore()->getScore() );
-
 
 
 	// è’ìÀèàóù
