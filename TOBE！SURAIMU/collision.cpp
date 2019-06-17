@@ -1,138 +1,140 @@
 #include "collision.h"
 #include "calc.h"
 
-Collision::Collision()
+Collision::Collision ()
 {}
 
 
-Collision::~Collision()
+Collision::~Collision ()
 {}
 
 //----------------------------------------------------------------------------------------
 //外部公開関数
 
-void Collision::init()
+void Collision::init ()
 {
 	onece_flag_ = false;
 	start_flag_ = false;
 }
 
 //当たり判定
-bool Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
+bool Collision::collision ( ObjectBase * Obj1, ObjectBase * Obj2 )
 {
-	switch (Obj1->getID())
+	switch ( Obj1->getID () )
 	{
-	case ObjectID::kPlayer:
-		switch (Obj2->getID())
-		{
 		case ObjectID::kPlayer:
-			return collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Player*>(Obj2));
+			switch ( Obj2->getID () )
+			{
+				case ObjectID::kPlayer:
+					return collision ( dynamic_cast< Player* >( Obj1 ), dynamic_cast< Player* >( Obj2 ) );
+
+				case ObjectID::kStar:
+					return collision ( dynamic_cast< Player* >( Obj1 ), dynamic_cast< Star* >( Obj2 ) );
+
+				case ObjectID::kWall:
+					return collision ( dynamic_cast< Player* >( Obj1 ), dynamic_cast< Wall* >( Obj2 ) );
+
+				default:
+					return false;
+			}
+			break;
 
 		case ObjectID::kStar:
-			return collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Star*>(Obj2));
+			switch ( Obj2->getID () )
+			{
+				case ObjectID::kPlayer:
+					return collision ( dynamic_cast< Player* >( Obj2 ), dynamic_cast< Star* >( Obj1 ) );
+
+				case ObjectID::kSerch:
+					return collision ( dynamic_cast< Sercher* >( Obj2 ), dynamic_cast< Star* >( Obj1 ) );
+				default:
+					return false;
+			}
+			break;
 
 		case ObjectID::kWall:
-			return collision(dynamic_cast<Player*>(Obj1), dynamic_cast<Wall*>(Obj2));
+			switch ( Obj2->getID () )
+			{
+				case ObjectID::kPlayer:
+					return collision ( dynamic_cast< Player* >( Obj2 ), dynamic_cast< Wall* >( Obj1 ) );
 
-		default:
-			return false;
-		}
-		break;
-
-	case ObjectID::kStar:
-		switch (Obj2->getID())
-		{
-		case ObjectID::kPlayer:
-			return collision(dynamic_cast<Player*>(Obj2), dynamic_cast<Star*>(Obj1));
+				default:
+					return false;
+			}
+			break;
 
 		case ObjectID::kSerch:
-			return collision(dynamic_cast<Sercher*>(Obj2), dynamic_cast<Star*>(Obj1));
-		default:
-			return false;
-		}
-		break;
-
-	case ObjectID::kWall:
-		switch (Obj2->getID())
-		{
-		case ObjectID::kPlayer:
-			return collision(dynamic_cast<Player*>(Obj2), dynamic_cast<Wall*>(Obj1));
+			switch ( Obj2->getID () )
+			{
+				case ObjectID::kStar:
+					return collision ( dynamic_cast< Sercher* >( Obj1 ), dynamic_cast< Star* >( Obj2 ) );
+			}
 
 		default:
 			return false;
-		}
-		break;
-
-	case ObjectID::kSerch:
-		switch (Obj2->getID())
-		{
-		case ObjectID::kStar:
-			return collision(dynamic_cast<Sercher*>(Obj1), dynamic_cast<Star*>(Obj2));
-		}
-
-	default:
-		return false;
 	}
 
 	return false;
 }
 
 //プレイヤー対星
-bool Collision::collision( Player * P , Star * S )
+bool Collision::collision ( Player * P, Star * S )
 {
-	start_flag_ = true;
-	id_ = S->getColor();
+	if ( !P->isJump () && start_flag_ )
+		return true;
+
+	id_ = S->getColor ();
 
 	bool hit_flag = false;
-	for( int i = 0; i < kStarLineNum; i++ )
+	for ( int i = 0; i < kStarLineNum; i++ )
 	{
 		//円と辺の始点との判定
-		if( judgment( P->getShape() , &Circle( S->getShape( i )->start , 0.0F ) ) )
+		if ( judgment ( P->getShape (), &Circle ( S->getShape ( i )->start, 0.0F ) ) )
 		{
-			if( !P->isCollision() )
+			if ( !P->isCollision () )
 			{
 				return false;
 			}
 		}
 	}
 
-	for( int i = 0; i < kStarLineNum; i++ )
+	for ( int i = 0; i < kStarLineNum; i++ )
 	{
 		//線と線の当たり判定
-		if( judgment( P->getMove() , S->getShape( i ) ) )
+		if ( judgment ( P->getMove (), S->getShape ( i ) ) )
 		{
-			if( P->getOwner() != S )
+			if ( P->getOwner () != S )
 			{
-				P->setGround( S->getShape( i ) );
-				P->revision( crossPoint( P->getMove() , S->getShape( i ) ) , id_ );
+				P->setGround ( S->getShape ( i ) );
+				P->revision ( crossPoint ( P->getMove (), S->getShape ( i ) ), id_ );
 				hit_flag = true;
 			}
 			else
 			{
-				if( !P->isCollision() )
+				if ( !P->isCollision () )
 				{
-					P->setGround( S->getShape( i ) );
-					P->revision( crossPoint( P->getMove() , S->getShape( i ) ) , id_ );
+					P->setGround ( S->getShape ( i ) );
+					P->revision ( crossPoint ( P->getMove (), S->getShape ( i ) ), id_ );
 					hit_flag = true;
 				}
 
 			}
 		}
 		//円と線の当たり判定
-		else if( judgment( P->getShape() , S->getShape( i ) ) )
+		else if ( judgment ( P->getShape (), S->getShape ( i ) ) )
 		{
-			if( P->getOwner() != S )
+			if ( P->getOwner () != S )
 			{
-				P->setGround( S->getShape( i ) );
-				P->revision( crossPoint( P->getShape() , S->getShape( i ) ) , id_ );
+				P->setGround ( S->getShape ( i ) );
+				P->revision ( crossPoint ( P->getShape (), S->getShape ( i ) ), id_ );
 				hit_flag = true;
 			}
 			else
 			{
-				if( !P->isCollision() )
+				if ( !P->isCollision () )
 				{
-					P->setGround( S->getShape( i ) );
-					P->revision( crossPoint( P->getShape() , S->getShape( i ) ) , id_ );
+					P->setGround ( S->getShape ( i ) );
+					P->revision ( crossPoint ( P->getShape (), S->getShape ( i ) ), id_ );
 					hit_flag = true;
 				}
 
@@ -141,26 +143,28 @@ bool Collision::collision( Player * P , Star * S )
 	}
 
 	//判定があったら
-	if( hit_flag )
+	if ( hit_flag )
 	{
-		if( P->getOwner() != S )
+		if ( P->getOwner () != S )
 		{
-			P->collision( S );
-			S->collision( P );
+			P->collision ( S );
+			S->collision ( P );
 			onece_flag_ = true;
 		}
 		else
 		{
-			if( !P->isCollision() )
+			if ( !P->isCollision () )
 			{
-				P->collision( S );
-				if( !onece_flag_ )
+				P->collision ( S );
+				if ( !onece_flag_ )
 				{
-					S->collision( P );
+					S->collision ( P );
 					onece_flag_ = true;
 				}
 			}
 		}
+
+		start_flag_ = true;
 		return true;
 	}
 
@@ -168,18 +172,18 @@ bool Collision::collision( Player * P , Star * S )
 }
 
 //プレイヤー対壁
-bool Collision::collision( Player * P , Wall * W )
+bool Collision::collision ( Player * P, Wall * W )
 {
-	if( !P->isJump() )
+	if ( !P->isJump () )
 		return false;
-	for( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 2; i++ )
 	{
-		if( judgment(P->getShape() , W->getShape( i ) ) || judgment( P->getMove() , W->getShape( i ) ))
+		if ( judgment ( P->getShape (), W->getShape ( i ) ) || judgment ( P->getMove (), W->getShape ( i ) ) )
 		{
 			//円と線の当たり判定
-			P->setGround( W->getShape( i ) );
-			P->revision( crossPoint( P->getShape() , W->getShape( i ) ) , NameSpaceParticle::ParticleID::kWall );
-			P->collision( W );
+			P->setGround ( W->getShape ( i ) );
+			P->revision ( crossPoint ( P->getShape (), W->getShape ( i ) ), NameSpaceParticle::ParticleID::kWall );
+			P->collision ( W );
 			onece_flag_ = false;
 			break;
 			return true;
@@ -190,26 +194,26 @@ bool Collision::collision( Player * P , Wall * W )
 }
 
 //プレイヤー対プレイヤー
-bool Collision::collision( Player * P1, Player * P2)
+bool Collision::collision ( Player * P1, Player * P2 )
 {
-	if( !P1->isJump() || !P2->isJump() || P1 == P2 )
+	if ( !P1->isJump () || !P2->isJump () || P1 == P2 )
 		return true;
 
 	//円と円の当たり判定
-	if( judgment( P1->getShape() , P2->getShape() ) )
+	if ( judgment ( P1->getShape (), P2->getShape () ) )
 	{
-		P1->collision( P2 );
-		P2->collision( P1 );
+		P1->collision ( P2 );
+		P2->collision ( P1 );
 	}
 	return true;
 }
 
-bool Collision::collision(Sercher * SRS, Star * S)
+bool Collision::collision ( Sercher * SRS, Star * S )
 {
-	for (int i = 0; i < kStarLineNum; i++)
-		if (judgment(&SRS->getRange(), S->getShape(i)))
+	for ( int i = 0; i < kStarLineNum; i++ )
+		if ( judgment ( &SRS->getRange (), S->getShape ( i ) ) )
 		{
-			SRS->collision(S);
+			SRS->collision ( S );
 			return true;
 		}
 
@@ -227,17 +231,17 @@ bool Collision::collision(Sercher * SRS, Star * S)
 //---当たり判定---
 
 //円と円の当たり判定
-bool Collision::judgment( const Circle * const C1 , const Circle * const C2 )
+bool Collision::judgment ( const Circle * const C1, const Circle * const C2 )
 {
 	//2点間の距離が2つの円の半径より小さい場合HIT
-	if( Calc::magnitude( C1->position , C2->position ) < ( C1->radius + C2->radius ) )
+	if ( Calc::magnitude ( C1->position, C2->position ) < ( C1->radius + C2->radius ) )
 		return true;
 
 	return false;
 }
 
 //円と線の当たり判定
-bool Collision::judgment( const Circle * const C, const Line * const L)
+bool Collision::judgment ( const Circle * const C, const Line * const L )
 {
 	//円と線分の判定
 	//判定用のベクトルを生成
@@ -247,22 +251,22 @@ bool Collision::judgment( const Circle * const C, const Line * const L)
 		L->end - L->start
 	};
 
-	float innr = Calc::inner( checker[ 0 ] , checker[ 1 ] );
-	float k = ( innr / Calc::magnitude( checker[ 1 ] ) ) / Calc::magnitude( checker[ 1 ] );
+	float innr = Calc::inner ( checker[ 0 ], checker[ 1 ] );
+	float k = ( innr / Calc::magnitude ( checker[ 1 ] ) ) / Calc::magnitude ( checker[ 1 ] );
 
-	if( k > 1.0F || k < 0.0F )
+	if ( k > 1.0F || k < 0.0F )
 		return false;
 
 	Vector2 per = ( checker[ 1 ] * k ) - checker[ 0 ];
 
-	if( Calc::magnitude( per ) < C->radius )
+	if ( Calc::magnitude ( per ) < C->radius )
 		return true;
 
 	return false;
 }
 
 //線と線の当たり判定
-bool Collision::judgment( const Line * const L1,  const Line * const L2)
+bool Collision::judgment ( const Line * const L1, const Line * const L2 )
 {
 	//対象が判定範囲内かどうかのチェック
 	Vector2 check_start[ 3 ]
@@ -279,8 +283,8 @@ bool Collision::judgment( const Line * const L1,  const Line * const L2)
 		L1->start - L1->end
 	};
 
-	if( Calc::cross( check_start[ 2 ] , check_start[ 0 ] ) *Calc::cross( check_start[ 2 ] , check_start[ 1 ] ) > 0 &&
-		Calc::cross( check_end[ 2 ] , check_end[ 0 ] ) *Calc::cross( check_end[ 2 ] , check_end[ 1 ] ) > 0 )
+	if ( Calc::cross ( check_start[ 2 ], check_start[ 0 ] ) *Calc::cross ( check_start[ 2 ], check_start[ 1 ] ) > 0 &&
+		 Calc::cross ( check_end[ 2 ], check_end[ 0 ] ) *Calc::cross ( check_end[ 2 ], check_end[ 1 ] ) > 0 )
 		return false;
 
 	//対象と交点が存在するかチェック
@@ -291,7 +295,7 @@ bool Collision::judgment( const Line * const L1,  const Line * const L2)
 		L2->end - L2->start
 	};
 
-	if( Calc::cross( check[ 2 ] , check[ 0 ] ) * Calc::cross( check[ 2 ] , check[ 1 ] ) < 0 )
+	if ( Calc::cross ( check[ 2 ], check[ 0 ] ) * Calc::cross ( check[ 2 ], check[ 1 ] ) < 0 )
 		return true;
 
 	return false;
@@ -300,7 +304,7 @@ bool Collision::judgment( const Line * const L1,  const Line * const L2)
 
 //---交点を求める---
 
-Vector2 Collision::crossPoint( const Circle * const C , const Line * const L )
+Vector2 Collision::crossPoint ( const Circle * const C, const Line * const L )
 {
 	//円と線分
 	//判定用のベクトルを生成
@@ -310,13 +314,13 @@ Vector2 Collision::crossPoint( const Circle * const C , const Line * const L )
 		L->end - L->start
 	};
 
-	float innr = Calc::inner( checker[ 0 ] , checker[ 1 ] );
-	float k = ( innr / Calc::magnitude( checker[ 1 ] ) ) / Calc::magnitude( checker[ 1 ] );
+	float innr = Calc::inner ( checker[ 0 ], checker[ 1 ] );
+	float k = ( innr / Calc::magnitude ( checker[ 1 ] ) ) / Calc::magnitude ( checker[ 1 ] );
 
 	return L->start + checker[ 1 ] * k;
 }
 
-Vector2 Collision::crossPoint( const Line * const L1, const Line * const L2)
+Vector2 Collision::crossPoint ( const Line * const L1, const Line * const L2 )
 {
 	//分子
 	float mol[ 2 ];
@@ -328,25 +332,25 @@ Vector2 Collision::crossPoint( const Line * const L1, const Line * const L2)
 	deno[ 1 ] = L2->end.x - L2->start.x;
 
 	//yの変化量( 分子 )
-	mol[0] = L1->end.y - L1->start.y;
-	mol[1] = L2->end.y - L2->start.y;
+	mol[ 0 ] = L1->end.y - L1->start.y;
+	mol[ 1 ] = L2->end.y - L2->start.y;
 
 	//xの変化量がない場合
-	if( deno[ 0 ] == 0 )
+	if ( deno[ 0 ] == 0 )
 	{
 		float tilt = mol[ 1 ] / deno[ 1 ];
 
 		float y = tilt * ( L1->start.x - L2->start.x ) + L2->start.y;
 
-		return Vector2( L1->start.x , y );
+		return Vector2 ( L1->start.x, y );
 	}
-	else if( deno[ 1 ] == 0 )
+	else if ( deno[ 1 ] == 0 )
 	{
 		float tilt = mol[ 0 ] / deno[ 0 ];
 
 		float y = tilt * ( L2->start.x - L1->start.x ) + L1->start.y;
 
-		return Vector2( L2->start.x , y );
+		return Vector2 ( L2->start.x, y );
 	}
 
 	//交点を求める
