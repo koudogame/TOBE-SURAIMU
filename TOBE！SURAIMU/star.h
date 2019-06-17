@@ -30,6 +30,8 @@ public:
 	bool isAlive() override;
 	//自身のID返却
 	inline ObjectID getID() const override { return ObjectID::kStar; }
+	//スクロール分を加算
+	inline void setMove(const float Over) override {position_.y += Over;}
 
 public:
 	//外部利用関数

@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "textureLoder.h"
 #include "ranking_manager.h"
+#include "collision.h"
 
 //-----------------------
 //Å‰‚ÌƒV[ƒ“
@@ -105,7 +106,6 @@ bool Game::update()
             kBackobjectDrawDepth);
 
     }
-  
 
 
 	SceneBase* temp = scene_->update();
@@ -119,6 +119,7 @@ bool Game::update()
 	{
 		scene_->destroy();
 		temp->init();
+		Collision::getInstance()->init();
 		scene_.reset( temp );
 	}
 
