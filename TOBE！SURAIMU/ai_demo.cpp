@@ -35,7 +35,6 @@ bool AIDemo::init( const Vector2& Position, const int PlayerNo )
 {
     Player::init( Position , PlayerNo);
 
-    is_jumping_ = false;
     sercher_ = new Sercher();
     if( sercher_->init( 
         Vector2{ Position.x, Position.y - kSerchRangeRadius },
@@ -85,57 +84,46 @@ void AIDemo::update()
 // 入力処理
 void AIDemo::inputjump()
 {
-    if( !flag_.test(kJump) )
+    direction_id_ = Direction::kFlont;
+    purpose_ = nullptr;
+
+    // 目標を設定
+    const std::deque<ObjectBase*>& kTargets = sercher_->getList();
+    const size_t kTargetsNum = kTargets.size();
+    if( purpose_ == nullptr &&
+        kTargetsNum > 0 )
     {
-        if( is_jumping_ )
+        for( size_t i = 0U; i < kTargetsNum && purpose_ == nullptr; ++i )
         {
-            is_jumping_ = false;
-            purpose_ = nullptr;
-        }
-
-        direction_id_ = Direction::kFlont;
-
-        // 目標を設定
-        const std::deque<ObjectBase*>& kTargets = sercher_->getList();
-        const size_t kTargetsNum = kTargets.size();
-        if( purpose_ == nullptr &&
-            kTargetsNum > 0 )
-        {
-            for( size_t i = 0U; i < kTargetsNum && purpose_ == nullptr; ++i )
+            purpose_ = kTargets[ rand() % kTargetsNum ];
+            if( purpose_ == owner_ ||
+                purpose_->getPosition().y > getPosition().y ) 
             {
-                purpose_ = kTargets[ rand() % kTargetsNum ];
-                if( purpose_ == owner_ ||
-                    purpose_->getPosition().y > getPosition().y ) 
-                {
-                    purpose_ = nullptr;
-                }
+                purpose_ = nullptr;
             }
         }
+    }
 
-        if( purpose_ != nullptr ) {
-            //ジャンプ
-            if (!died_flag_) {
-                float angle = Calc::angle( purpose_->getPosition() - getPosition() );
-                angle -= base_angle_ + XM_PI;
-                angle *= kToDegree;
-                if( angle >= kJumpAngleMin && angle <= kJumpAngleMax )
-                {
-                    is_jumping_ = true;
-                    SOUND->stop(SoundId::kJump);
-                    SOUND->play(SoundId::kJump, false);
-                    flag_.set(Flag::kJump);
-                    flag_.set(Flag::kStarCollision);
-                    flag_.reset(Flag::kParticle);
-                    flag_.reset(Flag::kOnce);
-                    direction_id_ = Direction::kFlay;
-                    particle_time_ = 0;
-                    now_amount_ = 0.0F;
-                    base_angle_ += XM_PI;
-                    ground_ = &kGround;
-                    prev_jump_moveamount_ = 0;
-                    score_.resetRotate();
-                }
-            }
+    if( purpose_ != nullptr && !died_flag_ ) {
+        //ジャンプ
+        float angle = Calc::angle( purpose_->getPosition() - getPosition() );
+        angle -= base_angle_ + XM_PI;
+        angle *= kToDegree;
+        if( angle >= kJumpAngleMin && angle <= kJumpAngleMax )
+        {
+            SOUND->stop(SoundId::kJump);
+            SOUND->play(SoundId::kJump, false);
+            flag_.set(Flag::kJump);
+            flag_.set(Flag::kStarCollision);
+            flag_.reset(Flag::kParticle);
+            flag_.reset(Flag::kOnce);
+            direction_id_ = Direction::kFlay;
+            particle_time_ = 0;
+            now_amount_ = 0.0F;
+            base_angle_ += XM_PI;
+            ground_ = &kGround;
+            prev_jump_moveamount_ = 0;
+            score_.resetRotate();
         }
     }
 }
