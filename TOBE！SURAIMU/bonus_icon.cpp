@@ -6,6 +6,8 @@
 #include "task_manager.h"
 
 /*===========================================================================*/
+constexpr long kWidth = 64L;
+constexpr long kHeight = 64L;
 constexpr int kAnimationFlipFrame =16;
 
 
@@ -25,12 +27,12 @@ BonusIcon::~BonusIcon()
 bool BonusIcon::init( const wchar_t* const TextureFileName,
                       const Vector2&       Position )
 {
+    destroy();
+
+
     // テクスチャ読み込み
-    if (texture_ == nullptr)
-    {
-        texture_ = TextureLoder::getInstance()->load( TextureFileName );
-        if (texture_ == nullptr) { return false; }
-    }
+    texture_ = TextureLoder::getInstance()->load( TextureFileName );
+    if (texture_ == nullptr) { return false; }
 
     // タスク登録
     TaskManager* const kTaskManager = TaskManager::getInstance();
@@ -39,6 +41,8 @@ bool BonusIcon::init( const wchar_t* const TextureFileName,
 
     // メンバ初期化
     position_ = Position;
+    anim_frame_ = 0;
+    anim_count_ = 0;
 
 
     return true;
@@ -78,9 +82,12 @@ void BonusIcon::update()
 // 描画処理
 void BonusIcon::draw()
 {
+    RECT trimming { 0L, 0L, kWidth, kHeight };
+
     Sprite::getInstance()->draw(
         texture_,
-        position_ );
+        position_, 
+        &trimming);
 }
 
 
