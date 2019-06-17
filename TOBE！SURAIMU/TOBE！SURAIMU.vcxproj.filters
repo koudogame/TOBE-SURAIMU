@@ -275,13 +275,7 @@
     <ClCompile Include="ai_mover.cpp">
       <Filter>Project\Game\Object\AI</Filter>
     </ClCompile>
-    <ClCompile Include="spin_icon.cpp">
-      <Filter>Project\Game\Object\BonusIcon</Filter>
-    </ClCompile>
-    <ClCompile Include="reflect.cpp">
-      <Filter>Project\Game\Object\BonusIcon</Filter>
-    </ClCompile>
-    <ClCompile Include="combo_icon.cpp">
+    <ClCompile Include="bonus_icon.cpp">
       <Filter>Project\Game\Object\BonusIcon</Filter>
     </ClCompile>
   </ItemGroup>
@@ -456,16 +450,7 @@
     <ClInclude Include="ai_demo.h">
       <Filter>Project\Game\Object\AI</Filter>
     </ClInclude>
-    <ClInclude Include="spin_icon.h">
-      <Filter>Project\Game\Object\BonusIcon</Filter>
-    </ClInclude>
-    <ClInclude Include="reflect_icon.h">
-      <Filter>Project\Game\Object\BonusIcon</Filter>
-    </ClInclude>
-    <ClInclude Include="combo_icon.h">
-      <Filter>Project\Game\Object\BonusIcon</Filter>
-    </ClInclude>
-    <ClInclude Include="bonus_icon_base.h">
+    <ClInclude Include="bonus_icon.h">
       <Filter>Project\Game\Object\BonusIcon</Filter>
     </ClInclude>
   </ItemGroup>

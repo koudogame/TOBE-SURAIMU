@@ -18,13 +18,12 @@ public:
 
     bool init( const Vector2& Position, const int PlayerNo = 0 ) override;
     void destroy() override;
-    void update() override;
+    void update()  override;
 
 private:
     void inputjump() override;
     void inputmove() override;
 
-    bool is_jumping_        = false;
     Sercher *sercher_       = nullptr;
     ObjectBase *purpose_    = nullptr;
 };

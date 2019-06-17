@@ -91,7 +91,6 @@ void AIMover::inputjump()
     const float kAngle = TODEGREES(base_angle_ + XM_PI);
 
     direction_id_ = Direction::kFlont;
-        
     purpose_ = nullptr;
 
     //ƒWƒƒƒ“ƒv                           /*Œë·*/
