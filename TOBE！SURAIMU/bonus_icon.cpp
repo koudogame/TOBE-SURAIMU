@@ -6,9 +6,9 @@
 #include "task_manager.h"
 
 /*===========================================================================*/
-constexpr long kWidth = 64L;
-constexpr long kHeight = 64L;
-constexpr int kAnimationFlipFrame =16;
+constexpr long kWidth = 80L;
+constexpr long kHeight = 80L;
+constexpr int kAnimationFlipFrame = 16;
 
 
 /*===========================================================================*/
@@ -69,13 +69,6 @@ void BonusIcon::update()
 {
     // アニメーション処理
     animation();
-
-
-    // 画面外へ行ったら、タスク登録解除
-    if (position_.y > getWindowHeight<float>())
-    {
-        TaskManager::getInstance()->unregisterObject(this);
-    }
 }
 
 /*===========================================================================*/
