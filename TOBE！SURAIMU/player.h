@@ -10,7 +10,7 @@
 #include "scoring.h"
 
 
-class Player :
+class Player:
 	public ObjectBase
 {
 public:
@@ -21,7 +21,7 @@ public:
 	//継承関数
 	//初期化
 	//引数...初期位置:最大移動量:入力量の追加量:重力:左右の移動量
-	virtual bool init(const Vector2& Posit, const int PlayerNo);
+	virtual bool init( const Vector2& Posit, const int PlayerNo );
 	//破棄
 	virtual void destroy()override;
 	//更新
@@ -48,6 +48,8 @@ public:
 	inline void setGround( Line* const Ground ) { died_flag_ ? ground_ = &kGround : ground_ = Ground; }
 	//判定を取っていいのかのフラグ
 	inline bool isCollision() { return flag_.test( Flag::kStarCollision ); }
+	inline bool isWallCollision() { return flag_.test( Flag::kWallCollision ); }
+	inline void resetWallCollisionFlag() { flag_.reset( Flag::kWallCollision ); }
 	//飛んだかのフラグ
 	inline bool isJump() { return flag_.test( Flag::kJump ); }
 	//現在の定在する星野返却
@@ -84,13 +86,14 @@ protected:
 	//処理系
 	//メンバ変数
 	Line move_vector_;		//移動ベクトル
-    ID3D11ShaderResourceView* texture_; //テクスチャ
+	ID3D11ShaderResourceView* texture_; //テクスチャ
 
 	//フラグ
 	enum Flag
 	{
 		kJump,
 		kStarCollision,
+		kWallCollision,
 		kParticle,
 		kTechnique,
 		kWallParticle,
@@ -100,6 +103,7 @@ protected:
 	std::bitset<kFlag> flag_;		//フラグ
 	float now_amount_;				//入力量
 	float ditrection_angle_;		//テクスチャの角度
+	float particle_alpha_;
 	Line* ground_;					//地面
 	ObjectBase* owner_;				//現住する星
 	Circle myshape_;				//自分の形
@@ -119,6 +123,7 @@ protected:
 	int player_no_;
 
 	float base_angle_;
+	float revision_angle_;
 	Vector2 movement_;
 	Vector2 offset_;
 

@@ -174,21 +174,26 @@ bool Collision::collision ( Player * P, Star * S )
 //ƒvƒŒƒCƒ„[‘Î•Ç
 bool Collision::collision ( Player * P, Wall * W )
 {
-	if ( !P->isJump () )
+	if ( !P->isJump ())
 		return false;
+
 	for ( int i = 0; i < 2; i++ )
 	{
 		if ( judgment ( P->getShape (), W->getShape ( i ) ) || judgment ( P->getMove (), W->getShape ( i ) ) )
 		{
-			//‰~‚Æü‚Ì“–‚½‚è”»’è
-			P->setGround ( W->getShape ( i ) );
-			P->revision ( crossPoint ( P->getShape (), W->getShape ( i ) ), NameSpaceParticle::ParticleID::kWall );
-			P->collision ( W );
-			onece_flag_ = false;
-			break;
+			if ( !P->isWallCollision() )
+			{
+				//‰~‚Æü‚Ì“–‚½‚è”»’è
+				P->setGround( W->getShape( i ) );
+				P->revision( crossPoint( P->getShape(), W->getShape( i ) ), NameSpaceParticle::ParticleID::kWall );
+				P->collision( W );
+				onece_flag_ = false;
+			}
 			return true;
 		}
 	}
+
+	P->resetWallCollisionFlag();
 
 	return false;
 }

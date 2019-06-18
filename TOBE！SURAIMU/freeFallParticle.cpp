@@ -18,7 +18,7 @@ FreeFallParticle::~FreeFallParticle()
 {}
 
 //初期化
-bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming )
+bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming,float Alpha )
 {
 	//テクスチャの読み込み
 	texture_ = TextureLoder::getInstance()->load( L"Texture/Particle.png" );
@@ -30,7 +30,7 @@ bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming )
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 
 	position_ = Posit;
-	alpha_ = 1.0F;
+	alpha_ = Alpha;
 	turn_ = rand() % 2 ? true : false;
 	rotate_ = rand() % kStarWhileAngle;
 	triming_ = Triming;

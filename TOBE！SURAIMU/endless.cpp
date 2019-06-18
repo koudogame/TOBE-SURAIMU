@@ -99,7 +99,7 @@ bool Endless::init()
 
     star_container_ = new StarContainer();
 
-    player_         = new AIMover();
+    player_         = new Player();
 
     wall_           = new Wall();
 
@@ -136,7 +136,7 @@ bool Endless::init()
 	float gravity    = file.getNumber_f(5, 1);
 	float speed      = file.getNumber_f(6, 1);
 	float rl_boost   = file.getNumber_f(7, 1);
-	if (dynamic_cast<AIMover*>(player_)->init(position, 0) == false)
+	if (dynamic_cast<Player*>(player_)->init(position, 0) == false)
 	{
 		return false;
 	}

@@ -10,7 +10,7 @@ FreeFallParticleContainer::~FreeFallParticleContainer()
 {}
 
 //パーティクルの追加
-FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Position, NameSpaceParticle::ParticleID ID )
+FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Position, NameSpaceParticle::ParticleID ID ,float Alpha)
 {
 	//空コンテナを取得
 	FreeFallParticle* s_particle = getFreeObjAndInsert();
@@ -22,7 +22,7 @@ FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Posit
 	trim.right = trim.left + kTextureSize;
 
 	//初期化
-	s_particle->init( Position , trim);
+	s_particle->init( Position, trim, Alpha );
 	return s_particle;
 }
 

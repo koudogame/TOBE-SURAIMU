@@ -16,7 +16,8 @@ public:
 	//パーティクルの追加
 	//引数...描画位置:パーティクルID
 	FreeFallParticle* addParticle( const Vector2& Position ,
-								   NameSpaceParticle::ParticleID ID );
+								   NameSpaceParticle::ParticleID ID,
+								   float Alpha = 1.0F);
 	//移動量の追加
 	//引数...移動量
 	void setMove( const float Over );

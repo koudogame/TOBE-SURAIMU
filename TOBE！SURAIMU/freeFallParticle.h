@@ -15,7 +15,7 @@ public:
 public:
 	//‰Šú‰»
 	//ˆø”...•`‰æˆÊ’u:Ø‚èæ‚è”ÍˆÍ
-	bool init(const Vector2& Posit ,const RECT& Triming);
+	bool init( const Vector2& Posit, const RECT& Triming, float Alpha );
 	//”jŠü
 	void destroy() override;
 	//XV
