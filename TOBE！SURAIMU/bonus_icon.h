@@ -5,6 +5,10 @@
 //-----------------------------------------------------------------------------
 // ボーナスアイコン
 //-----------------------------------------------------------------------------
+// --説明--
+// init関数 : 初期化処理
+// -TextureFileName = テクスチャのファイルパス
+// -Position        = 初期座標
 class BonusIcon :
     public ObjectBase
 {
@@ -20,11 +24,13 @@ public:
     virtual void draw() override;
 
     virtual bool isAlive() { return (position_.y < getWindowHeight<float>()); }
-        // 画面外で false を返却
 
 // セッター
+
+    virtual void setPosition( const Vector2& Dist )     { position_ = Dist; }
     virtual void setMove( const float Disp )            { position_.y += Disp;}
 // ゲッター
+
     virtual const Vector2& getPosition() const override { return position_; }
 
 protected:
@@ -32,7 +38,6 @@ protected:
 
     ID3D11ShaderResourceView* texture_ = nullptr;
     Vector2 position_ { 0.0F, 0.0F };
-
     int anim_frame_ = 0;
     int anim_count_ = 0;
 };

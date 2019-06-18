@@ -60,5 +60,4 @@ private:
     float climb_ = 0.0F;
 
 	ID3D11ShaderResourceView* description_;
-
 };
