@@ -14,9 +14,10 @@
 constexpr float kToDegrees = 180.0F / XM_PI;
 constexpr float kToRadians = XM_PI / 180.0F;
 constexpr float kSerchRange   = 300.0F;
-constexpr float kJumpAngleMin = 45.0F;
-constexpr float kJumpAngleMax = 135.0F;
-constexpr float kSpeed = 5.0F;
+constexpr float kJumpAngleMin = 60.0F;
+constexpr float kJumpAngleMax = 120.0F;
+constexpr float kMaxOffset = 3.0F;
+constexpr float kSpeed = 0.1F;
 constexpr int kBottomOff = 1;
 constexpr int kBottomOn  = 3;
 
@@ -44,6 +45,7 @@ bool AIMover::init( const Vector2& Position,    // 初期座標
         return false;
     }
 
+    old_owner_ = nullptr;
     purpose_ = nullptr;
     jump_angle_ = getRandJumpAngle();
 
@@ -67,37 +69,37 @@ void AIMover::destroy()
 // 更新処理
 void AIMover::update()
 {
+    if( purpose_ != nullptr &&
+        purpose_->getPosition().y > getWindowHeight<float>())
+    {
+        purpose_ = nullptr;
+    }
+
+
     Player::update();
 
     sercher_->setOrigin( myshape_.position );
     sercher_->update();
-
-    if( flag_.test(kJump) )
-    {
-        auto purposes = sercher_->getList();
-        const size_t purposes_num = purposes.size();
-
-        if (purposes_num > 0U) {
-            purpose_ = purposes[rand() % purposes_num];
-        }
-    }
 }
-
 
 /*===========================================================================*/
 // 入力処理
 void AIMover::inputjump()
 {
-    const float kAngle = TODEGREES(base_angle_ + XM_PI);
+    const float kAngle = TODEGREES(revision_angle_ + XM_PI);
 
     direction_id_ = Direction::kFlont;
-    purpose_ = nullptr;
 
-    //ジャンプ                           /*誤差*/
+        
+
+    //ジャンプのタイミング                 /*誤差*/
     if( std::abs(kAngle - jump_angle_) <= 5.0F &&
         !died_flag_)
     {
-        SOUND->stop(SoundId::kJump);
+        old_owner_ = owner_;
+
+        // ジャンプ
+        SOUND->stop ( SoundId::kJump );
         SOUND->play(SoundId::kJump, false);
         flag_.set(Flag::kJump);
         flag_.set(Flag::kStarCollision);
@@ -106,9 +108,10 @@ void AIMover::inputjump()
         direction_id_ = Direction::kFlay;
         particle_time_ = 0;
         now_amount_ = 0.0F;
-        base_angle_ += XM_PI;
+        base_angle_ = revision_angle_ + XM_PI;
         ground_ = &kGround;
         prev_jump_moveamount_ = 0;
+        particle_alpha_ = 1.0F;
         score_.resetRotate();
 
         // 次のジャンプ角度を設定する
@@ -118,19 +121,35 @@ void AIMover::inputjump()
 
 void AIMover::inputmove()
 {
-    Vector2 kPurPosi = purpose_->getPosition();
-    if (kPurPosi.y > getWindowHeight<float>())
+    // 目的の設定
+    const auto kPurposes = sercher_->getList();
+    const size_t kPurposesNum = kPurposes.size();
+        
+
+    for( size_t i = 0; i < kPurposesNum && purpose_ == nullptr; ++i )
     {
-        purpose_ = nullptr;
-        return;
+        purpose_ = kPurposes[ rand() % kPurposesNum ];
+
+        // 前回のオーナーか、
+        // 自分より下にあるスターは目的として認識しない
+        if( purpose_ == old_owner_ ||
+            purpose_->getPosition().y > myshape_.position.y )
+        {
+            purpose_ = nullptr;
+        }
     }
 
-    const float kDistance = Calc::magnitude(kPurPosi - myshape_.position);
 
-    // 目的地との距離が大きいかつ、自分が上にいたら下移動
-    if (kDistance > 300.0F)
+    if( purpose_ != nullptr )
     {
-        if (kPurPosi.y > myshape_.position.y)
+        // 目的が画面外へ出たら、リセット
+        Vector2 kPurPosi = purpose_->getPosition();
+
+
+        // 目的との座標のずれ(x座標)がないかつ、
+        // 目的が下にあったら下移動
+        if( std::abs(purpose_->getPosition().x - myshape_.position.x) < 30.0F &&
+            purpose_->getPosition().y > myshape_.position.y )
         {
             bottom_input_ = kBottomOn;
             score_.addDown();
@@ -141,19 +160,31 @@ void AIMover::inputmove()
         {
             bottom_input_ = kBottomOff;
         }
-    }
-    // 目的地との距離が小さいかつ、横に離れていたら横移動
-    else
-    {
-        // 右移動
-        if ((kPurPosi.x - myshape_.position.x) > 20.0F)
+
+        // 目的地との距離が小さいかつ、横に離れていたら横移動
+        if( std::abs(purpose_->getPosition().y - myshape_.position.y) < 200.0F )
         {
-            base_angle_ -= TORADIANS(kSpeed);
-        }
-        // 左移動
-        else if ((kPurPosi.x - myshape_.position.x) < 20.0F)
-        {
-            base_angle_ += TORADIANS(kSpeed);
+            const float kAngle = std::atan2( -movement_.y, movement_.x );
+            Vector2 temp;
+
+            // 右移動
+            if ((kPurPosi.x - myshape_.position.x) > 20.0F)
+            {
+                if (std::cos(kAngle - XM_PIDIV2) > 0)
+                    temp = Vector2(std::cos(kAngle - XM_PIDIV2), -std::sin(kAngle - XM_PIDIV2))*kSpeed;
+                else
+                    temp = -Vector2(std::cos(kAngle - XM_PIDIV2), -std::sin(kAngle - XM_PIDIV2))*kSpeed;
+            }
+            // 左移動
+            else if ((kPurPosi.x - myshape_.position.x) < -20.0F)
+            {
+                if (std::cos(kAngle + XM_PIDIV2) < 0)
+                    temp = Vector2(std::cos(kAngle + XM_PIDIV2), -std::sin(kAngle - XM_PIDIV2))*kSpeed;
+                else
+                    temp = -Vector2(std::cos(kAngle + XM_PIDIV2), -std::sin(kAngle + XM_PIDIV2))*kSpeed;
+            }
+            if (Vector2(offset_ + temp).Length() < kMaxOffset)
+                offset_ += temp;
         }
     }
 }

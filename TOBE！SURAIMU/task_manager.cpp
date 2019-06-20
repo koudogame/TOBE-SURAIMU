@@ -42,7 +42,7 @@ void TaskManager::allUpdate()
 {
     if( pause_ == false )
     {
-        execute(&update_list_, &ObjectBase::update);
+         execute(&update_list_, &ObjectBase::update);
     }
 }
 // 描画タスクの実行
@@ -91,7 +91,7 @@ void TaskManager::removeTask(
 		if (itr->second == Object)
 		{
 			List->erase(itr);
-			return;
+			break;
 		}
 	}
 }

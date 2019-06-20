@@ -33,6 +33,7 @@
 
 #include "ai_demo.h"
 #include "ai_mover.h"
+#include "bonus_icon.h"
 
 using KeyTracker = Keyboard::KeyboardStateTracker;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -99,7 +100,7 @@ bool Endless::init()
 
     star_container_ = new StarContainer();
 
-    player_         = new Player();
+    player_         = new AIMover();
 
     wall_           = new Wall();
 
@@ -136,7 +137,7 @@ bool Endless::init()
 	float gravity    = file.getNumber_f(5, 1);
 	float speed      = file.getNumber_f(6, 1);
 	float rl_boost   = file.getNumber_f(7, 1);
-	if (dynamic_cast<Player*>(player_)->init(position, 0) == false)
+	if (dynamic_cast<AIMover*>(player_)->init(position, 0) == false)
 	{
 		return false;
 	}
@@ -173,6 +174,13 @@ void Endless::destroy()
     if( created_ == false ) { return; }
     created_ = false;
 
+    for( auto itr = icon_.begin(), end = icon_.end(); itr != end; )
+    {
+        (*itr)->destroy();
+        safe_delete( *itr );
+
+        itr = icon_.erase( itr );
+    }
 
 	wall_->destroy();                  safe_delete(wall_);
 
@@ -191,6 +199,28 @@ void Endless::destroy()
 // 更新関数
 SceneBase* Endless::update()
 {
+
+    for( auto itr = icon_.begin(), end = icon_.end(); itr != end; )
+    {
+        if( (*itr)->isAlive() == false )
+        {
+            (*itr)->destroy();
+            safe_delete( *itr );
+            itr = icon_.erase( itr );
+        }
+        else
+        {
+            ++itr;
+        }
+    }
+
+    if( !(rand() % 100) )
+    {
+        BonusIcon* icon = new BonusIcon;
+        icon->init(L"Texture/bonus_icon.png", player_->getPosition());
+        icon_.push_back(icon);
+    }
+
 	return (this->*update_)();
 }
 
@@ -290,7 +320,10 @@ SceneBase* Endless::play()
 
 	// 座標調整( スクロール )
 	float kOver = scroll_threshold_ - player_->getPosition().y;
-
+for( auto e : icon_ )
+        {
+            e->setMove( 1.0F );
+        }
 	if( kOver <= 0.0F )
 		kOver = 0.0F;
 
@@ -299,6 +332,7 @@ SceneBase* Endless::play()
         player_->addScore( kOver );
         climb_ += kOver;
 	    adjustObjectPosition( kOver );
+        
 
         // レベルアップ
         if( (level_ < kLevelMax) && (climb_ >= kLevelTable[level_ + 1U][kHeight]) )
