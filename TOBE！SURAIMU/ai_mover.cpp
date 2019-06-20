@@ -14,8 +14,8 @@
 constexpr float kToDegrees = 180.0F / XM_PI;
 constexpr float kToRadians = XM_PI / 180.0F;
 constexpr float kSerchRange   = 300.0F;
-constexpr float kJumpAngleMin = 60.0F;
-constexpr float kJumpAngleMax = 120.0F;
+constexpr float kJumpAngleMin = 70.0F;
+constexpr float kJumpAngleMax = 110.0F;
 constexpr float kMaxOffset = 3.0F;
 constexpr float kSpeed = 0.1F;
 constexpr int kBottomOff = 1;
@@ -69,8 +69,8 @@ void AIMover::destroy()
 void AIMover::update()
 {
     if( purpose_ != nullptr &&
-        (purpose_->getPosition().y > getWindowHeight<float>() ||
-         purpose_ == owner_) )
+        ((purpose_->isAlive() == false) ||
+         (purpose_ == old_owner_)) )
     {
         purpose_ = nullptr;
     }
@@ -87,10 +87,10 @@ void AIMover::update()
     // 下向き
     else
     {
+        old_owner_ = nullptr;
         purpose_ = nullptr;
         sercher_->setOrigin( {myshape_.position.x, myshape_.position.y + kSerchRange} );
     }
-    sercher_->update();
 }
 
 /*===========================================================================*/
@@ -108,6 +108,7 @@ void AIMover::inputjump()
         !died_flag_)
     {
         // ジャンプ
+        old_owner_ = owner_;
         SOUND->stop ( SoundId::kJump );
         SOUND->play(SoundId::kJump, false);
         flag_.set(Flag::kJump);
@@ -137,16 +138,13 @@ void AIMover::inputmove()
 #if 1
     float dist_to_pur = kSerchRange;
     float temp = 0.0F;
-    for( size_t i = 0; i < kPurposesNum; ++i )
+    for( size_t i = 0; i < kPurposesNum && purpose_ == nullptr; ++i )
     {
-        if( kPurposes[i] != owner_ )
+        temp = Calc::magnitude(kPurposes[i]->getPosition() - myshape_.position);
+        if( temp < dist_to_pur )
         {
-            temp = Calc::magnitude(kPurposes[i]->getPosition() - myshape_.position);
-            if( dist_to_pur > temp )
-            {
-                purpose_ = kPurposes[i];
-                dist_to_pur = temp;
-            }
+            purpose_ = kPurposes[i];
+            dist_to_pur = temp;
         }
     }
 #else
@@ -184,7 +182,7 @@ void AIMover::inputmove()
         }
 
         // 目的地との距離が小さいかつ、横に離れていたら横移動
-        if( std::abs(purpose_->getPosition().y - myshape_.position.y) < 200.0F )
+        if( std::abs(purpose_->getPosition().y - myshape_.position.y) < 300.0F )
         {
             const float kAngle = std::atan2( -movement_.y, movement_.x );
             Vector2 temp;
