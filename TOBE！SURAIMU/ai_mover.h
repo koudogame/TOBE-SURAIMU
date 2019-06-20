@@ -27,7 +27,6 @@ private:
     float getRandJumpAngle();
 
     Sercher *sercher_      = nullptr;
-    ObjectBase *old_owner_ = nullptr;
     ObjectBase *purpose_   = nullptr;
     float jump_angle_ = 0.0F;
 };
