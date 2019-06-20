@@ -154,6 +154,7 @@ void Player::update()
 	if ( move_power - kGravity < 0 )
 	{
 		flag_.reset( Flag::kStarCollision );
+		score_.resetCombo();
 	}
 
 	movement_ += ( Vector2( std::cos( base_angle_ ), -std::sin( base_angle_ ) ) * move_power );
@@ -330,6 +331,8 @@ void Player::collision( Player * PlayerObj )
 		SOUND->setPitch( SoundId::kCllision, 0.0F );
 		SOUND->play( SoundId::kCllision, false );
 	}
+	base_angle_ = XM_PI - base_angle_;
+		offset_.x = -offset_.x;
 }
 
 //‰ñ“]Šp‚ð•Ô‹p
