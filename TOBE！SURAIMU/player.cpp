@@ -161,7 +161,10 @@ void Player::update()
 
 
 	if ( ground_ != &kGround )
+	{
 		revision( ground_->start + ( ground_->end - ground_->start ) * dis_, NameSpaceParticle::ParticleID::kNonParticle );
+		base_angle_ = revision_angle_;
+	}
 	else
 		movement_ += Vector2( 0.0F, kGravity * bottom_input_ );
 
@@ -171,7 +174,10 @@ void Player::update()
 		inputmove();
 
 	if ( !flag_.test( Flag::kJump ) && owner_ != nullptr )
+	{
 		revision( ground_->start + ( ground_->end - ground_->start ) * dis_, NameSpaceParticle::ParticleID::kNonParticle );
+		base_angle_ = revision_angle_;
+	}
 
 	myshape_.position += movement_ + offset_;
 
@@ -256,7 +262,7 @@ void Player::revision( const Vector2& CrossPoint, NameSpaceParticle::ParticleID 
 		addGroundParticle( ID );
 		flag_.set( Flag::kParticle );
 	}
-	myshape_.position += Vector2( cos( base_angle_ + XM_PI ), -sin( base_angle_ + XM_PI ) ) * myshape_.radius;
+	myshape_.position += Vector2( cos( revision_angle_ + XM_PI ), -sin( revision_angle_ + XM_PI ) ) * myshape_.radius;
 	move_vector_.end = myshape_.position;
 }
 
@@ -310,7 +316,10 @@ void Player::collision( Wall * WallObj )
 	setGround( &kGround );
 
 	if ( !flag_.test( Flag::kWallCollision ) )
+	{
 		base_angle_ = XM_PI - base_angle_;
+		offset_.x *= -1.0F;
+	}
 
 	flag_.set( Flag::kWallCollision );
 
@@ -332,7 +341,7 @@ void Player::collision( Player * PlayerObj )
 		SOUND->play( SoundId::kCllision, false );
 	}
 	base_angle_ = XM_PI - base_angle_;
-		offset_.x = -offset_.x;
+	offset_.x = -offset_.x;
 }
 
 //‰ñ“]Šp‚ð•Ô‹p
