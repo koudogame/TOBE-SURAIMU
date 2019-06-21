@@ -96,8 +96,8 @@ void AIDemo::inputjump()
         for( size_t i = 0U; i < kTargetsNum && purpose_ == nullptr; ++i )
         {
             purpose_ = kTargets[ rand() % kTargetsNum ];
-            if( purpose_ == owner_ ||
-                purpose_->getPosition().y > getPosition().y ) 
+            if( (purpose_ == owner_) ||
+                (purpose_->getPosition().y > getPosition().y) ) 
             {
                 purpose_ = nullptr;
             }
@@ -107,10 +107,11 @@ void AIDemo::inputjump()
     if( purpose_ != nullptr && !died_flag_ ) {
         //ジャンプ
         float angle = Calc::angle( purpose_->getPosition() - getPosition() );
-        angle -= base_angle_ + XM_PI;
+        angle -= revision_angle_ + XM_PI;
         angle *= kToDegree;
         if( angle >= kJumpAngleMin && angle <= kJumpAngleMax )
         {
+            // ジャンプ
             SOUND->stop(SoundId::kJump);
             SOUND->play(SoundId::kJump, false);
             flag_.set(Flag::kJump);
@@ -120,9 +121,10 @@ void AIDemo::inputjump()
             direction_id_ = Direction::kFlay;
             particle_time_ = 0;
             now_amount_ = 0.0F;
-            base_angle_ += XM_PI;
+            base_angle_ = revision_angle_ + XM_PI;
             ground_ = &kGround;
             prev_jump_moveamount_ = 0;
+            particle_alpha_ = 1.0F;
             score_.resetRotate();
         }
     }

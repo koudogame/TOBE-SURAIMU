@@ -312,7 +312,8 @@ SceneBase* Endless::play()
 	if (player_->isAlive() == false)
 	{
 		SOUND->stop( SoundId::kPlay );
-		return new Result(ranking_->getRank(), *player_->getScore());
+		//return new Result(ranking_->getRank(), *player_->getScore());
+        return new Endless();
 	}
 
 	//コンテナのアップデート

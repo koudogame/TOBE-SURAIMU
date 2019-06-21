@@ -14,8 +14,8 @@
 constexpr float kToDegrees = 180.0F / XM_PI;
 constexpr float kToRadians = XM_PI / 180.0F;
 constexpr float kSerchRange   = 300.0F;
-constexpr float kJumpAngleMin = 60.0F;
-constexpr float kJumpAngleMax = 120.0F;
+constexpr float kJumpAngleMin = 70.0F;
+constexpr float kJumpAngleMax = 110.0F;
 constexpr float kMaxOffset = 3.0F;
 constexpr float kSpeed = 0.1F;
 constexpr int kBottomOff = 1;
@@ -45,7 +45,6 @@ bool AIMover::init( const Vector2& Position,    // 初期座標
         return false;
     }
 
-    old_owner_ = nullptr;
     purpose_ = nullptr;
     jump_angle_ = getRandJumpAngle();
 
@@ -70,16 +69,28 @@ void AIMover::destroy()
 void AIMover::update()
 {
     if( purpose_ != nullptr &&
-        purpose_->getPosition().y > getWindowHeight<float>())
+        ((purpose_->isAlive() == false) ||
+         (purpose_ == old_owner_)) )
     {
         purpose_ = nullptr;
     }
 
-
     Player::update();
 
-    sercher_->setOrigin( myshape_.position );
-    sercher_->update();
+    float angle = std::atan2( -movement_.y, movement_.x );
+
+    // 上向き
+    if( TODEGREES(angle) < 180.0F )
+    {
+        sercher_->setOrigin( myshape_.position );
+    }
+    // 下向き
+    else
+    {
+        old_owner_ = nullptr;
+        purpose_ = nullptr;
+        sercher_->setOrigin( {myshape_.position.x, myshape_.position.y + kSerchRange} );
+    }
 }
 
 /*===========================================================================*/
@@ -96,9 +107,8 @@ void AIMover::inputjump()
     if( std::abs(kAngle - jump_angle_) <= 5.0F &&
         !died_flag_)
     {
-        old_owner_ = owner_;
-
         // ジャンプ
+        old_owner_ = owner_;
         SOUND->stop ( SoundId::kJump );
         SOUND->play(SoundId::kJump, false);
         flag_.set(Flag::kJump);
@@ -125,31 +135,41 @@ void AIMover::inputmove()
     const auto kPurposes = sercher_->getList();
     const size_t kPurposesNum = kPurposes.size();
         
-
+#if 1
+    float dist_to_pur = kSerchRange;
+    float temp = 0.0F;
+    for( size_t i = 0; i < kPurposesNum && purpose_ == nullptr; ++i )
+    {
+        temp = Calc::magnitude(kPurposes[i]->getPosition() - myshape_.position);
+        if( temp < dist_to_pur )
+        {
+            purpose_ = kPurposes[i];
+            dist_to_pur = temp;
+        }
+    }
+#else
     for( size_t i = 0; i < kPurposesNum && purpose_ == nullptr; ++i )
     {
         purpose_ = kPurposes[ rand() % kPurposesNum ];
 
-        // 前回のオーナーか、
-        // 自分より下にあるスターは目的として認識しない
-        if( purpose_ == old_owner_ ||
-            purpose_->getPosition().y > myshape_.position.y )
+        // 前回のオーナーは目的としない
+        if( purpose_ == owner_ )
         {
-            purpose_ = nullptr;
+             purpose_ = nullptr;
         }
     }
+#endif
 
 
     if( purpose_ != nullptr )
     {
-        // 目的が画面外へ出たら、リセット
         Vector2 kPurPosi = purpose_->getPosition();
 
 
         // 目的との座標のずれ(x座標)がないかつ、
         // 目的が下にあったら下移動
-        if( std::abs(purpose_->getPosition().x - myshape_.position.x) < 30.0F &&
-            purpose_->getPosition().y > myshape_.position.y )
+        if( (std::abs(purpose_->getPosition().x - myshape_.position.x) < 30.0F) &&
+            (purpose_->getPosition().y > myshape_.position.y) )
         {
             bottom_input_ = kBottomOn;
             score_.addDown();
@@ -162,7 +182,7 @@ void AIMover::inputmove()
         }
 
         // 目的地との距離が小さいかつ、横に離れていたら横移動
-        if( std::abs(purpose_->getPosition().y - myshape_.position.y) < 200.0F )
+        if( std::abs(purpose_->getPosition().y - myshape_.position.y) < 300.0F )
         {
             const float kAngle = std::atan2( -movement_.y, movement_.x );
             Vector2 temp;
