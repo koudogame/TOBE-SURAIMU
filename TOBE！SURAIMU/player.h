@@ -50,6 +50,8 @@ public:
 	inline bool isCollision() { return flag_.test( Flag::kStarCollision ); }
 	inline bool isWallCollision() { return flag_.test( Flag::kWallCollision ); }
 	inline void resetWallCollisionFlag() { flag_.reset( Flag::kWallCollision ); }
+	inline bool isPlayerCollision() { return flag_.test( Flag::kPlayerCollision ); }
+	inline void resetPlayerCollisionFlag() { flag_.reset( Flag::kPlayerCollision ); }
 	//”ò‚ñ‚¾‚©‚Ìƒtƒ‰ƒO
 	inline bool isJump() { return flag_.test( Flag::kJump ); }
 	//Œ»İ‚Ì’èİ‚·‚é¯–ì•Ô‹p
@@ -94,6 +96,7 @@ protected:
 		kJump,
 		kStarCollision,
 		kWallCollision,
+		kPlayerCollision,
 		kParticle,
 		kTechnique,
 		kWallParticle,

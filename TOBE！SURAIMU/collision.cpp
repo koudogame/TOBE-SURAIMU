@@ -223,10 +223,21 @@ bool Collision::collision( Player * P1, Player * P2 )
 	//‰~‚Æ‰~‚Ì“–‚½‚è”»’è
 	if ( judgment( P1->getShape(), P2->getShape() ) )
 	{
-		P1->collision( P2 );
-		P2->collision( P1 );
+		if ( !P1->isPlayerCollision() || !P2->isPlayerCollision() )
+		{
+			P1->resetPlayerCollisionFlag();
+			P2->resetPlayerCollisionFlag();
+			P1->collision( P2 );
+			P2->collision( P1 );
+		}
+
+		return true;
 	}
-	return true;
+
+	P1->resetPlayerCollisionFlag();
+	P2->resetPlayerCollisionFlag();
+
+	return false;
 }
 
 bool Collision::collision( Sercher * SRS, Star * S )

@@ -340,8 +340,14 @@ void Player::collision( Player * PlayerObj )
 		SOUND->setPitch( SoundId::kCllision, 0.0F );
 		SOUND->play( SoundId::kCllision, false );
 	}
+
 	base_angle_ = XM_PI - base_angle_;
-	offset_.x = -offset_.x;
+	offset_.x *= -1.5F;
+
+	flag_.set( Flag::kPlayerCollision );
+
+	if ( std::abs( offset_.x ) > kMaxOffset )
+		offset_.x = std::copysign( kMaxOffset, offset_.x );
 }
 
 //‰ñ“]Šp‚ð•Ô‹p
