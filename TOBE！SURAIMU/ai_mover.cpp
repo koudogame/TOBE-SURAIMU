@@ -16,8 +16,8 @@ constexpr float kWindowWidth = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
 constexpr float kToDegrees = 180.0F / XM_PI;
 constexpr float kToRadians = XM_PI / 180.0F;
-constexpr float kSerchRange   = 500.0F;
-constexpr float kDeltaJumpAngle = 20.0F;
+constexpr float kSerchRange   = 300.0F;
+constexpr float kDeltaJumpAngle = 2.0F;
 constexpr float kMaxOffset = 3.0F;
 constexpr float kSpeed = 0.1F;
 constexpr int kBottomOff = 1;
@@ -42,7 +42,10 @@ bool AIMover::init( const Vector2& Position,    // 初期座標
     Player::init( Position, PlayerNo );
 
     sercher_ = new Sercher();
-    if( sercher_->init(Position, kSerchRange, ObjectID::kStar) == false )
+    if( sercher_->init(
+        {kWindowWidth / 2.0F, kWindowHeight / 2.0F},
+        kWindowHeight / 2.0F,
+        ObjectID::kStar) == false )
     {
         return false;
     }
@@ -80,44 +83,16 @@ void AIMover::update()
     }
 
     Player::update();
+
+    if( !flag_.test( kJump ) &&
+        jumping_ )
+    {
+        jumping_ = false;
+        purpose_ = nullptr;
+    }
+
     setPurpose();
     setJumpAngle();
-
-    float angle = std::atan2( -movement_.y, movement_.x );
-
-
-    // ジャンプ中のスター検索範囲設定
-    if( flag_.test( kJump ) )
-    {
-        // 上向き
-        if( TODEGREES(angle) < 180.0F )
-        {
-            sercher_->setOrigin( myshape_.position );
-        }
-        // 下向き
-        else
-        {
-            sercher_->setOrigin( {myshape_.position.x, myshape_.position.y + kSerchRange} );
-        }
-    }
-    // 接地中のスター検索範囲設定
-    else
-    {
-        // 着地した瞬間に、目的をリセットする
-        if( jumping_ )
-        {
-            jumping_ = false;
-            purpose_ = nullptr;
-        }
-
-        float angle = revision_angle_ + XM_PI;
-
-        sercher_->setOrigin(
-            {
-              myshape_.position.x + std::cos( angle ) * kSerchRange,
-              myshape_.position.y - std::sin( angle ) * kSerchRange
-            } );
-    }
 }
 
 /*===========================================================================*/
@@ -126,13 +101,14 @@ void AIMover::inputjump()
 {
     auto judge = [this]()->bool
     {
-        float angle = TODEGREES(revision_angle_ + XM_PI);
+        float angle = TODEGREES(revision_angle_ + XM_PI);   // ジャンプ時進行方向
+        if( angle < 0.0F ) { angle += 360.0F; }
+
         // 画面内にいる
         if( myshape_.position.y < kWindowHeight )
         {
             if( (std::abs(jump_angle_ - angle) <= kDeltaJumpAngle) && // 目的との角度が誤差内
-                (angle >= 30.0F && angle <= 150.0F) &&                // 上向き
-                !(rand() % 7)                                         // n分の1の確立
+                ((myshape_.position.y >= 500.0F) || !(rand() % 2))    // 一定のライン以下か、n分の1の確立
               )
             {
                 return true;
@@ -141,6 +117,7 @@ void AIMover::inputjump()
         // 画面外へ出てしまっている( 焦る )
         else
         {
+            // 一定の角度にいたら飛ぶ
             if( angle >= 70.0F && angle <= 110.0F )
             {
                 return true;
@@ -243,7 +220,7 @@ void AIMover::setPurpose()
             float angle = TODEGREES( std::atan2(-movement_.y, movement_.x) );
 
             // 上向き
-            if( angle < 180.0F )
+            if( angle >= 0.0F && angle <= 180.0F )
             {
                 if( Target == owner_ )
                 {
@@ -282,7 +259,7 @@ void AIMover::setPurpose()
     }
     else
     {
-        dist_to_pur = kSerchRange;
+        dist_to_pur = sercher_->getRadius() * 2.0F;
     }
 
     float temp = 0.0F;
@@ -292,7 +269,10 @@ void AIMover::setPurpose()
             check( kPurposes[i]) )
         {
         temp = magnitude(kPurposes[i]->getPosition() - myshape_.position);
-        if( temp < dist_to_pur )
+
+        // ここらへんの条件ラムダに入れようかな
+        if( temp < dist_to_pur ||
+            kPurposes[i]->getPosition().y < purpose_->getPosition().y)
         {
             purpose_ = kPurposes[i];
             dist_to_pur = temp;
@@ -305,8 +285,9 @@ void AIMover::setJumpAngle()
 {
     if( purpose_ != nullptr )
     {
-        jump_angle_ = angle( purpose_->getPosition() - myshape_.position );
-        jump_angle_ = TODEGREES( jump_angle_ );
+        Vector2 disp = purpose_->getPosition() - myshape_.position;
+        jump_angle_ = TODEGREES( atan2(-disp.y, disp.x) );
+        if( jump_angle_ < 0.0F ) { jump_angle_ += 360.0F; }
     }
 }
  
