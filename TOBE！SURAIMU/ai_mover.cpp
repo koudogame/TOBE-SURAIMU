@@ -209,6 +209,7 @@ void AIMover::setPurpose()
 {
     auto check = [this]( ObjectBase* Target )->bool
     {
+    // 消去法
         if( Target->isAlive() == false )
         {
             return false;
@@ -246,37 +247,42 @@ void AIMover::setPurpose()
             }
         }
 
+        if( purpose_ != nullptr )
+        {
+        // 現在の目的よりも遠いか、下にあるか
+            const Vector2 kPurposePosition = purpose_->getPosition();
+            const Vector2 kTargetPosition  = Target->getPosition();
+            float disp_pur = magnitude( kPurposePosition - myshape_.position );
+            float disp_tar = magnitude( kTargetPosition  - myshape_.position );
+            if( disp_tar > disp_pur || kTargetPosition.y > kPurposePosition.y )
+            {
+                return false;
+            }
+        }
+
         return true;
     };
 
 
+    // 下向きの時、目的が届かない位置にあったらリセット
+    if( purpose_ )
+    {
+        float angle = TODEGREES( std::atan2(-movement_.y, movement_.x) );
+        if( (angle <= 0.0F || angle >= 180.0F) && 
+            purpose_->getPosition().y < myshape_.position.y )
+        {
+            purpose_ = nullptr;
+        }
+    }
+
+
     const auto kPurposes = sercher_->getList();
     const size_t kPurposesNum = kPurposes.size();
-    float dist_to_pur;
-    if( purpose_ != nullptr )
-    {
-        dist_to_pur = magnitude( purpose_->getPosition() - myshape_.position);
-    }
-    else
-    {
-        dist_to_pur = sercher_->getRadius() * 2.0F;
-    }
-
-    float temp = 0.0F;
     for (size_t i = 0; i < kPurposesNum; ++i)
     {
-        if( kPurposes[i]->getPosition().y < kWindowHeight &&
-            check( kPurposes[i]) )
-        {
-        temp = magnitude(kPurposes[i]->getPosition() - myshape_.position);
-
-        // ここらへんの条件ラムダに入れようかな
-        if( temp < dist_to_pur ||
-            kPurposes[i]->getPosition().y < purpose_->getPosition().y)
+        if( check( kPurposes[i]) )
         {
             purpose_ = kPurposes[i];
-            dist_to_pur = temp;
-        }
         }
     }
 }

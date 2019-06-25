@@ -48,10 +48,11 @@ public:
 
 // ÉQÉbÉ^Å[
     ObjectID       getID()     const override { return ObjectID::kSerch; }
-    const Circle&  getRange()  const { return range_; }
-    const Vector2& getOrigin() const { return getRange().position; }
-          float    getRadius() const { return getRange().radius; }
-          ObjectID getTarget() const { return target_; }
+    const Circle&  getRange()  const          { return range_; }
+    const Vector2& getOrigin() const          { return getRange().position; }
+          float    getRadius() const          { return getRange().radius; }
+          float    getDiameter() const        { return getRange().radius * 2.0F; } 
+          ObjectID getTarget() const          { return target_; }
     const std::deque<ObjectBase*>& getList() const { return collision_list_; }
 
 private:
