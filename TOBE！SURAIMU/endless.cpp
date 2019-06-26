@@ -102,7 +102,7 @@ bool Endless::init()
 
     star_container_ = new StarContainer();
 
-    player_         = new Player();
+    player_         = new AIMover();
 
     wall_           = new Wall();
 
