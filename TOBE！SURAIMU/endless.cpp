@@ -63,6 +63,8 @@ constexpr float kLevelTable[][2] = {                            // ƒŒƒxƒ‹ƒe[ƒuƒ
     {  10000.0F, kWindowHeight * 0.75F }
 };
 
+constexpr Vector2 kPlayerPosition { 600.0F, 565.0F };
+
 constexpr Vector2 kInitStarPosi[]   = {                         // ‰ŠúƒXƒ^[ˆÊ’u
     {640.0F, 600.0F},
     {816.0F, 297.0F},
@@ -127,17 +129,7 @@ bool Endless::init()
 	}
 
 	// ƒvƒŒƒCƒ„[‰Šú‰»
-	CsvLoader file(L"State/player_state.csv");
-	Vector2 position;
-    position.x       = file.getNumber_f(0, 1);
-    position.y       = file.getNumber_f(1, 1);
-	float jump       = file.getNumber_f(2, 1);
-	float add_vol    = file.getNumber_f(3, 1);
-	float decay      = file.getNumber_f(4, 1);
-	float gravity    = file.getNumber_f(5, 1);
-	float speed      = file.getNumber_f(6, 1);
-	float rl_boost   = file.getNumber_f(7, 1);
-	if (dynamic_cast<Player*>(player_)->init(position, 0) == false)
+	if (dynamic_cast<AIMover*>(player_)->init(kPlayerPosition, 0) == false)
 	{
 		return false;
 	}

@@ -24,10 +24,11 @@ private:
     void inputjump() override;
     void inputmove() override;
 
-    float getRandJumpAngle();
+    void setPurpose();
+    void setJumpAngle();
 
     Sercher *sercher_      = nullptr;
-    ObjectBase *old_owner_ = nullptr;
     ObjectBase *purpose_   = nullptr;
+    bool jumping_ = false;
     float jump_angle_ = 0.0F;
 };

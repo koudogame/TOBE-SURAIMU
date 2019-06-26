@@ -9,7 +9,7 @@
 /*===========================================================================*/
 constexpr unsigned kMask        = 0x03; // マスク用
 
-constexpr RECT kRange{ 0L, -840L, 1280L, 1000L };
+constexpr RECT kRange{ -200L, -840L, 1380L, 1220L };
 constexpr unsigned kDivideLevel = 3U;   // 空間分割レベル
 constexpr unsigned kDivideNum   = 4U;   // 分割数
 const unsigned kBlockNum =              // 空間ブロック数
