@@ -65,6 +65,7 @@ private:
 	float spin_;		    //回転速度
 	float size_;	        //大きさ
 	float rate_;	        //回転倍率
+	float spining_angle_;
 	Line myshape_[ kStarLineNum ];		//自分の形
 
 	std::unique_ptr<FreeFallParticleContainer> s_particle_container_;		//落下パーティクルコンテナ

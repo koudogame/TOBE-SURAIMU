@@ -121,6 +121,7 @@ protected:
 	float collision_combo_pitch_;	//星の移動時のサウンドのピッチ
 	ID3D11ShaderResourceView* guide_;	//ガイドのテクスチャ
 	float guide_alpha_;					//ガイドのアルファ値
+	float over_;
 
 	Scoring score_;	//スコア
 	int player_no_;

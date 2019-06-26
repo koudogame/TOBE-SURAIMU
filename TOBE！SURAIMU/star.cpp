@@ -20,7 +20,7 @@ const float kMaxSpin[ 3 ] =			//最大回転量
 	6.0F,
 	9.0F
 };
-const int kParticleTime = 3;		//パーティクルの生成時間
+const int kParticleTime = 2;		//パーティクルの生成時間
 const float kFallSpeed = 2.0F;		//星の落下速度
 const Vector3 kStarInformation[ 3 ] = {	//星の切り取り情報( x,y,size )
 	Vector3( 0.0F,0.0F,150.0F ),
@@ -183,6 +183,7 @@ void Star::collision( Player* P )
 		spin_ = static_cast< float >( std::copysign( kMaxSpin[ id_ ] , spin_ ) );
 
 	particle_time_ = 0;
+	spining_angle_ = 0.0F;
 }
 
 void Star::collision(AIDemo * P)
@@ -230,11 +231,18 @@ void Star::addFreeFallParticle()
 	{
 		if( fall_ >= 1.0F )
 		{
+			Vector2 create_position = position_ + Vector2( std::cos( XMConvertToRadians( spining_angle_ ) ), -std::sin( XMConvertToRadians( spining_angle_ ) ) ) * ( size_ / 5 * 2.0F);
+			spining_angle_ += std::copysign( 74.5F, spin_ );
 			//1フレームに1つの頂点から生成
-			s_particle_container_.get()->addParticle( myshape_[ create_point_++ ].start , id_ );
+			s_particle_container_.get()->addParticle( create_position, id_, 100 );
 			particle_time_ = 0;
 			if( create_point_ >= kStarLineNum )
 				create_point_ = 0;
+
+			if ( create_point_ > 5 )
+			{
+				create_point_ = 0;
+			}
 		}
 	}
 }

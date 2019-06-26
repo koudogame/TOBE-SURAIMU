@@ -15,7 +15,7 @@ public:
 public:
 	//初期化
 	//引数...描画位置:切り取り範囲
-	bool init( const Vector2& Posit, const RECT& Triming, float Alpha );
+	bool init( const Vector2& Posit, const RECT& Triming, float LifeTime, bool RotateFlag, float Angle );
 	//破棄
 	void destroy() override;
 	//更新
@@ -24,6 +24,9 @@ public:
 	void draw() override;
 	//生存確認
 	bool isAlive() override;
+	//スクロールの加算
+
+	void setMove(const float Over)override;
 
 private:
     ID3D11ShaderResourceView* texture_; // テクスチャ
@@ -32,8 +35,10 @@ private:
 	float alpha_;	    //アルファ値
 	float angle_;	    //角度
 	float move_amount_;	//移動量
-	int rotate_;		//回転角
-	bool turn_;		    //回転方向
+	float rotate_;		//回転角
+	int turn_;		    //回転方向
 	float fall_;
+	float life_time_;
+	float max_life_;
 };
 

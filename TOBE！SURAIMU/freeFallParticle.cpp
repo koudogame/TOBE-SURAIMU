@@ -3,12 +3,11 @@
 #include "sprite.h"
 #include "task_manager.h"
 
-const float kMinFall = 0.0F;		//最小落下速度
 const int kTextureSize = 64;		//テクスチャサイズ
 const int kRotate = 5;				//回転角
 const int kStarWhileAngle = 72;		//星の頂点の角度の差
-const float kFall = 2.0F;
-const float kFalldecay = 0.05F;
+const float kFall = 1.0F;
+const float kFalldecay = 0.01F;
 
 FreeFallParticle::FreeFallParticle()
 {}
@@ -18,7 +17,7 @@ FreeFallParticle::~FreeFallParticle()
 {}
 
 //初期化
-bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming,float Alpha )
+bool FreeFallParticle::init( const Vector2& Posit, const RECT& Triming, float LifeTime, bool RotateFlag, float Angle )
 {
 	//テクスチャの読み込み
 	texture_ = TextureLoder::getInstance()->load( L"Texture/Particle.png" );
@@ -30,9 +29,13 @@ bool FreeFallParticle::init(const Vector2& Posit , const RECT& Triming,float Alp
 	TaskManager::getInstance()->registerTask( this , TaskDraw::kParticle );
 
 	position_ = Posit;
-	alpha_ = Alpha;
-	turn_ = rand() % 2 ? true : false;
-	rotate_ = rand() % kStarWhileAngle;
+	alpha_ = 1.0F;
+	max_life_ = life_time_ = LifeTime;
+	rotate_ = 0.0F;
+	turn_ = 0;
+	if( RotateFlag )
+		turn_ = rand() % 2 ? 1 : -1;
+	rotate_ = Angle;
 	triming_ = Triming;
 	fall_ = kFall;
 
@@ -49,8 +52,8 @@ void FreeFallParticle::destroy()
 //更新
 void FreeFallParticle::update()
 {
-	alpha_ -= 0.01F;
-	rotate_ += turn_ ? kRotate : -kRotate;
+	alpha_ =  life_time_--/max_life_;
+	rotate_ += static_cast<float>(turn_ * kRotate);
 	position_.y += fall_;
 	fall_ -= kFalldecay;
 
@@ -64,7 +67,7 @@ void FreeFallParticle::draw()
 	//加算モードで描画
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
-	Sprite::getInstance()->draw( texture_ , position_ , &triming_ , alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , static_cast< float >( rotate_ ) , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->draw( texture_ , position_ , &triming_ , alpha_ , 0.2F , Vector2( 1.0F , 1.0F ) , rotate_ , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 	Sprite::getInstance()->end();
 	Sprite::getInstance()->begin();
 }
@@ -72,9 +75,15 @@ void FreeFallParticle::draw()
 //生存確認
 bool FreeFallParticle::isAlive()
 {
-	//アルファの消滅で死亡
-	if( alpha_ <= 0.0F )
+	//アルファの消滅で死亡または画面外で死亡
+	if ( position_.y - kTextureSize / 2.0F > getWindowHeight<float>()||
+		 life_time_ <= 0.0F)
 		return false;
 
 	return true;
+}
+
+void FreeFallParticle::setMove( const float Over )
+{
+	position_.y += Over;
 }

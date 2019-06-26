@@ -42,9 +42,11 @@ void GroundParticle::destroy()
 //XV
 void GroundParticle::update()
 {
+	now_time_ += 0.02F;
+
 	if(now_time_ > 0.0F)
 		velocity_ = Vector2( std::cos( angle_ ) , -std::sin( angle_ ) ) * Easing::getInstance()->expo( 100.0F , now_time_ , Easing::Mode::Out );
-	now_time_ += 0.02F;
+
 }
 
 //•`‰æ

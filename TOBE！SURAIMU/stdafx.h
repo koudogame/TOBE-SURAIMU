@@ -18,6 +18,7 @@
 #include <chrono>
 #include <fstream>
 #include <Audio.h>
+#include <thread>
 
 
 #include <Windows.h>

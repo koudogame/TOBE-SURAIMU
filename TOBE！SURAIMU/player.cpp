@@ -25,13 +25,15 @@ const float kGuideHeight = 214.0F;	            //ガイドのテクスチャの高さ
 const float kGuideWidth = 5.0F;		            //ガイドのテクスチャの幅
 const int kMaxPlayer = 4;			            //最大プレイ人数
 
+constexpr float kParticleInterval = 2.5F;       //パーティクルの生成間隔
+
 //プレイヤーのステータス
-constexpr float kJumpAmount = 800.0F;                           //プレイヤージャンプ力
+constexpr float kJumpAmount = 900.0F;                           //プレイヤージャンプ力
 constexpr float kAddVolume = 0.005F;                            //プレイヤー増加量
-constexpr float kGravity = 5.0F;                                //プレイヤー重力
-constexpr float kSpeed = 0.1F;                                  //プレイヤー速さ
-constexpr float kMaxOffset = 3.0F;
-constexpr float kReboundBasePower = 5.0F;		                //プレイヤーの反発力
+constexpr float kGravity = 8.0F;                                //プレイヤー重力
+constexpr float kSpeed = 0.5F;                                  //プレイヤー速さ
+constexpr float kMaxOffset = 5.0F;
+constexpr float kReboundBasePower = 1.0F;		                //プレイヤーの反発力
 constexpr float kReboundDecay = 0.05F;			                //プレイヤーの反発力の減衰量
 constexpr float kMaxChangeAngle = XMConvertToRadians( 70 );		//左右の最大変角度
 
@@ -97,6 +99,7 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo )
 	died_flag_ = false;
 
 	base_angle_ = XM_PIDIV2;
+	over_ = 0.0F;
 
 	Space::getInstance()->registration( this, myshape_.position, myshape_.radius );
 
@@ -127,8 +130,8 @@ void Player::update()
 	g_particle_container_.get()->update();
 	f_particle_container_.get()->update();
 
-	//各パーティクルの追加
-	addFreeFallParticle();
+	if( died_flag_ )
+		return;
 
 	//スコアの更新
 	score_.update();
@@ -192,6 +195,9 @@ void Player::update()
 //描画
 void Player::draw()
 {
+	//各パーティクルの追加
+	addFreeFallParticle();
+
 	float draw_angle = 0.0F;
 
 	if ( flag_.test( Flag::kJump ) )
@@ -244,6 +250,7 @@ bool Player::isAlive()
 //移動量の追加
 void Player::setMove( const float Over )
 {
+	over_ = Over;
 	myshape_.position.y += Over;
 }
 
@@ -342,7 +349,7 @@ void Player::collision( Player * PlayerObj )
 	}
 
 	base_angle_ = XM_PI - base_angle_;
-	offset_.x *= -1.5F;
+	offset_.x *= -1.5F;	//プレイヤーのコンボで反射率変更
 
 	flag_.set( Flag::kPlayerCollision );
 
@@ -376,25 +383,21 @@ void Player::inputjump()
 		direction_id_ = Direction::kSquat;
 	}
 	//ジャンプ
-	if ( pad_tracker.a == pad_tracker.RELEASED || key.released.Space )
+	if( pad_tracker.a == pad_tracker.RELEASED || key.released.Space )
 	{
-		if ( !died_flag_ )
-		{
-			SOUND->stop( SoundId::kJump );
-			SOUND->play( SoundId::kJump, false );
-			flag_.set( Flag::kJump );
-			flag_.set( Flag::kStarCollision );
-			flag_.reset( Flag::kParticle );
-			flag_.reset( Flag::kOnce );
-			direction_id_ = Direction::kFlay;
-			particle_time_ = 0;
-			now_amount_ = 0.0F;
-			base_angle_ = revision_angle_ + XM_PI;
-			ground_ = &kGround;
-			prev_jump_moveamount_ = 0.0F;
-			particle_alpha_ = 1.0F;
-			score_.resetRotate();
-		}
+		SOUND->stop( SoundId::kJump );
+		SOUND->play( SoundId::kJump, false );
+		flag_.set( Flag::kJump );
+		flag_.set( Flag::kStarCollision );
+		flag_.reset( Flag::kParticle );
+		flag_.reset( Flag::kOnce );
+		direction_id_ = Direction::kFlay;
+		particle_time_ = 0;
+		now_amount_ = 0.0F;
+		base_angle_ = revision_angle_ + XM_PI;
+		ground_ = &kGround;
+		prev_jump_moveamount_ = 0.0F;
+		score_.resetRotate();
 	}
 }
 
@@ -403,7 +406,9 @@ void Player::inputmove()
 	GamePad::ButtonStateTracker pad_tracker = Pad::getInstance()->getTracker( player_no_ );
 	Keyboard::KeyboardStateTracker key = Key::getInstance()->getTracker();
 
-	float angle = std::atan2( -movement_.y, movement_.x );
+	Vector2 move = movement_ + offset_;
+
+	float angle = std::atan2( -move.y, move.x );
 
 	Vector2 temp = Vector2::Zero;
 
@@ -503,10 +508,10 @@ void Player::addGroundParticle( NameSpaceParticle::ParticleID ID )
 	if ( score_.isStart() )
 	{
 		//衝突時のパーティクルの生成
-		g_particle_container_.get()->addParticle( myshape_.position, base_angle_ + XM_PI + XMConvertToRadians( 45.0F ), ID );
-		g_particle_container_.get()->addParticle( myshape_.position, base_angle_ + XM_PI + XMConvertToRadians( 15.0F ), ID );
-		g_particle_container_.get()->addParticle( myshape_.position, base_angle_ + XM_PI - XMConvertToRadians( 45.0F ), ID );
-		g_particle_container_.get()->addParticle( myshape_.position, base_angle_ + XM_PI - XMConvertToRadians( 15.0F ), ID );
+		g_particle_container_.get()->addParticle( myshape_.position, revision_angle_ + XM_PI + XMConvertToRadians( 45.0F ), ID );
+		g_particle_container_.get()->addParticle( myshape_.position, revision_angle_ + XM_PI + XMConvertToRadians( 15.0F ), ID );
+		g_particle_container_.get()->addParticle( myshape_.position, revision_angle_ + XM_PI - XMConvertToRadians( 45.0F ), ID );
+		g_particle_container_.get()->addParticle( myshape_.position, revision_angle_ + XM_PI - XMConvertToRadians( 15.0F ), ID );
 	}
 }
 
@@ -515,12 +520,17 @@ void Player::addFreeFallParticle()
 {
 	if ( flag_.test( Flag::kJump ) )
 	{
-		if ( ++particle_time_ >= kParticleTime )
-		{
-			//ジャンプ時のパーティクル生成
-			f_particle_container_.get()->addParticle( myshape_.position, NameSpaceParticle::ParticleID::kPlayer, particle_alpha_ );
+		Vector2 nomal = move_vector_.end - move_vector_.start;
+		float angle = XM_PIDIV2 - std::atan2( -nomal.y, nomal.x );
+		int particle_num = static_cast< int >( ( nomal.Length() + over_ ) / kParticleInterval );
 
-			particle_time_ = 0;
+		nomal.Normalize();
+
+		for ( int i = 0; i < particle_num + 1; i++ )
+		{
+			Vector2 create_position = myshape_.position - nomal * i * kParticleInterval;
+			//ジャンプ時のパーティクル生成
+			f_particle_container_.get()->addParticle( create_position, NameSpaceParticle::ParticleID::kPlayer, 20.0F, false, XMConvertToDegrees(angle));
 		}
 	}
 	else
@@ -530,6 +540,8 @@ void Player::addFreeFallParticle()
 			dynamic_cast< Star* >( owner_ )->addFreeFallParticle();
 		}
 	}
+
+	over_ = 0.0F;
 }
 
 bool Player::diedEffect()

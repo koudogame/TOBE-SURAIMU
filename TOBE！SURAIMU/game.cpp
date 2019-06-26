@@ -104,7 +104,6 @@ bool Game::update()
             (rand() % static_cast<int>(kBackobjectMoveXMax * 10.0F)) / 10.0F + 0.1F * (rand() % 2 ? 1 : -1),
             (rand() % static_cast<int>(kBackobjectMoveYMax * 10.0F)) / 10.0F + 0.1F,
             kBackobjectDrawDepth);
-
     }
 
 

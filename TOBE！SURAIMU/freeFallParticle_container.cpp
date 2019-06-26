@@ -1,6 +1,7 @@
 #include "freeFallParticle_container.h"
 
 const int kTextureSize = 64;		//テクスチャサイズ
+constexpr long kMaxParticle = 100000L;    //生成パーティクル最大数
 
 FreeFallParticleContainer::FreeFallParticleContainer()
 {}
@@ -10,7 +11,7 @@ FreeFallParticleContainer::~FreeFallParticleContainer()
 {}
 
 //パーティクルの追加
-FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Position, NameSpaceParticle::ParticleID ID ,float Alpha)
+FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Position, NameSpaceParticle::ParticleID ID, float LifeTime, bool RotateFlag, float Angle )
 {
 	//空コンテナを取得
 	FreeFallParticle* s_particle = getFreeObjAndInsert();
@@ -22,7 +23,7 @@ FreeFallParticle * FreeFallParticleContainer::addParticle( const Vector2 & Posit
 	trim.right = trim.left + kTextureSize;
 
 	//初期化
-	s_particle->init( Position, trim, Alpha );
+	s_particle->init( Position, trim, LifeTime, RotateFlag, Angle );
 	return s_particle;
 }
 
