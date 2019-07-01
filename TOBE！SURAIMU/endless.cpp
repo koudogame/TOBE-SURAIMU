@@ -102,7 +102,7 @@ bool Endless::init()
 
     star_container_ = new StarContainer();
 
-    player_         = new AIMover();
+    player_         = new Player();
 
     wall_           = new Wall();
 
@@ -129,7 +129,7 @@ bool Endless::init()
 	}
 
 	// プレイヤー初期化
-	if (dynamic_cast<AIMover*>(player_)->init(kPlayerPosition, 0) == false)
+	if (dynamic_cast<Player*>(player_)->init(kPlayerPosition, 0) == false)
 	{
 		return false;
 	}
@@ -213,7 +213,12 @@ SceneBase* Endless::update()
         icon_.push_back(icon);
     }*/
 
-	return (this->*update_)();
+	SceneBase* scene = (this->*update_)();
+
+    // 衝突処理
+    Space::getInstance()->collision();
+
+    return scene;
 }
 
 /*===========================================================================*/
@@ -250,8 +255,6 @@ SceneBase* Endless::start()
 {
     KeyTracker key = Key::getInstance()->getTracker();
     PadTracker pad = Pad::getInstance()->getTracker();
-
-    Space::getInstance()->collision();
 
     // ポーズ画面へ
     if( key.pressed.P || pad.start == PadTracker::PRESSED )
@@ -360,9 +363,6 @@ for( auto e : icon_ )
 
 	ranking_->setScore( player_->getScore()->getScore() );
 
-
-	// 衝突処理
-    Space::getInstance()->collision();
 
 	return this;
 }
