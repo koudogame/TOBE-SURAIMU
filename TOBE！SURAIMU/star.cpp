@@ -247,6 +247,11 @@ void Star::addFreeFallParticle()
 	}
 }
 
+float Star::getRotateDia()
+{
+	return 1.0F + (std::abs(spin_) - kMinSpin) /10.0F;
+}
+
 //Šp“x‚Ìİ’è
 void Star::setAngle()
 {

@@ -149,20 +149,20 @@ bool Collision::collision( Player * P, Star * S )
 	{
 		if ( P->getOwner() != S )
 		{
-			P->collision( S );
 			S->collision( P );
+			P->collision( S );
 			onece_flag_ = true;
 		}
 		else
 		{
 			if ( !P->isCollision() )
 			{
-				P->collision( S );
 				if ( !onece_flag_ )
 				{
 					S->collision( P );
 					onece_flag_ = true;
 				}
+				P->collision( S );
 			}
 		}
 

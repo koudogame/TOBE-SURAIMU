@@ -51,7 +51,8 @@ public:
 	inline float getSize() { return size_; }
 	//パーティクルIDの取得
 	inline NameSpaceParticle::ParticleID  getColor() { return id_; }
-
+	//回転比率の返却
+	float getRotateDia();
 private:
 	//内部利用関数
 	//角度の設定

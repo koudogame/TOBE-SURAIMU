@@ -20,7 +20,7 @@ const int kFlicTime = 18;		                //アニメーション更新時間
 const int kParticleTime = 1;	                //パーティクルの生成クールフレーム
 const int kBottomOn = 3;		                //下入力時の重力倍率
 const int kBottomOff = 1;		                //下入力なしの重力倍率
-const float kDeathLine = 1000.0F;	            //死亡ライン
+const float kDeathLine = 720;	            //死亡ライン
 const float kGuideHeight = 214.0F;	            //ガイドのテクスチャの高さ
 const float kGuideWidth = 5.0F;		            //ガイドのテクスチャの幅
 const int kMaxPlayer = 4;			            //最大プレイ人数
@@ -100,6 +100,7 @@ bool Player::init( const Vector2 & Posit, const int PlayerNo )
 
 	base_angle_ = XM_PIDIV2;
 	over_ = 0.0F;
+	kJumpPower = kJumpAmount;
 
 	Space::getInstance()->registration( this, myshape_.position, myshape_.radius );
 
@@ -152,7 +153,7 @@ void Player::update()
 	if ( now_amount_ >= 1.0F )
 		now_amount_ = 1.0F;
 
-	float move_power = Easing::getInstance()->expo( kJumpAmount, now_amount_, Easing::Mode::Out ) - prev_jump_moveamount_;
+	float move_power = Easing::getInstance()->expo( kJumpPower, now_amount_, Easing::Mode::Out ) - prev_jump_moveamount_;
 
 	if ( move_power - kGravity < 0 )
 	{
@@ -171,7 +172,7 @@ void Player::update()
 	else
 		movement_ += Vector2( 0.0F, kGravity * bottom_input_ );
 
-	prev_jump_moveamount_ = Easing::getInstance()->expo( kJumpAmount, now_amount_, Easing::Mode::Out );
+	prev_jump_moveamount_ = Easing::getInstance()->expo( kJumpPower, now_amount_, Easing::Mode::Out );
 
 	if ( flag_.test( Flag::kJump ) )
 		inputmove();
@@ -303,11 +304,15 @@ void Player::collision( Star * StarObj )
 	died_flag_ ? owner_ = nullptr : owner_ = StarObj;
 	now_amount_ = 0.0F;
 	prev_jump_moveamount_ = 0.0F;
-	if ( flag_.test( Flag::kJump ) && owner_ != nullptr )
-		score_.addLength( ( myshape_.position - owner_->getPosition() ).Length() / dynamic_cast< Star* >( owner_ )->getSize() );
+	if (flag_.test(Flag::kJump) && owner_ != nullptr)
+	{
+ 		kJumpPower = kJumpAmount * StarObj->getRotateDia();
+		score_.addLength((myshape_.position - owner_->getPosition()).Length() / dynamic_cast<Star*>(owner_)->getSize());
+	}
 	flag_.reset( Flag::kJump );
 	flag_.reset( Flag::kTechnique );
-	flag_.reset( Flag::kWallParticle );
+	flag_.reset(Flag::kWallParticle);
+
 }
 
 //壁との当たり判定後の処理
@@ -413,7 +418,7 @@ void Player::inputmove()
 	Vector2 temp = Vector2::Zero;
 
 	//右入力
-	if ( pad_tracker.leftStickRight == pad_tracker.HELD || key.lastState.Right )
+	if ( pad_tracker.dpadRight == pad_tracker.HELD || key.lastState.Right )
 	{
 		if ( std::cos( angle - XM_PIDIV2 ) > 0 )
 			temp = Vector2( std::cos( angle - XM_PIDIV2 ), -std::sin( angle - XM_PIDIV2 ) )*kSpeed;
@@ -421,7 +426,7 @@ void Player::inputmove()
 			temp = -Vector2( std::cos( angle - XM_PIDIV2 ), -std::sin( angle - XM_PIDIV2 ) )*kSpeed;
 	}
 	//左入力
-	else if ( pad_tracker.leftStickLeft == pad_tracker.HELD || key.lastState.Left )
+	else if ( pad_tracker.dpadLeft == pad_tracker.HELD || key.lastState.Left )
 	{
 		if ( std::cos( angle + XM_PIDIV2 ) < 0 )
 			temp = Vector2( std::cos( angle + XM_PIDIV2 ), -std::sin( angle - XM_PIDIV2 ) )*kSpeed;
@@ -433,7 +438,7 @@ void Player::inputmove()
 		offset_ += temp;
 
 	//下入力
-	if ( pad_tracker.leftStickDown == pad_tracker.HELD || key.lastState.Down )
+	if ( pad_tracker.dpadDown == pad_tracker.HELD || key.lastState.Down )
 	{
 		bottom_input_ = kBottomOn;
 		score_.addDown();
@@ -528,7 +533,7 @@ void Player::addFreeFallParticle()
 
 		for ( int i = 0; i < particle_num + 1; i++ )
 		{
-			Vector2 create_position = myshape_.position - nomal * i * kParticleInterval;
+			Vector2 create_position = myshape_.position - nomal * static_cast<float>(i) * kParticleInterval;
 			//ジャンプ時のパーティクル生成
 			f_particle_container_.get()->addParticle( create_position, NameSpaceParticle::ParticleID::kPlayer, 20.0F, false, XMConvertToDegrees(angle));
 		}

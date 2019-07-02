@@ -122,6 +122,7 @@ protected:
 	ID3D11ShaderResourceView* guide_;	//ガイドのテクスチャ
 	float guide_alpha_;					//ガイドのアルファ値
 	float over_;
+	float kJumpPower;
 
 	Scoring score_;	//スコア
 	int player_no_;
