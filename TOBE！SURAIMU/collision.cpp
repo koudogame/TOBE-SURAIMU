@@ -91,11 +91,24 @@ bool Collision::collision( Player * P, Star * S )
 	for ( int i = 0; i < kStarLineNum; i++ )
 	{
 		//‰~‚Æ•Ó‚ÌŽn“_‚Æ‚Ì”»’è
-		if ( judgment( P->getShape(), &Circle( S->getShape( i )->start, 0.0F ) ) )
+		if ( judgment( P->getShape(), &Circle( S->getShape( i )->start, 0.0F ) )||
+			judgment(&Circle(S->getShape(i)->start, 0.0F), P->getMove()))
 		{
-			if ( !P->isCollision() )
+			if (P->getOwner() != S)
 			{
-				return false;
+				P->setGround(S->getShape(i));
+				P->revision(S->getShape(i)->start, id_);
+				hit_flag = true;
+			}
+			else
+			{
+				if (!P->isCollision())
+				{
+					P->setGround(S->getShape(i));
+					P->revision(S->getShape(i)->start, id_);
+					hit_flag = true;
+				}
+
 			}
 		}
 	}

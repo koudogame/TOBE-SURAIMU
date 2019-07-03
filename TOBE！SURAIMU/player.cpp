@@ -191,14 +191,14 @@ void Player::update()
 		score_.addRotate( XMConvertToDegrees( getRotate() ) );
 
 	Space::getInstance()->registration( this, myshape_.position, myshape_.radius );
+
+	//各パーティクルの追加
+	addFreeFallParticle();
 }
 
 //描画
 void Player::draw()
 {
-	//各パーティクルの追加
-	addFreeFallParticle();
-
 	float draw_angle = 0.0F;
 
 	if ( flag_.test( Flag::kJump ) )
