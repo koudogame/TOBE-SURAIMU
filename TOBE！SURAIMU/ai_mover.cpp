@@ -17,7 +17,7 @@ constexpr float kWindowHeight = getWindowHeight<float>();
 constexpr float kToDegrees = 180.0F / XM_PI;
 constexpr float kToRadians = XM_PI / 180.0F;
 constexpr float kSerchRange   = 300.0F;
-constexpr float kDeltaJumpAngle = 2.0F;
+constexpr float kDeltaJumpAngle = 5.0F;
 constexpr float kMaxOffset = 3.0F;
 constexpr float kSpeed = 0.1F;
 constexpr int kBottomOff = 1;
@@ -44,7 +44,7 @@ bool AIMover::init( const Vector2& Position,    // 初期座標
     sercher_ = new Sercher();
     if( sercher_->init(
         {kWindowWidth / 2.0F, kWindowHeight / 2.0F},
-        kWindowHeight / 2.0F,
+        kWindowHeight,
         ObjectID::kStar) == false )
     {
         return false;
@@ -104,11 +104,11 @@ void AIMover::inputjump()
         float angle = TODEGREES(revision_angle_ + XM_PI);   // ジャンプ時進行方向
         if( angle < 0.0F ) { angle += 360.0F; }
 
-        // 画面内にいる
-        if( myshape_.position.y < kWindowHeight )
+        // 焦る高さじゃない
+        if( myshape_.position.y < 550.0F )
         {
             if( (std::abs(jump_angle_ - angle) <= kDeltaJumpAngle) && // 目的との角度が誤差内
-                ((myshape_.position.y >= 500.0F) || !(rand() % 2))    // 一定のライン以下か、n分の1の確立
+                ((myshape_.position.y >= 400.0F) || !(rand() % 2))    // 一定のライン以下か、n分の1の確立
               )
             {
                 return true;
@@ -240,8 +240,8 @@ void AIMover::setPurpose()
         // 接地
         else 
         {
-            if( Target == owner_ ||
-                Target->getPosition().y > myshape_.position.y)
+            if( Target == owner_ ||                            /*誤差*/
+                Target->getPosition().y > myshape_.position.y - 50.0F)
             {
                 return false;
             }
@@ -265,7 +265,7 @@ void AIMover::setPurpose()
 
 
     // 下向きの時、目的が届かない位置にあったらリセット
-    if( purpose_ )
+    /*if( purpose_ )
     {
         float angle = TODEGREES( std::atan2(-movement_.y, movement_.x) );
         if( (angle <= 0.0F || angle >= 180.0F) && 
@@ -273,9 +273,12 @@ void AIMover::setPurpose()
         {
             purpose_ = nullptr;
         }
+    }*/
+
+    if( purpose_ != nullptr && !check(purpose_) )
+    {
+        purpose_ = nullptr;
     }
-
-
     const auto kPurposes = sercher_->getList();
     const size_t kPurposesNum = kPurposes.size();
     for (size_t i = 0; i < kPurposesNum; ++i)
@@ -294,6 +297,10 @@ void AIMover::setJumpAngle()
         Vector2 disp = purpose_->getPosition() - myshape_.position;
         jump_angle_ = TODEGREES( atan2(-disp.y, disp.x) );
         if( jump_angle_ < 0.0F ) { jump_angle_ += 360.0F; }
+    }
+    else
+    {
+        jump_angle_ = 500.0F;
     }
 }
  
