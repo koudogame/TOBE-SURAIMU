@@ -126,6 +126,9 @@
     <Filter Include="Project\Game\Object\AI">
       <UniqueIdentifier>{3b985f52-44b6-4497-b39f-4575806744cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\FailWall">
+      <UniqueIdentifier>{2d412ce3-062b-49a0-b261-e5fe6c4967fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -277,6 +280,12 @@
     </ClCompile>
     <ClCompile Include="bonus_icon.cpp">
       <Filter>Project\Game\Object\BonusIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_base.cpp">
+      <Filter>Project\Game\Object\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="fail_wall.cpp">
+      <Filter>Project\Game\Object\FailWall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -452,6 +461,12 @@
     </ClInclude>
     <ClInclude Include="bonus_icon.h">
       <Filter>Project\Game\Object\BonusIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_base.h">
+      <Filter>Project\Game\Object\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="fail_wall.h">
+      <Filter>Project\Game\Object\FailWall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -23,6 +23,7 @@
 #include "star_container.h"
 #include "player.h"
 #include "wall.h"
+#include "fail_wall.h"
 
 #include "title.h"
 #include "endless.h"
@@ -53,13 +54,14 @@ constexpr float kDispTimeMSPF = 500.0F / 16.0F;                 // “ïˆÕ“xã¸
 // “ïˆÕ“x‚ÉŠÖŒW
 constexpr unsigned kLevelMax = 2U;                              // ƒŒƒxƒ‹ãŒÀ
 constexpr unsigned kHeight = 0U;                                // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : ‚‚³
-constexpr unsigned kThreshold = 1U;                             // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : è‡’l
-constexpr float kLevelTable[][2] = {                            // ƒŒƒxƒ‹ƒe[ƒuƒ‹
-    {      0.0F, kWindowHeight * 0.0F },
-    {   5000.0F, kWindowHeight * 0.0F },
-    {  20000.0F, kWindowHeight * 0.0F },
-    {   7500.0f, kWindowHeight * 0.0F },
-    {  10000.0F, kWindowHeight * 0.0F }
+constexpr unsigned kThresholdUp = 1U;                           // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : è‡’l( ƒXƒNƒ[ƒ‹ª )
+constexpr unsigned kThresholdDown = 2U;                         // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : è‡’l( ƒXƒNƒ[ƒ‹« )
+constexpr float kLevelTable[][3] = {                            // ƒŒƒxƒ‹ƒe[ƒuƒ‹
+    {      0.0F, kWindowHeight * 0.10F, kWindowHeight * 0.90F },
+    {   5000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.90F },
+    {   5000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.90F },
+    {   7500.0f, kWindowHeight * 0.10F, kWindowHeight * 0.90F },
+    {  10000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.90F }
 };
 
 constexpr Vector2 kPlayerPosition { 600.0F, 565.0F };
@@ -101,9 +103,11 @@ bool Endless::init()
 
     star_container_ = new StarContainer();
 
-    player_         = new AIMover();
+    player_         = new Player();
 
     wall_           = new Wall();
+
+    fail_wall_      = new FailWall();
 
 
     // ƒ|[ƒY‰Šú‰»
@@ -128,7 +132,7 @@ bool Endless::init()
 	}
 
 	// ƒvƒŒƒCƒ„[‰Šú‰»
-	if (dynamic_cast<AIMover*>(player_)->init(kPlayerPosition, 0) == false)
+	if (dynamic_cast<Player*>(player_)->init(kPlayerPosition, 0) == false)
 	{
 		return false;
 	}
@@ -136,12 +140,14 @@ bool Endless::init()
 	// •Ç‰Šú‰»
 	if (wall_->init() == false) { return false; }
 
+    if( fail_wall_->init() == false ) { return false; }
+
 
 	// •Ï”‰Šú‰»
 	update_ = &Endless::start;
     is_pause_ = false;
-    level_ = 0U;
-    scroll_threshold_ = kLevelTable[0U][kThreshold];
+    level_ = 1U;
+    scroll_threshold_ = kLevelTable[0U][kThresholdUp];
     offset_ = 0.0F;
     offset_one_frame_ = 0.0F;
 	climb_ = 0.0F;
@@ -162,8 +168,10 @@ bool Endless::init()
 // I—¹ˆ—
 void Endless::destroy()
 {
-    if( created_ == false ) { return; }
+     if( created_ == false ) { return; }
     created_ = false;
+
+    fail_wall_->destroy();             safe_delete(fail_wall_);
 
 	wall_->destroy();                  safe_delete(wall_);
 
@@ -284,15 +292,27 @@ SceneBase* Endless::play()
 	star_container_->update();
 
 	// À•W’²®( ƒXƒNƒ[ƒ‹ )
-	float kOver = scroll_threshold_ - player_->getPosition().y;
-	if( kOver <= 0.0F )
-		kOver = 0.0F;
-
-	if( kOver >= 0.0F )
+    float over = 0.0F;
+    const Vector2 kPlayerPosi = player_->getPosition();
+    if( kPlayerPosi.y < kLevelTable[level_][kThresholdUp] )
     {
-        player_->addScore( kOver );
-        climb_ += kOver;
-	    adjustObjectPosition( kOver );
+        over = scroll_threshold_ - kPlayerPosi.y;
+    }
+    else if( kPlayerPosi.y > kLevelTable[level_][kThresholdDown] )
+    {
+        over = kLevelTable[level_][kThresholdDown] - kPlayerPosi.y;
+    }
+
+
+	if( true ) //kOver >= 0.0F )
+    {
+        // ‰º‚©‚ç‚Ì•œ‹A‚Åã‚Á‚½‹——£‚ª‘‚¦‚é‚Ì‚Í‚¢‚©‚ª‚È‚à‚Ì‚©
+        if( over > 0 )
+        {
+            player_->addScore( over );
+            climb_ += over;
+        }
+	    adjustObjectPosition( over );
         
 
         // ƒŒƒxƒ‹ƒAƒbƒv
@@ -307,7 +327,7 @@ SceneBase* Endless::play()
             player_->addLevel();
 
             // ƒŒƒxƒ‹ƒAƒbƒv‚É”º‚¤ƒXƒNƒ[ƒ‹è‡’l‚Ì•ÏX( ‚ä‚Á‚­‚è‚Æ•Ï‰»‚³‚¹‚é )
-            offset_ = kLevelTable[level_][kThreshold] - scroll_threshold_;
+            offset_ = kLevelTable[level_][kThresholdUp] - scroll_threshold_;
             offset_one_frame_ = offset_ / kDispTimeMSPF;
         }
 
@@ -380,10 +400,7 @@ SceneBase* Endless::pause()
 // ƒIƒuƒWƒFƒNƒg‚ÌÀ•W’²®
 void Endless::adjustObjectPosition(const float Over)
 {
-	if (Over > 0)
-	{
-        TaskManager::getInstance()->allSetOver(Over);
-	}
+    TaskManager::getInstance()->allSetOver(Over);
 }
 
 /*===========================================================================*/
