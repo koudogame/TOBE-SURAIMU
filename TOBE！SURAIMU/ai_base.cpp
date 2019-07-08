@@ -14,6 +14,7 @@ constexpr int kBottomOn  = 3;		                //‰º“ü—Í‚Ìd—Í”{—¦
 constexpr int kBottomOff = 1;		                //‰º“ü—Í‚È‚µ‚Ìd—Í”{—¦
 constexpr float kMaxOffset = 5.0F;
 
+
 /*===========================================================================*/
 void AIBase::inputjump()
 {
@@ -28,23 +29,25 @@ void AIBase::inputjump()
 
 void AIBase::inputmove()
 {
-    // ‰¡ˆÚ“®
     if( isMoveLeft() )
     {
+    // ¶ˆÚ“®
         move( kMoveLeft );
     }
     if( isMoveRight() )
     {
+    // ‰EˆÚ“®
         move( kMoveRight );
     }
 
-    // ‰ºˆÚ“®
     if( isMoveDown() )
     {
+    // ‰ºˆÚ“®
         move( kMoveDown );
     }
     else
     {
+    // ‰ºˆÚ“®–³‚µ
         bottom_input_ = kBottomOff;
     }
 }
@@ -119,8 +122,6 @@ void AIBase::move( int Way )
         score_.resetCombo();
         flag_.reset(Flag::kStarCollision);
 
-        break;
-    default:
         break;
     }
 }

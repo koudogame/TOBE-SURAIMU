@@ -5,6 +5,9 @@
 
 #include "player.h"
 
+// AI基底クラス
+//
+// is~~関数の戻り値を確認して各関数名にある行動をとる
 class AIBase :
     public Player
 {
@@ -16,11 +19,11 @@ public:
     virtual void update() override  = 0;
 
 protected:
-    virtual bool isSquat() = 0;
-    virtual bool isJump()  = 0;
-    virtual bool isMoveLeft()  = 0;
-    virtual bool isMoveRight() = 0;
-    virtual bool isMoveDown()  = 0;
+    virtual bool isSquat() { return false; }
+    virtual bool isJump()  { return false; }
+    virtual bool isMoveLeft()  { return false; }
+    virtual bool isMoveRight() { return false; }
+    virtual bool isMoveDown()  { return false; }
 
 private:
     void inputjump() override final;

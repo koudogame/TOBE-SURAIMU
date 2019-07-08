@@ -29,6 +29,8 @@ private:
 
     void trance(); 
 
+    void scroll();
+
     bool isCreateStar();
     void setStarPattern();
     bool createStar();

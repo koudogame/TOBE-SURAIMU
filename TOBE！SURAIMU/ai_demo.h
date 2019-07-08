@@ -7,6 +7,9 @@
 
 class Sercher;
 
+// デモ用プレイ(第1号)
+//
+// 画面内にある星に飛び移る
 class AIDemo :
     public AIBase
 {
@@ -21,9 +24,6 @@ public:
 private:
     bool isSquat() override;
     bool isJump()  override;
-    bool isMoveLeft()  override;
-    bool isMoveRight() override;
-    bool isMoveDown()  override;
 
     void setPurpose();
 

@@ -12,6 +12,7 @@
 #include "key.h"
 #include "pad.h"
 // ƒIƒuƒWƒFƒNƒg
+#include "task_manager.h"
 #include "space.h"
 #include "ai_demo.h"
 #include "wall.h"
@@ -48,13 +49,13 @@ struct StarState
     float   size;
 };
 
-constexpr long long kStartTimeSc    = 2LL;
-constexpr long long kDemoPlayTimeSc = 30LL;
-constexpr long long kEndTimeSc      = 1LL;
-constexpr long long kDemoTimeSc = kStartTimeSc + kDemoPlayTimeSc + kEndTimeSc;
+constexpr long long kStartTimeSc    = 2LL;  // ŠJnAˆÃ“]ŠÔ(’PˆÊ : •b)
+constexpr long long kDemoPlayTimeSc = 30LL; // ƒfƒ‚ƒvƒŒƒCŠÔ@(’PˆÊ : •b)
+constexpr long long kEndTimeSc      = 1LL;  // I—¹AˆÃ“]ŠÔ(’PˆÊ : •b)
+constexpr long long kDemoTimeSc = kStartTimeSc + kDemoPlayTimeSc + kEndTimeSc;  // ƒV[ƒ“‚Ì‡ŒvŠÔ
 const RECT kRangeOfScreen { 0L, 0L, 1280L, 720L };
-constexpr float kAmountOfAlphaForIn = 0.01F;
-constexpr float kAmountOfAlphaForOut = 0.1F;
+constexpr float kAmountOfAlphaForIn  = 0.01F;       // ƒtƒF[ƒhƒCƒ“A@ƒAƒ‹ƒtƒ@’l•Ï‰»—Ê
+constexpr float kAmountOfAlphaForOut = 0.10F;       // ƒtƒF[ƒhƒAƒEƒgAƒAƒ‹ƒtƒ@’l•Ï‰»—Ê
 
 constexpr int       kInitStarNum = 3;               // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ^[‚Ì”
 constexpr StarState kInitStarState[kInitStarNum] =  // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ^[‚Ìî•ñ
@@ -63,7 +64,8 @@ constexpr StarState kInitStarState[kInitStarNum] =  // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ
     { {816.0F, 297.0F}, 90.0F,  3.0F, 0.2F, 120.0F },
     { {468.0F, 142.0F}, 90.0F,  3.0F, 0.2F, 120.0F }
 };
-
+constexpr float kScrollThresholdUp   = getWindowHeight<float>() * 0.10F;
+constexpr float kScrollThresholdDown = getWindowHeight<float>() * 0.90F;
 
 
 /*===========================================================================*/
@@ -83,15 +85,19 @@ bool Demo::init()
 {
     destroy();
 
+    // ƒeƒNƒXƒ`ƒƒ
     texture_ = TextureLoder::getInstance()->load( L"Texture/black.png" );
     if( texture_ == nullptr ) { return false; }
 
+    // Demo—pAI
     ai_ = new AIDemo();
     if( ai_->init( { 640.0F, 650.0F } ) == false ) { return false; }
 
+    // •Ç
     wall_ = new Wall();
     if( wall_->init() == false ) { return false; }
 
+    // ƒXƒ^[ŠÇ—ƒRƒ“ƒeƒi
     stars_ = new StarContainer();
     setStarPattern();
 
@@ -152,15 +158,18 @@ void Demo::destroy()
 
     if( texture_ )
     {
+    // ƒeƒNƒXƒ`ƒƒŠJ•ú
         TextureLoder::getInstance()->release( texture_ );
         texture_ = nullptr;
     }
 }
 
+// ƒXƒ^[ŠÇ——pƒRƒ“ƒeƒi‚Ìupdate‚ğŒÄ‚ñ‚Å‚¢‚È‚¢(AI‚ª—‰º‚µ‚½‚Æ‚«A’…’n‚Å‚«‚é‚æ‚¤‚ ‚¦‚Ä)
 SceneBase* Demo::update()
 {
     trance();
 
+    // ƒQ[ƒ€ƒpƒbƒh‚Ìƒ{ƒ^ƒ“‚ª‚Ç‚ê‚©ˆê‚Â‚Å‚à‰Ÿ‚³‚ê‚½‚çtrue‚ğ•Ô‚·ƒ‰ƒ€ƒ_
     auto pad_any_input = [] ()->bool
     {
         size_t struct_size = 0U;
@@ -200,10 +209,13 @@ SceneBase* Demo::update()
     if( ai_->isAlive() == false ) { is_end_ = true; } 
     if( pad_any_input() )         { is_end_ = true; }
 
+
+    // ˆê’èŠÔ‚ÌŒo‰ß‚©Aendƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚ÄˆÃ“]‚àI‚í‚Á‚Ä‚¢‚½‚ç
     auto elapsed = duration_cast<seconds>(Clock::now() - start_time_).count();
     if( elapsed >= kDemoTimeSc ||
         (is_end_ && alpha_ >= 1.0F ))
     {
+    // ƒ^ƒCƒgƒ‹‚Ö
         return new Title;
     }
 
@@ -212,7 +224,11 @@ SceneBase* Demo::update()
     // ƒXƒ^[‚ğ¶¬‚·‚é
         if( createStar() == false ) { return nullptr; } 
     }
+    
+    // ƒXƒNƒ[ƒ‹ˆ—
+    scroll();
 
+    // Õ“Ëˆ—
     Space::getInstance()->collision();
 
     return this;
@@ -257,6 +273,28 @@ void Demo::trance()
     }
 }
 
+
+/*===========================================================================*/
+// ƒXƒNƒ[ƒ‹
+void Demo::scroll()
+{
+    float scroll = 0.0F;
+
+    const Vector2& kBasePosition = ai_->getPosition();
+
+    if( kBasePosition.y < kScrollThresholdUp )
+    {
+    // ‰º‚ÉƒXƒNƒ[ƒ‹
+        scroll = kScrollThresholdUp - kBasePosition.y;
+    }
+    else if( kBasePosition.y > kScrollThresholdDown )
+    {
+    // ã‚ÉƒXƒNƒ[ƒ‹
+        scroll = kScrollThresholdDown - kBasePosition.y ;
+    }
+
+    TaskManager::getInstance()->allSetOver( scroll );
+}
 
 /*===========================================================================*/
 // ‰æ–ÊŠO(ã•ûŒü)‚ÉƒXƒ^[‚ª‚È‚©‚Á‚½‚çtrue

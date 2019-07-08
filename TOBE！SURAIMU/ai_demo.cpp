@@ -20,7 +20,7 @@ constexpr float kWindowWidth  = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
 
 constexpr float kJumpRange = 400.0F;
-constexpr float kJumpAngleErrorRange = 3.0F;    // ジャンプする角度の誤差
+constexpr float kJumpAngleErrorRange  = 4.0F;   // ジャンプする角度の誤差
 
 constexpr float kSquatAngleErrorRange = 10.0F;  // しゃがむ角度の誤差
 
@@ -55,6 +55,7 @@ bool AIDemo::init( const Vector2& Position, const int No )
     }
 
     // メンバ初期化
+    purpose_ = nullptr;
 
     return true;
 }
@@ -63,6 +64,7 @@ void AIDemo::destroy()
 {
     if( sercher_ )
     {
+    // 検索範囲オブジェクト開放
         sercher_->destroy();
         safe_delete( sercher_ );
     }
@@ -72,15 +74,17 @@ void AIDemo::destroy()
 
 void AIDemo::update()
 {
-    Player::update();
+    Player::update();   // 基底更新
 
+    setPurpose();       // 目的の設定
 
-    setPurpose();
 
     if( flag_.test(kJump) == false )
     {
+    // 接地中
         if( direction_id_ != Direction::kSquat )
         {
+        // しゃがみでない状態なら正面を向く
             direction_id_ = Direction::kFlont;
         }
     }
@@ -92,12 +96,14 @@ bool AIDemo::isSquat()
 {
     if( purpose_ )
     {
+    // 目的がある
         float flont_angle = toDegrees(revision_angle_ + XM_PI);
         float jump_angle  = toDegrees(Calc::angle(purpose_->getPosition() - getPosition()));
 
+        // 目的との角度が一定の範囲内ならtrue
         return std::abs(flont_angle - jump_angle) <= kSquatAngleErrorRange;
     }
-
+    // 目的がない
     return false;
 }
 
@@ -115,26 +121,11 @@ bool AIDemo::isJump()
 
     if( std::abs(flont_angle - jump_angle) > kJumpAngleErrorRange )
     {
-    // 現目的との角度が一定の範囲外
+    // 目的との角度が一定の範囲外
         jump = false;
     }
-    // 現目的との角度が一定の範囲内
+    // 目的との角度が一定の範囲内ならtrue
     return jump;
-}
-
-bool AIDemo::isMoveLeft()
-{
-    return false;
-}
-
-bool AIDemo::isMoveRight()
-{
-    return false;
-}
-
-bool AIDemo::isMoveDown()
-{
-    return false;
 }
 
 
@@ -169,7 +160,6 @@ void AIDemo::setPurpose()
 
     // 目的の設定
     if( (this->*check)(purpose_) == false ) { purpose_ = nullptr; }
-    // ここ、getList関数の呼び出し回数調べる
     for( auto star : sercher_->getList() )
     {
         if( (this->*check)(star) )
@@ -181,6 +171,7 @@ void AIDemo::setPurpose()
 
 
 /*===========================================================================*/
+// 上昇中の条件
 bool AIDemo::checkPurposeForUp( ObjectBase* const Target )
 {
     if( Target == nullptr ) { return false; }
@@ -192,7 +183,7 @@ bool AIDemo::checkPurposeForUp( ObjectBase* const Target )
 
     return true;
 }
-
+// 下降中の条件
 bool AIDemo::checkPurposeForDown( ObjectBase* const Target )
 {
     using namespace Calc;
@@ -202,6 +193,7 @@ bool AIDemo::checkPurposeForDown( ObjectBase* const Target )
 
     // 上にあるスターは無視
     if( Target->getPosition().y < myshape_.position.y ) { return false; }
+
 
     // 現目的との比較
     if( purpose_ != nullptr )
@@ -215,25 +207,26 @@ bool AIDemo::checkPurposeForDown( ObjectBase* const Target )
 
     return true;
 }
-
+// 接地中の条件
 bool AIDemo::checkPurposeForGround( ObjectBase* const Target )
 {
     if( Target == nullptr ) { return false; }
 
 
+    // オーナーとの比較
     if( owner_ != nullptr )
     {
-        // 現オーナーは目的としない
+        // オーナーは目的としない
         if( Target == owner_ ) { return false; }
 
-        // 現オーナーより下にあるスターは無視する
+        // オーナー以下にあるスターは無視する
         if( Target->getPosition().y >= owner_->getPosition().y ) { return false; }
     }
 
     // 現目的との比較
     if( purpose_ != nullptr )
     {
-        // 低いスターは無視
+        // 現目的よりも低いスターは無視
         if(Target->getPosition().y > purpose_->getPosition().y) {return false;}
     }
 
