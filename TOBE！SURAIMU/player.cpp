@@ -155,7 +155,7 @@ void Player::update()
 
 	float move_power = Easing::getInstance()->expo( kJumpPower, now_amount_, Easing::Mode::Out ) - prev_jump_moveamount_;
 
-	if ( move_power - kGravity < 0 )
+	if (move_power - kGravity < 0 && flag_.test(Flag::kJump))
 	{
 		flag_.reset( Flag::kStarCollision );
 		score_.resetCombo();

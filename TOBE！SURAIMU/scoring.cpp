@@ -86,7 +86,7 @@ void Scoring::draw()
 		trim.left = kNumWidth * ( temp % 10 );
 		trim.right = trim.left + kNumWidth;
 		trim.bottom = trim.top + kNumHeight;
-		Sprite::getInstance()->draw( num_texture_ , kTotalPosition , &trim , 1.0F , 1.0F );
+		Sprite::getInstance()->draw( num_texture_ , draw_position , &trim , 1.0F , 1.0F );
 		draw_position.x -= kNumWidth;
 		temp /= 10;
 	} while( temp > 0ULL );
