@@ -14,6 +14,7 @@ class RankingInEndless;
 class StarContainer;
 class Player;
 class Wall;
+class FailWall;
 
 //-----------------------------------------------------------------------------
 // エンドレスモード
@@ -51,6 +52,7 @@ private:
     StarContainer* star_container_  = nullptr;
     Player* player_                 = nullptr;
     Wall* wall_                     = nullptr;
+    FailWall* fail_wall_            = nullptr;
 
     bool is_pause_ = false;
     unsigned level_ = 0U;
@@ -60,14 +62,4 @@ private:
     float climb_ = 0.0F;
 
 	ID3D11ShaderResourceView* description_;
-
-
-
-
-
-
-
-
-
-    std::list<class BonusIcon*> icon_;
 };

@@ -23,6 +23,9 @@ public:
 
 
 private:
+    bool checkAndCreateStar();
+    void setPattern();
+
     bool created_ = false;
 
     std::list<Player*> player_;

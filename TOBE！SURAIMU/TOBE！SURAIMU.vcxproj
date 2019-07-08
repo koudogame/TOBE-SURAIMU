@@ -153,10 +153,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ai_base.h" />
     <ClInclude Include="ai_mover.h" />
     <ClInclude Include="battle.h" />
     <ClInclude Include="ai_demo.h" />
     <ClInclude Include="bonus_icon.h" />
+    <ClInclude Include="fail_wall.h" />
     <ClInclude Include="ranking_manager.h" />
     <ClInclude Include="sercher.h" />
     <ClInclude Include="Sound.h" />
@@ -212,6 +214,7 @@
     <ClInclude Include="wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ai_base.cpp" />
     <ClCompile Include="ai_mover.cpp" />
     <ClCompile Include="background.cpp" />
     <ClCompile Include="background_container.cpp" />
@@ -226,6 +229,7 @@
     <ClCompile Include="direct3d.cpp" />
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="endless.cpp" />
+    <ClCompile Include="fail_wall.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="groundParticle.cpp" />
     <ClCompile Include="groundparticle_container.cpp" />

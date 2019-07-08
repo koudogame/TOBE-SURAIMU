@@ -80,8 +80,8 @@ void Space::collision()
         for( parent = child; ; parent >>= 2 )
         {
             // ”»’èˆ—
-            for( auto child_obj : space_[child] ){
-                for( auto parent_obj : space_[parent] )
+            for( auto& child_obj : space_[child] ){
+                for( auto& parent_obj : space_[parent] )
                 {
                     kCollision->collision(
                         child_obj, parent_obj );
