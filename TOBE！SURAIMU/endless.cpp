@@ -33,7 +33,6 @@
 
 
 #include "ai_demo.h"
-#include "ai_mover.h"
 
 using KeyTracker = Keyboard::KeyboardStateTracker;
 using PadTracker = GamePad::ButtonStateTracker;
@@ -103,7 +102,7 @@ bool Endless::init()
 
     star_container_ = new StarContainer();
 
-    player_         = new Player();
+    player_         = new AIDemo();
 
     wall_           = new Wall();
 
@@ -132,7 +131,7 @@ bool Endless::init()
 	}
 
 	// ƒvƒŒƒCƒ„[‰Šú‰»
-	if (dynamic_cast<Player*>(player_)->init(kPlayerPosition, 0) == false)
+	if (dynamic_cast<AIDemo*>(player_)->init(kPlayerPosition, 0) == false)
 	{
 		return false;
 	}
@@ -146,7 +145,7 @@ bool Endless::init()
 	// •Ï”‰Šú‰»
 	update_ = &Endless::start;
     is_pause_ = false;
-    level_ = 1U;
+    level_ = 0U;
     scroll_threshold_ = kLevelTable[0U][kThresholdUp];
     offset_ = 0.0F;
     offset_one_frame_ = 0.0F;

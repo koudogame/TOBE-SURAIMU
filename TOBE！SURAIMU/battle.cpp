@@ -11,7 +11,7 @@
 #include "wall.h"
 #include "star_container.h"
 
-#include "ai_mover.h"
+#include "ai_demo.h"
 
 
 /*===========================================================================*/
@@ -56,7 +56,7 @@ bool Battle::init()
     // ÉvÉåÉCÉÑÅ[
     for( int i = 0; i < kPlayerMax; ++i )
     {
-        player_.push_back( new AIMover() );
+        player_.push_back( new AIDemo() );
 
         if( player_.back()->init(kPlayerPosition[i], i) == false )
         {

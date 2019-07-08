@@ -23,9 +23,9 @@ const float kPositionXLeft        = kCenterX - kDistanceToCenter; // 左の壁x座標
 const float kPositionXRight       = kCenterX + kDistanceToCenter; // 右の壁x座標
 
 const Line kCollisionLeftWall{                                    // 左の壁衝突判定範囲
-	Vector2(kPositionXLeft, -100.0F), Vector2(kPositionXLeft, 1000.0F) };
+	Vector2(kPositionXLeft, 0.0F), Vector2(kPositionXLeft, 1000.0F) };
 const Line kCollisionRightWall{                                   // 右の壁衝突判定範囲
-    Vector2(kPositionXRight, 1000.0F),Vector2(kPositionXRight, -100.0F) };
+    Vector2(kPositionXRight, 1000.0F),Vector2(kPositionXRight, 0.0F) };
 
 const float kDrawPositionXLeftWall  = kPositionXLeft - kWallWidthHarf;  // 左の壁描画x座標
 const float kDrawPositionXRightWall = kPositionXRight - kWallWidthHarf; // 右の壁描画x座標

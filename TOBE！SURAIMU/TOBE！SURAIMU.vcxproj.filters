@@ -129,6 +129,9 @@
     <Filter Include="Project\Game\Object\FailWall">
       <UniqueIdentifier>{2d412ce3-062b-49a0-b261-e5fe6c4967fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Scene\Demo">
+      <UniqueIdentifier>{03c701d8-5d1b-4862-81e4-22e99968f370}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -272,12 +275,6 @@
     <ClCompile Include="sercher.cpp">
       <Filter>Project\Game\Object\Sercher</Filter>
     </ClCompile>
-    <ClCompile Include="ai_demo.cpp">
-      <Filter>Project\Game\Object\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_mover.cpp">
-      <Filter>Project\Game\Object\AI</Filter>
-    </ClCompile>
     <ClCompile Include="bonus_icon.cpp">
       <Filter>Project\Game\Object\BonusIcon</Filter>
     </ClCompile>
@@ -286,6 +283,12 @@
     </ClCompile>
     <ClCompile Include="fail_wall.cpp">
       <Filter>Project\Game\Object\FailWall</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_demo.cpp">
+      <Filter>Project\Game\Object\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="demo.cpp">
+      <Filter>Project\Game\Scene\Demo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -453,12 +456,6 @@
     <ClInclude Include="sercher.h">
       <Filter>Project\Game\Object\Sercher</Filter>
     </ClInclude>
-    <ClInclude Include="ai_mover.h">
-      <Filter>Project\Game\Object\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_demo.h">
-      <Filter>Project\Game\Object\AI</Filter>
-    </ClInclude>
     <ClInclude Include="bonus_icon.h">
       <Filter>Project\Game\Object\BonusIcon</Filter>
     </ClInclude>
@@ -467,6 +464,12 @@
     </ClInclude>
     <ClInclude Include="fail_wall.h">
       <Filter>Project\Game\Object\FailWall</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_demo.h">
+      <Filter>Project\Game\Object\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="demo.h">
+      <Filter>Project\Game\Scene\Demo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,16 +1,14 @@
+
+// 板場　温樹
+
 #pragma once
 
-#include "player.h"
+#include "ai_base.h"
 
 class Sercher;
 
-//-----------------------------------------------------------------------------
-// デモプレイ用AI
-//-----------------------------------------------------------------------------
-// --説明--
-// とにかく近くの星へ飛び移る
 class AIDemo :
-    public Player
+    public AIBase
 {
 public:
     AIDemo();
@@ -21,9 +19,18 @@ public:
     void update()  override;
 
 private:
-    void inputjump() override;
-    void inputmove() override;
+    bool isSquat() override;
+    bool isJump()  override;
+    bool isMoveLeft()  override;
+    bool isMoveRight() override;
+    bool isMoveDown()  override;
 
-    Sercher *sercher_       = nullptr;
-    ObjectBase *purpose_    = nullptr;
+    void setPurpose();
+
+    bool checkPurposeForUp( ObjectBase* const Target );
+    bool checkPurposeForDown( ObjectBase* const Target );
+    bool checkPurposeForGround( ObjectBase* const Target );
+
+    Sercher    *sercher_ = nullptr;
+    ObjectBase *purpose_ = nullptr;
 };

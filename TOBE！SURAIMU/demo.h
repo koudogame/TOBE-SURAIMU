@@ -1,0 +1,43 @@
+
+// î¬èÍÅ@â∑é˜
+
+#pragma once
+
+#include "scene_base.h"
+
+class AIBase;
+class Wall;
+class StarContainer;
+
+class Demo :
+    public SceneBase
+{
+public:
+    Demo();
+    ~Demo();
+
+    static void end() { if( !is_end_ )is_end_ = true; }
+
+    bool init();
+    void destroy();
+    SceneBase* update();
+    void draw();
+
+
+private:
+    static bool is_end_;
+
+    void trance(); 
+
+    bool isCreateStar();
+    void setStarPattern();
+    bool createStar();
+
+    AIBase* ai_           = nullptr;
+    Wall*   wall_         = nullptr;
+    StarContainer* stars_ = nullptr;
+
+    std::chrono::time_point<std::chrono::high_resolution_clock> start_time_;
+    bool is_fadein_       = false;
+    float alpha_          = 0.0F;
+};

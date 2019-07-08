@@ -1,4 +1,6 @@
 
+// ”Âê@‰·÷
+
 #include "ai_base.h"
 
 #include "Sound.h"
@@ -15,9 +17,12 @@ constexpr float kMaxOffset = 5.0F;
 /*===========================================================================*/
 void AIBase::inputjump()
 {
-    if( isJump() )
+    if( flag_.test(kJump) == false )
     {
-        jump();
+        // ƒWƒƒƒ“ƒv
+        if( isJump() )       { jump(); }
+        // ‚µ‚á‚ª‚Ş
+        else if( isSquat() ) { direction_id_ = Direction::kSquat; } 
     }
 }
 
@@ -118,6 +123,4 @@ void AIBase::move( int Way )
     default:
         break;
     }
-
-
 }

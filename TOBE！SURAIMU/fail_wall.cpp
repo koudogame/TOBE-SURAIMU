@@ -9,10 +9,10 @@
 #include "sprite.h"
 
 /*===========================================================================*/
-const RECT kTrimming { 320L, 1704L, 960L, 1744L };
-const Line kInitPosition { 320.0F, 720.0F, 960.0F, 720.0F };
 constexpr float kLimitY = 1000.0F;
 constexpr float kScrollSpeed = 0.5F;
+const RECT kTrimming { 320L, 1704L, 960L, 1744L };
+const Line kInitPosition { 320.0F, kLimitY, 960.0F, kLimitY };
 
 
 /*===========================================================================*/

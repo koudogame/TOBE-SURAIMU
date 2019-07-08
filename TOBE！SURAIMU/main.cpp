@@ -4,6 +4,7 @@
 #include "key.h"
 
 #include "game.h"
+#include "demo.h"
 #include "pad.h"
 #include "sound.h"
 
@@ -201,10 +202,12 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	case WM_SYSKEYDOWN:
 	case WM_SYSKEYUP:
 	case WM_KEYUP:
+        Demo::end();
 		Keyboard::ProcessMessage(Msg, wParam, lParam);
 		break;
 
 	case WM_KEYDOWN:
+        Demo::end();
 		Keyboard::ProcessMessage(Msg, wParam, lParam);
 		switch (wParam)
 		{

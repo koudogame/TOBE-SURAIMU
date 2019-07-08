@@ -1,3 +1,6 @@
+
+// ”Âê@‰·÷
+
 #pragma once
 
 #include "player.h"
@@ -13,14 +16,15 @@ public:
     virtual void update() override  = 0;
 
 protected:
-    void inputjump() override final;
-    void inputmove() override final;
-
-    virtual void jump() final;
-    virtual void move( int Way ) final;
     virtual bool isSquat() = 0;
     virtual bool isJump()  = 0;
     virtual bool isMoveLeft()  = 0;
     virtual bool isMoveRight() = 0;
     virtual bool isMoveDown()  = 0;
+
+private:
+    void inputjump() override final;
+    void inputmove() override final;
+    void jump();
+    void move( int Way );
 };
