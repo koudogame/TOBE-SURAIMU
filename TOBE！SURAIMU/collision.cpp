@@ -36,6 +36,9 @@ bool Collision::collision( ObjectBase * Obj1, ObjectBase * Obj2 )
 				case ObjectID::kWall:
 					return collision( dynamic_cast< Player* >( Obj1 ), dynamic_cast< Wall* >( Obj2 ) );
 
+				case ObjectID::kFailWall:
+					return collision(dynamic_cast<Player*>(Obj1), dynamic_cast<FailWall*>(Obj2));
+
 				default:
 					return false;
 			}
@@ -49,6 +52,10 @@ bool Collision::collision( ObjectBase * Obj1, ObjectBase * Obj2 )
 
 				case ObjectID::kSerch:
 					return collision( dynamic_cast< Sercher* >( Obj2 ), dynamic_cast< Star* >( Obj1 ) );
+
+				case ObjectID::kFailWall:
+					return collision(dynamic_cast<Star*>(Obj1), dynamic_cast<FailWall*>(Obj2));
+
 				default:
 					return false;
 			}
@@ -262,6 +269,34 @@ bool Collision::collision( Sercher * SRS, Star * S )
 			return true;
 		}
 
+	return false;
+}
+
+bool Collision::collision(Player * P, FailWall * FW)
+{
+	if (judgment(P->getShape(), FW->getShape()))
+	{
+		P->collision(FW);
+		return true;
+	}
+	else if (judgment(P->getMove(), FW->getShape()))
+	{
+		P->collision(FW);
+		return true;
+	}
+	return false;
+}
+
+bool Collision::collision(Star * S, FailWall * FW)
+{
+	Vector2 judge_vector[2] = { FW->getShape()->end - FW->getShape()->start,S->getPosition() - FW->getShape()->start };
+	judge_vector[0].Normalize();
+	judge_vector[1].Normalize();
+	if (Calc::cross(judge_vector[0], judge_vector[1]) > 0)
+	{
+  		S->collision(FW);
+		return true;
+	}
 	return false;
 }
 

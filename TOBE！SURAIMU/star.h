@@ -45,6 +45,7 @@ public:
 	//判定後の処理( プレイヤー )
 	void collision( class Player* P );
 	void collision( class AIDemo* P );
+	void collision(class FailWall* FW);
 	//落下パーティクルの生成
 	void addFreeFallParticle();
 	//サイズの取得
@@ -68,6 +69,7 @@ private:
 	float rate_;	        //回転倍率
 	float spining_angle_;
 	Line myshape_[ kStarLineNum ];		//自分の形
+	bool alive_flag_;
 
 	std::unique_ptr<FreeFallParticleContainer> s_particle_container_;		//落下パーティクルコンテナ
 	int particle_time_;	//パーティクルの生成時間管理

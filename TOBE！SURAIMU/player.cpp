@@ -14,6 +14,7 @@
 //判定対象クラス
 #include "star.h"
 #include "wall.h"
+#include "fail_wall.h"
 
 const int kPlayerSize = 46;		                //テクスチャサイズ
 const int kFlicTime = 18;		                //アニメーション更新時間
@@ -199,6 +200,9 @@ void Player::update()
 //描画
 void Player::draw()
 {
+	if (died_flag_)
+		return;
+
 	float draw_angle = 0.0F;
 
 	if ( flag_.test( Flag::kJump ) )
@@ -228,8 +232,7 @@ void Player::draw()
 	trim.bottom = trim.top + kPlayerSize;
 	trim.right = trim.left + kPlayerSize;
 
-
-	Sprite::getInstance()->draw( texture_, myshape_.position, &trim, 1.0F, 1.0F, Vector2( 1.0F, 1.0F ), XMConvertToDegrees( draw_angle ), Vector2( kPlayerSize / 2.0F, kPlayerSize / 2.0F ) );
+	Sprite::getInstance()->draw(texture_, myshape_.position, &trim, 1.0F, 1.0F, Vector2(1.0F, 1.0F), XMConvertToDegrees(draw_angle), Vector2(kPlayerSize / 2.0F, kPlayerSize / 2.0F));
 
 	score_.draw();
 
@@ -238,7 +241,7 @@ void Player::draw()
 //生存フラグの返却
 bool Player::isAlive()
 {
-	if ( myshape_.position.y > kDeathLine || died_flag_ )
+	if ( died_flag_ )
 	{
 		owner_ = nullptr;
 		ground_ = &kGround;
@@ -360,6 +363,12 @@ void Player::collision( Player * PlayerObj )
 
 	if ( std::abs( offset_.x ) > kMaxOffset )
 		offset_.x = std::copysign( kMaxOffset, offset_.x );
+}
+
+void Player::collision(FailWall* FW)
+{
+	if (!died_flag_)
+		diedEffect();
 }
 
 //回転角を返却
@@ -560,6 +569,7 @@ bool Player::diedEffect()
 
 		//元あったパーティクルは全消去
 		g_particle_container_->destroy();
+		s_particle_container_.get()->destroy();
 
 		//死亡時のパーティクル( 衝突時のものを流用( Scale 2.0F ) )を生成
 		g_particle_container_->addParticle( Vector2( myshape_.position.x, getWindowHeight<float>() ), XMConvertToRadians( 45 ), NameSpaceParticle::ParticleID::kCyan, 2.0F );

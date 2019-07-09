@@ -7,6 +7,7 @@
 
 //衝突対象クラス
 #include "ai_demo.h"
+#include "fail_wall.h"
 
 //定数
 const int kStarMin = 60;			//最小サイズ
@@ -82,6 +83,7 @@ bool Star::init( const Vector2 & Position , const float Angle  , const float Spi
 
 	particle_time_ = 0;
 	create_point_ = 0;
+	alive_flag_ = true;
 
 	setAngle();
 
@@ -133,11 +135,7 @@ void Star::draw()
 //生存確認
 bool Star::isAlive()
 {
-	//画面外で死亡
-	if( position_.y > kDeathLine )
-		return false;
-
-	return true;
+	return alive_flag_;
 }
 
 //落下の実装
@@ -222,6 +220,11 @@ void Star::collision(AIDemo * P)
 		spin_ = static_cast<float>(std::copysign(kMaxSpin[id_], spin_));
 
 	particle_time_ = 0;
+}
+
+void Star::collision(FailWall * FW)
+{
+	alive_flag_ = false;
 }
 
 //落下のパーティクル生成

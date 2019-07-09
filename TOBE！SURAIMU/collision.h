@@ -11,6 +11,7 @@
 #include "wall.h"
 #include "ai_demo.h"
 #include "sercher.h"
+#include "fail_wall.h"
 
 class Player;
 class Star;
@@ -46,6 +47,9 @@ public:
 	//”»’è( CPU‚Ì”»’è”ÍˆÍ‘Î¯ )
 	bool collision(Sercher*, Star*);
 	inline bool collision(Star* S, Sercher* SRS) { return collision(SRS, S); }
+	//”»’è( €–Sƒ‰ƒCƒ“ )
+	bool collision(Player* S, FailWall* FW);
+	bool collision(Star* S, FailWall* FW);
 
 
 private:
