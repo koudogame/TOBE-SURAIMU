@@ -11,7 +11,7 @@
 #include "easing.h"
 #include "Sound.h"
 
-#include "battle.h"
+#include "demo.h"
 
 
 const int kMenuSize = 256;

@@ -1,3 +1,6 @@
+
+// ”Âê@‰·÷
+
 #pragma once
 
 #include "object_base.h"

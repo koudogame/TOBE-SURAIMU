@@ -164,50 +164,43 @@ void Demo::destroy()
     }
 }
 
+
 // スター管理用コンテナのupdateを呼んでいない(AIが落下したとき、着地できるようあえて)
+
 SceneBase* Demo::update()
 {
     trance();
 
     // ゲームパッドのボタンがどれか一つでも押されたらtrueを返すラムダ
-    auto pad_any_input = [] ()->bool
+    auto padAnyInput = [] ()->bool
     {
-        size_t struct_size = 0U;
-        char*  ptr_struct  = nullptr;
+        // 構造体(要素がchar型)の要素がどれか一つでもtrueだったらtrueを返すラムダ
+        auto isAnyTrue = [](void* const PtrToStructure, const size_t Size)->bool
         {
-        // ボタン
-        struct_size = sizeof( GamePad::Buttons );
-        auto input  = Pad::getInstance()->getState().buttons;
-        ptr_struct  = reinterpret_cast<char*>(&input);
+            char* idx = reinterpret_cast<char*>(PtrToStructure);
 
-        for( size_t i = 0; i < struct_size; ++i )
-        {
-            if( *(ptr_struct + i) )
+            for( size_t i = 0U; i < Size; ++i )
             {
-                return true;
-            }
-        }
-        }
-        {
-        // Dpad
-            struct_size = sizeof( GamePad::DPad );
-            auto input  = Pad::getInstance()->getState().dpad;
-            ptr_struct  = reinterpret_cast<char*>(&input);
-
-            for( size_t i = 0; i < struct_size; ++i )
-            {
-                if( *(ptr_struct + i ) )
+            // 構造体の先頭から順に見ていく
+                if( *(idx + i ) )
                 {
                     return true;
                 }
             }
-        }
-        return false;
+            return false;
+        };
+
+
+        auto button = Pad::getInstance()->getState().buttons;
+        auto dpad = Pad::getInstance()->getState().dpad;
+
+        return isAnyTrue( &button, sizeof( button ) ) ||
+               isAnyTrue( &dpad,   sizeof( dpad ) );
     };
    
 
     if( ai_->isAlive() == false ) { is_end_ = true; } 
-    if( pad_any_input() )         { is_end_ = true; }
+    if( padAnyInput() )         { is_end_ = true; }
 
 
     // 一定時間の経過か、endフラグが立っていて暗転も終わっていたら

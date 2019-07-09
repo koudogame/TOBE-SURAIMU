@@ -1,4 +1,6 @@
 
+// 板場　温樹
+
 #include "fail_wall.h"
 
 #include "release.h"
@@ -9,10 +11,11 @@
 #include "sprite.h"
 
 /*===========================================================================*/
-constexpr float kLimitY = 1000.0F;
+constexpr float kLimitYUp   = getWindowHeight<float>() * 0.90F;
+constexpr float kLimitYDown = 1000.0F;
 constexpr float kScrollSpeed = 0.5F;
 const RECT kTrimming { 320L, 1704L, 960L, 1744L };
-const Line kInitPosition { 320.0F, kLimitY, 960.0F, kLimitY };
+const Line kInitPosition { 320.0F, kLimitYDown, 960.0F, kLimitYDown };
 
 
 /*===========================================================================*/
@@ -79,10 +82,16 @@ void FailWall::setMove( const float Disp )
 {
     // 移動
     shape_->start.y += Disp;
-    // 限界高度は超えない
-    if( shape_->start.y > kLimitY )
+
+    if( shape_->start.y < kLimitYUp )
     {
-        shape_->start.y = kLimitY;
+    // 上限を超えたら戻す
+        shape_->start.y = kLimitYUp;
+    }
+    else if( shape_->start.y > kLimitYDown )
+    {
+    // 下限を超えたら戻す
+        shape_->start.y = kLimitYDown;
     }
 
     // 終点も移動

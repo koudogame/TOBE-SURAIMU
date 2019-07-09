@@ -102,7 +102,7 @@ bool Endless::init()
 
     star_container_ = new StarContainer();
 
-    player_         = new AIDemo();
+    player_         = new Player();
 
     wall_           = new Wall();
 
@@ -131,7 +131,7 @@ bool Endless::init()
 	}
 
 	// ƒvƒŒƒCƒ„[‰Šú‰»
-	if (dynamic_cast<AIDemo*>(player_)->init(kPlayerPosition, 0) == false)
+	if (dynamic_cast<Player*>(player_)->init(kPlayerPosition, 0) == false)
 	{
 		return false;
 	}
