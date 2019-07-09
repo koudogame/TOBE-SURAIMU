@@ -289,15 +289,18 @@ bool Collision::collision(Player * P, FailWall * FW)
 
 bool Collision::collision(Star * S, FailWall * FW)
 {
-	Vector2 judge_vector[2] = { FW->getShape()->end - FW->getShape()->start,S->getPosition() - FW->getShape()->start };
-	judge_vector[0].Normalize();
-	judge_vector[1].Normalize();
-	if (Calc::cross(judge_vector[0], judge_vector[1]) > 0)
+	for (int i = 0; i < 5; i++)
 	{
-  		S->collision(FW);
-		return true;
-	}
+		Vector2 judge_vector[2] = { FW->getShape()->end - FW->getShape()->start,S->getShape(i)->start - FW->getShape()->start };
+		judge_vector[0].Normalize();
+		judge_vector[1].Normalize();
+		if (Calc::cross(judge_vector[0], judge_vector[1]) < 0)
+		{
 	return false;
+		}
+	}
+			S->collision(FW);
+			return true;
 }
 
 
