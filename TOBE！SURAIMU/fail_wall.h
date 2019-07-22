@@ -14,17 +14,30 @@ public:
     FailWall();
     ~FailWall();
 
-    bool init() override;
+    bool init()    override;
     void destroy() override;
-    void update() override;
-    void draw() override;
+    void update()  override;
+    void draw()    override;
 
-    void setMove( const float Displacement) override;
+    void start();
+    void levelUp();
+    void setMove( float Displacement ) override;
+
 
     ObjectID getID() const override { return ObjectID::kFailWall; }
     Line* getShape() { return shape_; }
 
+
+
+
+
+
 private:
     ID3D11ShaderResourceView* texture_ = nullptr;
     Line* shape_ = nullptr;
+
+    int scroll_speed_idx_ = 0;
+    int frame_counter_ = 0;
+    float scaling_ = 0.0F;
+    std::deque<float> scale_y_;
 };

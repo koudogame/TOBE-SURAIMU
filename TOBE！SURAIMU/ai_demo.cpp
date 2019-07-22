@@ -91,7 +91,9 @@ void AIDemo::update()
 }
 
 
+// 行動判定関数
 /*===========================================================================*/
+// しゃがみ
 bool AIDemo::isSquat()
 {
     if( purpose_ )
@@ -107,6 +109,7 @@ bool AIDemo::isSquat()
     return false;
 }
 
+// ジャンプ
 bool AIDemo::isJump()
 {
     if( purpose_ == nullptr ) { return false; }
@@ -170,6 +173,7 @@ void AIDemo::setPurpose()
 }
 
 
+// 引数のスターが目的にふさわしいか判定する
 /*===========================================================================*/
 // 上昇中の条件
 bool AIDemo::checkPurposeForUp( ObjectBase* const Target )

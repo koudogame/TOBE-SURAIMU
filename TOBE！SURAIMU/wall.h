@@ -27,6 +27,8 @@ public:
 
     virtual ObjectID getID() const override { return ObjectID::kWall; }
 
+    virtual void setMove( const float Move ) { position_.y += Move; }
+
 private:
     bool created_ = false;
 

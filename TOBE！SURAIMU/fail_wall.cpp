@@ -11,11 +11,36 @@
 #include "sprite.h"
 
 /*===========================================================================*/
-constexpr float kLimitYUp   = getWindowHeight<float>() * 0.90F;
-constexpr float kLimitYDown = 1000.0F;
-constexpr float kScrollSpeed = 0.5F;
-const RECT kTrimming { 320L, 1704L, 960L, 1744L };
-const Line kInitPosition { 320.0F, kLimitYDown, 960.0F, kLimitYDown };
+constexpr float kLimitYUp   = getWindowHeight<float>() * 0.75F;
+constexpr float kLimitYDown = getWindowHeight<float>() * 1.50F;
+const Line kInitPosition { 250.0F, kLimitYDown, 1030.0F, kLimitYDown };
+constexpr float kScrollSpeedTable[] = 
+{
+    0.0F,
+    -0.25F,
+    -0.40F,
+    -0.50F
+};
+
+
+constexpr int kElemNum = 4;
+constexpr int kFireNum = 3;
+constexpr int kWallNo = 3;
+constexpr float kWidth = 1024.0F;
+constexpr float kWallHeight = 256.0F;
+constexpr float kFireHeight = 255.0F;
+const RECT kTrimming[] =
+{
+    { 0L,    1L, 1024L,  256L }, // fire
+    { 0L,  257L, 1024L,  512L }, // fire
+    { 0L,  513L, 1024L,  768L }, // fire
+    { 0L,  768L, 1024L, 1024L }, // wall
+};
+constexpr int kScalingFrame = 3;
+constexpr int kScaleSaveNum = kScalingFrame * kFireNum;
+constexpr float kAmountOfScaling = 0.05F;
+constexpr float kMaxScale = 1.0F;
+constexpr float kMinScale = 0.70F;
 
 
 /*===========================================================================*/
@@ -35,15 +60,26 @@ bool FailWall::init()
 {
     destroy();
 
-    texture_ = TextureLoder::getInstance()->load( L"Texture/Background.png" );
+    texture_ = TextureLoder::getInstance()->load( L"Texture/fire.png" );
     if( texture_ == nullptr ) { return false; }
     shape_ = new Line( kInitPosition );
 
     TaskManager::getInstance()->registerTask( this, TaskUpdate::kBackground );
-    TaskManager::getInstance()->registerTask( this, TaskDraw::kBackground );
+    TaskManager::getInstance()->registerTask( this, TaskDraw::kA );
 
+    // 空間「0」に登録
     Space::getInstance()->registration( this, { 640.0F, 360.0F }, 10.0F );
 
+
+    // メンバ初期化
+    scroll_speed_idx_ = 0;
+    frame_counter_ = 0;
+    scaling_ = kAmountOfScaling;
+    scale_y_.resize( kScaleSaveNum );
+    for( auto& scale : scale_y_ )
+    {
+        scale = 1.0F;
+    }
 
     return true;
 }
@@ -52,10 +88,12 @@ void FailWall::destroy()
 {
     Space::getInstance()->unregistration( this );
     TaskManager::getInstance()->unregisterObject( this );
+
     safe_delete( shape_ );
 
     if( texture_ )
     {
+    // テクスチャの開放
         TextureLoder::getInstance()->release( texture_ );
         texture_ = nullptr;
     }
@@ -63,37 +101,108 @@ void FailWall::destroy()
 
 void FailWall::update()
 {
-    shape_->start.y -= kScrollSpeed;
-    shape_->end.y   -= kScrollSpeed;
+    // 上へスクロール
+    shape_->start.y += kScrollSpeedTable[scroll_speed_idx_];
+    shape_->end.y += kScrollSpeedTable[scroll_speed_idx_]; 
+    if (shape_->start.y < kLimitYUp)
+    {
+        // 上限を超えたら戻す
+        shape_->start.y = kLimitYUp;
+    }
+
+    // 炎のスケーリング
+    if( ++frame_counter_ % 2 == 0 )
+    {
+        // 新しい拡大率を計算
+        float scale_y = *scale_y_.begin() + scaling_;
+        if( scale_y > kMaxScale )
+        {
+            // 既定のサイズを超える
+            scale_y = kMaxScale;
+            scaling_ *= -1.0F;
+        }
+        else if( scale_y < kMinScale )
+        {
+            // 既定のサイズを下回る
+            scale_y = kMinScale;
+            scaling_ *= -1.0F;
+        }
+
+        // スケーリング履歴を追加
+        scale_y_.push_front( scale_y );
+
+        // 古いデータを弾く
+        scale_y_.pop_back();
+    }
 }
 
 void FailWall::draw()
 {
-    Sprite::getInstance()->draw(
+    Sprite* sprite = Sprite::getInstance();
+
+    // 加算合成
+    sprite->end();
+    sprite->begin( Common::getInstance()->getStates()->Additive() );
+
+    // 壁の描画
+    sprite->draw(
         texture_,
-        shape_->start,
-        &kTrimming
+        {shape_->start.x, shape_->start.y + 10.0F},
+        &kTrimming[kWallNo]
     );
+
+
+    // 炎の描画
+    for( int i = 0; i < kFireNum; ++i )
+    {
+        sprite->draw(
+            texture_,
+            { shape_->start.x, shape_->start.y + 10.0F },
+            &kTrimming[i],
+            1.0F,
+            0.0F,
+            {1.0F, scale_y_[i * kScalingFrame]},
+            0.0F,
+            {0.0F, kFireHeight}
+        );
+    }
+
+    sprite->end();
+    sprite->begin();
+    // 加算合成
 }
 
 
 /*===========================================================================*/
-void FailWall::setMove( const float Disp )
+void FailWall::start()
 {
+    ++scroll_speed_idx_;
+}
+
+void FailWall::levelUp()
+{
+    ++scroll_speed_idx_;
+}
+
+void FailWall::setMove( float Disp )
+{
+    // 上への移動は倍率をかける
+    if( Disp < 0 ) { Disp *= 0.5F; }
+
     // 移動
     shape_->start.y += Disp;
 
     if( shape_->start.y < kLimitYUp )
     {
-    // 上限を超えたら戻す
+        // 上限を超えたら戻す
         shape_->start.y = kLimitYUp;
     }
     else if( shape_->start.y > kLimitYDown )
     {
-    // 下限を超えたら戻す
+        // 下限を超えたら戻す
         shape_->start.y = kLimitYDown;
     }
 
-    // 終点も移動
+    // 終点も合わせて移動
     shape_->end.y = shape_->start.y;
 }

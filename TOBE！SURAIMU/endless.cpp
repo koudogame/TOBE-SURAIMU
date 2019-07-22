@@ -254,6 +254,7 @@ SceneBase* Endless::start()
 		    }
 		    clock_->start();
 		    player_->onStartFlag();
+            fail_wall_->start();
         }
 	}
 
@@ -283,8 +284,8 @@ SceneBase* Endless::play()
 	if( player_->isAlive() == false )
 	{
 		SOUND->stop( SoundId::kPlay );
-		//return new Result(ranking_->getRank(), *player_->getScore());
-        return new Endless();
+		return new Result(ranking_->getRank(), *player_->getScore());
+        //return new Endless();
 	}
 
 	//コンテナのアップデート
@@ -322,8 +323,9 @@ SceneBase* Endless::play()
             // スターの生成パターンを変化させる
             changePattern();
 
-            // プレイヤーにレベルアップを知らせる
+            // レベルアップを知らせる
             player_->addLevel();
+            fail_wall_->levelUp();
 
             // レベルアップに伴うスクロール閾値の変更( ゆっくりと変化させる )
             offset_ = kLevelTable[level_][kThresholdUp] - scroll_threshold_;
@@ -357,18 +359,6 @@ SceneBase* Endless::pause()
 
     KeyTracker key = Key::getInstance()->getTracker();
     PadTracker pad = Pad::getInstance()->getTracker();
-
-
-    if( pad.start == PadTracker::PRESSED || key.pressed.P )
-    {
-		SOUND->stop( SoundId::kDicision );
-		SOUND->play( SoundId::kDicision , false );
-        kTaskManager->restart();
-        clock_->restart();
-
-        update_ = is_pause_ ? &Endless::start : &Endless::play;
-        is_pause_ = false;
-    }
 
 
     // ポーズからの戻り値で処理を分岐

@@ -45,29 +45,32 @@ constexpr float kAmountAlphaChangeForRankIn = 0.04F;    // "RankIn"‚ÌƒAƒ‹ƒtƒ@’l‚
 constexpr float kAlphaMaxRankIn             = 1.0F;     // "RankIn"‚ÌƒAƒ‹ƒtƒ@’lãŒÀ
 constexpr float kAlphaMinRankIn             = 0.0F;     // "RankIn"‚ÌƒAƒ‹ƒtƒ@’l‰ºŒÀ
 
-enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankInLine, kTrimRankIn };
+enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankInLine, kTrimRankIn, kTrimRank };
 const RECT kTrimming[] =
 {
     {   0L,   0L, 680L, 720L }, // back
     { 665L,   0L, 921L,  16L }, // cursor
     { 683L,  85L, 700L, 141L }, // name cursor
-    {   0L, 720L, 642L, 915L }, // rankin line
+    {   0L, 777L, 642L, 915L }, // rankin line
     {   0L, 916L,  66L, 929L }, // rankin
+    {   0L, 727L, 230L, 777L }, // rank
 };
 
 enum { kPosBackground, kPosScore, kPosHeight, kPosCombo, kPosRankInLine,
-                kPosRankIn, kPosRank, kPosName, kPosNameCursor, kPosRanking };
+                kPosRankIn, kPosRank, kPosName, kPosNameCursor, kPosRanking,
+       kPosRankInRank};
 constexpr Vector2 kPositionFromBase[] {
     { 307.0F,   0.0F }, // back
     { 740.0F, 148.0F }, // score
     { 417.0F, 222.0F }, // height
     { 898.0F, 221.0F }, // combo
-    { 319.0F, 100.0F }, // rankin line
+    { 319.0F, 158.0F }, // rankin line
     {   0.0F,   0.0F }, // rankin
-    { 890.0F, 120.0F }, // rank
-    { 556.0F, 262.0F }, // name
+    { 654.0F, 215.0F }, // rank
+    { 556.0F, 265.0F }, // name
     { 558.0F, 247.0F }, // name cursor
     { 436.0F, 456.0F }, // ranking
+    { 530.0F, 200.0F }, // rank in rank
 };
 
 enum { kSelectSetName, kSelectOneMore, kSelectTitle, };
@@ -297,6 +300,10 @@ void Result::draw()
                        position_base_ + kPositionFromBase[kPosRankInLine],
 					   &kTrimming[ kTrmRankInLine ] , alpha_ , 1.0F );
 
+        kSprite->draw( texture_,
+                       position_base_ + kPositionFromBase[kPosRankInRank],
+                       &kTrimming[ kTrimRank ], alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_, 1.0F );
+
         // –¼‘O
         Text::drawString( name_,
                           texture_char_,
@@ -309,7 +316,7 @@ void Result::draw()
                           texture_numbers_big_,
                           position_base_ + kPositionFromBase[kPosRank],
                           kBigNumbersWidth, kBigNumbersHeight,
-                          1U, alpha_ );
+                          1U, alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_ );
 
         // –¼‘OƒJ[ƒ\ƒ‹( –¼‘O‘I‘ðŽž‚É‚Ì‚Ý•`‰æ )
         if( update_ == &Result::setName )
