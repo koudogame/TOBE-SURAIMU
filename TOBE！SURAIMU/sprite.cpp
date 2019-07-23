@@ -1,13 +1,12 @@
 
 #include "direct3d.h"
-#include "commonstates.h"
 #include "sprite.h"
 
 //  初期化
 bool Sprite::init()
 {
     //  SpriteBatchクラスのメモリを確保
-	sprite_ = std::make_unique<SpriteBatch>(Direct3D::Get()->getContext());
+	sprite_ = std::make_unique<SpriteBatch>(Direct3D::getInstance()->getContext());
     //  メモリ確保チェック
     if( !sprite_ )
         //  エラー
