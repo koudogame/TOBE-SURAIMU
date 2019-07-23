@@ -83,7 +83,7 @@ void Background::draw()
         kSprite->reserveDraw(
             texture_,
             draw_position,
-            &trimming_,
+            trimming_,
             1.0F, 
             depth_,
             {1.0F, 1.0F},

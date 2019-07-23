@@ -196,7 +196,7 @@ void RankingInEndless::draw()
 
 
     // ‰e‚ð•`‰æ
-	Sprite::getInstance()->reserveDraw( texture_ , Vector2::Zero , nullptr , 1.0F , 0.95F );
+    Sprite::getInstance()->reserveDraw( texture_ , Vector2::Zero , {0L, 0L, 0L, 0L} , 1.0F , 0.95F );
 }
 
 /*===========================================================================*/

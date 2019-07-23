@@ -211,7 +211,7 @@ void Result::draw()
     // 背景
 	kSprite->reserveDraw( texture_,
                    position_base_ + kPositionFromBase[kPosBackground],
-				   &kTrimming[ kTrmBackground ] , alpha_ , 0.9F );
+				   kTrimming[ kTrmBackground ] , alpha_ , 0.9F );
 
     // スコア
     Text::drawNumber( score_.getScore(),
@@ -234,7 +234,7 @@ void Result::draw()
     // カーソル
     kSprite->reserveDraw(  texture_,
                            position_base_ + kPositionCursorFromBase[select_],
-				           &kTrimming[ kTrmCursor ] , alpha_ , 1.0F );
+				           kTrimming[ kTrmCursor ] , alpha_ , 1.0F );
 
     // ランキング
     RankingManager* kRanking = RankingManager::getInstance();
@@ -270,7 +270,7 @@ void Result::draw()
             draw_player_ = true;
 
             position.x -= 80.0F;
-            kSprite->reserveDraw( texture_, position, &kTrimming[kTrimRankIn],
+            kSprite->reserveDraw( texture_, position, kTrimming[kTrimRankIn],
                            alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_);
             position.x += 80.0F;
 
@@ -298,11 +298,11 @@ void Result::draw()
         // 下線
         kSprite->reserveDraw( texture_,
                        position_base_ + kPositionFromBase[kPosRankInLine],
-					   &kTrimming[ kTrmRankInLine ] , alpha_ , 1.0F );
+					   kTrimming[ kTrmRankInLine ] , alpha_ , 1.0F );
 
         kSprite->reserveDraw( texture_,
                        position_base_ + kPositionFromBase[kPosRankInRank],
-                       &kTrimming[ kTrimRank ], alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_, 1.0F );
+                       kTrimming[ kTrimRank ], alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_, 1.0F );
 
         // 名前
         Text::drawString( name_,
@@ -325,7 +325,7 @@ void Result::draw()
             position.x += kCharacterWidth * index_name_;
             kSprite->reserveDraw( texture_,
                            position,
-                           &kTrimming[kTrmNameCursor], alpha_, 1.0F
+                           kTrimming[kTrmNameCursor], alpha_, 1.0F
 			);
         }
     }

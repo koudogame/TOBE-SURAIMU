@@ -204,7 +204,7 @@ void Ranking::draw()
     Sprite* const kSprite = Sprite::getInstance();
 
     // バックの描画
-	kSprite->reserveDraw( texture_ , kPosition[ kBack ] , &kTrimming[ kBack ] , 1.0F , 0.2F );
+	kSprite->reserveDraw( texture_ , kPosition[ kBack ] , kTrimming[ kBack ] , 1.0F , 0.2F );
 
     // ランキングの描画
     RankingManager* const kRanking = RankingManager::getInstance();
@@ -222,7 +222,7 @@ void Ranking::draw()
         // フィールド
         position.x = kPosition[kField].x;
         position.y += 3.0F;
-		kSprite->reserveDraw( texture_ , position , &kTrimming[ kField ] , 1.0F , 0.3F );
+		kSprite->reserveDraw( texture_ , position , kTrimming[ kField ] , 1.0F , 0.3F );
         position.y -= 3.0F;
 
         // ランク
@@ -255,7 +255,7 @@ void Ranking::draw()
 
 
     // フレームの描画
-	kSprite->reserveDraw( texture_ , kPosition[ kFrame ] , &kTrimming[ kFrame ] , 1.0F , 1.0F );
+	kSprite->reserveDraw( texture_ , kPosition[ kFrame ] , kTrimming[ kFrame ] , 1.0F , 1.0F );
 }
 
 

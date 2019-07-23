@@ -23,7 +23,7 @@ void Text::drawString( const std::string& Text,
         trimming.left = getCharNum( ch ) * Width;
         trimming.right = trimming.left + Width;
 
-        kSprite->reserveDraw( Texture, position, &trimming, Alpha, 0.9F );
+        kSprite->reserveDraw( Texture, position, trimming, Alpha, 0.9F );
 
         position.x += Width;
     }
@@ -54,7 +54,7 @@ void Text::drawNumber( const unsigned long long Number,
         Sprite::getInstance()->reserveDraw(
             Texture,
             position,
-            &trimming,
+            trimming,
             Alpha,
             0.9F
         );
