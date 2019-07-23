@@ -215,7 +215,7 @@ void Player::draw()
 
 	//ƒKƒCƒh‚Ì•`‰æ
 	if ( !flag_.test( Flag::kJump ) && guide_alpha_ > 0.0F )
-		Sprite::getInstance()->reserveDraw(guide_, myshape_.position, nullptr, guide_alpha_, 1.0F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kGuideWidth / 2.0F, kGuideHeight), Sprite::getInstance()->chengeMode());
+		Sprite::getInstance()->reserveDraw(guide_, myshape_.position, {0,0,0,0}, guide_alpha_, 1.0F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kGuideWidth / 2.0F, kGuideHeight), Sprite::getInstance()->chengeMode());
 	else if ( guide_alpha_ <= 0.0F )
 		guide_alpha_ = 0.0F;
 

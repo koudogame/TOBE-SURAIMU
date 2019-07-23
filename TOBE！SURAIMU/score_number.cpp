@@ -54,14 +54,14 @@ void ScoreNumber::draw()
 		trim.left = kNumWidth * ( temp % 10 );
 		trim.right = trim.left + kNumWidth;
 		trim.bottom = trim.top + kNumHeight;
-		Sprite::getInstance()->reserveDraw( texture_ , draw_position , &trim , alpha_ , 1.0F );
+		Sprite::getInstance()->reserveDraw( texture_ , draw_position , trim , alpha_ , 1.0F );
 		draw_position.x -= kNumWidth;
 	}
 
 	//+‚Ì•`‰æ
 	trim.left = kPulseLeft;
 	trim.right = trim.left + kNumWidth;
-	Sprite::getInstance()->reserveDraw( puluse_ , draw_position , &trim , alpha_ , 1.0F );
+	Sprite::getInstance()->reserveDraw( puluse_ , draw_position , trim , alpha_ , 1.0F );
 }
 
 //¶‘¶Šm”F

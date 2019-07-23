@@ -76,7 +76,7 @@ void Scoring::draw()
 {
 	//トータルスコアの下地描画
 	RECT trim = kBaseTrim;
-	Sprite::getInstance()->reserveDraw( texture_ , kBasePosition , &trim , 1.0F , 0.9F );
+	Sprite::getInstance()->reserveDraw( texture_ , kBasePosition , trim , 1.0F , 0.9F );
 
 	//トータルスコアの描画
 	unsigned long long temp = score_;
@@ -86,7 +86,7 @@ void Scoring::draw()
 		trim.left = kNumWidth * ( temp % 10 );
 		trim.right = trim.left + kNumWidth;
 		trim.bottom = trim.top + kNumHeight;
-		Sprite::getInstance()->reserveDraw( num_texture_ , draw_position , &trim , 1.0F , 1.0F );
+		Sprite::getInstance()->reserveDraw( num_texture_ , draw_position , trim , 1.0F , 1.0F );
 		draw_position.x -= kNumWidth;
 		temp /= 10;
 	} while( temp > 0ULL );
@@ -100,7 +100,7 @@ void Scoring::draw()
 		trim.left = kNumWidth * ( temp_ % 10 );
 		trim.right = trim.left + kNumWidth;
 		trim.bottom = trim.top + kNumHeight;
-		Sprite::getInstance()->reserveDraw( num_texture_ , draw_position , &trim , 1.0F , 1.0F );
+		Sprite::getInstance()->reserveDraw( num_texture_ , draw_position , trim , 1.0F , 1.0F );
 		draw_position.x -= kNumWidth;
 		temp_ /= 10;
 	} while( temp_ > 0ULL );
@@ -114,7 +114,7 @@ void Scoring::draw()
 		trim.left = kNumWidth * ( temp_ % 10 );
 		trim.right = trim.left + kNumWidth;
 		trim.bottom = trim.top + kNumHeight;
-		Sprite::getInstance()->reserveDraw( num_texture_ , draw_position , &trim , 1.0F , 1.0F );
+		Sprite::getInstance()->reserveDraw( num_texture_ , draw_position , trim , 1.0F , 1.0F );
 		draw_position.x -= kNumWidth;
 		temp_ /= 10;
 	} while( temp_ > 0ULL );

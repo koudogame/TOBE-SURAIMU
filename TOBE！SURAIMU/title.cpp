@@ -139,12 +139,12 @@ void Title::draw()
 {
 	for( int i = ObjectNum::kStar1; i <= ObjectNum::kStar3; i++ )
 	{
-        Sprite::getInstance()->reserveDraw( overlay_texture_ , object_status_[ i ].position , &object_status_[ i ].trim , 1.0F , 1.0F, {1.0F, 1.0F}, 0.0F, Vector2::Zero, Sprite::getInstance()->chengeMode() );
+        Sprite::getInstance()->reserveDraw( overlay_texture_ , object_status_[ i ].position , object_status_[ i ].trim , 1.0F , 1.0F, {1.0F, 1.0F}, 0.0F, Vector2::Zero, Sprite::getInstance()->chengeMode() );
 	}
 
-	Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kStar1 ].texture , object_status_[ ObjectNum::kStar1 ].position , &object_status_[ ObjectNum::kStar1 ].trim , 1.0F , 1.0F );
-	Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kStar2 ].texture , object_status_[ ObjectNum::kStar2 ].position , &object_status_[ ObjectNum::kStar2 ].trim , 1.0F , 1.0F);
-	Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kStar3 ].texture , object_status_[ ObjectNum::kStar3 ].position , &object_status_[ ObjectNum::kStar3 ].trim , 1.0F , 1.0F );
+	Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kStar1 ].texture , object_status_[ ObjectNum::kStar1 ].position , object_status_[ ObjectNum::kStar1 ].trim , 1.0F , 1.0F );
+	Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kStar2 ].texture , object_status_[ ObjectNum::kStar2 ].position , object_status_[ ObjectNum::kStar2 ].trim , 1.0F , 1.0F);
+	Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kStar3 ].texture , object_status_[ ObjectNum::kStar3 ].position , object_status_[ ObjectNum::kStar3 ].trim , 1.0F , 1.0F );
 
 	for( int i = 0; i <= ObjectNum::kPlayer; i++ )
 		object_[ i ].get()->draw();
@@ -157,9 +157,9 @@ void Title::draw()
 		positright.y = y;
 		positleft.y = y;
 
-		Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kWallRight ].texture , positright , &object_status_[ ObjectNum::kWallRight ].trim , object_status_[ ObjectNum::kWallRight ].alpha ,
+		Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kWallRight ].texture , positright , object_status_[ ObjectNum::kWallRight ].trim , object_status_[ ObjectNum::kWallRight ].alpha ,
 									 1.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2::Zero, Common::getInstance()->getStates()->NonPremultiplied() , SpriteEffects::SpriteEffects_FlipHorizontally );
-		Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kWallLeft ].texture , positleft , &object_status_[ ObjectNum::kWallLeft ].trim , object_status_[ ObjectNum::kWallLeft ].alpha ,
+		Sprite::getInstance()->reserveDraw( object_status_[ ObjectNum::kWallLeft ].texture , positleft , object_status_[ ObjectNum::kWallLeft ].trim , object_status_[ ObjectNum::kWallLeft ].alpha ,
 									 1.0F , Vector2( 1.0F , 1.0F ) , 0.0F , Vector2::Zero, Common::getInstance()->getStates()->NonPremultiplied(), SpriteEffects::SpriteEffects_None );
 	}
 

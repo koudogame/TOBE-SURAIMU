@@ -52,7 +52,7 @@ void GroundParticle::update()
 //ï`âÊ
 void GroundParticle::draw()
 {
-	Sprite::getInstance()->reserveDraw( texture_ , position_ + velocity_ , &triming_ , 1.0F - now_time_ , 0.2F , Vector2( scale_ , scale_ ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
+	Sprite::getInstance()->reserveDraw( texture_ , position_ + velocity_ , triming_ , 1.0F - now_time_ , 0.2F , Vector2( scale_ , scale_ ) , 0.0F , Vector2( kTextureSize / 2.0F , kTextureSize / 2.0F ) );
 }
 
 //ê∂ë∂ämîF

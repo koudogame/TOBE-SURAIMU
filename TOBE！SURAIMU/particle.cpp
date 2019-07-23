@@ -85,7 +85,7 @@ void Particle::draw()
 	Sprite::getInstance()->reserveDraw(
 		texture_ ,
 		position_ ,
-		nullptr ,
+		{0,0,0,0},
 		1.0F ,
 		0.2F
 	);

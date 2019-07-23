@@ -56,7 +56,7 @@ void StayParticle::draw()
 	Sprite::getInstance()->reserveDraw(
 		texture_,
 		(*position_),
-		&trim,
+		trim,
 		1.0F,
 		0.9F,
 		Vector2(1.0F, 1.0F),
