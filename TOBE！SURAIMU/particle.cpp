@@ -82,7 +82,7 @@ void Particle::update()
 // •`‰æˆ—
 void Particle::draw()
 {
-	Sprite::getInstance()->draw(
+	Sprite::getInstance()->reserveDraw(
 		texture_ ,
 		position_ ,
 		nullptr ,

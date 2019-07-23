@@ -213,15 +213,11 @@ void Player::draw()
 	else
 		draw_angle = -revision_angle_ - XM_PIDIV2;
 
-	Sprite::getInstance()->end();
-	Sprite::getInstance()->begin( Sprite::getInstance()->chengeMode() );
 	//ƒKƒCƒh‚Ì•`‰æ
 	if ( !flag_.test( Flag::kJump ) && guide_alpha_ > 0.0F )
-		Sprite::getInstance()->draw( guide_, myshape_.position, nullptr, guide_alpha_, 0.2F, Vector2( 1.0F, 1.0F ), XMConvertToDegrees( draw_angle ), Vector2( kGuideWidth / 2.0F, kGuideHeight ) );
+		Sprite::getInstance()->reserveDraw(guide_, myshape_.position, nullptr, guide_alpha_, 0.2F, Vector2(1.0F, 1.0F), XMConvertToDegrees(draw_angle), Vector2(kGuideWidth / 2.0F, kGuideHeight), Sprite::getInstance()->chengeMode());
 	else if ( guide_alpha_ <= 0.0F )
 		guide_alpha_ = 0.0F;
-	Sprite::getInstance()->end();
-	Sprite::getInstance()->begin();
 
 
 	slectDirection();
@@ -232,7 +228,7 @@ void Player::draw()
 	trim.bottom = trim.top + kPlayerSize;
 	trim.right = trim.left + kPlayerSize;
 
-	Sprite::getInstance()->draw(texture_, myshape_.position, &trim, 1.0F, 1.0F, Vector2(1.0F, 1.0F), XMConvertToDegrees(draw_angle), Vector2(kPlayerSize / 2.0F, kPlayerSize / 2.0F));
+	Sprite::getInstance()->reserveDraw(texture_, myshape_.position, &trim, 1.0F, 1.0F, Vector2(1.0F, 1.0F), XMConvertToDegrees(draw_angle), Vector2(kPlayerSize / 2.0F, kPlayerSize / 2.0F));
 
 	score_.draw();
 
