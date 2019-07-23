@@ -9,6 +9,7 @@ struct TitleStatus
 	ID3D11ShaderResourceView* texture;
 	RECT trim;
 	float alpha = 1.0F;
+	float depth = 1.0F;
 };
 
 //class
