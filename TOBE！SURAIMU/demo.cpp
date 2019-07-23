@@ -232,7 +232,7 @@ void Demo::draw()
     Sprite::getInstance()->reserveDraw(
         texture_,
         Vector2::Zero,
-        &kRangeOfScreen,
+        kRangeOfScreen,
         alpha_,
         1.0F
     );

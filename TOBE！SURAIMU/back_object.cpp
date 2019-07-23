@@ -136,14 +136,14 @@ void BackObject::draw()
     while( draw_position.x < getWindowWidth<float>() )
     {
         kSprite->reserveDraw( 
-            texture_, draw_position, &trimming_,
+            texture_, draw_position, trimming_,
             0.2F, draw_depth_,
             {1.0F, 1.0F}, 0.0F, Vector2::Zero,
             Common::getInstance()->getStates()->Additive()
         );
 
         kSprite->reserveDraw(
-            texture_sub_, draw_position, &trimming_,
+            texture_sub_, draw_position, trimming_,
             sub_alpha_, draw_depth_,
             {1.0F, 1.0F}, 0.0F, Vector2::Zero,
             Common::getInstance()->getStates()->Additive()

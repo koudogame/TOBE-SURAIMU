@@ -145,7 +145,7 @@ void FailWall::draw()
     sprite->reserveDraw(
         texture_,
         {shape_->start.x, shape_->start.y + 10.0F},
-        &kTrimming[kWallNo],
+        kTrimming[kWallNo],
         1.0F, 0.0F, {1.0F, 1.0F}, 0.0F, Vector2::Zero,
         common->getStates()->Additive()
     );
@@ -157,7 +157,7 @@ void FailWall::draw()
         sprite->reserveDraw(
             texture_,
             { shape_->start.x, shape_->start.y + 10.0F },
-            &kTrimming[i],
+            kTrimming[i],
             1.0F,
             0.0F,
             {1.0F, scale_y_[i * kScalingFrame]},
