@@ -6,7 +6,7 @@ struct DrawInf
 {
 	ID3D11ShaderResourceView* texture;
 	Vector2 position;
-	const RECT* trim;
+	RECT trim;
 	float alpha;
 	float depth;
 	Vector2 scale;
@@ -18,7 +18,7 @@ struct DrawInf
 	DrawInf(
 		ID3D11ShaderResourceView* Texture,
 		const Vector2& Position,
-		const RECT* Trim,
+		RECT Trim,
 		float Alpha,
 		float Depth,
 		const Vector2& Scale,
@@ -57,7 +57,7 @@ public:
 	void reserveDraw(
 		ID3D11ShaderResourceView* Texture,				//  テクスチャ
 		const Vector2& position,                       //  描画位置
-		const RECT* Rect = NULL,                        //  切り取り範囲
+		RECT  Rect = {0,0,0,0},                        //  切り取り範囲
 		float alpha = 1.0F,							    //　α値
 		float Depth = 0.0F,                             //  深度値
 		const Vector2& Scale = Vector2(1.0F, 1.0F),    //	拡縮率

@@ -5,14 +5,14 @@
 //  初期化
 bool Sprite::init()
 {
-    //  SpriteBatchクラスのメモリを確保
+	//  SpriteBatchクラスのメモリを確保
 	sprite_ = std::make_unique<SpriteBatch>(Direct3D::getInstance()->getContext());
-    //  メモリ確保チェック
-    if( !sprite_ )
-        //  エラー
-        return false;
+	//  メモリ確保チェック
+	if (!sprite_)
+		//  エラー
+		return false;
 	draw_inf_.clear();
-    return true;
+	return true;
 }
 
 void Sprite::draw()
@@ -31,10 +31,17 @@ void Sprite::draw()
 			blend_mode = temp;
 		}
 
+		RECT* trim_ptr = nullptr;
+		if (itr.trim.top != itr.trim.bottom ||
+			itr.trim.right != itr.trim.left ||
+			itr.trim.top != itr.trim.left ||
+			itr.trim.top != 0)
+			trim_ptr = &itr.trim;
+
 		sprite_->Draw(
 			itr.texture,
 			itr.position,
-			itr.trim,
+			trim_ptr,
 			Color(1.0F, 1.0F, 1.0F, itr.alpha),
 			itr.rotate,
 			itr.anker,
@@ -47,7 +54,7 @@ void Sprite::draw()
 	draw_inf_.clear();
 }
 
-void Sprite::reserveDraw(ID3D11ShaderResourceView * Texture, const Vector2 & Position, const RECT * Rect, float alpha, float Depth, const Vector2 & Scale, float Rotate, const Vector2 & Anker, ID3D11BlendState * BlendState, SpriteEffects Effect)
+void Sprite::reserveDraw(ID3D11ShaderResourceView * Texture, const Vector2 & Position, RECT Rect, float alpha, float Depth, const Vector2 & Scale, float Rotate, const Vector2 & Anker, ID3D11BlendState * BlendState, SpriteEffects Effect)
 {
-	draw_inf_.push_back(DrawInf(Texture, Position, Rect, alpha, Depth, Scale, Rotate, Anker, Effect,BlendState));
+	draw_inf_.push_back(DrawInf(Texture, Position, Rect, alpha, Depth, Scale, Rotate, Anker, Effect, BlendState));
 }
