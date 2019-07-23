@@ -111,12 +111,12 @@ void Pause::draw() const
     if( update_ == &Pause::waitInput )
     {
         // 背景
-	    kSprite->draw( texture_ , Vector2::Zero ,  &kTrimming[kBack] , 1.0F , 1.0F );
+	    kSprite->reserveDraw( texture_ , Vector2::Zero ,  &kTrimming[kBack] , 1.0F , 1.0F );
         // ポーズ本体
-        kSprite->draw( texture_, kPosition,        &kTrimming[kPause], 1.0F, 1.0F );
+        kSprite->reserveDraw( texture_, kPosition,        &kTrimming[kPause], 1.0F, 1.0F );
 
         // カーソル
-        kSprite->draw( texture_, position_cursor_, &kTrimming[kCursor], 1.0F, 1.0F );
+        kSprite->reserveDraw( texture_, position_cursor_, &kTrimming[kCursor], 1.0F, 1.0F );
     }
     // コンティニュー時にのみ描画
     else if( update_ == &Pause::toContinue )
@@ -126,7 +126,7 @@ void Pause::draw() const
         trimming.right = trimming.left + kNumberWidth;
 
         // 残り時間
-        kSprite->draw( texture_, kPositionRemainingTime, &trimming,
+        kSprite->reserveDraw( texture_, kPositionRemainingTime, &trimming,
             number_alpha_, 0.0F, {number_scale_, number_scale_}, 0.0F,
             kAnkerRemainingTime );
     }

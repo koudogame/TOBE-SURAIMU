@@ -75,19 +75,24 @@ void Background::draw()
     Sprite* const kSprite = Sprite::getInstance();
 
 
-    // •`‰æƒ‚[ƒh"‰ÁZ‡¬"
-    kSprite->end();
-    kSprite->begin(kSprite->chengeMode());
     Vector2 draw_position = position_;
 
     // ‰æ–Ê‚ª–„‚Ü‚é‚Ü‚Åc‚É•`‰æ
     while (draw_position.y + kTextureSize > 0.0F)
     {
-        kSprite->draw(texture_, draw_position, &trimming_, 1.0F, depth_);
+        kSprite->reserveDraw(
+            texture_,
+            draw_position,
+            &trimming_,
+            1.0F, 
+            depth_,
+            {1.0F, 1.0F},
+            0.0F,
+            {0.0F, 0.0F},
+            Common::getInstance()->getStates()->Additive()
+        );
 
         draw_position.y -= static_cast<float>(kTextureSize);
     }
-    kSprite->end();
-    kSprite->begin();
     // I•`‰æƒ‚[ƒh"‰ÁZ‡¬"
 }

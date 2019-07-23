@@ -138,24 +138,23 @@ void FailWall::update()
 
 void FailWall::draw()
 {
+    Common* common = Common::getInstance();
     Sprite* sprite = Sprite::getInstance();
 
-    // ‰ÁZ‡¬
-    sprite->end();
-    sprite->begin( Common::getInstance()->getStates()->Additive() );
-
     // •Ç‚Ì•`‰æ
-    sprite->draw(
+    sprite->reserveDraw(
         texture_,
         {shape_->start.x, shape_->start.y + 10.0F},
-        &kTrimming[kWallNo]
+        &kTrimming[kWallNo],
+        1.0F, 0.0F, {1.0F, 1.0F}, 0.0F, Vector2::Zero,
+        common->getStates()->Additive()
     );
 
 
     // ‰Š‚Ì•`‰æ
     for( int i = 0; i < kFireNum; ++i )
     {
-        sprite->draw(
+        sprite->reserveDraw(
             texture_,
             { shape_->start.x, shape_->start.y + 10.0F },
             &kTrimming[i],
@@ -163,13 +162,10 @@ void FailWall::draw()
             0.0F,
             {1.0F, scale_y_[i * kScalingFrame]},
             0.0F,
-            {0.0F, kFireHeight}
+            {0.0F, kFireHeight},
+            common->getStates()->Additive()
         );
     }
-
-    sprite->end();
-    sprite->begin();
-    // ‰ÁZ‡¬
 }
 
 

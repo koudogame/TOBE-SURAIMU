@@ -76,11 +76,11 @@ void BonusIcon::update()
 void BonusIcon::draw()
 {
     RECT trimming { 0L, 0L, kWidth, kHeight };
-
+/*
     Sprite::getInstance()->draw(
         texture_,
         position_, 
-        &trimming);
+        &trimming);*/
 }
 
 

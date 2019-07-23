@@ -121,12 +121,13 @@ void Wall::draw()
     {
         // ¶•Ç
         draw_position.x = kDrawPositionXLeftWall;
-		kSprite->draw( texture_ , draw_position , &kTrimmingWall , 1.0F , 1.0F );
+		kSprite->reserveDraw( texture_ , draw_position , &kTrimmingWall , 1.0F , 1.0F );
 
         // ‰E•Ç( ¶‰E”½“] )
         draw_position.x = kDrawPositionXRightWall;
-        kSprite->draw(texture_, draw_position, &kTrimmingWall,
+        kSprite->reserveDraw(texture_, draw_position, &kTrimmingWall,
             1.0F, 1.0F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero,
+            Common::getInstance()->getStates()->NonPremultiplied(),
             SpriteEffects_FlipHorizontally );
 
         draw_position.y += static_cast<long>(kWallHeight);

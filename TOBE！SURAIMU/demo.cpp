@@ -229,7 +229,7 @@ SceneBase* Demo::update()
 
 void Demo::draw()
 {
-    Sprite::getInstance()->draw(
+    Sprite::getInstance()->reserveDraw(
         texture_,
         Vector2::Zero,
         &kRangeOfScreen,

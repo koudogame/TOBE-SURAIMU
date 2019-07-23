@@ -132,21 +132,25 @@ void BackObject::draw()
     }
 
 
-    // シームレスに描画( 左から右へ ) *加算合成
-    kSprite->end();
-    kSprite->begin(kSprite->chengeMode());
+    // シームレスに描画( 左から右へ )
     while( draw_position.x < getWindowWidth<float>() )
     {
-        kSprite->draw( texture_, draw_position, &trimming_,
-                       0.2F, draw_depth_ );
+        kSprite->reserveDraw( 
+            texture_, draw_position, &trimming_,
+            0.2F, draw_depth_,
+            {1.0F, 1.0F}, 0.0F, Vector2::Zero,
+            Common::getInstance()->getStates()->Additive()
+        );
 
-        kSprite->draw( texture_sub_, draw_position, &trimming_,
-                       sub_alpha_, draw_depth_);
+        kSprite->reserveDraw(
+            texture_sub_, draw_position, &trimming_,
+            sub_alpha_, draw_depth_,
+            {1.0F, 1.0F}, 0.0F, Vector2::Zero,
+            Common::getInstance()->getStates()->Additive()
+        );
 
         draw_position.x += kWidth;
     }
-    kSprite->end();
-    kSprite->begin();
 }
 
 

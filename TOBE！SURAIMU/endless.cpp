@@ -211,13 +211,13 @@ void Endless::draw()
 	{
 		if (player_->isJump())
 		{
-			Sprite::getInstance()->draw(
+			Sprite::getInstance()->reserveDraw(
 				description_, kPosition, &kTrimming[kStick],
 				1.0F, 1.0F);
 		}
 		else if(!player_->isJump())
 		{
-			Sprite::getInstance()->draw(
+			Sprite::getInstance()->reserveDraw(
 				description_, kPosition, &kTrimming[kAButton],
 				1.0F, 1.0F);
 		}

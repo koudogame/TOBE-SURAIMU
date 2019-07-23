@@ -209,7 +209,7 @@ void Result::draw()
     Sprite* const kSprite = Sprite::getInstance();
 
     // 背景
-	kSprite->draw( texture_,
+	kSprite->reserveDraw( texture_,
                    position_base_ + kPositionFromBase[kPosBackground],
 				   &kTrimming[ kTrmBackground ] , alpha_ , 0.9F );
 
@@ -232,9 +232,9 @@ void Result::draw()
                       kMiniNumbersWidth, kMiniNumbersHeight, 1U, alpha_ );
 
     // カーソル
-    kSprite->draw( texture_,
-                   position_base_ + kPositionCursorFromBase[select_],
-				   &kTrimming[ kTrmCursor ] , alpha_ , 1.0F );
+    kSprite->reserveDraw(  texture_,
+                           position_base_ + kPositionCursorFromBase[select_],
+				           &kTrimming[ kTrmCursor ] , alpha_ , 1.0F );
 
     // ランキング
     RankingManager* kRanking = RankingManager::getInstance();
@@ -270,7 +270,7 @@ void Result::draw()
             draw_player_ = true;
 
             position.x -= 80.0F;
-            kSprite->draw( texture_, position, &kTrimming[kTrimRankIn],
+            kSprite->reserveDraw( texture_, position, &kTrimming[kTrimRankIn],
                            alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_);
             position.x += 80.0F;
 
@@ -296,11 +296,11 @@ void Result::draw()
     if( rank_ <= kRegisteredNum )
     {
         // 下線
-        kSprite->draw( texture_,
+        kSprite->reserveDraw( texture_,
                        position_base_ + kPositionFromBase[kPosRankInLine],
 					   &kTrimming[ kTrmRankInLine ] , alpha_ , 1.0F );
 
-        kSprite->draw( texture_,
+        kSprite->reserveDraw( texture_,
                        position_base_ + kPositionFromBase[kPosRankInRank],
                        &kTrimming[ kTrimRank ], alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_, 1.0F );
 
@@ -323,7 +323,7 @@ void Result::draw()
         {
             position = position_base_ + kPositionFromBase[kPosNameCursor];
             position.x += kCharacterWidth * index_name_;
-            kSprite->draw( texture_,
+            kSprite->reserveDraw( texture_,
                            position,
                            &kTrimming[kTrmNameCursor], alpha_, 1.0F
 			);

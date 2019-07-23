@@ -196,7 +196,7 @@ void RankingInEndless::draw()
 
 
     // ‰e‚ð•`‰æ
-	Sprite::getInstance()->draw( texture_ , Vector2::Zero , nullptr , 1.0F , 0.95F );
+	Sprite::getInstance()->reserveDraw( texture_ , Vector2::Zero , nullptr , 1.0F , 0.95F );
 }
 
 /*===========================================================================*/
@@ -244,5 +244,5 @@ void RankingInEndless::drawData(
     // ‰ºü
     Position.x = kBarPositionX;
     Position.y += kIntervalNameToBar;
-    Sprite::getInstance()->draw( texture_bar_, Position, TrimminaBar, Alpha, 0.5F );
+    Sprite::getInstance()->reserveDraw( texture_bar_, Position, TrimminaBar, Alpha, 0.5F );
 }
