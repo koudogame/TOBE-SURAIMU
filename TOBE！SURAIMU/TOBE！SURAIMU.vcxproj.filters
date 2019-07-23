@@ -152,9 +152,6 @@
     <ClCompile Include="direct3d.cpp">
       <Filter>Project\System\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="sprite.cpp">
-      <Filter>Project\System\DirectX</Filter>
-    </ClCompile>
     <ClCompile Include="pad.cpp">
       <Filter>Project\System\DirectX\Input</Filter>
     </ClCompile>
@@ -290,6 +287,9 @@
     <ClCompile Include="demo.cpp">
       <Filter>Project\Game\Scene\Demo</Filter>
     </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>Project\System\DirectX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -302,9 +302,6 @@
       <Filter>Project\System\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="direct3d.h">
-      <Filter>Project\System\DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="sprite.h">
       <Filter>Project\System\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="pad.h">
@@ -470,6 +467,9 @@
     </ClInclude>
     <ClInclude Include="demo.h">
       <Filter>Project\Game\Scene\Demo</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>Project\System\DirectX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

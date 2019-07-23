@@ -189,6 +189,7 @@
     <ClInclude Include="scoring.h" />
     <ClInclude Include="Sound\xwb.h" />
     <ClInclude Include="space.h" />
+    <ClInclude Include="sprite.h" />
     <ClInclude Include="stay_particle.h" />
     <ClInclude Include="stay_particle_container.h" />
     <ClInclude Include="text.h" />
@@ -202,7 +203,6 @@
     <ClInclude Include="result.h" />
     <ClInclude Include="scene_base.h" />
     <ClInclude Include="shape.h" />
-    <ClInclude Include="sprite.h" />
     <ClInclude Include="star.h" />
     <ClInclude Include="star_container.h" />
     <ClInclude Include="stdafx.h" />
@@ -247,6 +247,7 @@
     <ClCompile Include="sercher.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="space.cpp" />
+    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="stay_particle.cpp" />
     <ClCompile Include="stay_particle_container.cpp" />
     <ClCompile Include="text.cpp" />
@@ -256,7 +257,6 @@
     <ClCompile Include="pad.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="result.cpp" />
-    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="star.cpp" />
     <ClCompile Include="star_container.cpp" />
     <ClCompile Include="stdafx.cpp">

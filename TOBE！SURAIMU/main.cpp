@@ -162,14 +162,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				{
 					break;
 				}
-				// ƒXƒvƒ‰ƒCƒg•`‰æŠJn
-				Sprite::getInstance()->begin();
 
 				// ƒQ[ƒ€‰æ–Ê•`‰æ
 				game.draw();
 
-				// ƒXƒvƒ‰ƒCƒg•`‰æI—¹
-				Sprite::getInstance()->end();
+				//•`‰æ
+				Sprite::getInstance()->draw();
 
 				// •`‰æXV
 				Direct3D::getInstance()->present();
