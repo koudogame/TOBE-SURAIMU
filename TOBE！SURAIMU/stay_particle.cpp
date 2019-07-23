@@ -60,7 +60,7 @@ void StayParticle::draw()
 		1.0F,
 		0.9F,
 		Vector2(1.0F, 1.0F),
-		angle_,
+		XMConvertToRadians(angle_) ,
 		Vector2(kTextureSize / 2.0F, kTextureSize / 2.0F),
 		Sprite::getInstance()->chengeMode());
 }

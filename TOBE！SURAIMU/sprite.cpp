@@ -47,7 +47,7 @@ void Sprite::draw()
 			itr.anker,
 			itr.scale,
 			itr.effect,
-			itr.depth);
+			1.0F);
 	}
 	sprite_->End();
 

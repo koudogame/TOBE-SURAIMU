@@ -228,7 +228,7 @@ void Player::draw()
 	trim.bottom = trim.top + kPlayerSize;
 	trim.right = trim.left + kPlayerSize;
 
-	Sprite::getInstance()->reserveDraw(texture_, myshape_.position, &trim, 1.0F, 1.0F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kPlayerSize / 2.0F, kPlayerSize / 2.0F));
+	Sprite::getInstance()->reserveDraw(texture_, myshape_.position, trim, 1.0F, 1.0F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kPlayerSize / 2.0F, kPlayerSize / 2.0F));
 
 	score_.draw();
 }

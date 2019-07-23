@@ -64,7 +64,7 @@ bool RankingInEndless::init()
 
     texture_bar_                 = kLoader->load(L"Texture/mini_ranking_bar.png");
     if( texture_bar_             == nullptr ) { return false; }
-    
+
     texture_number_              = kLoader->load(L"Texture/Rank_Number.png");
     if( texture_number_          == nullptr ) { return false; }
 
@@ -213,7 +213,7 @@ void RankingInEndless::drawData(
 {
     // ランク
     if( Data.rank == player_.rank)
-    {   
+    {
         // プレイヤーのランクは大きめのテクスチャ
         if( Data.rank != (kRegisteredNum + 1U ) )
         {
@@ -244,5 +244,5 @@ void RankingInEndless::drawData(
     // 下線
     Position.x = kBarPositionX;
     Position.y += kIntervalNameToBar;
-    Sprite::getInstance()->reserveDraw( texture_bar_, Position, TrimminaBar, Alpha, 0.5F );
+    Sprite::getInstance()->reserveDraw( texture_bar_, Position, *TrimminaBar, Alpha, 0.5F );
 }
