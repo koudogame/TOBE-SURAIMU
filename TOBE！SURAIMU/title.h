@@ -2,6 +2,7 @@
 
 #include "scene_base.h"
 #include "title_object.h"
+#include "timer.h"
 
 //-----------------------------------------------------------------------------
 // タイトル
@@ -36,14 +37,15 @@ private:
 	//オブジェクト番号
 	enum ObjectNum
 	{
-		kRogo ,
-		kCusur ,
-		kPlayer ,
-		kStar1 ,
-		kStar2 ,
+		kRogo,
+		kCusur,
+		kPlayer,
+		kStar1,
+		kStar2,
 		kStar3,
 		kWallRight,
 		kWallLeft,
+		kBlack,
 		kObjectNum
 	};
 
@@ -54,11 +56,12 @@ private:
 	Keyboard::KeyboardStateTracker key_;			                    //キーボード
 
 	Menu select_menu_;									                //メニュー変数
-	TitleStatus object_status_[ ObjectNum::kObjectNum ];	            //オブジェクト情報
-	std::unique_ptr<TitleObject> object_[ ObjectNum::kObjectNum ];		//タイトルオブジェクト
+	TitleStatus object_status_[ObjectNum::kObjectNum];	                //オブジェクト情報
+	std::unique_ptr<TitleObject> object_[ObjectNum::kObjectNum];		//タイトルオブジェクト
 	ID3D11ShaderResourceView* overlay_texture_;		                    //加算テクスチャ
-	float volume_;									                    //音量
-	SceneBase* ( Title::* scene_ )( ) = nullptr;		                //更新処理の関数ポインタ
+	float volume_;				                                        //音量
+	SceneBase* (Title::* scene_)() = nullptr;		                    //更新処理の関数ポインタ
+	Timer<Seconds> timer_;
 
 	//内部利用関数
 private:
@@ -70,5 +73,7 @@ private:
 	SceneBase* rankingScene();
 	//選択部の処理
 	SceneBase* selectScene();
+	//デモへの遷移
+	SceneBase* DemoScene();
 
 };

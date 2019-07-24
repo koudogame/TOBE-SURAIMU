@@ -29,7 +29,7 @@ const int kMaxPlayer = 4;			            //最大プレイ人数
 constexpr float kParticleInterval = 2.5F;       //パーティクルの生成間隔
 
 //プレイヤーのステータス
-constexpr float kJumpAmount = 900.0F;                           //プレイヤージャンプ力
+constexpr float kJumpAmount = 800.0F;                           //プレイヤージャンプ力
 constexpr float kAddVolume = 0.005F;                            //プレイヤー増加量
 constexpr float kGravity = 8.0F;                                //プレイヤー重力
 constexpr float kSpeed = 0.5F;                                  //プレイヤー速さ

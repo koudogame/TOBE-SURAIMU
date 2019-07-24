@@ -129,9 +129,6 @@ bool Game::update()
 void Game::draw()
 {
 	TaskManager::getInstance()->allDraw();
-	// 背景エフェクト
-	//Sprite::getInstance()->draw( texture_ , Vector2::Zero , &kTrimmingEffect , 1.0F , 0.09F );
-
 	scene_->draw();
 }
 
