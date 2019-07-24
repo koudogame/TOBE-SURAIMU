@@ -121,7 +121,7 @@ void Wall::draw()
     {
         // ç∂ï«
         draw_position.x = kDrawPositionXLeftWall;
-		kSprite->reserveDraw( texture_ , draw_position , kTrimmingWall , 1.0F , 1.0F );
+		kSprite->reserveDraw( texture_ , draw_position , kTrimmingWall , 1.0F , 0.9F );
 
         // âEï«( ç∂âEîΩì] )
         draw_position.x = kDrawPositionXRightWall;
