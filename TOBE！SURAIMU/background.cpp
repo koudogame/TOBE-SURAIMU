@@ -94,5 +94,4 @@ void Background::draw()
 
         draw_position.y -= static_cast<float>(kTextureSize);
     }
-    // I•`‰æƒ‚[ƒh"‰ÁZ‡¬"
 }
