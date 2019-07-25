@@ -58,7 +58,7 @@ void StayParticle::draw()
 		(*position_),
 		trim,
 		1.0F,
-		0.9F,
+		12.0F,
 		Vector2(1.0F, 1.0F),
 		XMConvertToRadians(angle_) ,
 		Vector2(kTextureSize / 2.0F, kTextureSize / 2.0F),

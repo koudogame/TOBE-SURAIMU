@@ -65,7 +65,7 @@ void FreeFallParticle::update()
 void FreeFallParticle::draw()
 {
 	//加算モードで描画
-	Sprite::getInstance()->reserveDraw(texture_, position_, triming_, alpha_, 0.2F, Vector2(1.0F, 1.0F), XMConvertToRadians( rotate_), Vector2(kTextureSize / 2.0F, kTextureSize / 2.0F), Sprite::getInstance()->chengeMode());
+	Sprite::getInstance()->reserveDraw(texture_, position_, triming_, alpha_, 11.0F, Vector2(1.0F, 1.0F), XMConvertToRadians( rotate_), Vector2(kTextureSize / 2.0F, kTextureSize / 2.0F), Sprite::getInstance()->chengeMode());
 }
 
 //生存確認

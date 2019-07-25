@@ -87,6 +87,6 @@ void Particle::draw()
 		position_ ,
 		{0,0,0,0},
 		1.0F ,
-		0.2F
+		11.0F
 	);
 }

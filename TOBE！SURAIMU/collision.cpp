@@ -78,6 +78,7 @@ bool Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
 		case ObjectID::kStar:
 			return collision(dynamic_cast<Sercher*>(Obj1), dynamic_cast<Star*>(Obj2));
 		}
+		break;
 
 	case ObjectID::kFailWall:
 		switch (Obj2->getID())
@@ -91,6 +92,7 @@ bool Collision::collision(ObjectBase * Obj1, ObjectBase * Obj2)
 		default:
 			return false;
 		}
+		break;
 
 
 	default:

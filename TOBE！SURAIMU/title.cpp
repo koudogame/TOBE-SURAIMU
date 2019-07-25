@@ -70,10 +70,12 @@ bool Title::init()
 	object_status_[ObjectNum::kRogo].texture = TextureLoder::getInstance()->load(L"Texture/title.png");
 	object_status_[ObjectNum::kRogo].position = kObjectposition[ObjectNum::kRogo];;
 	object_status_[ObjectNum::kRogo].trim = kObjectTrim[ObjectNum::kRogo];
+	object_status_[ObjectNum::kRogo].depth = 30.0F;
 	//カーソル
 	object_status_[ObjectNum::kCusur].texture = TextureLoder::getInstance()->load(L"Texture/title.png");
 	object_status_[ObjectNum::kCusur].position = kObjectposition[ObjectNum::kCusur];
 	object_status_[ObjectNum::kCusur].trim = kObjectTrim[ObjectNum::kCusur];
+	object_status_[ObjectNum::kCusur].depth = 30.0F;
 
 	//初期の星１
 	object_status_[ObjectNum::kStar1].texture = TextureLoder::getInstance()->load(L"Texture/star.png");
@@ -96,6 +98,7 @@ bool Title::init()
 	object_status_[ObjectNum::kPlayer].texture = TextureLoder::getInstance()->load(L"Texture/character.png");
 	object_status_[ObjectNum::kPlayer].position = kObjectposition[ObjectNum::kPlayer];
 	object_status_[ObjectNum::kPlayer].trim = kObjectTrim[ObjectNum::kPlayer];
+	object_status_[ObjectNum::kPlayer].depth = 30.0F;
 
 	//壁( 右 )
 	object_status_[ObjectNum::kWallRight].texture = TextureLoder::getInstance()->load(L"Texture/wall.png");
@@ -111,7 +114,7 @@ bool Title::init()
 	object_status_[ObjectNum::kBlack].position = Vector2::Zero;
 	object_status_[ObjectNum::kBlack].trim = kObjectTrim[ObjectNum::kBlack];
 	object_status_[ObjectNum::kBlack].alpha = 0.0F;
-	object_status_[ObjectNum::kBlack].depth = 10.0F;
+	object_status_[ObjectNum::kBlack].depth = 100.0F;
 
 	overlay_texture_ = TextureLoder::getInstance()->load(L"Texture/star1.png");
 
@@ -149,12 +152,12 @@ void Title::draw()
 {
 	for (int i = ObjectNum::kStar1; i <= ObjectNum::kStar3; i++)
 	{
-		Sprite::getInstance()->reserveDraw(overlay_texture_, object_status_[i].position, object_status_[i].trim, 1.0F, 1.0F, { 1.0F, 1.0F }, 0.0F, Vector2::Zero, Sprite::getInstance()->chengeMode());
+		Sprite::getInstance()->reserveDraw(overlay_texture_, object_status_[i].position, object_status_[i].trim, 1.0F, 13.0F, { 1.0F, 1.0F }, 0.0F, Vector2::Zero, Sprite::getInstance()->chengeMode());
 	}
 
-	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kStar1].texture, object_status_[ObjectNum::kStar1].position, object_status_[ObjectNum::kStar1].trim, 1.0F, 1.0F);
-	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kStar2].texture, object_status_[ObjectNum::kStar2].position, object_status_[ObjectNum::kStar2].trim, 1.0F, 1.0F);
-	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kStar3].texture, object_status_[ObjectNum::kStar3].position, object_status_[ObjectNum::kStar3].trim, 1.0F, 1.0F);
+	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kStar1].texture, object_status_[ObjectNum::kStar1].position, object_status_[ObjectNum::kStar1].trim, 1.0F, 14.0F);
+	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kStar2].texture, object_status_[ObjectNum::kStar2].position, object_status_[ObjectNum::kStar2].trim, 1.0F, 14.0F);
+	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kStar3].texture, object_status_[ObjectNum::kStar3].position, object_status_[ObjectNum::kStar3].trim, 1.0F, 14.0F);
 
 	for (int i = 0; i <= ObjectNum::kPlayer; i++)
 		object_[i].get()->draw();
@@ -168,9 +171,9 @@ void Title::draw()
 		positleft.y = y;
 
 		Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kWallRight].texture, positright, object_status_[ObjectNum::kWallRight].trim, object_status_[ObjectNum::kWallRight].alpha,
-			1.0F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero, Common::getInstance()->getStates()->NonPremultiplied(), SpriteEffects::SpriteEffects_FlipHorizontally);
+			30.0F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero, Common::getInstance()->getStates()->NonPremultiplied(), SpriteEffects::SpriteEffects_FlipHorizontally);
 		Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kWallLeft].texture, positleft, object_status_[ObjectNum::kWallLeft].trim, object_status_[ObjectNum::kWallLeft].alpha,
-			1.0F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero, Common::getInstance()->getStates()->NonPremultiplied(), SpriteEffects::SpriteEffects_None);
+			30.0F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero, Common::getInstance()->getStates()->NonPremultiplied(), SpriteEffects::SpriteEffects_None);
 	}
 
 	object_[ObjectNum::kBlack].get()->draw();
