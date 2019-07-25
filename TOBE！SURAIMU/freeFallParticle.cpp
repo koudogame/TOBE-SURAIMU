@@ -3,7 +3,7 @@
 #include "sprite.h"
 #include "task_manager.h"
 
-const int kTextureSize = 64;		//テクスチャサイズ
+const int kTextureSize = 128;		//テクスチャサイズ
 const int kRotate = 5;				//回転角
 const int kStarWhileAngle = 72;		//星の頂点の角度の差
 const float kFall = 1.0F;

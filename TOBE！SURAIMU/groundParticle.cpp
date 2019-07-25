@@ -4,7 +4,7 @@
 #include "sprite.h"
 #include "task_manager.h"
 
-const int kTextureSize = 64;		//テクスチャサイズ
+const int kTextureSize = 128;		//テクスチャサイズ
 
 GroundParticle::GroundParticle()
 {}

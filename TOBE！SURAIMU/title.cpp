@@ -21,7 +21,7 @@ const int kLayer = 3;
 const int kFall = 6;
 const int kWallWidth = 32;
 const float kWallHeight = 88.0F;
-const long kDemoTimeSecond = 3;
+const long kDemoTimeSecond = 30;
 const Vector2 kObjectposition[] =
 {
 	Vector2::Zero,

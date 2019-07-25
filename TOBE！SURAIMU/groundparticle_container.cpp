@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "groundParticle_container.h"
 
-const int kTextureSize = 64;		//テクスチャサイズ
+const int kTextureSize = 128;		//テクスチャサイズ
 
 //コンストラクタ
 GroundParticleContainer::GroundParticleContainer()
