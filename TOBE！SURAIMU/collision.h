@@ -48,8 +48,10 @@ public:
 	bool collision(Sercher*, Star*);
 	inline bool collision(Star* S, Sercher* SRS) { return collision(SRS, S); }
 	//”»’è( Ž€–Sƒ‰ƒCƒ“ )
-	bool collision(Player* S, FailWall* FW);
+	bool collision(Player* P, FailWall* FW);
 	bool collision(Star* S, FailWall* FW);
+	inline bool collision(FailWall* FW, Player* P) { return  collision(P, FW); }
+	inline bool collision(FailWall* FW, Star* S) { return collision(S, FW); }
 
 
 private:
