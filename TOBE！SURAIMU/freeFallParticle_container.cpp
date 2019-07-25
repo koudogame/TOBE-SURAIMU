@@ -1,7 +1,6 @@
 #include "freeFallParticle_container.h"
 
-const int kTextureSize = 64;		//テクスチャサイズ
-constexpr long kMaxParticle = 100000L;    //生成パーティクル最大数
+const int kTextureSize = 128;		//テクスチャサイズ
 
 FreeFallParticleContainer::FreeFallParticleContainer()
 {}
