@@ -30,7 +30,9 @@ public:
         const Vector2& DrawPosition,
         const long TextWidth, 
         const long TextHeight,
-        const float Alpha = 1.0F);
+        const float Alpha = 1.0F,
+        const float Interval = 0.0F,
+        const float Depth = 0.0F );
 
     static void drawNumber(
         const unsigned long long Number,
@@ -40,7 +42,8 @@ public:
         const long TextHeight,
         const unsigned MinDigit = 1U,
         const float Alpha = 1.0F,
-        const float Interval = 0.0F);
+        const float Interval = 0.0F,
+        const float Depth = 0.0F);
 
     static int getCharNum(const char);
 };

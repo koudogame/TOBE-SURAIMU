@@ -54,6 +54,7 @@ constexpr long long kDemoPlayTimeSc = 30LL; // デモプレイ時間　(単位 : 秒)
 constexpr long long kEndTimeSc      = 1LL;  // 終了時、暗転時間(単位 : 秒)
 constexpr long long kDemoTimeSc = kStartTimeSc + kDemoPlayTimeSc + kEndTimeSc;  // シーンの合計時間
 const RECT kRangeOfScreen { 0L, 0L, 1280L, 720L };
+constexpr float kDepth = 10.0F;
 constexpr float kAmountOfAlphaForIn  = 0.01F;       // フェードイン時、　アルファ値変化量
 constexpr float kAmountOfAlphaForOut = 0.10F;       // フェードアウト時、アルファ値変化量
 
@@ -234,7 +235,7 @@ void Demo::draw()
         Vector2::Zero,
         kRangeOfScreen,
         alpha_,
-        1.0F
+        kDepth
     );
 }
 

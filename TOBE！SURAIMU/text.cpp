@@ -11,7 +11,9 @@ void Text::drawString( const std::string& Text,
                        ID3D11ShaderResourceView* const Texture,
                        const Vector2& Position,
                        const long Width, const long Height,
-                       const float Alpha )
+                       const float Alpha,
+                       const float Interval,
+                       const float Depth )
 {
     Sprite* kSprite = Sprite::getInstance();
 
@@ -23,9 +25,9 @@ void Text::drawString( const std::string& Text,
         trimming.left = getCharNum( ch ) * Width;
         trimming.right = trimming.left + Width;
 
-        kSprite->reserveDraw( Texture, position, trimming, Alpha, 0.9F );
+        kSprite->reserveDraw( Texture, position, trimming, Alpha, Depth );
 
-        position.x += Width;
+        position.x += Width + Interval;
     }
 }
 // êîóÒï`âÊ
@@ -35,7 +37,8 @@ void Text::drawNumber( const unsigned long long Number,
                        const long Width, const long Height,
                        const unsigned Digit,
                        const float Alpha,
-                       const float Interval)
+                       const float Interval,
+                       const float Depth )
 {
     Vector2 position = Position;
     position.x -= Width;
@@ -56,7 +59,7 @@ void Text::drawNumber( const unsigned long long Number,
             position,
             trimming,
             Alpha,
-            0.9F
+            Depth
         );
 
         temp /= 10ULL;
