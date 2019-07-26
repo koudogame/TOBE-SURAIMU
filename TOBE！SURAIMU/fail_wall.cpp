@@ -146,7 +146,7 @@ void FailWall::draw()
         texture_,
         {shape_->start.x, shape_->start.y + 10.0F},
         kTrimming[kWallNo],
-        1.0F, 1.0F, {1.0F, 1.0F}, 0.0F, Vector2::Zero,
+        1.0F, 0.8F, {1.0F, 1.0F}, 0.0F, Vector2::Zero,
         common->getStates()->Additive()
     );
 
@@ -159,7 +159,7 @@ void FailWall::draw()
             { shape_->start.x, shape_->start.y + 10.0F },
             kTrimming[i],
             1.0F,
-            1.0F,
+            0.8F,
             {1.0F, scale_y_[i * kScalingFrame]},
             0.0F,
             {0.0F, kFireHeight},

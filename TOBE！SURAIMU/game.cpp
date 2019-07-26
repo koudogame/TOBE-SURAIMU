@@ -18,9 +18,10 @@ constexpr RECT kTrimmingBackground{         // ”wŒiØ‚èŽæ‚è”ÍˆÍ
 	0L, 0L, 1024L, 1024L };
 constexpr RECT kTrimmingEffect{             // ”wŒiƒGƒtƒFƒNƒgØ‚èŽæ‚è”ÍˆÍ
 	0L, 1024L, 1280L, 1744L };
+constexpr float kBackEffectDepth = 4.0F;
 
 constexpr float kBackgroundSpeed[]     = { 0.25F, 0.4F, 1.0F };
-constexpr float kBackgroundDrawDepth[] = { 0.03F, 0.01F, 0.02F };
+constexpr float kBackgroundDrawDepth[] = { 3.0F, 1.0F, 2.0F };
 constexpr int   kBackobjectCreateRate  = 500;
 constexpr int   kBackobjectMax         = 10;
 constexpr float kBackobjectMoveXMax    = 0.2F;
@@ -130,6 +131,13 @@ void Game::draw()
 {
 	TaskManager::getInstance()->allDraw();
 	scene_->draw();
+    Sprite::getInstance()->reserveDraw(
+        texture_,
+        Vector2::Zero,
+        kTrimmingEffect,
+        1.0F,
+        kBackEffectDepth
+    );
 }
 
 //”jŠü

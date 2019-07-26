@@ -38,6 +38,10 @@ const RECT kTrimming[] = {
     { 0L, 24L, 415L, 48L }
 };
 
+constexpr float kMaskDepth = 7.0F;
+constexpr float kBarDepth  = 5.0F;
+constexpr float kTextDepth = 6.0F;
+
 /*===========================================================================*/
 RankingInEndless::RankingInEndless() :
     ranking_(kRegisteredNum)
@@ -196,7 +200,7 @@ void RankingInEndless::draw()
 
 
     // ‰e‚ð•`‰æ
-    Sprite::getInstance()->reserveDraw( texture_ , Vector2::Zero , {0L, 0L, 0L, 0L} , 1.0F , 0.95F );
+    Sprite::getInstance()->reserveDraw( texture_ , Vector2::Zero , {0L, 0L, 0L, 0L} , 1.0F , kMaskDepth );
 }
 
 /*===========================================================================*/
@@ -222,27 +226,27 @@ void RankingInEndless::drawData(
             position_for_playerrank.y -= kDeltaPositionPlayerRank.y;
             Text::drawNumber( Data.rank,
                 texture_number_forplayer_, position_for_playerrank,
-                kPlayerRankWidth, kPlayerRankHeight, 1U, Alpha);
+                kPlayerRankWidth, kPlayerRankHeight, 1U, Alpha, 0.0F, kTextDepth);
         }
     }
     else
     {
         Text::drawNumber( Data.rank,
-            texture_number_, Position, kNumberWidth, kTextHeight, 1U, Alpha );
+            texture_number_, Position, kNumberWidth, kTextHeight, 1U, Alpha, 0.0F, kTextDepth );
     }
 
     // –¼‘O
     Position.x += kIntervalRankToName;
     Text::drawString( Data.name,
-        texture_text_, Position, kCharacterWidth, kTextHeight, Alpha);
+        texture_text_, Position, kCharacterWidth, kTextHeight, Alpha, 0.0F, kTextDepth );
 
     // ƒXƒRƒA
     Position.x = kDrawPositionXScore;
     Text::drawNumber( Data.score,
-        texture_number_, Position, kNumberWidth, kTextHeight, kScoreDigits, Alpha);
+        texture_number_, Position, kNumberWidth, kTextHeight, kScoreDigits, Alpha, 0.0F, kTextDepth );
 
     // ‰ºü
     Position.x = kBarPositionX;
     Position.y += kIntervalNameToBar;
-    Sprite::getInstance()->reserveDraw( texture_bar_, Position, *TrimminaBar, Alpha, 0.5F );
+    Sprite::getInstance()->reserveDraw( texture_bar_, Position, *TrimminaBar, Alpha, kBarDepth );
 }
