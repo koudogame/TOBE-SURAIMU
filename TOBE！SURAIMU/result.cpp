@@ -44,6 +44,7 @@ constexpr float kIntervalRankingElem        = 22.0F;    // ランキング要素の間
 constexpr float kAmountAlphaChangeForRankIn = 0.04F;    // "RankIn"のアルファ値の変化量
 constexpr float kAlphaMaxRankIn             = 1.0F;     // "RankIn"のアルファ値上限
 constexpr float kAlphaMinRankIn             = 0.0F;     // "RankIn"のアルファ値下限
+constexpr float kRankingDepth               = 2.0F;     // ランキング部描画深度値
 
 enum { kTrmBackground, kTrmCursor, kTrmNameCursor, kTrmRankInLine, kTrimRankIn, kTrimRank };
 const RECT kTrimming[] =
@@ -211,14 +212,14 @@ void Result::draw()
     // 背景
 	kSprite->reserveDraw( texture_,
                    position_base_ + kPositionFromBase[kPosBackground],
-				   kTrimming[ kTrmBackground ] , alpha_ , 0.9F );
+				   kTrimming[ kTrmBackground ] , alpha_ , 1.0F );
 
     // スコア
     Text::drawNumber( score_.getScore(),
                       texture_numbers_,
                       position_base_ + kPositionFromBase[kPosScore],
                       kNumbersWidth, kNumbersHeight,
-                      10U, alpha_ );
+                      10U, alpha_ , 0.0F, kRankingDepth);
 
     // 高さ
     Text::drawNumber( static_cast<ULL>(score_.getHeight()),
@@ -585,34 +586,34 @@ void Result::drawRankingElem( Vector2 Position,
     Text::drawNumber( Rank,
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        1U, alpha_ );
+        1U, alpha_, 0.0F, kRankingDepth );
 
     // 名前
     Position.x = kDrawPositionX[kName];
     Text::drawString( Name,
         texture_char_mini_,
         Position, kMiniCharacterWidth, kMiniCharacterHeight,
-        alpha_ );
+        alpha_, 0.0F, kRankingDepth );
 
     // スコア
     Position.x = kDrawPositionX[kScore];
     Text::drawNumber( Score,
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        kScoreDigits, alpha_ );
+        kScoreDigits, alpha_, 0.0F, kRankingDepth );
 
     // 距離
     Position.x = kDrawPositionX[kHeight];
     Text::drawNumber( static_cast<ULL>(Height),
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        kHeightDigits, alpha_ );
+        kHeightDigits, alpha_, 0.0F, kRankingDepth );
 
     // 最大コンボ
     Position.x = kDrawPositionX[kCombo];
     Text::drawNumber( Combo,
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        kComboDigits, alpha_ );
+        kComboDigits, alpha_, 0.0F, kRankingDepth );
 
 }

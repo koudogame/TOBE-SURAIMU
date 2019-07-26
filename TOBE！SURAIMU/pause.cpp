@@ -56,6 +56,10 @@ const RECT kTrimming[] = {
     {   0L, 720L,  126L, 890L },
 };
 
+constexpr float kBackDepth   = 31.0F;
+constexpr float kPauseDepth  = 32.0F;
+constexpr float kCursorDepth = 33.0F;
+
 /*===========================================================================*/
 Pause::Pause()
 {
@@ -111,12 +115,12 @@ void Pause::draw() const
     if( update_ == &Pause::waitInput )
     {
         // 背景
-	    kSprite->reserveDraw( texture_ , Vector2::Zero ,  kTrimming[kBack] , 1.0F , 1.0F );
+	    kSprite->reserveDraw( texture_ , Vector2::Zero ,  kTrimming[kBack] , 1.0F , kBackDepth );
         // ポーズ本体
-        kSprite->reserveDraw( texture_, kPosition,        kTrimming[kPause], 1.0F, 1.0F );
+        kSprite->reserveDraw( texture_, kPosition,        kTrimming[kPause], 1.0F, kPauseDepth );
 
         // カーソル
-        kSprite->reserveDraw( texture_, position_cursor_, kTrimming[kCursor], 1.0F, 1.0F );
+        kSprite->reserveDraw( texture_, position_cursor_, kTrimming[kCursor], 1.0F, kCursorDepth );
     }
     // コンティニュー時にのみ描画
     else if( update_ == &Pause::toContinue )
