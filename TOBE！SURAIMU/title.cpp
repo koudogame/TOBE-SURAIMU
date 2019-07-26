@@ -252,7 +252,7 @@ SceneBase * Title::rankingScene()
 	volume_ -= 0.01F;
 	SOUND->setVolume(SoundId::kScene, volume_);
 	SOUND->play(SoundId::kScene, false);
-	for (int i = 0; i < ObjectNum::kObjectNum; i++)
+	for (int i = 0; i < ObjectNum::kBlack; i++)
 		object_status_[i].alpha = volume_;
 
 
