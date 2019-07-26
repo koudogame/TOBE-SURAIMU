@@ -62,7 +62,7 @@ const RECT kTrimming[] = {
 
 constexpr float kFieldDepth = 1.0F;
 constexpr float kTextDepth = 2.0F;
-constexpr float kFrameDepth = 3.0F;
+constexpr float kFrameDepth = 10.0F;
 
 
 /*===========================================================================*/
