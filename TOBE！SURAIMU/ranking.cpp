@@ -51,13 +51,18 @@ enum { kFrame, kBack, kField };
 constexpr Vector2 kPosition[] = {
     { 140.0F,  21.0F },
     { 140.0F,  70.0F },
-    { 680.0F, 200.0F },
+    { 680.0F, 150.0F },
 };
 const RECT kTrimming[] = {
     {    0L,    0L, 1145L,  681L },
     {    0L,  681L, 1145L, 1313L },
     { 1145L,    0L,  1341L,  12L },
 };
+
+
+constexpr float kFieldDepth = 1.0F;
+constexpr float kTextDepth = 2.0F;
+constexpr float kFrameDepth = 3.0F;
 
 
 /*===========================================================================*/
@@ -148,7 +153,7 @@ SceneBase* Ranking::update()
 	}
 	// 上長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
 	else if( key_state.Up ||
-             pad_state.IsLeftThumbStickUp(),
+             pad_state.IsLeftThumbStickUp() ||
              pad_state.dpad.up )
 	{
 		addOffset( &offset_ , -kOffset * magnification_ );
@@ -156,7 +161,7 @@ SceneBase* Ranking::update()
 	}
 	// 下長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
 	else if( key_state.Down || 
-             pad_state.IsLeftThumbStickDown(),
+             pad_state.IsLeftThumbStickDown() ||
              pad_state.dpad.down )
 	{
 		addOffset( &offset_ , kOffset * magnification_ );
@@ -229,33 +234,33 @@ void Ranking::draw()
         position.x = kCoordinateX[kRank] + kNumWidth *
                             ( rank > 99U ? 3.0F : (rank > 9U ? 2.5F :  2.0F) );
         Text::drawNumber( rank, texture_numbers_, position,
-                          kNumWidth, kNumHeight );
+                          kNumWidth, kNumHeight, 1U, 1.0F, 0.0F, kTextDepth );
 
         // 名前
         position.x = kCoordinateX[kName];
         Text::drawString( data.name, texture_characters_, position,
-                          kCharWidth, kCharHeight );
+                          kCharWidth, kCharHeight, 1.0F, 0.0F, kTextDepth );
 
         // スコア
         position.x = kCoordinateX[kScore] + kNumWidth * kScoreDigits;
         Text::drawNumber( data.score, texture_numbers_, position,
-                          kNumWidth, kNumHeight, kScoreDigits, 1.0F, kIntervalNumber );
+                          kNumWidth, kNumHeight, kScoreDigits, 1.0F, kIntervalNumber, kTextDepth );
 
         // 高さ
         position.x = kCoordinateX[kHeight] + kNumWidth * kHeightDigits;
         Text::drawNumber( static_cast<ULL>(data.height), texture_numbers_,
                           position,
-                          kNumWidth, kNumHeight, 1U, 1.0F, kIntervalNumber );
+                          kNumWidth, kNumHeight, 1U, 1.0F, kIntervalNumber, kTextDepth );
 
         // コンボ
         position.x = kCoordinateX[kCombo] + kNumWidth * kComboDigits;
         Text::drawNumber( data.combo, texture_numbers_, position,
-                         kNumWidth, kNumHeight, 1U, 1.0F, kIntervalNumber );
+                         kNumWidth, kNumHeight, 1U, 1.0F, kIntervalNumber, kTextDepth );
     }
 
 
     // フレームの描画
-	kSprite->reserveDraw( texture_ , kPosition[ kFrame ] , kTrimming[ kFrame ] , 1.0F , 1.0F );
+	kSprite->reserveDraw( texture_ , kPosition[ kFrame ] , kTrimming[ kFrame ] , 1.0F , kFrameDepth );
 }
 
 
