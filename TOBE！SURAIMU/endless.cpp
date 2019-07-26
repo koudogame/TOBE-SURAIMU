@@ -51,17 +51,19 @@ const RECT kTrimming[] = {
 
 constexpr float kDispTimeMSPF = 500.0F / 16.0F;                 // 難易度上昇時、スクロールにかける時間( ミリ秒/フレーム )
 // 難易度に関係
-constexpr unsigned kLevelMax = 2U;                              // レベル上限
-constexpr unsigned kHeight = 0U;                                // レベルテーブル : 高さ
+constexpr int      kStageNum = 3;                               // ステージ数
+constexpr unsigned kHeight = 0U;                                // レベルテーブル : ステージの長さ( 高さ )
 constexpr unsigned kThresholdUp = 1U;                           // レベルテーブル : 閾値( スクロール↑ )
 constexpr unsigned kThresholdDown = 2U;                         // レベルテーブル : 閾値( スクロール↓ )
 constexpr float kLevelTable[][3] = {                            // レベルテーブル
-    {      0.0F, kWindowHeight * 0.10F, kWindowHeight * 0.90F },
-    {   5000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.90F },
-    {   5000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.90F },
-    {   7500.0f, kWindowHeight * 0.10F, kWindowHeight * 0.90F },
-    {  10000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.90F }
+    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
+    {   5000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
+    {   8000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
+    {   7500.0f, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
+    {  10000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F }
 };
+
+
 
 constexpr Vector2 kPlayerPosition { 600.0F, 565.0F };
 
@@ -144,14 +146,14 @@ bool Endless::init()
 
 	// 変数初期化
 	update_ = &Endless::start;
+    stage_ = 0;
+    round_counter_ = 0;
     is_pause_ = false;
-    level_ = 0U;
     scroll_threshold_ = kLevelTable[0U][kThresholdUp];
     offset_ = 0.0F;
     offset_one_frame_ = 0.0F;
 	climb_ = 0.0F;
-    // スター生成パターンファイルのリスト化
-    changePattern();
+    changePattern( stage_ );    // スター生成パターン設定
 
 	clock_->start();
 
@@ -292,58 +294,7 @@ SceneBase* Endless::play()
 	star_container_->update();
 
 	// 座標調整( スクロール )
-    float over = 0.0F;
-    const Vector2 kPlayerPosi = player_->getPosition();
-    if( kPlayerPosi.y < kLevelTable[level_][kThresholdUp] )
-    {
-        over = scroll_threshold_ - kPlayerPosi.y;
-    }
-    else if( kPlayerPosi.y > kLevelTable[level_][kThresholdDown] )
-    {
-        over = kLevelTable[level_][kThresholdDown] - kPlayerPosi.y;
-    }
-
-
-	if( true ) //kOver >= 0.0F )
-    {
-        // 下からの復帰で上った距離が増えるのはいかがなものか
-        if( over > 0 )
-        {
-            player_->addScore( over );
-            climb_ += over;
-        }
-	    adjustObjectPosition( over );
-        
-
-        // レベルアップ
-        if( (level_ < kLevelMax) && (climb_ >= kLevelTable[level_ + 1U][kHeight]) )
-        {
-            ++level_;
-
-            // スターの生成パターンを変化させる
-            changePattern();
-
-            // レベルアップを知らせる
-            player_->addLevel();
-            fail_wall_->levelUp();
-
-            // レベルアップに伴うスクロール閾値の変更( ゆっくりと変化させる )
-            offset_ = kLevelTable[level_][kThresholdUp] - scroll_threshold_;
-            offset_one_frame_ = offset_ / kDispTimeMSPF;
-        }
-
-
-        if( (std::abs(offset_) < std::abs(offset_one_frame_)) )
-        {
-            scroll_threshold_ += offset_ - offset_one_frame_;
-            offset_ = offset_one_frame_ = 0.0F;
-        }
-        else
-        {
-            scroll_threshold_ += offset_one_frame_;
-            offset_-= offset_one_frame_;
-        }
-    }
+    scroll();
 
 
 
@@ -386,17 +337,59 @@ SceneBase* Endless::pause()
 }
 
 /*===========================================================================*/
-// オブジェクトの座標調整
-void Endless::adjustObjectPosition(const float Over)
+// 画面スクロール処理
+void Endless::scroll()
 {
-    TaskManager::getInstance()->allSetOver(Over);
+    float over = 0; // プレイアブルエリアからはみ出した距離
+    const Vector2& kPlayerPosi = player_->getPosition();
+
+    // 上限からはみ出している
+    if( kPlayerPosi.y < kLevelTable[stage_][kThresholdUp] )
+    {
+        over = kLevelTable[stage_][kThresholdUp] - kPlayerPosi.y;
+    }
+    // 下限からはみ出している
+    else if( kPlayerPosi.y > kLevelTable[stage_][kThresholdDown] )
+    {
+        over = kLevelTable[stage_][kThresholdDown] - kPlayerPosi.y;
+    }
+
+
+    // 各オブジェクトのスクロール
+    TaskManager::getInstance()->allSetOver( over );
+
+    if( over > 0.0F ) 
+    {
+        player_->addScore( over );  // プレイヤーにスコア反映
+    }
+    climb_ += over;
+
+
+    // 現在のステージを突破したら
+    if( climb_ >= kLevelTable[stage_][kHeight] )
+    {
+        climb_ = 0.0F;
+        ++stage_;
+        if( stage_ >= kStageNum )
+        {
+            ++round_counter_;
+            stage_ = 0;
+
+            // 周回を知らせる
+            player_->addLevel();
+            fail_wall_->levelUp();
+        }
+
+        // スターの生成パターン変更
+        changePattern( stage_ );
+    }
 }
+
 
 /*===========================================================================*/
 // スターの生成条件を満たしていたらスターを生成する
 bool Endless::checkAndCreateStar()
 {
-    // 画面外待機しているスターが無くなったらスターの生成
     auto itr = star_container_->active().begin();
     auto end = star_container_->active().end();
     for (; itr != end; ++itr)
@@ -404,6 +397,7 @@ bool Endless::checkAndCreateStar()
         if ((*itr)->getPosition().y < 0.0F) { break; }
     }
 
+    // 画面外待機しているスターが無くなったらスターの生成
     if (itr == end &&
         star_container_->createStar() == false)
     {
@@ -416,7 +410,7 @@ bool Endless::checkAndCreateStar()
 
 /*===========================================================================*/
 // スターの生成パターンを設定する
-void Endless::changePattern()
+void Endless::changePattern( const int Pattern )
 {
     star_container_->resetPattern();
 
@@ -424,7 +418,7 @@ void Endless::changePattern()
     CsvLoader file(L"State/pattern_list.csv");
     for (int i = 0; ; ++i)
     {
-        file_name = file.getString(level_, i);
+        file_name = file.getString(Pattern, i);
         if (wcscmp(file_name.c_str(), L"") == 0)
         {
             break;

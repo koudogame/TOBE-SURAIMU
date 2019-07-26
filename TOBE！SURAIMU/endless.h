@@ -40,9 +40,9 @@ private:
     SceneBase* pause();
     SceneBase* (Endless::* update_)() = nullptr;
 
-    void adjustObjectPosition(const float);
+    void scroll();
     bool checkAndCreateStar();
-    void changePattern();
+    void changePattern( const int PatternNo );
 
 
 // オブジェクト
@@ -54,8 +54,9 @@ private:
     Wall* wall_                     = nullptr;
     FailWall* fail_wall_            = nullptr;
 
+    int stage_ = 0;
+    int round_counter_   = 0;
     bool is_pause_ = false;
-    unsigned level_ = 0U;
     float scroll_threshold_ = 0.0F;
     float offset_ = 0.0F;;
     float offset_one_frame_ = 0.0F;
