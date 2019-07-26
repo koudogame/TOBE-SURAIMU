@@ -11,9 +11,10 @@
 #include "sprite.h"
 
 /*===========================================================================*/
-constexpr float kLimitYUp   = getWindowHeight<float>() * 0.75F;
+constexpr float kLimitYUp   = getWindowHeight<float>() * 0.00F;
 constexpr float kLimitYDown = getWindowHeight<float>() * 1.50F;
 const Line kInitPosition { 250.0F, kLimitYDown, 1030.0F, kLimitYDown };
+constexpr float kMagnificationSpeed = 1.25F;
 constexpr float kScrollSpeedTable[] = 
 {
     0.0F,
@@ -72,8 +73,8 @@ bool FailWall::init()
 
 
     // メンバ初期化
-    scroll_speed_idx_ = 0;
     frame_counter_ = 0;
+    speed_ = 0.0F;
     scaling_ = kAmountOfScaling;
     scale_y_.resize( kScaleSaveNum );
     for( auto& scale : scale_y_ )
@@ -102,8 +103,8 @@ void FailWall::destroy()
 void FailWall::update()
 {
     // 上へスクロール
-    shape_->start.y += kScrollSpeedTable[scroll_speed_idx_];
-    shape_->end.y += kScrollSpeedTable[scroll_speed_idx_]; 
+    shape_->start.y += speed_;
+    shape_->end.y += speed_; 
     if (shape_->start.y < kLimitYUp)
     {
         // 上限を超えたら戻す
@@ -172,12 +173,12 @@ void FailWall::draw()
 /*===========================================================================*/
 void FailWall::start()
 {
-    ++scroll_speed_idx_;
+    speed_ = -0.25F;
 }
 
 void FailWall::levelUp()
 {
-    ++scroll_speed_idx_;
+    speed_ *= kMagnificationSpeed;
 }
 
 void FailWall::setMove( float Disp )

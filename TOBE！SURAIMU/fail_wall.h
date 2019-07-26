@@ -36,8 +36,8 @@ private:
     ID3D11ShaderResourceView* texture_ = nullptr;
     Line* shape_ = nullptr;
 
-    int scroll_speed_idx_ = 0;
     int frame_counter_ = 0;
+    float speed_ = 0.0F;
     float scaling_ = 0.0F;
     std::deque<float> scale_y_;
 };
