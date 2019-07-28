@@ -422,7 +422,7 @@ void Player::inputmove()
 	Vector2 temp = Vector2::Zero;
 
 	//âEì¸óÕ
-	if ( pad_tracker.dpadRight == pad_tracker.HELD || key.lastState.Right )
+	if ( pad_tracker.dpadRight == pad_tracker.HELD || pad_tracker.leftStickRight == pad_tracker.PRESSED || key.lastState.Right )
 	{
 		if ( std::cos( angle - XM_PIDIV2 ) > 0 )
 			temp = Vector2( std::cos( angle - XM_PIDIV2 ), -std::sin( angle - XM_PIDIV2 ) )*kSpeed;
@@ -430,7 +430,7 @@ void Player::inputmove()
 			temp = -Vector2( std::cos( angle - XM_PIDIV2 ), -std::sin( angle - XM_PIDIV2 ) )*kSpeed;
 	}
 	//ç∂ì¸óÕ
-	else if ( pad_tracker.dpadLeft == pad_tracker.HELD || key.lastState.Left )
+	else if ( pad_tracker.dpadLeft == pad_tracker.HELD || pad_tracker.leftStickLeft == pad_tracker.PRESSED || key.lastState.Left )
 	{
 		if ( std::cos( angle + XM_PIDIV2 ) < 0 )
 			temp = Vector2( std::cos( angle + XM_PIDIV2 ), -std::sin( angle - XM_PIDIV2 ) )*kSpeed;
