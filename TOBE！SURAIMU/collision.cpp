@@ -119,6 +119,7 @@ bool Collision::collision(Player * P, Star * S)
 		{
 			if (P->getOwner() != S)
 			{
+				S->setPlayeroldPosition(P->getPosition());
 				P->setGround(S->getShape(i));
 				P->revision(S->getShape(i)->start, id_);
 				hit_flag = true;
@@ -127,6 +128,7 @@ bool Collision::collision(Player * P, Star * S)
 			{
 				if (!P->isCollision())
 				{
+					S->setPlayeroldPosition(P->getPosition());
 					P->setGround(S->getShape(i));
 					P->revision(S->getShape(i)->start, id_);
 					hit_flag = true;
@@ -143,6 +145,7 @@ bool Collision::collision(Player * P, Star * S)
 		{
 			if (P->getOwner() != S)
 			{
+				S->setPlayeroldPosition(P->getPosition());
 				P->setGround(S->getShape(i));
 				P->revision(crossPoint(P->getMove(), S->getShape(i)), id_);
 				hit_flag = true;
@@ -151,6 +154,7 @@ bool Collision::collision(Player * P, Star * S)
 			{
 				if (!P->isCollision())
 				{
+					S->setPlayeroldPosition(P->getPosition());
 					P->setGround(S->getShape(i));
 					P->revision(crossPoint(P->getMove(), S->getShape(i)), id_);
 					hit_flag = true;
@@ -163,6 +167,7 @@ bool Collision::collision(Player * P, Star * S)
 		{
 			if (P->getOwner() != S)
 			{
+				S->setPlayeroldPosition(P->getPosition());
 				P->setGround(S->getShape(i));
 				P->revision(crossPoint(P->getShape(), S->getShape(i)), id_);
 				hit_flag = true;
@@ -171,6 +176,7 @@ bool Collision::collision(Player * P, Star * S)
 			{
 				if (!P->isCollision())
 				{
+					S->setPlayeroldPosition(P->getPosition());
 					P->setGround(S->getShape(i));
 					P->revision(crossPoint(P->getShape(), S->getShape(i)), id_);
 					hit_flag = true;

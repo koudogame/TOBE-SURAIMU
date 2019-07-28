@@ -143,33 +143,15 @@ void Star::setFall()
 //当たり判定
 void Star::collision( Player* P )
 {
-	Vector2 movement = P->getMove()->end - P->getMove()->start;
-
-	movement.Normalize();
-
-	movement = movement * 30;
-
-	Vector2 move_end = P->getMove()->start + movement;
-	float old_angle = std::atan2( -( P->getMove()->start.y - position_.y ) , P->getMove()->start.x - position_.x );
-	float new_angle = std::atan2( -( move_end.y - position_.y ) , move_end.x - position_.x );
-
-	//360度に変更
-	if( old_angle < 0.0F ) old_angle += XM_2PI;
-	if( new_angle < 0.0F ) new_angle += XM_2PI;
-
-	//0度をまたいでいる場合0360度を加算
-	if( std::abs( new_angle - old_angle ) > XM_PI )
-		new_angle < old_angle ? new_angle += XM_2PI : old_angle += XM_2PI;
-
-	if( std::abs( new_angle - old_angle ) > XM_PIDIV2 )
-		return;
-
 	//中心からの割合
 	float per = ( ( P->getPosition() - position_ ).Length() / size_ );
 	//プレイヤーの移動量を取り出す
 	float p_movement = ( P->getMove()->end - P->getMove()->start ).Length();
 
-	spin_ += std::copysign( rate_ * per * p_movement , new_angle - old_angle );
+	float old_angle = Calc::angle(old_player_position_ - position_);
+	float new_angle = Calc::angle(P->getPosition() - position_);
+
+	spin_ += std::copysign(rate_ * per * p_movement, old_angle - new_angle);
 
 	if( std::abs( spin_ ) < kMinSpin )
 		spin_ = static_cast< float >( std::copysign( kMinSpin , spin_ ) );
