@@ -433,7 +433,7 @@ void Player::inputmove()
 	else if ( pad_tracker.dpadLeft == pad_tracker.HELD || pad_tracker.leftStickLeft == pad_tracker.PRESSED || key.lastState.Left )
 	{
 		if ( std::cos( angle + XM_PIDIV2 ) < 0 )
-			temp = Vector2( std::cos( angle + XM_PIDIV2 ), -std::sin( angle - XM_PIDIV2 ) )*kSpeed;
+			temp = Vector2( std::cos( angle + XM_PIDIV2 ), -std::sin( angle + XM_PIDIV2 ) )*kSpeed;
 		else
 			temp = -Vector2( std::cos( angle + XM_PIDIV2 ), -std::sin( angle + XM_PIDIV2 ) )*kSpeed;
 	}
