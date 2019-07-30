@@ -43,11 +43,13 @@ bool Game::init()
 {
     RankingManager::getInstance();
 
+	texture_ = TextureLoder::getInstance()->load(L"Texture/Background.png");
+
 	scene_ = std::make_unique<Title>();
 
 	if (scene_.get()->init() == false)
 		return false;
-	if (!background_.init())
+	if (!Background::getInstance()->init())
 		return false;
 
     backobject_container_ = std::make_unique<BackObjectContainer>();
@@ -114,7 +116,7 @@ void Game::draw()
 //”jŠü
 void Game::destroy()
 {
-	background_.destroy();
+	Background::getInstance()->destroy();
     backobject_container_.get()->destroy();
 	scene_->destroy();
 }
