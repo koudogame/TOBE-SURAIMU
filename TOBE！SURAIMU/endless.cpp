@@ -18,7 +18,6 @@
 #include "ranking_in_endless.h"
 #include "space.h"
 #include "task_manager.h"
-#include "background_container.h"
 #include "back_object_container.h"
 #include "star_container.h"
 #include "player.h"

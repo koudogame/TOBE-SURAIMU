@@ -221,9 +221,6 @@
     <ClCompile Include="scoring.cpp">
       <Filter>Project\Game\Others\Scoring</Filter>
     </ClCompile>
-    <ClCompile Include="background_container.cpp">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClCompile>
     <ClCompile Include="back_object_container.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
@@ -286,9 +283,6 @@
     </ClCompile>
     <ClCompile Include="sprite.cpp">
       <Filter>Project\System\DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="b.cpp">
-      <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
     <ClCompile Include="background.cpp">
       <Filter>Project\Game\Object\Background</Filter>
@@ -399,9 +393,6 @@
     <ClInclude Include="scoring.h">
       <Filter>Project\Game\Others\Scoring</Filter>
     </ClInclude>
-    <ClInclude Include="background_container.h">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClInclude>
     <ClInclude Include="back_object_container.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
@@ -470,9 +461,6 @@
     </ClInclude>
     <ClInclude Include="sprite.h">
       <Filter>Project\System\DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="b.h">
-      <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
     <ClInclude Include="background.h">
       <Filter>Project\Game\Object\Background</Filter>

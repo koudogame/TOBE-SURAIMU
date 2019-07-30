@@ -12,16 +12,10 @@
 //#include "play.h"
 
 //”wŒiˆ——˜—p’è”
-constexpr int kBackgroundLayerNum = 3;      // ”wŒiƒŒƒCƒ„[”
-constexpr long kBackgroundSize = 1024L;     // ”wŒic‰¡ƒTƒCƒY
-constexpr RECT kTrimmingBackground{         // ”wŒiØ‚èŽæ‚è”ÍˆÍ
-	0L, 0L, 1024L, 1024L };
 constexpr RECT kTrimmingEffect{             // ”wŒiƒGƒtƒFƒNƒgØ‚èŽæ‚è”ÍˆÍ
 	0L, 1024L, 1280L, 1744L };
 constexpr float kBackEffectDepth = 4.0F;
 
-constexpr float kBackgroundSpeed[]     = { 0.25F, 0.4F, 1.0F };
-constexpr float kBackgroundDrawDepth[] = { 3.0F, 1.0F, 2.0F };
 constexpr int   kBackobjectCreateRate  = 500;
 constexpr int   kBackobjectMax         = 10;
 constexpr float kBackobjectMoveXMax    = 0.2F;
@@ -53,33 +47,10 @@ bool Game::init()
 
 	if (scene_.get()->init() == false)
 		return false;
+	if (!background_.init())
+		return false;
 
-	texture_ = TextureLoder::getInstance()->load( L"Texture/Background.png" );
-
-	background_container_ = std::make_unique<BackgroundContainer>();
     backobject_container_ = std::make_unique<BackObjectContainer>();
-
-	// ”wŒi‚Ì’Ç‰Á
-	RECT trimming = kTrimmingBackground;
-	for( int i = 0; i < kBackgroundLayerNum; ++i )
-	{
-		if( background_container_.get()->addBackground(
-			trimming ,
-			kBackgroundSpeed[ i ] ,
-			kBackgroundDrawDepth[ i ] ) == false )
-		{
-			return false;
-		}
-		trimming.left += kBackgroundSize;
-		trimming.right += kBackgroundSize;
-	}
-
-	RECT trim;
-	trim.bottom = 1024;
-	trim.right = 4096;
-	trim.left = trim.right - 1024;
-	trim.top = trim.bottom - 1024;
-	background_container_.get()->addBackground( trim , 20.0F );
 
     backobject_container_->addBackObject(
         kTrimmingBackObject[rand() % kBackobjectKind],
@@ -143,7 +114,7 @@ void Game::draw()
 //”jŠü
 void Game::destroy()
 {
-	background_container_.get()->destroy();
+	background_.destroy();
     backobject_container_.get()->destroy();
 	scene_->destroy();
 }

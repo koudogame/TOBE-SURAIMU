@@ -163,8 +163,6 @@
     <ClInclude Include="ranking_manager.h" />
     <ClInclude Include="sercher.h" />
     <ClInclude Include="Sound.h" />
-    <ClInclude Include="b.h" />
-    <ClInclude Include="background_container.h" />
     <ClInclude Include="back_object.h" />
     <ClInclude Include="back_object_container.h" />
     <ClInclude Include="calc.h" />
@@ -217,9 +215,7 @@
   <ItemGroup>
     <ClCompile Include="ai_base.cpp" />
     <ClCompile Include="ai_demo.cpp" />
-    <ClCompile Include="b.cpp" />
     <ClCompile Include="background.cpp" />
-    <ClCompile Include="background_container.cpp" />
     <ClCompile Include="back_object.cpp" />
     <ClCompile Include="back_object_container.cpp" />
     <ClCompile Include="battle.cpp" />
