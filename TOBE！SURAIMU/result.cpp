@@ -15,6 +15,8 @@
 #include "endless.h"
 #include "Sound.h"
 
+#include "background.h"
+
 
 typedef unsigned long long ULL;
 
@@ -177,6 +179,10 @@ void Result::destroy()
     kLoader->release(texture_numbers_big_);
     kLoader->release(texture_char_);
     kLoader->release(texture_);
+
+
+    // ”wŒi‚ÌƒŠƒZƒbƒg
+    Background::getInstance()->init();
 }
 
 /*===========================================================================*/

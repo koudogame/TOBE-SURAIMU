@@ -15,9 +15,9 @@ constexpr int kLayerNum = 3;
 constexpr float kScrollSpeed = 2.0F;
 constexpr float kScrollMagnification[kLayerNum]
 {
-    0.25F, //  ‰œ
-    0.4F,  //  «
-    0.1F,  // è‘O
+    0.1F, //  ‰œ
+    0.25F,  //  «
+    0.5F,  // è‘O
 };
 
 constexpr float kWidth  = 900.0F;
@@ -61,7 +61,7 @@ Background::Background()
 
 Background::~Background()
 {
-    destroy();
+
 }
 
 
@@ -173,3 +173,8 @@ void Background::changeColor()
 {
     color_ != kColorIDMax ? ++color_ : color_ = kColorIDMin;
 }
+
+//void Background::reset()
+//{
+//    color_ = BackColor::kPurple;
+//}

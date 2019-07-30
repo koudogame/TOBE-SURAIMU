@@ -156,6 +156,7 @@
     <ClInclude Include="ai_base.h" />
     <ClInclude Include="ai_demo.h" />
     <ClInclude Include="background.h" />
+    <ClInclude Include="back_object_base.h" />
     <ClInclude Include="battle.h" />
     <ClInclude Include="bonus_icon.h" />
     <ClInclude Include="demo.h" />
@@ -210,7 +211,9 @@
     <ClInclude Include="textureLoder.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="title_object.h" />
+    <ClInclude Include="view_background.h" />
     <ClInclude Include="wall.h" />
+    <ClInclude Include="wave_background.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ai_base.cpp" />
@@ -268,7 +271,9 @@
     <ClCompile Include="textureLoder.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="title_object.cpp" />
+    <ClCompile Include="view_background.cpp" />
     <ClCompile Include="wall.cpp" />
+    <ClCompile Include="wave_background.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

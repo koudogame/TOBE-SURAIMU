@@ -287,6 +287,12 @@
     <ClCompile Include="background.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
+    <ClCompile Include="view_background.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="wave_background.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -315,9 +321,6 @@
     </ClInclude>
     <ClInclude Include="release.h">
       <Filter>Project\System</Filter>
-    </ClInclude>
-    <ClInclude Include="object_base.h">
-      <Filter>Project\Game\Object</Filter>
     </ClInclude>
     <ClInclude Include="collision.h">
       <Filter>Project\Game\Others\Collision</Filter>
@@ -463,6 +466,18 @@
       <Filter>Project\System\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="background.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="view_background.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="back_object_base.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="object_base.h">
+      <Filter>Project\Game\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="wave_background.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
   </ItemGroup>
