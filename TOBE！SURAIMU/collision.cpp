@@ -111,29 +111,30 @@ bool Collision::collision(Player * P, Star * S)
 	id_ = S->getColor();
 
 	bool hit_flag = false;
-	for (int i = 0; i < kStarLineNum; i++)
+	float length_min_ = FLT_MAX;
+	for (int i = 0; i < kStarLineNum; ++i)
 	{
 		//‰~‚Æ•Ó‚ÌŽn“_‚Æ‚Ì”»’è
 		if (judgment(P->getShape(), &Circle(S->getShape(i)->start, 0.0F)) ||
 			judgment(&Circle(S->getShape(i)->start, 0.0F), P->getMove()))
 		{
-			if (P->getOwner() != S)
+			if (length_min_ > (S->getShape(i)->start - P->getMove()->start).Length())
 			{
-				S->setPlayeroldPosition(P->getPosition());
-				P->setGround(S->getShape(i));
-				P->revision(S->getShape(i)->start, id_);
-				hit_flag = true;
-			}
-			else
-			{
-				if (!P->isCollision())
+				length_min_ = (S->getShape(i)->start - P->getMove()->start).Length();
+				if (P->getOwner() != S)
 				{
-					S->setPlayeroldPosition(P->getPosition());
 					P->setGround(S->getShape(i));
-					P->revision(S->getShape(i)->start, id_);
 					hit_flag = true;
 				}
+				else
+				{
+					if (!P->isCollision())
+					{
+						P->setGround(S->getShape(i));
+						hit_flag = true;
+					}
 
+				}
 			}
 		}
 	}
@@ -143,45 +144,45 @@ bool Collision::collision(Player * P, Star * S)
 		//ü‚Æü‚Ì“–‚½‚è”»’è
 		if (judgment(P->getMove(), S->getShape(i)))
 		{
-			if (P->getOwner() != S)
+			if (length_min_ > (crossPoint(P->getMove(),S->getShape(i))- P->getMove()->start).Length())
 			{
-				S->setPlayeroldPosition(P->getPosition());
-				P->setGround(S->getShape(i));
-				P->revision(crossPoint(P->getMove(), S->getShape(i)), id_);
-				hit_flag = true;
-			}
-			else
-			{
-				if (!P->isCollision())
+				length_min_ = (crossPoint(P->getMove(), S->getShape(i)) - P->getMove()->start).Length();
+				if (P->getOwner() != S)
 				{
-					S->setPlayeroldPosition(P->getPosition());
 					P->setGround(S->getShape(i));
-					P->revision(crossPoint(P->getMove(), S->getShape(i)), id_);
 					hit_flag = true;
 				}
+				else
+				{
+					if (!P->isCollision())
+					{
+						P->setGround(S->getShape(i));
+						hit_flag = true;
+					}
 
+				}
 			}
 		}
 		//‰~‚Æü‚Ì“–‚½‚è”»’è
 		else if (judgment(P->getShape(), S->getShape(i)))
 		{
-			if (P->getOwner() != S)
+			if (length_min_ > (crossPoint(P->getShape(),S->getShape(i)) - P->getMove()->start).Length())
 			{
-				S->setPlayeroldPosition(P->getPosition());
-				P->setGround(S->getShape(i));
-				P->revision(crossPoint(P->getShape(), S->getShape(i)), id_);
-				hit_flag = true;
-			}
-			else
-			{
-				if (!P->isCollision())
+				length_min_ = (crossPoint(P->getShape(), S->getShape(i)) - P->getMove()->start).Length();
+				if (P->getOwner() != S)
 				{
-					S->setPlayeroldPosition(P->getPosition());
 					P->setGround(S->getShape(i));
-					P->revision(crossPoint(P->getShape(), S->getShape(i)), id_);
 					hit_flag = true;
 				}
+				else
+				{
+					if (!P->isCollision())
+					{
+						P->setGround(S->getShape(i));
+						hit_flag = true;
+					}
 
+				}
 			}
 		}
 	}
@@ -189,6 +190,9 @@ bool Collision::collision(Player * P, Star * S)
 	//”»’è‚ª‚ ‚Á‚½‚ç
 	if (hit_flag)
 	{
+		float ratio = length_min_ / (P->getMove()->end - P->getMove()->start).Length();
+		S->setPlayeroldPosition(P->getPosition());
+		P->revision(P->getMove()->start + (P->getMove()->end - P->getMove()->start)*ratio, id_);
 		if (P->getOwner() != S)
 		{
 			S->collision(P);
