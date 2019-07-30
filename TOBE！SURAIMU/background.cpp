@@ -9,15 +9,15 @@
 
 constexpr float kWindowHeight = getWindowHeight<float>();
 
-enum { kFront = 0, kMiddle, kBack };
+enum { kBack = 0, kMiddle, kFront };
 constexpr int kLayerNum = 3;
 
-constexpr float kScrollSpeed = 1.0F;
+constexpr float kScrollSpeed = 2.0F;
 constexpr float kScrollMagnification[kLayerNum]
 {
-    1.0F,   // 手前
-    0.4F,   //  ↓
-    0.25F,  //  奥
+    0.25F, //  奥
+    0.4F,  //  ↓
+    0.1F,  // 手前
 };
 
 constexpr float kWidth  = 900.0F;
@@ -38,11 +38,19 @@ constexpr float kDrawOffsetY = 600.0F;
 constexpr float kDifSizeOffsetY = kHeight - kDrawOffsetY;
 constexpr float kDrawDepth[kLayerNum]
 {
-    2.0F,   // 手前
-    1.0F,   //  ↓
-    0.0F,   //  奥
+    0.4F,   //  奥
+    0.5F,   //  ↓
+    0.6F,   // 手前
 };
 constexpr RECT kTrimmingStart  { 0L, 0L, getWidth<long>(), getHeight<long>() };
+enum BackColor
+{
+    kPurple,
+    kBlue,
+    kRed,
+};
+constexpr BackColor kColorIDMin = kPurple;
+constexpr BackColor kColorIDMax = kRed;
 
 
 /*===========================================================================*/
@@ -60,11 +68,12 @@ Background::~Background()
 /*===========================================================================*/
 bool Background::init()
 {
-    destroy();
-
     // テクスチャ読み込み
-    texture_ = TextureLoder::getInstance()->load( L"Texture/background.png" );
-    if( texture_ == nullptr ) { return false; }
+    if( texture_ == nullptr )
+    {
+        texture_ = TextureLoder::getInstance()->load( L"Texture/background.png" );
+        if( texture_ == nullptr ) { return false; }
+    }
 
     // タスク登録
     TaskManager* task_manager = TaskManager::getInstance();
@@ -73,12 +82,16 @@ bool Background::init()
 
 
     // メンバ初期化
-    position_ = new Vector2[kLayerNum];
+    if( position_ == nullptr )
+    {
+        position_ = new Vector2[kLayerNum];
+    }
     for( int i = 0; i < kLayerNum; ++i )
     {
         position_[i] = kInitPosition;
     }
 
+    color_ = 0;
     offset_y_ = kScrollSpeed;
 
 
@@ -88,6 +101,9 @@ bool Background::init()
 void Background::destroy()
 {
     safe_delete_array( position_ );   
+
+    // タスク解除
+    TaskManager::getInstance()->unregisterObject( this );
 
     if( texture_ )
     {
@@ -107,9 +123,11 @@ void Background::update()
         // 常にきちんと重なるように位置をループ
         if( position_[i].y > -kDifSizeOffsetY )
         {
-            position_[i].y -= kDifSizeOffsetY;
+            position_[i].y -= kDrawOffsetY;
         }
     }
+
+    offset_y_ = kScrollSpeed;
 }
 
 void Background::draw()
@@ -118,29 +136,40 @@ void Background::draw()
 
     Vector2 draw_position;
     RECT    trimming = kTrimmingStart;
-    // ここでレベルにあった位置に動かす
+    // 切り取り範囲をカラーに合わせる( カラーの変化は左右 )
+    trimming.left += getWidth<long>() * color_;
+    trimming.right = trimming.left + getWidth<long>();
 
     // 各レイヤーをシームレスに描画
-    for( int i = 0; i < kLayerNum; ++i )
+    for( int i = 0; i < kLayerNum ; ++i )
     {
-        // 切り取り範囲をレイヤーに合った位置に動かす
-        trimming.top += getHeight<long>();
-
         for( draw_position = position_[i];
-             draw_position.y + kHeight < kWindowHeight;
+             draw_position.y < kWindowHeight;
              draw_position.y += kDrawOffsetY )
         {
-
             kSprite->reserveDraw(
                 texture_,
                 draw_position,
                 trimming,
                 1.0F,
-                kDrawDepth[i]
+                kDrawDepth[i],
+                {1.0F, 1.0F},
+                0.0F,
+                Vector2::Zero,
+                Common::getInstance()->getStates()->Additive()
             );
         }
+
+
+        // 切り取り範囲を次のレイヤーに( レイヤーの変化は上下 )
+        trimming.top += getHeight<long>();
+        trimming.bottom += getHeight<long>();
     }
 }
 
 
 /*===========================================================================*/
+void Background::changeColor()
+{
+    color_ != kColorIDMax ? ++color_ : color_ = kColorIDMin;
+}

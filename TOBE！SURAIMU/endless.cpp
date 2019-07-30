@@ -18,6 +18,8 @@
 #include "ranking_in_endless.h"
 #include "space.h"
 #include "task_manager.h"
+
+#include "background.h"
 #include "back_object_container.h"
 #include "star_container.h"
 #include "player.h"
@@ -369,6 +371,8 @@ void Endless::scroll()
     {
         climb_ = 0.0F;
         ++stage_;
+        Background::getInstance()->changeColor();
+
         if( stage_ >= kStageNum )
         {
             ++round_counter_;
@@ -414,7 +418,7 @@ void Endless::changePattern( const int Pattern )
     star_container_->resetPattern();
 
     std::wstring file_name;
-    CsvLoader file(L"State/pattern_list.csv");
+    CsvLoader file( L"State/pattern_list.csv" );
     for (int i = 0; ; ++i)
     {
         file_name = file.getString(Pattern, i);
