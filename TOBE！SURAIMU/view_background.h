@@ -13,6 +13,8 @@ public:
     void destroy();
     void update();
     void draw();
+
+    const Vector2& getPosition() const override { return position_[0]; }
     void setMove( const float Offset ) override { offset_y_ += Offset; } 
     bool isAlive() override { return position_[0].y < getWindowHeight<float>(); }
 

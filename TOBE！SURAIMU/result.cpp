@@ -182,7 +182,7 @@ void Result::destroy()
 
 
     // ”wŒi‚ÌƒŠƒZƒbƒg
-    Background::getInstance()->init();
+    Background::getInstance()->reset();
 }
 
 /*===========================================================================*/

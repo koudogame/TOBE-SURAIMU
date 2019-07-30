@@ -6,11 +6,11 @@ class BackObjectBase
     : public ObjectBase
 {
 public :
-    enum Color
+    enum Color : int
     {
         kPurple,
         kBlue,
-        kRed
+        kRed,
     };
 
     BackObjectBase() = default;
@@ -21,6 +21,8 @@ public :
 
     virtual void setMove( const float ) override = 0;
     virtual bool isAlive() override = 0;
+
+    void setColor( const Color Color ) { color_ = Color; }
 
 
 protected :

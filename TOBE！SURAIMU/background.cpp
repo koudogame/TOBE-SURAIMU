@@ -1,57 +1,13 @@
 
 #include "background.h"
 
-#include "release.h"
-#include "textureLoder.h"
-#include "sprite.h"
 #include "task_manager.h"
+#include "view_background.h"
+#include "wave_background.h"
 
-
-constexpr float kWindowHeight = getWindowHeight<float>();
-
-enum { kBack = 0, kMiddle, kFront };
-constexpr int kLayerNum = 3;
-
-constexpr float kScrollSpeed = 2.0F;
-constexpr float kScrollMagnification[kLayerNum]
-{
-    0.1F, //  奥
-    0.25F,  //  ↓
-    0.5F,  // 手前
-};
-
-constexpr float kWidth  = 900.0F;
-constexpr float kHeight = 900.0F;
-template <typename T>
-constexpr T getWidth()  { return static_cast<T>(kWidth);  }
-template <typename T>
-constexpr T getHeight() { return static_cast<T>(kHeight); } 
-
-constexpr Vector2 kInitPosition 
-{ 
-    getWindowWidth<float>() / 2.0F - kWidth / 2.0F, // x( 画面中央 )
-    -kHeight                                        // y( 画面外 )
-};
-
-
-constexpr float kDrawOffsetY = 600.0F;
-constexpr float kDifSizeOffsetY = kHeight - kDrawOffsetY;
-constexpr float kDrawDepth[kLayerNum]
-{
-    0.4F,   //  奥
-    0.5F,   //  ↓
-    0.6F,   // 手前
-};
-constexpr RECT kTrimmingStart  { 0L, 0L, getWidth<long>(), getHeight<long>() };
-enum BackColor
-{
-    kPurple,
-    kBlue,
-    kRed,
-};
-constexpr BackColor kColorIDMin = kPurple;
-constexpr BackColor kColorIDMax = kRed;
-
+constexpr Vector2 kViewPositionInit { 190.0F, -600.0F };
+constexpr float kThresholdCreateViewY = -300.0F;
+constexpr float kViewOffsetY = 600.0F;
 
 /*===========================================================================*/
 Background::Background()
@@ -68,31 +24,34 @@ Background::~Background()
 /*===========================================================================*/
 bool Background::init()
 {
-    // テクスチャ読み込み
-    if( texture_ == nullptr )
-    {
-        texture_ = TextureLoder::getInstance()->load( L"Texture/background.png" );
-        if( texture_ == nullptr ) { return false; }
-    }
-
     // タスク登録
     TaskManager* task_manager = TaskManager::getInstance();
     task_manager->registerTask( this, TaskUpdate::kBackground );
     task_manager->registerTask( this, TaskDraw::kBackground );
 
 
-    // メンバ初期化
-    if( position_ == nullptr )
+    // 背景を下まで追加
+    View* view = nullptr;
+    Vector2 view_position = kViewPositionInit;
+    while( view_position.y < getWindowHeight<float>() )
     {
-        position_ = new Vector2[kLayerNum];
-    }
-    for( int i = 0; i < kLayerNum; ++i )
-    {
-        position_[i] = kInitPosition;
-    }
+        view = new View();
+        if( view->init( 
+            view_position, 
+            BackObjectBase::Color::kPurple) == false )
+        {
+            return false;
+        }
 
-    color_ = 0;
-    offset_y_ = kScrollSpeed;
+        view_list_.push_back( view );
+
+        view_position.y += kViewOffsetY;
+    }
+    last_view_ = *view_list_.begin();
+
+
+    // その他のメンバ初期化
+    color_ = BackObjectBase::Color::kPurple;
 
 
     return true;
@@ -100,81 +59,136 @@ bool Background::init()
 
 void Background::destroy()
 {
-    safe_delete_array( position_ );   
+    // リストのオブジェクトの開放処理ラムダ
+    auto releaseForList = []( auto& List )
+    {
+        for( auto& elem : List )
+        {
+            elem->destroy();
+            delete elem;
+        }
+
+        List.clear();
+    };
+
+    // 背景の開放
+    releaseForList( view_free_list_ );
+    releaseForList( view_list_ );
+
+    // 波の開放
+    releaseForList( wave_free_list_ );
+    releaseForList( wave_list_ );
+
+
 
     // タスク解除
     TaskManager::getInstance()->unregisterObject( this );
-
-    if( texture_ )
-    {
-    // テクスチャ開放
-        TextureLoder::getInstance()->release( texture_ );
-        texture_ = nullptr;
-    }
 }
 
 void Background::update()
 {
-    // スクロール
-    for( int i = 0; i < kLayerNum; ++i )
+    // リストのオブジェクト更新ラムダ
+    auto updateForList = []( auto& List, auto& FreeList )
     {
-        position_[i].y += offset_y_ * kScrollMagnification[i];
-
-        // 常にきちんと重なるように位置をループ
-        if( position_[i].y > -kDifSizeOffsetY )
+        for( auto itr = List.begin(), end = List.end();
+            itr != end; )
         {
-            position_[i].y -= kDrawOffsetY;
+            // オブジェクトの更新
+            (*itr)->update();
+
+            // オブジェクトが死んでいたら、フリーリストに移動
+            if( (*itr)->isAlive() == false )
+            {
+                FreeList.push_back(*itr);
+                itr = List.erase( itr );
+            }
+            else
+            {
+                ++itr;
+            }
+        }
+    };
+
+
+    updateForList( view_list_, view_free_list_ );
+    updateForList( wave_list_, wave_free_list_ );
+
+
+    // 背景が切れないよう追加していく
+    if( last_view_->getPosition().y > kThresholdCreateViewY )
+    {
+        View* view = nullptr;
+
+        if( view_free_list_.size() > 0U )
+        {
+            view = view_free_list_.back();
+            view_free_list_.pop_back();
+        }
+        else
+        {
+            view = new View;
+        }
+
+        if( view->init( kViewPositionInit, color_ ) )
+        {
+            view_list_.push_back( view );
+            last_view_ = view;
         }
     }
-
-    offset_y_ = kScrollSpeed;
 }
 
 void Background::draw()
 {
-    Sprite* const kSprite = Sprite::getInstance();
-
-    Vector2 draw_position;
-    RECT    trimming = kTrimmingStart;
-    // 切り取り範囲をカラーに合わせる( カラーの変化は左右 )
-    trimming.left += getWidth<long>() * color_;
-    trimming.right = trimming.left + getWidth<long>();
-
-    // 各レイヤーをシームレスに描画
-    for( int i = 0; i < kLayerNum ; ++i )
+    // リストのオブジェクト描画ラムダ
+    auto DrawForList = []( auto& List )
     {
-        for( draw_position = position_[i];
-             draw_position.y < kWindowHeight;
-             draw_position.y += kDrawOffsetY )
+        for( auto& elem : List )
         {
-            kSprite->reserveDraw(
-                texture_,
-                draw_position,
-                trimming,
-                1.0F,
-                kDrawDepth[i],
-                {1.0F, 1.0F},
-                0.0F,
-                Vector2::Zero,
-                Common::getInstance()->getStates()->Additive()
-            );
+            elem->draw();
         }
+    };
 
 
-        // 切り取り範囲を次のレイヤーに( レイヤーの変化は上下 )
-        trimming.top += getHeight<long>();
-        trimming.bottom += getHeight<long>();
-    }
+    DrawForList( view_list_ );
+    DrawForList( wave_list_ );
 }
 
 
 /*===========================================================================*/
-void Background::changeColor()
+void Background::setMove( const float Offset ) 
 {
-    color_ != kColorIDMax ? ++color_ : color_ = kColorIDMin;
+    auto moveForList = [=]( auto& List )
+    {
+        for( auto& elem : List )
+        {
+            elem->setMove( Offset );
+        }
+    };
+
+    moveForList( view_list_ );
+    moveForList( wave_list_ );
 }
 
-//void Background::reset()
-//{
-//    color_ = BackColor::kPurple;
-//}
+void Background::changeColor()
+{
+    color_ = color_ != BackObjectBase::Color::kRed ?
+    static_cast<BackObjectBase::Color>(static_cast<int>(color_) + 1) :
+    BackObjectBase::Color::kPurple;
+}
+
+void Background::reset()
+{
+    color_ = BackObjectBase::Color::kPurple;
+    
+    // リストのオブジェクトに色をセットするラムダ式
+    auto setColorForList = [this]( auto& List )
+    {
+        for( auto& elem : List )
+        {
+            elem->setColor( color_ );
+        }
+    };
+
+    setColorForList( view_list_ );
+    setColorForList( wave_list_ );
+}

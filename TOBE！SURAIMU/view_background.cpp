@@ -18,13 +18,6 @@ constexpr T getWidth(){ return static_cast<T>(kWidth); }
 template <typename T>
 constexpr T getHeight() { return static_cast<T>(kHeight); }
 
-constexpr Vector2 kInitPosition
-{
-    getWindowWidth<float>() * 0.5F - getWidth<float>() * 0.5F,
-    -getHeight<float>()
-};
-
-
 constexpr int kLayerNum = 3;
 constexpr float kScrollSpeed = 2.0F;
 constexpr float kScrollMagnification[kLayerNum]
@@ -62,7 +55,7 @@ bool View::init( const Vector2& Position, const Color Color )
     // テクスチャ読み込み( 初回のみ )
     if( texture_ == nullptr )
     {
-       texture_ = TextureLoder::getInstance()->load(L"Texture/background.jpg");
+       texture_ = TextureLoder::getInstance()->load(L"Texture/background.png");
        if( texture_ == nullptr ) { return false; }
     }
 
@@ -75,8 +68,13 @@ bool View::init( const Vector2& Position, const Color Color )
     }
     for( int i = 0; i < kLayerNum; ++i )
     {
-        position_[i] = kInitPosition;
+        position_[i] = Position;
     }
+
+
+    // その他メンバ
+    color_ = Color;
+    offset_y_ = kScrollSpeed;
 
     return true;
 }
@@ -110,19 +108,22 @@ void View::update()
             position_[layer].y = getWindowHeight<float>();
         }
     }
+
+
+    // オフセット量初期化
+    offset_y_ = kScrollSpeed;
 }
 
 void View::draw()
 {
     Sprite* sprite = Sprite::getInstance();
     RECT trimming = kTrimmingStart;
+    // カラー変更
+    trimming.left += kWidth * color_;
+    trimming.right = trimming.left + kWidth;
 
     for( int layer = 0; layer < kLayerNum; ++layer )
     {
-        // レイヤー毎の切り取り範囲の移動処理
-        trimming.left += kHeight;
-        trimming.bottom += kHeight;
-
         sprite->reserveDraw(
             texture_,
             position_[layer],
@@ -130,5 +131,10 @@ void View::draw()
             1.0F,
             kDrawDepth[layer]
         );
+
+
+        // レイヤー毎の切り取り範囲の移動処理
+        trimming.top += kHeight;
+        trimming.bottom += kHeight;
     }
 }

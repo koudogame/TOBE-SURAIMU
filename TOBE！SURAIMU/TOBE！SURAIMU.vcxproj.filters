@@ -27,9 +27,6 @@
     <Filter Include="Project\Game\Scene">
       <UniqueIdentifier>{6cda7968-8104-473d-bc1e-7c45ea93d7b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Scene\Result">
-      <UniqueIdentifier>{69320312-d4af-44f1-ab7f-01dd9c64468c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Scene\Title">
       <UniqueIdentifier>{656fe80d-9a73-4a4b-97ad-4eb84e97b625}</UniqueIdentifier>
     </Filter>
@@ -131,6 +128,9 @@
     </Filter>
     <Filter Include="Project\Game\Scene\Demo">
       <UniqueIdentifier>{03c701d8-5d1b-4862-81e4-22e99968f370}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Scene\Result">
+      <UniqueIdentifier>{69320312-d4af-44f1-ab7f-01dd9c64468c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

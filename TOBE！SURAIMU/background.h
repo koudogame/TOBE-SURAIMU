@@ -1,7 +1,11 @@
 #pragma once
 
 #include "object_base.h"
+#include "back_object_base.h"
 
+
+class View;
+class Wave;
 class Background :
     public ObjectBase
 {
@@ -17,16 +21,18 @@ public:
     void destroy() override;
     void update()  override;
     void draw()    override;
-    void setMove( const float Offset ) override { offset_y_ += Offset; }
+    void setMove( const float Offset ) override;
     void changeColor();
+    void reset();
 
 private:
     Background();
 
+    std::list<View*> view_list_;
+    std::list<View*> view_free_list_;
+    std::list<Wave*> wave_list_;
+    std::list<Wave*> wave_free_list_;
+    View* last_view_ = nullptr;
 
-    ID3D11ShaderResourceView *texture_ = nullptr;
-
-    Vector2 *position_      = nullptr;
-    int color_ = 0;
-    float offset_y_ = 0.0F;
+    BackObjectBase::Color color_ = BackObjectBase::Color::kPurple;
 };
