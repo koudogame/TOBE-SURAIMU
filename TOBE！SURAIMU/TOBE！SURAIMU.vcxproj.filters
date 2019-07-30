@@ -206,9 +206,6 @@
     <ClCompile Include="groundParticle.cpp">
       <Filter>Project\Game\Object\Particle\Ground</Filter>
     </ClCompile>
-    <ClCompile Include="background.cpp">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClCompile>
     <ClCompile Include="freeFallParticle.cpp">
       <Filter>Project\Game\Object\Particle\FreeFall</Filter>
     </ClCompile>
@@ -289,6 +286,12 @@
     </ClCompile>
     <ClCompile Include="sprite.cpp">
       <Filter>Project\System\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="b.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="background.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -377,9 +380,6 @@
     </ClInclude>
     <ClInclude Include="groundParticle_container.h">
       <Filter>Project\Game\Object\Particle\Ground</Filter>
-    </ClInclude>
-    <ClInclude Include="background.h">
-      <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
     <ClInclude Include="freeFallParticle.h">
       <Filter>Project\Game\Object\Particle\FreeFall</Filter>
@@ -470,6 +470,12 @@
     </ClInclude>
     <ClInclude Include="sprite.h">
       <Filter>Project\System\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="b.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="background.h">
+      <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

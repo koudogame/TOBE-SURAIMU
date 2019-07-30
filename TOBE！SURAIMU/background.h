@@ -1,34 +1,25 @@
 #pragma once
 
-// î¬èÍ â∑é˜
-
 #include "object_base.h"
 
-//-----------------------------------------------------------------------------
-// îwåi
-//-----------------------------------------------------------------------------
 class Background :
     public ObjectBase
 {
 public:
     Background();
-    virtual ~Background();
+    ~Background();
 
-    virtual bool init(const RECT& Trimming,
-                      const float Scroll = 1.0F,
-                      const float Depth = 0.0F);
-    virtual void destroy() override;
-    virtual void update() override;
-    virtual void draw() override;
+    bool init()    override;
+    void destroy() override;
+    void update()  override;
+    void draw()    override;
+    void setMove( const float Offset ) override { offset_y_ += Offset; }
 
-    void resetStates(const float Magnification) { magnification_ = Magnification; }
 
-    
-protected:
-    ID3D11ShaderResourceView* texture_ = nullptr;
-    Vector2 position_{ 0.0F, 0.0F };
-    RECT trimming_{0L, 0L, 0L, 0L};
-    float magnification_ = 1.0F;
-    float scroll_ = 1.0F;
-    float depth_ = 0.0F;
+private:
+    ID3D11ShaderResourceView *texture_ = nullptr;
+
+    Vector2 *position_      = nullptr;
+
+    float offset_y_ = 0.0F;
 };

@@ -57,8 +57,8 @@ constexpr unsigned kThresholdUp = 1U;                           // ƒŒƒxƒ‹ƒe[ƒuƒ
 constexpr unsigned kThresholdDown = 2U;                         // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : è‡’l( ƒXƒNƒ[ƒ‹« )
 constexpr float kLevelTable[][3] = {                            // ƒŒƒxƒ‹ƒe[ƒuƒ‹
     {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   5000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   8000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
+    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
+    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
     {   7500.0f, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
     {  10000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F }
 };
@@ -360,9 +360,9 @@ void Endless::scroll()
 
     if( over > 0.0F ) 
     {
+        climb_ += over;
         player_->addScore( over );  // ƒvƒŒƒCƒ„[‚ÉƒXƒRƒA”½‰f
     }
-    climb_ += over;
 
 
     // Œ»İ‚ÌƒXƒe[ƒW‚ğ“Ë”j‚µ‚½‚ç

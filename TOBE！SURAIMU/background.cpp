@@ -1,97 +1,146 @@
 
-// 板場 温樹
-
 #include "background.h"
 
+#include "release.h"
 #include "textureLoder.h"
 #include "sprite.h"
 #include "task_manager.h"
 
-const long kTextureSize = 1024L;
+
+constexpr float kWindowHeight = getWindowHeight<float>();
+
+enum { kFront = 0, kMiddle, kBack };
+constexpr int kLayerNum = 3;
+
+constexpr float kScrollSpeed = 1.0F;
+constexpr float kScrollMagnification[kLayerNum]
+{
+    1.0F,   // 手前
+    0.4F,   //  ↓
+    0.25F,  //  奥
+};
+
+constexpr float kWidth  = 900.0F;
+constexpr float kHeight = 900.0F;
+template <typename T>
+constexpr T getWidth()  { return static_cast<T>(kWidth);  }
+template <typename T>
+constexpr T getHeight() { return static_cast<T>(kHeight); } 
+
+constexpr Vector2 kInitPosition 
+{ 
+    getWindowWidth<float>() / 2.0F - kWidth / 2.0F, // x( 画面中央 )
+    -kHeight                                        // y( 画面外 )
+};
+
+
+constexpr float kDrawOffsetY = 600.0F;
+constexpr float kDifSizeOffsetY = kHeight - kDrawOffsetY;
+constexpr float kDrawDepth[kLayerNum]
+{
+    2.0F,   // 手前
+    1.0F,   //  ↓
+    0.0F,   //  奥
+};
+constexpr RECT kTrimmingStart  { 0L, 0L, getWidth<long>(), getHeight<long>() };
+
 
 /*===========================================================================*/
 Background::Background()
 {
+
 }
 
 Background::~Background()
 {
+    destroy();
 }
 
+
 /*===========================================================================*/
-// 初期化処理
-// Trimming : 画像切り取り範囲
-// Scroll   : y座標の1フレームでのスクロール量
-// Depth    : Sprite深度値
-bool Background::init(const RECT& Trimming, const float Scroll, const float Depth)
+bool Background::init()
 {
+    destroy();
+
     // テクスチャ読み込み
-    texture_ = TextureLoder::getInstance()->load(L"Texture/background.png");
-    if (texture_ == nullptr) { return false; }
+    texture_ = TextureLoder::getInstance()->load( L"Texture/background.png" );
+    if( texture_ == nullptr ) { return false; }
+
+    // タスク登録
+    TaskManager* task_manager = TaskManager::getInstance();
+    task_manager->registerTask( this, TaskUpdate::kBackground );
+    task_manager->registerTask( this, TaskDraw::kBackground );
 
 
-    // タスクの登録
-    TaskManager::getInstance()->registerTask(this, TaskUpdate::kBackground);
-    TaskManager::getInstance()->registerTask(this, TaskDraw::kBackground);
+    // メンバ初期化
+    position_ = new Vector2[kLayerNum];
+    for( int i = 0; i < kLayerNum; ++i )
+    {
+        position_[i] = kInitPosition;
+    }
 
+    offset_y_ = kScrollSpeed;
 
-    // メンバ
-    position_.x = (getWindowWidth<float>() - static_cast<float>(kTextureSize))
-                  / 2.0F;
-    position_.y = 0.0F;
-    trimming_ = Trimming;
-    magnification_ = 1.0F;
-    scroll_ = Scroll;
 
     return true;
 }
 
-/*===========================================================================*/
-// 終了処理
 void Background::destroy()
 {
-    TaskManager::getInstance()->unregisterObject(this);
+    safe_delete_array( position_ );   
 
-    TextureLoder::getInstance()->release(texture_);
-}
-
-/*===========================================================================*/
-// 更新処理
-void Background::update()
-{
-    position_.y += scroll_ * magnification_;
-
-    // y座標が画面外( 下 )へ行ったら上へ戻す
-    if (position_.y > getWindowHeight<float>())
+    if( texture_ )
     {
-        position_.y = getWindowHeight<float>() - kTextureSize + scroll_;
+    // テクスチャ開放
+        TextureLoder::getInstance()->release( texture_ );
+        texture_ = nullptr;
     }
 }
 
-/*===========================================================================*/
-// 描画処理
+void Background::update()
+{
+    // スクロール
+    for( int i = 0; i < kLayerNum; ++i )
+    {
+        position_[i].y += offset_y_ * kScrollMagnification[i];
+
+        // 常にきちんと重なるように位置をループ
+        if( position_[i].y > -kDifSizeOffsetY )
+        {
+            position_[i].y -= kDifSizeOffsetY;
+        }
+    }
+}
+
 void Background::draw()
 {
     Sprite* const kSprite = Sprite::getInstance();
 
+    Vector2 draw_position;
+    RECT    trimming = kTrimmingStart;
+    // ここでレベルにあった位置に動かす
 
-    Vector2 draw_position = position_;
-
-    // 画面が埋まるまで縦に描画
-    while (draw_position.y + kTextureSize > 0.0F)
+    // 各レイヤーをシームレスに描画
+    for( int i = 0; i < kLayerNum; ++i )
     {
-        kSprite->reserveDraw(
-            texture_,
-            draw_position,
-            trimming_,
-            1.0F, 
-            depth_,
-            {1.0F, 1.0F},
-            0.0F,
-            {0.0F, 0.0F},
-            Common::getInstance()->getStates()->Additive()
-        );
+        // 切り取り範囲をレイヤーに合った位置に動かす
+        trimming.top += getHeight<long>();
 
-        draw_position.y -= static_cast<float>(kTextureSize);
+        for( draw_position = position_[i];
+             draw_position.y + kHeight < kWindowHeight;
+             draw_position.y += kDrawOffsetY )
+        {
+
+            kSprite->reserveDraw(
+                texture_,
+                draw_position,
+                trimming,
+                1.0F,
+                kDrawDepth[i]
+            );
+        }
     }
 }
+
+
+/*===========================================================================*/

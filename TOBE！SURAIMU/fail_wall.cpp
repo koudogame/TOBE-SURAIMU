@@ -14,7 +14,8 @@
 constexpr float kLimitYUp   = getWindowHeight<float>() * 0.00F;
 constexpr float kLimitYDown = getWindowHeight<float>() * 1.50F;
 const Line kInitPosition { 250.0F, kLimitYDown, 1030.0F, kLimitYDown };
-constexpr float kMagnificationSpeed = 1.25F;
+constexpr float kStartSpeed = -0.25F;
+constexpr float kMagnificationSpeed = 1.5F;
 constexpr float kScrollSpeedTable[] = 
 {
     0.0F,
@@ -22,6 +23,7 @@ constexpr float kScrollSpeedTable[] =
     -0.40F,
     -0.50F
 };
+
 
 
 constexpr int kElemNum = 4;
@@ -173,7 +175,7 @@ void FailWall::draw()
 /*===========================================================================*/
 void FailWall::start()
 {
-    speed_ = -0.25F;
+    speed_ = kStartSpeed;
 }
 
 void FailWall::levelUp()
