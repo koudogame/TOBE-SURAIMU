@@ -48,6 +48,8 @@ bool CsvLoader::load( std::wstring FileName)
 
 	}
 
+	container_.pop_back();
+
 	file.close();
 
 	return true;
