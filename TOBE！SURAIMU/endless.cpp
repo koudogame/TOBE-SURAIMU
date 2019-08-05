@@ -76,7 +76,7 @@ constexpr Vector2 kInitStarPosi[]   = {                         // ‰ŠúƒXƒ^[ˆÊ’
 constexpr float kInitStarAngle[]    = { 90.0F, 90.0F,90.0F, };  // ‰ŠúƒXƒ^[Šp“x
 constexpr float kInitStarSpin[]		= { -3.0F, 3.0F,3.0F };     // ‰ŠúƒXƒ^[‰ñ“]‘¬“x
 constexpr float kInitStarSpinRate[] = { 0.2F, 0.2F,0.2F };      // ‰ŠúƒXƒ^[‰ñ“]Š„‡
-constexpr float kInitStarSize[]     = { 90.0F, 120.0F, 120.0F}; // ‰ŠúƒXƒ^[‘å‚«‚³
+constexpr float kInitStarSize[]     = { 80.0F, 100.0F, 100.0F}; // ‰ŠúƒXƒ^[‘å‚«‚³
 
 
 /*===========================================================================*/
