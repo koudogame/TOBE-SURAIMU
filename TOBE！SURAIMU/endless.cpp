@@ -20,7 +20,6 @@
 #include "task_manager.h"
 
 #include "background.h"
-#include "back_object_container.h"
 #include "star_container.h"
 #include "player.h"
 #include "wall.h"

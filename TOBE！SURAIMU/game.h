@@ -3,7 +3,6 @@
 //CreatorName:YamadaHaruhisa
 
 #include "scene_base.h"
-#include "back_object_container.h"
 #include "background.h"
 
 class Game
@@ -21,7 +20,6 @@ public:
 
 private:
 	std::unique_ptr<SceneBase> scene_;		//stateパターンシーン格納用変数
-    std::unique_ptr<BackObjectContainer> backobject_container_;
 	ID3D11ShaderResourceView* texture_;
 };
 

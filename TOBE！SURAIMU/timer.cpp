@@ -1,4 +1,6 @@
 
+// ”Âê@‰·÷
+
 #include "timer.h"
 
 using namespace std::chrono;

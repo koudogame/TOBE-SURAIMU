@@ -14,7 +14,7 @@ public:
     void update();
     void draw();
 
-    const Vector2& getPosition() const override { return position_[0]; }
+    const Vector2& getPosition() const override { return position_[2]; }
     void setMove( const float Offset ) override { offset_y_ += Offset; } 
     bool isAlive() override { return position_[0].y < getWindowHeight<float>(); }
 

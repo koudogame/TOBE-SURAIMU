@@ -33,7 +33,7 @@ constexpr float kDrawDepth[kLayerNum]
     0.6F
 };
 
-/*                              left    top   right   bottom  */
+/*                               left    top   right   bottom  */
 constexpr RECT kTrimmingStart {    0L,    0L, kWidth, kHeight };
 
 

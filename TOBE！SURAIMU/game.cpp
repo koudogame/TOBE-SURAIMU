@@ -13,7 +13,7 @@
 
 //背景処理利用定数
 constexpr RECT kTrimmingEffect{             // 背景エフェクト切り取り範囲
-	0L, 1024L, 1280L, 1744L };
+	0L, 0L, 1280L, 720L };
 constexpr float kBackEffectDepth = 4.0F;
 
 constexpr int   kBackobjectCreateRate = 500;
@@ -43,7 +43,7 @@ bool Game::init()
 {
     RankingManager::getInstance();
 
-	texture_ = TextureLoder::getInstance()->load(L"Texture/Background.png");
+	texture_ = TextureLoder::getInstance()->load(L"Texture/shadow1.png");
 
 	scene_ = std::make_unique<Title>();
 
@@ -52,14 +52,6 @@ bool Game::init()
 	if (!Background::getInstance()->init())
 		return false;
 
-    backobject_container_ = std::make_unique<BackObjectContainer>();
-
-    backobject_container_->addBackObject(
-        kTrimmingBackObject[rand() % kBackobjectKind],
-        (rand() % static_cast<int>(kBackobjectMoveXMax * 10.0F)) / 10.0F + 0.1F * (rand() % 2 ? 1 : -1),
-        (rand() % static_cast<int>(kBackobjectMoveYMax * 10.0F)) / 10.0F + 0.1F,
-        kBackobjectDrawDepth);
-
 	return true;
 }
 
@@ -67,18 +59,6 @@ bool Game::init()
 bool Game::update()
 {
 	TaskManager::getInstance()->allUpdate();
-	//オブジェクトの更新
-    backobject_container_->update();
-    if( backobject_container_->empty() ||
-        (!(rand() % kBackobjectCreateRate) &&
-         backobject_container_->active().size() < kBackobjectMax) )
-    {
-        backobject_container_->addBackObject(
-            kTrimmingBackObject[rand() % kBackobjectKind],
-            (rand() % static_cast<int>(kBackobjectMoveXMax * 10.0F)) / 10.0F + 0.1F * (rand() % 2 ? 1 : -1),
-            (rand() % static_cast<int>(kBackobjectMoveYMax * 10.0F)) / 10.0F + 0.1F,
-            kBackobjectDrawDepth);
-    }
 
 
 	SceneBase* temp = scene_->update();
@@ -104,19 +84,18 @@ void Game::draw()
 {
 	TaskManager::getInstance()->allDraw();
 	scene_->draw();
-    /*Sprite::getInstance()->reserveDraw(
+    Sprite::getInstance()->reserveDraw(
         texture_,
         Vector2::Zero,
         kTrimmingEffect,
         1.0F,
         kBackEffectDepth
-    );*/
+    );
 }
 
 //破棄
 void Game::destroy()
 {
 	Background::getInstance()->destroy();
-    backobject_container_.get()->destroy();
 	scene_->destroy();
 }

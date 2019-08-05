@@ -90,9 +90,6 @@
     <Filter Include="Project\Game\Object\TitleObj">
       <UniqueIdentifier>{ba692143-526d-47e7-b53a-83a69d9f2881}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Others\Text">
-      <UniqueIdentifier>{b0f22c7b-e10c-473f-818c-e0a4a1125dd7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Scene\Ranking">
       <UniqueIdentifier>{dc5a65bf-c0f7-4f4d-bfa6-97881e2e6b1c}</UniqueIdentifier>
     </Filter>
@@ -131,6 +128,9 @@
     </Filter>
     <Filter Include="Project\Game\Scene\Result">
       <UniqueIdentifier>{69320312-d4af-44f1-ab7f-01dd9c64468c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\Text">
+      <UniqueIdentifier>{b0f22c7b-e10c-473f-818c-e0a4a1125dd7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -215,14 +215,8 @@
     <ClCompile Include="csvLoader.cpp">
       <Filter>Project\Game\Others\CSV</Filter>
     </ClCompile>
-    <ClCompile Include="back_object.cpp">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClCompile>
     <ClCompile Include="scoring.cpp">
       <Filter>Project\Game\Others\Scoring</Filter>
-    </ClCompile>
-    <ClCompile Include="back_object_container.cpp">
-      <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
     <ClCompile Include="stay_particle.cpp">
       <Filter>Project\Game\Object\Particle\Stay</Filter>
@@ -390,14 +384,8 @@
     <ClInclude Include="csvLoader.h">
       <Filter>Project\Game\Others\CSV</Filter>
     </ClInclude>
-    <ClInclude Include="back_object.h">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClInclude>
     <ClInclude Include="scoring.h">
       <Filter>Project\Game\Others\Scoring</Filter>
-    </ClInclude>
-    <ClInclude Include="back_object_container.h">
-      <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
     <ClInclude Include="ranking_in_endless.h">
       <Filter>Project\Game\Object\UI</Filter>

@@ -18,6 +18,12 @@ public:
     bool isAlive() override { return position_.y < getWindowHeight<float>(); }
 
 private:
+    void (Wave::*effect_)() = nullptr;
+    void effectFadeIn();
+    void effectFadeOut();
+
     Vector2 position_;
     Vector2 offset_;
+    int pattern_id_ = 0;
+    float effect_alpha_ = 0.0F;
 };

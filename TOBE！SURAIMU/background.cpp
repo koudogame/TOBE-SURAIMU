@@ -1,13 +1,44 @@
 
 #include "background.h"
 
+#include "textureLoder.h"
 #include "task_manager.h"
 #include "view_background.h"
 #include "wave_background.h"
 
+
+
+
+// テクスチャサイズが大きい画像を初期化時、同時に読み込んでおく
+/*===========================================================================*/
+const wchar_t* const kTextureFileName[]
+{
+    L"Texture/back_wave_purple.png",    // kPurple
+    L"Texture/back_wave_blue.png",      // kBule
+    L"Texture/back_wave_red.png",       // kRed
+};
+namespace
+{
+    class Loader
+    {
+    public:
+        Loader()
+        {
+            TextureLoder* texture_loader = TextureLoder::getInstance();
+
+            for (auto& file : kTextureFileName)
+            {
+                texture_loader->load(file);
+            }
+        }
+    };
+}
+
 constexpr Vector2 kViewPositionInit { 190.0F, -600.0F };
-constexpr float kThresholdCreateViewY = -300.0F;
+constexpr float kThresholdCreateViewY = -600.0F;
 constexpr float kViewOffsetY = 600.0F;
+constexpr Vector2 kWavePositionInit { 0.0F, -1200.0F };
+
 
 /*===========================================================================*/
 Background::Background()
@@ -24,6 +55,8 @@ Background::~Background()
 /*===========================================================================*/
 bool Background::init()
 {
+    static ::Loader load_texture;   /*サイズの大きい画像を読み込んでおく*/
+
     // タスク登録
     TaskManager* task_manager = TaskManager::getInstance();
     task_manager->registerTask( this, TaskUpdate::kBackground );
@@ -115,9 +148,11 @@ void Background::update()
 
 
     // 背景が切れないよう追加していく
-    if( last_view_->getPosition().y > kThresholdCreateViewY )
+    // 最後に追加した背景を基準に追加
+    const Vector2& last_position = last_view_->getPosition();
+    if( last_position.y > kThresholdCreateViewY )
     {
-        View* view = nullptr;
+        View *view = nullptr;
 
         if( view_free_list_.size() > 0U )
         {
@@ -126,14 +161,37 @@ void Background::update()
         }
         else
         {
-            view = new View;
+            view = new View();
         }
 
-        if( view->init( kViewPositionInit, color_ ) )
+        Vector2 view_position{
+            last_position.x,
+            last_position.y - kViewOffsetY
+        };
+        if( view->init( view_position, color_ ) )
         {
             view_list_.push_back( view );
             last_view_ = view;
         }
+
+
+#if 1
+        Wave *wave = nullptr;
+        if( wave_free_list_.size() > 0U )
+        {
+            wave = wave_free_list_.back();
+            wave_free_list_.pop_back();
+        }
+        else
+        {
+            wave = new Wave();
+        }
+
+        if( wave->init( kWavePositionInit, color_ ) )
+        {
+            wave_list_.push_back( wave );
+        }
+#endif
     }
 }
 
