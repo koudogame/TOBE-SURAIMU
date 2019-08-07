@@ -41,7 +41,6 @@ using PadTracker = GamePad::ButtonStateTracker;
 // 処理に関係
 constexpr float kWindowWidth  = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
-
 enum { kAButton, kStick };
 constexpr Vector2 kPosition = Vector2(kWindowWidth - 272.0F, kWindowHeight - 128.0F);
 const RECT kTrimming[] = {
@@ -324,6 +323,7 @@ SceneBase* Endless::pause()
 
     case Pause::kRestart  :
         kTaskManager->restart();
+        Background::getInstance()->reset();
         return new Endless();
 
     case Pause::kTitle    :
@@ -396,7 +396,7 @@ bool Endless::checkAndCreateStar()
     auto end = star_container_->active().end();
     for (; itr != end; ++itr)
     {
-        if ((*itr)->getPosition().y < 0.0F) { break; }
+        if ((*itr)->getPosition().y - (*itr)->getSize() < 0.0F) { break; }
     }
 
     // 画面外待機しているスターが無くなったらスターの生成
