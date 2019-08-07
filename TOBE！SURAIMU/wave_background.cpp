@@ -4,7 +4,6 @@
 #include "textureLoder.h"
 #include "sprite.h"
 
-
 /*
     2つのレイヤーからなる。
     メインレイヤーの切り取り範囲は上、エフェクトはメインレイヤー切り取り範囲の下にある
@@ -160,6 +159,18 @@ void Wave::draw()
         draw( draw_position );
 
         draw_position.x += getWidth<float>();
+    }
+}
+
+/*===========================================================================*/
+void Wave::setColor( const Color Color )
+{
+    if( texture_ )
+    {
+        auto tex_manager = TextureLoder::getInstance();
+
+        tex_manager->release( texture_ );
+        texture_ = tex_manager->load( kTextureFileName[Color] );
     }
 }
 

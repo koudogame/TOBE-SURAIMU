@@ -17,6 +17,8 @@ public:
     void setMove( const float Offset ) override { position_.y += Offset; }
     bool isAlive() override { return position_.y < getWindowHeight<float>(); }
 
+    void setColor( const Color Color ) override;
+
 private:
     void (Wave::*effect_)() = nullptr;
     void effectFadeIn();

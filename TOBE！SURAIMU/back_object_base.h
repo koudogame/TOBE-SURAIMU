@@ -22,7 +22,7 @@ public :
     virtual void setMove( const float ) override = 0;
     virtual bool isAlive() override = 0;
 
-    void setColor( const Color Color ) { color_ = Color; }
+    virtual void setColor( const Color Color ) { color_ = Color; }
 
 
 protected :
