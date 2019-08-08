@@ -208,7 +208,7 @@ void Background::draw()
 
 
     DrawForList( view_list_ );
-    //DrawForList( wave_list_ );
+    DrawForList( wave_list_ );
 }
 
 

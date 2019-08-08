@@ -231,12 +231,12 @@ void Result::draw()
     Text::drawNumber( static_cast<ULL>(score_.getHeight()),
                       texture_numbers_mini_,
                       position_base_ + kPositionFromBase[kPosHeight],
-                      kMiniNumbersWidth, kMiniNumbersHeight, 1U, alpha_ );
+                      kMiniNumbersWidth, kMiniNumbersHeight, 1U, alpha_,0.0F, kRankingDepth );
 
     // コンボ
     Text::drawNumber( score_.getMaxCombo(), texture_numbers_mini_,
                       position_base_ + kPositionFromBase[kPosCombo],
-                      kMiniNumbersWidth, kMiniNumbersHeight, 1U, alpha_ );
+                      kMiniNumbersWidth, kMiniNumbersHeight, 1U, alpha_, 0.0F, kRankingDepth );
 
     // カーソル
     kSprite->reserveDraw(  texture_,
@@ -315,7 +315,7 @@ void Result::draw()
         Text::drawString( name_,
                           texture_char_,
                           position_base_ + kPositionFromBase[kPosName],
-                          kCharacterWidth, kCharacterHeight, alpha_ );
+                          kCharacterWidth, kCharacterHeight, alpha_, 0.0F, kRankingDepth );
 
 
         // ランク
@@ -323,7 +323,7 @@ void Result::draw()
                           texture_numbers_big_,
                           position_base_ + kPositionFromBase[kPosRank],
                           kBigNumbersWidth, kBigNumbersHeight,
-                          1U, alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_ );
+                          1U, alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_, kRankingDepth );
 
         // 名前カーソル( 名前選択時にのみ描画 )
         if( update_ == &Result::setName )

@@ -366,25 +366,25 @@ void Endless::scroll()
 
 
     // 現在のステージを突破したら
-    if( climb_ >= kLevelTable[stage_][kHeight] )
-    {
-        climb_ = 0.0F;
-        ++stage_;
-        Background::getInstance()->changeColor();
+    //if( climb_ >= kLevelTable[stage_][kHeight] )
+    //{
+    //    climb_ = 0.0F;
+    //    ++stage_;
+    //    Background::getInstance()->changeColor();
 
-        if( stage_ >= kStageNum )
-        {
-            ++round_counter_;
-            stage_ = 0;
+    //    if( stage_ >= kStageNum )
+    //    {
+    //        ++round_counter_;
+    //        stage_ = 0;
 
-            // 周回を知らせる
-            player_->addLevel();
-            fail_wall_->levelUp();
-        }
+    //        // 周回を知らせる
+    //        player_->addLevel();
+    //        fail_wall_->levelUp();
+    //    }
 
-        // スターの生成パターン変更
-        changePattern( stage_ );
-    }
+    //    // スターの生成パターン変更
+    //    changePattern( stage_ );
+    //}
 }
 
 
@@ -400,10 +400,28 @@ bool Endless::checkAndCreateStar()
     }
 
     // 画面外待機しているスターが無くなったらスターの生成
-    if (itr == end &&
-        star_container_->createStar() == false)
+    if (itr == end )
     {
-        return false;
+        if( star_container_->createStar() == false ) { return false; }
+        climb_ = 0.0F;
+        ++stage_;
+        Background::getInstance()->changeColor();
+
+        if (stage_ >= kStageNum)
+        {
+            ++round_counter_;
+            stage_ = 0;
+
+            // 周回を知らせる
+            player_->addLevel();
+            fail_wall_->levelUp();
+        }
+
+        // スターの生成パターン変更
+        changePattern(stage_);
+
+
+
     }
 
 
