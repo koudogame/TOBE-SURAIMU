@@ -116,7 +116,7 @@ void Star::update()
 //•`‰æ
 void Star::draw()
 {
-	if (position_.y < - size_)
+	if (position_.y < -size_)
 		return;
 
 	//Ø‚èŽæ‚è”ÍˆÍ
@@ -127,7 +127,7 @@ void Star::draw()
 	trim.right = trim.left + static_cast<long>(kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z);
 	trim.bottom = trim.top + static_cast<long>(kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z);
 
-	//Sprite::getInstance()->reserveDraw(overlay_texture_, position_, trim, 1.0F, 0.7F, Vector2(1.0F, 1.0F), -( XMConvertToRadians( angle_[0] )- XM_PIDIV2), Vector2(kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F, kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F), Sprite::getInstance()->chengeMode());
+	Sprite::getInstance()->reserveDraw(overlay_texture_, position_, trim, 1.0F, 0.7F, Vector2(1.0F, 1.0F), -(XMConvertToRadians(angle_[0]) - XM_PIDIV2), Vector2(kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F, kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F), Sprite::getInstance()->chengeMode());
 	Sprite::getInstance()->reserveDraw(texture_, position_, trim, 1.0F, 0.75F, Vector2(1.0F, 1.0F), -(XMConvertToRadians(angle_[0]) - XM_PIDIV2), Vector2(kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F, kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F));
 }
 
