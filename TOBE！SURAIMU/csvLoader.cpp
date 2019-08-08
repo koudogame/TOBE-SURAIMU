@@ -20,6 +20,9 @@ bool CsvLoader::load( std::wstring FileName)
 	std::wifstream file;
 	file.open( FileName.c_str() );
 
+	if (!file.good())
+		return false;
+
 	while( !file.eof() )
 	{
 		//1s•ª‚Ì•¶š—ñ
