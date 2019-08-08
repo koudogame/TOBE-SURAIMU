@@ -28,9 +28,9 @@ constexpr float kScrollMagnification[kLayerNum]
 };
 constexpr float kDrawDepth[kLayerNum]
 {
+    0.3F,
     0.4F,
-    0.5F,
-    0.6F
+    0.5F
 };
 
 /*                               left    top   right   bottom  */
