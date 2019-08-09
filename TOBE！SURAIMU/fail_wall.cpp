@@ -14,7 +14,7 @@
 constexpr float kLimitYUp   = getWindowHeight<float>() * 0.00F;
 constexpr float kLimitYDown = getWindowHeight<float>() * 1.50F;
 const Line kInitPosition { 250.0F, kLimitYDown, 1030.0F, kLimitYDown };
-constexpr float kStartSpeed = -0.25F;
+constexpr float kStartSpeed = -0.1F;
 constexpr float kMagnificationSpeed = 1.5F;
 constexpr float kScrollSpeedTable[] = 
 {
@@ -145,13 +145,20 @@ void FailWall::draw()
     Sprite* sprite = Sprite::getInstance();
 
     // •Ç‚Ì•`‰æ
-    sprite->reserveDraw(
-        texture_,
-        {shape_->start.x, shape_->start.y + 10.0F},
-        kTrimming[kWallNo],
-        1.0F, 0.8F, {1.0F, 1.0F}, 0.0F, Vector2::Zero,
-        common->getStates()->Additive()
-    );
+    Vector2 draw_position = shape_->start;
+    draw_position.y += 10.0F;
+    while( draw_position.y < getWindowHeight<float>() )
+    {
+        sprite->reserveDraw(
+            texture_,
+            draw_position,
+            kTrimming[kWallNo],
+            1.0F, 0.8F, {1.0F, 1.0F}, 0.0F, Vector2::Zero,
+            common->getStates()->Additive()
+        );
+
+        draw_position.y += kWallHeight;
+    }
 
 
     // ‰Š‚Ì•`‰æ
@@ -186,7 +193,7 @@ void FailWall::levelUp()
 void FailWall::setMove( float Disp )
 {
     // ã‚Ö‚ÌˆÚ“®‚Í”{—¦‚ğ‚©‚¯‚é
-    if( Disp < 0 ) { Disp *= 0.5F; }
+    if( Disp < 0 ) { Disp *= 0.75F; }
 
     // ˆÚ“®
     shape_->start.y += Disp;

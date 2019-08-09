@@ -61,9 +61,9 @@ constexpr float kAmountOfAlphaForOut = 0.10F;       // ƒtƒF[ƒhƒAƒEƒgAƒAƒ‹ƒtƒ
 constexpr int       kInitStarNum = 3;               // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ^[‚Ì”
 constexpr StarState kInitStarState[kInitStarNum] =  // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ^[‚Ìî•ñ
 {
-    { {640.0F, 600.0F}, 90.0F, -3.0F, 0.2F,  90.0F },
-    { {816.0F, 297.0F}, 90.0F,  3.0F, 0.2F, 120.0F },
-    { {468.0F, 142.0F}, 90.0F,  3.0F, 0.2F, 120.0F }
+    { {640.0F, 600.0F}, 90.0F, -3.0F, 0.2F,  80.0F },
+    { {816.0F, 297.0F}, 90.0F,  3.0F, 0.2F, 100.0F },
+    { {468.0F, 142.0F}, 90.0F,  3.0F, 0.2F, 100.0F }
 };
 constexpr float kScrollThresholdUp   = getWindowHeight<float>() * 0.10F;
 constexpr float kScrollThresholdDown = getWindowHeight<float>() * 0.90F;

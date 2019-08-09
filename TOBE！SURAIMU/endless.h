@@ -41,7 +41,7 @@ private:
     SceneBase* (Endless::* update_)() = nullptr;
 
     void scroll();
-    bool checkAndCreateStar();
+    bool checkAndLoadStage();
     void changePattern( const int PatternNo );
 
 

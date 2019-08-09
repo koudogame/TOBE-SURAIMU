@@ -92,6 +92,12 @@ bool Ranking::init()
     texture_characters_ = kLoader->load(L"Texture/rank_name.png");
     if( texture_characters_ == nullptr ) { return false; }
 
+    // ランキングデータ読み込み
+    RankingManager* ranking_manager = RankingManager::getInstance();
+    for( unsigned i = 1U; i <= kRegisteredNum; ++i )
+    {
+        data_.push_back( ranking_manager->getData(i) );
+    }
 
     // メンバ初期化
     magnification_ = 1.0F;
@@ -212,17 +218,12 @@ void Ranking::draw()
 	kSprite->reserveDraw( texture_ , kPosition[ kBack ] , kTrimming[ kBack ] , 1.0F , 0.2F );
 
     // ランキングの描画
-    RankingManager* const kRanking = RankingManager::getInstance();
-    RankingManager::Data data;
     Vector2 position = kPositionBase;
     position.y -= offset_;
-    for( unsigned rank = 1U; rank <= kRegisteredNum;
-                                            ++rank, position.y += kLineHeight )
+    for( auto data : data_ )
     {
         if( position.y < kPosition[kField].y ) { continue; }
         if( position.y > kFieldMax )           { break; }
-
-        data = kRanking->getData( rank );
 
         // フィールド
         position.x = kPosition[kField].x;
@@ -232,8 +233,8 @@ void Ranking::draw()
 
         // ランク
         position.x = kCoordinateX[kRank] + kNumWidth *
-                            ( rank > 99U ? 3.0F : (rank > 9U ? 2.5F :  2.0F) );
-        Text::drawNumber( rank, texture_numbers_, position,
+                            ( data.rank > 99U ? 3.0F : (data.rank > 9U ? 2.5F :  2.0F) );
+        Text::drawNumber( data.rank, texture_numbers_, position,
                           kNumWidth, kNumHeight, 1U, 1.0F, 0.0F, kTextDepth );
 
         // 名前
@@ -256,6 +257,8 @@ void Ranking::draw()
         position.x = kCoordinateX[kCombo] + kNumWidth * kComboDigits;
         Text::drawNumber( data.combo, texture_numbers_, position,
                          kNumWidth, kNumHeight, 1U, 1.0F, kIntervalNumber, kTextDepth );
+
+        position.y += kLineHeight;
     }
 
 

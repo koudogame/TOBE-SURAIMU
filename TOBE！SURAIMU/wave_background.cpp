@@ -49,7 +49,7 @@ constexpr float kAlphaMainLayer = 1.0F;
 constexpr float kDrawDepthMainLayer = 0.4F;
 constexpr float kDrawDepthEffect    = 0.5F;
 
-constexpr Vector2 kOffset { 0.2F, 0.2F };
+constexpr Vector2 kOffset { 1.0F, 0.2F };
 constexpr float kAmountOfEffectAlpha = 0.02F;
 constexpr float kEffectAlphaMax = 1.0F;
 constexpr float kEffectAlphaMin = 0.0F;
@@ -147,14 +147,18 @@ void Wave::draw()
 
     // シームレスに描画
     Vector2 draw_position = position_;
-    while( draw_position.x > -getWidth<float>() )
+
+    // 左方向に描画
+    while( draw_position.x + getWidth<float>() > 0.0F )
     {
         draw( draw_position );
 
         draw_position.x -= getWidth<float>();
     }
+    // 右方向に描画
     draw_position = position_;
-    while( draw_position.x + getWidth<float>() < getWindowWidth<float>() )
+    draw_position.x += getWidth<float>();
+    while( draw_position.x - getWidth<float>() < getWindowWidth<float>() )
     {
         draw( draw_position );
 
