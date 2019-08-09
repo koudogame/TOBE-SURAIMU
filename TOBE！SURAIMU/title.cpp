@@ -93,8 +93,6 @@ bool Title::init()
 	object_status_[ObjectNum::kStar3].trim = kObjectTrim[ObjectNum::kStar3];
 
 	//プレイヤー
-	//マジックナンバー
-	CsvLoader file(L"State/player_state.csv");
 	object_status_[ObjectNum::kPlayer].texture = TextureLoder::getInstance()->load(L"Texture/character.png");
 	object_status_[ObjectNum::kPlayer].position = kObjectposition[ObjectNum::kPlayer];
 	object_status_[ObjectNum::kPlayer].trim = kObjectTrim[ObjectNum::kPlayer];
