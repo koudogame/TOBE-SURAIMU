@@ -30,7 +30,7 @@ const Line kCollisionRightWall{                                   // ‰E‚Ì•ÇÕ“Ë”
 const float kDrawPositionXLeftWall  = kPositionXLeft - kWallWidthHarf;  // ¶‚Ì•Ç•`‰æxÀ•W
 const float kDrawPositionXRightWall = kPositionXRight - kWallWidthHarf; // ‰E‚Ì•Ç•`‰æxÀ•W
 
-constexpr RECT kTrimmingWall { 0L, 0L, 32L, 88L };     // •ÇØ‚èŽæ‚è”ÍˆÍ
+constexpr RECT kWallTrimming { 0L, 0L, 32L, 88L };     // •ÇØ‚èŽæ‚è”ÍˆÍ
 
 
 /*===========================================================================*/
@@ -121,11 +121,11 @@ void Wall::draw()
     {
         // ¶•Ç
         draw_position.x = kDrawPositionXLeftWall;
-		kSprite->reserveDraw( texture_ , draw_position , kTrimmingWall , 1.0F , 0.7F );
+		kSprite->reserveDraw( texture_ , draw_position , kWallTrimming , 1.0F , 0.7F );
 
         // ‰E•Ç( ¶‰E”½“] )
         draw_position.x = kDrawPositionXRightWall;
-        kSprite->reserveDraw(texture_, draw_position, kTrimmingWall,
+        kSprite->reserveDraw(texture_, draw_position, kWallTrimming,
             1.0F, 0.7F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero,
             Common::getInstance()->getStates()->NonPremultiplied(),
             SpriteEffects_FlipHorizontally );

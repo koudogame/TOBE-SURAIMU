@@ -20,7 +20,7 @@ enum class TaskDraw
     kBackground,
 	kParticle,
 	kObject,
-    kA,
+    kFailWall,
 };
 
 

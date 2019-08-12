@@ -161,6 +161,7 @@
     <ClInclude Include="bonus_icon.h" />
     <ClInclude Include="demo.h" />
     <ClInclude Include="fail_wall.h" />
+    <ClInclude Include="progress.h" />
     <ClInclude Include="ranking_manager.h" />
     <ClInclude Include="sercher.h" />
     <ClInclude Include="Sound.h" />
@@ -236,6 +237,7 @@
     <ClCompile Include="freeFallParticle.cpp" />
     <ClCompile Include="freeFallParticle_container.cpp" />
     <ClCompile Include="pause.cpp" />
+    <ClCompile Include="progress.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="ranking_in_endless.cpp" />
     <ClCompile Include="ranking_manager.cpp" />

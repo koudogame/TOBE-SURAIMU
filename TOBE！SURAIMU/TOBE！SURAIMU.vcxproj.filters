@@ -45,17 +45,11 @@
     <Filter Include="Project\Game\Object\Wall">
       <UniqueIdentifier>{cef62833-c4f3-4115-a77e-4bf76353b882}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Others">
-      <UniqueIdentifier>{583b3209-771a-4518-a699-11345f16cc1f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Object\Particle">
       <UniqueIdentifier>{41c1f148-516b-425b-911d-cad1ad677457}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Scene\Endless">
       <UniqueIdentifier>{c8a74af1-e0c3-4137-bdbe-0db01a778c18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Others\easing">
-      <UniqueIdentifier>{034a96b2-fc3c-4c8d-8a89-81d926b23016}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\Particle\Nomal">
       <UniqueIdentifier>{d46929fe-6c78-433d-9067-c07968918c32}</UniqueIdentifier>
@@ -69,23 +63,11 @@
     <Filter Include="Project\Game\Object\UI">
       <UniqueIdentifier>{2fc35952-74df-4892-a04b-6e9bab38694c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Others\CSV">
-      <UniqueIdentifier>{4bf1c498-63e0-42dd-9d69-4fbfe2d2b485}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Others\sound">
-      <UniqueIdentifier>{7dc47c95-be4d-4a4e-9560-aefe63f00826}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Others\Scoring">
-      <UniqueIdentifier>{c77d9a66-d3a9-4e68-9f17-51b399b14b3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Object\Particle\FreeFall">
       <UniqueIdentifier>{419f758f-e517-4824-b0a6-fb899780d545}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\Particle\Stay">
       <UniqueIdentifier>{567c1266-7f5e-4580-8d2e-1786cce9a3e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Others\Time">
-      <UniqueIdentifier>{079fb69a-dfa5-4512-abe7-0883d4743ac9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\TitleObj">
       <UniqueIdentifier>{ba692143-526d-47e7-b53a-83a69d9f2881}</UniqueIdentifier>
@@ -93,23 +75,11 @@
     <Filter Include="Project\Game\Scene\Ranking">
       <UniqueIdentifier>{dc5a65bf-c0f7-4f4d-bfa6-97881e2e6b1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Others\Collision">
-      <UniqueIdentifier>{d79af6f7-4414-4c49-99c2-63e7f80ab6f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Others\TaskManager">
-      <UniqueIdentifier>{f11f552b-e0df-4b26-993c-f716098789ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Object\UI\Pause">
       <UniqueIdentifier>{ca5e6288-5a78-4c62-8ef1-db59f28d734c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Others\RankingManager">
-      <UniqueIdentifier>{dae19ff1-6db2-4d7e-9dc6-eec608c35180}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Scene\Battle">
       <UniqueIdentifier>{c8faea38-69f3-4933-9bb6-74102db013c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Others\Space">
-      <UniqueIdentifier>{15db0afd-e5fc-4603-a616-b10961066151}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\Sercher">
       <UniqueIdentifier>{b1dbc8ed-691d-4992-8e8f-c503742b8b2e}</UniqueIdentifier>
@@ -128,6 +98,36 @@
     </Filter>
     <Filter Include="Project\Game\Scene\Result">
       <UniqueIdentifier>{69320312-d4af-44f1-ab7f-01dd9c64468c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others">
+      <UniqueIdentifier>{583b3209-771a-4518-a699-11345f16cc1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\easing">
+      <UniqueIdentifier>{034a96b2-fc3c-4c8d-8a89-81d926b23016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\CSV">
+      <UniqueIdentifier>{4bf1c498-63e0-42dd-9d69-4fbfe2d2b485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\sound">
+      <UniqueIdentifier>{7dc47c95-be4d-4a4e-9560-aefe63f00826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\Scoring">
+      <UniqueIdentifier>{c77d9a66-d3a9-4e68-9f17-51b399b14b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\Time">
+      <UniqueIdentifier>{079fb69a-dfa5-4512-abe7-0883d4743ac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\Collision">
+      <UniqueIdentifier>{d79af6f7-4414-4c49-99c2-63e7f80ab6f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\TaskManager">
+      <UniqueIdentifier>{f11f552b-e0df-4b26-993c-f716098789ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\RankingManager">
+      <UniqueIdentifier>{dae19ff1-6db2-4d7e-9dc6-eec608c35180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Others\Space">
+      <UniqueIdentifier>{15db0afd-e5fc-4603-a616-b10961066151}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Others\Text">
       <UniqueIdentifier>{b0f22c7b-e10c-473f-818c-e0a4a1125dd7}</UniqueIdentifier>
@@ -286,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="wave_background.cpp">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="progress.cpp">
+      <Filter>Project\Game\Object\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -467,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="wave_background.h">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="progress.h">
+      <Filter>Project\Game\Object\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

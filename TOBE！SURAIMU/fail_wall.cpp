@@ -68,7 +68,7 @@ bool FailWall::init()
     shape_ = new Line( kInitPosition );
 
     TaskManager::getInstance()->registerTask( this, TaskUpdate::kBackground );
-    TaskManager::getInstance()->registerTask( this, TaskDraw::kA );
+    TaskManager::getInstance()->registerTask( this, TaskDraw::kFailWall );
 
     // ‹óŠÔu0v‚É“o˜^
     Space::getInstance()->registration( this, { 640.0F, 360.0F }, 10.0F );

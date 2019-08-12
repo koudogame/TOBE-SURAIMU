@@ -98,9 +98,10 @@ bool StarContainer::createStar(const std::wstring FileCSV)
         size           = file.getNumber_f(5, count);
         position.y     -= 720.0F;   // 画面外へ
 
-        // 星をリストに追加して、落下を設定する
+        // 星をリストに追加
         addStar(
-            position, angle, spin, spin_rate, size)->setFall();
+         // 座標      初角度  回転速 回転率　　　大きさ
+            position, angle, spin, spin_rate, size);
         ++count;
     }
     return true;
@@ -114,4 +115,12 @@ Star* StarContainer::getFreeObjAndInsert()
     active_list_.push_back(free);
 
     return free;
+}
+// 落下を付与
+void StarContainer::setFall()
+{
+    for( auto& star : active() )
+    {
+        star->setFall();
+    }
 }

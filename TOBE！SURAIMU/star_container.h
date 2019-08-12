@@ -31,6 +31,7 @@ public:
     void update() override;
 
     void setMove(const float MoveY);
+    void setFall();
 
     bool createStar();
     bool createStar(const std::wstring PatternFileCSV);

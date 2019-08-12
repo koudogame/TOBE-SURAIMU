@@ -10,6 +10,7 @@ class Timer;
 
 class Pause;
 class RankingInEndless;
+class Progress;
 
 class StarContainer;
 class Player;
@@ -53,6 +54,7 @@ private:
     Player* player_                 = nullptr;
     Wall* wall_                     = nullptr;
     FailWall* fail_wall_            = nullptr;
+    Progress* progress_             = nullptr;
 
     int stage_ = 0;
     int round_counter_   = 0;

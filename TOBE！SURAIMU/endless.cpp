@@ -14,11 +14,12 @@
 
 #include "text.h"
 #include "timer.h"
-#include "pause.h"
-#include "ranking_in_endless.h"
 #include "space.h"
 #include "task_manager.h"
 
+#include "pause.h"
+#include "ranking_in_endless.h"
+#include "progress.h"
 #include "background.h"
 #include "star_container.h"
 #include "player.h"
@@ -109,6 +110,8 @@ bool Endless::init()
 
     fail_wall_      = new FailWall();
 
+    progress_       = new Progress();
+
 
     // ポーズ初期化
     if( pause_->init() == false ) { return false; }
@@ -139,8 +142,13 @@ bool Endless::init()
 
 	// 壁初期化
 	if (wall_->init() == false) { return false; }
-
     if( fail_wall_->init() == false ) { return false; }
+
+    // 進行度初期化
+    if( progress_->init( 7200.0F, player_, fail_wall_ ) == false )
+    {
+        return false;
+    }
 
 
 	// 変数初期化
@@ -153,6 +161,7 @@ bool Endless::init()
     offset_one_frame_ = 0.0F;
 	climb_ = 0.0F;
     changePattern( stage_ );    // スター生成パターン設定
+    if( star_container_->createStar() == false ) { return false; }
 
 	clock_->start();
 
@@ -170,6 +179,8 @@ void Endless::destroy()
 {
      if( created_ == false ) { return; }
     created_ = false;
+
+    progress_->destroy();              safe_delete(progress_);
 
     fail_wall_->destroy();             safe_delete(fail_wall_);
 
@@ -255,6 +266,7 @@ SceneBase* Endless::start()
 		    }
 		    clock_->start();
 		    player_->onStartFlag();
+            star_container_->setFall();
             fail_wall_->start();
         }
 	}
@@ -379,10 +391,11 @@ bool Endless::checkAndLoadStage()
     }
 
     // 画面外待機しているスターが無くなったら
-    if (itr == end )
+    if( itr == end )
     {
         // スターの生成
         if( star_container_->createStar() == false ) { return false; }
+        star_container_->setFall();
 
 
 
@@ -390,6 +403,7 @@ bool Endless::checkAndLoadStage()
         climb_ = 0.0F;
         ++stage_;
         Background::getInstance()->changeColor();
+        progress_->changeStage();
 
         if (stage_ >= kStageNum)
         {
