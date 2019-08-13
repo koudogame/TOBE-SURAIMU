@@ -13,20 +13,27 @@ static constexpr float kToDegrees = 180.0F / XM_PI;
 static constexpr float toDegrees( const float Radians ) { return Radians * kToDegrees; }
 static constexpr float kToRadians = XM_PI / 180.0F;
 static constexpr float toRadians( const float Degrees ) { return Degrees * kToRadians; }
+
+static constexpr float kScrollSpeed = 2.0F;
+// Stage
 /*===========================================================================*/
 static constexpr float kTextureStageHeight = 576.0F;
 static constexpr float kStageNum = 3;
 static constexpr float kTextureStageHeightSum = kTextureStageHeight * kStageNum;
-
 static constexpr Vector2 kStageInitPosition { 250.0F, -1080.0F, };
 static constexpr RECT    kStageTrimming     { 0L,  0L, 70L, 1728L };
 static constexpr float   kStageDrawDepth    = 10.0F;
 static constexpr float   kBasePositionY     = kStageInitPosition.y + (kTextureStageHeight * 3);
-
 static constexpr float kOffsetSinMin =  0.0F;
 static constexpr float kOffsetSinMax = 90.0F;
-static constexpr int   kOffsetFrameNum = 8;
+static constexpr int   kOffsetFrameNum = 32;
 static constexpr float kChangeOfSin = (kOffsetSinMax - kOffsetSinMin) / kOffsetFrameNum;
+// Player
+/*===========================================================================*/
+static constexpr float   kTexturePlayerHeight = 70.0F;
+static constexpr Vector2 kPlayerInitPosition  { 250.0F, 615.0F };
+static constexpr RECT    kPlayerTrimming      { 140L, 0L, 210L, 70L };
+static constexpr float   kPlayerDrawDepth     = 11.0F; 
 
 
 /*===========================================================================*/
@@ -48,6 +55,7 @@ bool Progress::init( const float StageHeight,
 {
     // 引数をメンバにセット
     stage_height_ = StageHeight;
+    player_       = PPlayer;
 
     // テクスチャ読み込み
     texture_ = TextureLoder::getInstance()->load( L"Texture/progress.png" );
@@ -57,6 +65,8 @@ bool Progress::init( const float StageHeight,
     stage_position_ = kStageInitPosition;
     scale_ = kTextureStageHeight / stage_height_;
     offset_ = 0.0F;
+
+    player_position_ = kPlayerInitPosition;
 
 
 
@@ -89,6 +99,16 @@ void Progress::update()
     {
         easingOffset();
     }
+
+
+    // プレイヤーの位置更新
+    Vector2 player_position = player_->getPosition();
+    float p_delta = player_last_coordinate_y_ - player_position.y;
+    player_last_coordinate_y_ = player_position.y;
+    
+
+    player_position_.y -= kScrollSpeed * scale_;
+    player_position_.y -= p_delta * scale_;
 }
 
 void Progress::draw()
@@ -118,6 +138,13 @@ void Progress::draw()
     }
 
     // プレイヤー描画
+    kSprite->reserveDraw(
+        texture_,
+        player_position_,
+        kPlayerTrimming,
+        1.0F, // alpha
+        kPlayerDrawDepth
+    );
 
     // 壁描画
 
@@ -129,7 +156,7 @@ void Progress::setMove( const float Dist )
 {
     // TODO : スクロール( プレイヤーの移動 )
     // ポストイットに式かいてある
-
+    player_position_.y -= Dist * scale_;
 }
 
 /*===========================================================================*/
@@ -151,6 +178,7 @@ void Progress::easingOffset()
     // ポジションの変更( 前回との差分のみ )
     float displacement = offset_ * std::sin(toRadians(offset_sin_)) - last_displacement;
     stage_position_.y += displacement;
+    player_position_.y += displacement;
 
     // 上限まで変位したらオフセットの値をリセット
     if( offset_sin_ >= kOffsetSinMax ) 

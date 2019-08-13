@@ -33,9 +33,14 @@ private:
     void easingOffset();
 
     ID3D11ShaderResourceView *texture_ = nullptr;
+    float scale_ = 0.0F;
+
     Vector2 stage_position_;
     float stage_height_ = 0.0F;
-    float scale_ = 0.0F;
     float offset_ = 0.0F;
     float offset_sin_ = 0.0F;
+
+    Player  *player_ = nullptr;
+    Vector2 player_position_;
+    float   player_last_coordinate_y_ = 0.0F;
 };
