@@ -9,6 +9,11 @@
 #include "player.h"
 #include "fail_wall.h"
 
+static constexpr float kToDegrees = 180.0F / XM_PI;
+static constexpr float toDegrees( const float Radians ) { return Radians * kToDegrees; }
+static constexpr float kToRadians = XM_PI / 180.0F;
+static constexpr float toRadians( const float Degrees ) { return Degrees * kToRadians; }
+/*===========================================================================*/
 static constexpr float kTextureStageHeight = 576.0F;
 static constexpr float kStageNum = 3;
 static constexpr float kTextureStageHeightSum = kTextureStageHeight * kStageNum;
@@ -17,6 +22,12 @@ static constexpr Vector2 kStageInitPosition { 250.0F, -1080.0F, };
 static constexpr RECT    kStageTrimming     { 0L,  0L, 70L, 1728L };
 static constexpr float   kStageDrawDepth    = 10.0F;
 static constexpr float   kBasePositionY     = kStageInitPosition.y + (kTextureStageHeight * 3);
+
+static constexpr float kOffsetSinMin =  0.0F;
+static constexpr float kOffsetSinMax = 90.0F;
+static constexpr int   kOffsetFrameNum = 8;
+static constexpr float kChangeOfSin = (kOffsetSinMax - kOffsetSinMin) / kOffsetFrameNum;
+
 
 /*===========================================================================*/
 Progress::Progress()
@@ -73,7 +84,11 @@ void Progress::destroy()
 
 void Progress::update()
 {
-    
+    // ステージのオフセットがあれば行う
+    if( offset_ > 0.0F )
+    {
+        easingOffset();
+    }
 }
 
 void Progress::draw()
@@ -114,14 +129,32 @@ void Progress::setMove( const float Dist )
 {
     // TODO : スクロール( プレイヤーの移動 )
     // ポストイットに式かいてある
+
 }
 
+/*===========================================================================*/
 void Progress::changeStage()
 {
-    // ステージ変更を知らせる
-    stage_position_.y  += kTextureStageHeight;
-    if( stage_position_.y > kTextureStageHeightSum )
+    // オフセット開始準備
+    offset_ = kTextureStageHeight;
+    offset_sin_ = kOffsetSinMin;
+}
+
+void Progress::easingOffset()
+{
+    float last_displacement = offset_ * std::sin(toRadians(offset_sin_));
+
+    // サインカーブ用変数の更新
+    offset_sin_ += kChangeOfSin;
+    if( offset_sin_ > kOffsetSinMax ) { offset_sin_ = kOffsetSinMax; }
+
+    // ポジションの変更( 前回との差分のみ )
+    float displacement = offset_ * std::sin(toRadians(offset_sin_)) - last_displacement;
+    stage_position_.y += displacement;
+
+    // 上限まで変位したらオフセットの値をリセット
+    if( offset_sin_ >= kOffsetSinMax ) 
     {
-        stage_position_ = kStageInitPosition;
+        offset_ = 0.0F;
     }
 }
