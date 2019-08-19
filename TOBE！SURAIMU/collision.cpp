@@ -123,14 +123,18 @@ bool Collision::collision(Player * P, Star * S)
 				length_min_ = (S->getShape(i)->start - P->getMove()->start).Length();
 				if (P->getOwner() != S)
 				{
+					S->setPlayeroldPosition(P->getPosition());
 					P->setGround(S->getShape(i));
+					P->revision(S->getShape(i)->start, id_);
 					hit_flag = true;
 				}
 				else
 				{
 					if (!P->isCollision())
 					{
+						S->setPlayeroldPosition(P->getPosition());
 						P->setGround(S->getShape(i));
+						P->revision(S->getShape(i)->start, id_);
 						hit_flag = true;
 					}
 
@@ -144,19 +148,23 @@ bool Collision::collision(Player * P, Star * S)
 		//ü‚Æü‚Ì“–‚½‚è”»’è
 		if (judgment(P->getMove(), S->getShape(i)))
 		{
-			if (length_min_ > (crossPoint(P->getMove(),S->getShape(i))- P->getMove()->start).Length())
+			if (length_min_ > (crossPoint(P->getMove(), S->getShape(i)) - P->getMove()->start).Length())
 			{
 				length_min_ = (crossPoint(P->getMove(), S->getShape(i)) - P->getMove()->start).Length();
 				if (P->getOwner() != S)
 				{
+					S->setPlayeroldPosition(P->getPosition());
 					P->setGround(S->getShape(i));
+					P->revision(crossPoint(P->getMove(), S->getShape(i)), id_);
 					hit_flag = true;
 				}
 				else
 				{
 					if (!P->isCollision())
 					{
+						S->setPlayeroldPosition(P->getPosition());
 						P->setGround(S->getShape(i));
+						P->revision(crossPoint(P->getMove(), S->getShape(i)), id_);
 						hit_flag = true;
 					}
 
@@ -166,19 +174,23 @@ bool Collision::collision(Player * P, Star * S)
 		//‰~‚Æü‚Ì“–‚½‚è”»’è
 		else if (judgment(P->getShape(), S->getShape(i)))
 		{
-			if (length_min_ > (crossPoint(P->getShape(),S->getShape(i)) - P->getMove()->start).Length())
+			if (length_min_ > (crossPoint(P->getShape(), S->getShape(i)) - P->getMove()->start).Length())
 			{
 				length_min_ = (crossPoint(P->getShape(), S->getShape(i)) - P->getMove()->start).Length();
 				if (P->getOwner() != S)
 				{
+					S->setPlayeroldPosition(P->getPosition());
 					P->setGround(S->getShape(i));
+					P->revision(crossPoint(P->getShape(), S->getShape(i)), id_);
 					hit_flag = true;
 				}
 				else
 				{
 					if (!P->isCollision())
 					{
+						S->setPlayeroldPosition(P->getPosition());
 						P->setGround(S->getShape(i));
+						P->revision(crossPoint(P->getShape(), S->getShape(i)), id_);
 						hit_flag = true;
 					}
 
@@ -190,9 +202,6 @@ bool Collision::collision(Player * P, Star * S)
 	//”»’è‚ª‚ ‚Á‚½‚ç
 	if (hit_flag)
 	{
-		float ratio = length_min_ / (P->getMove()->end - P->getMove()->start).Length();
-		S->setPlayeroldPosition(P->getPosition());
-		P->revision(P->getMove()->start + (P->getMove()->end - P->getMove()->start)*ratio, id_);
 		if (P->getOwner() != S)
 		{
 			S->collision(P);
