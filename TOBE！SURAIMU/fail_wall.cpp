@@ -212,3 +212,11 @@ void FailWall::setMove( float Disp )
     // I“_‚à‡‚í‚¹‚ÄˆÚ“®
     shape_->end.y = shape_->start.y;
 }
+
+
+/*===========================================================================*/
+const Vector2& FailWall::getPosition() const 
+{
+    return shape_->start;
+}
+

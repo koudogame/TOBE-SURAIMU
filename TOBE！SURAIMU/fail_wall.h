@@ -25,6 +25,7 @@ public:
 
 
     ObjectID getID() const override { return ObjectID::kFailWall; }
+    const Vector2& getPosition() const override;
     Line* getShape() { return shape_; }
 
 

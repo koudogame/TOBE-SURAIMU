@@ -28,7 +28,6 @@ public:
 /*=================================================================*/
     void changeStage();
 
-
 private:
     void easingOffset();
 
@@ -41,6 +40,9 @@ private:
     float offset_sin_ = 0.0F;
 
     Player  *player_ = nullptr;
-    Vector2 player_position_;
+    Vector2 player_base_position_;
+    float   player_displacement_ = 0.0F;
     float   player_last_coordinate_y_ = 0.0F;
+
+    FailWall *wall_ = nullptr;
 };
