@@ -15,8 +15,8 @@ const int kNumHeight = 32;
 const int kMinNumWidth = 11;
 const int kMinNumHeight = 20;
 const float kScoreHeight = 50.0F;
-const Vector2 kBasePosition = Vector2( 10.0F , 20.0F );
-const Vector2 kTotalPosition = Vector2( 225.0F , 32.0F );
+const Vector2 kBasePosition = Vector2( -25.0F , 20.0F );
+const Vector2 kTotalPosition = Vector2( 190.0F , 32.0F );
 const RECT kBaseTrim = { 0 , 0 , 300 , 256 };
 
 Scoring::Scoring()

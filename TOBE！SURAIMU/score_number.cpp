@@ -5,7 +5,7 @@
 const int kNumWidth = 11;
 const int kNumHeight = 15;
 const float kSpeed = 6.0F;
-const float kLimitLine = 300.0F;
+const float kLimitLine = 240.0F;
 const float kDffAlpha = 0.005F;
 const int kPulseLeft = 302;
 
