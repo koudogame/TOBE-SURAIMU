@@ -222,7 +222,7 @@ void Ranking::draw()
     position.y -= offset_;
     for( auto data : data_ )
     {
-        if( position.y < kPosition[kField].y ) { continue; }
+        if( position.y < kPosition[kField].y ) { position.y += kLineHeight; continue;}
         if( position.y > kFieldMax )           { break; }
 
         // フィールド
