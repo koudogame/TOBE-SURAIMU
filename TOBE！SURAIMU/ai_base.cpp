@@ -119,7 +119,6 @@ void AIBase::move( int Way )
     case kMoveDown:
         bottom_input_ = kBottomOn;
         score_.addDown();
-        score_.resetCombo();
         flag_.reset(Flag::kStarCollision);
 
         break;
