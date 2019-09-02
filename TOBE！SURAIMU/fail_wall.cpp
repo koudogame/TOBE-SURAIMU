@@ -219,4 +219,4 @@ const Vector2& FailWall::getPosition() const
 {
     return shape_->start;
 }
-
+ 
