@@ -45,14 +45,14 @@ constexpr long kTrimDeltaMainToEffect = 4096L;
 /*                                        left    top   right   bottom */
 constexpr RECT kTrimmingStartMainLayer {    0L,    0L, kWidth, kHeight };
 constexpr RECT kTrimmingStartEffect    {    0L, kTrimDeltaMainToEffect, kWidth, kTrimDeltaMainToEffect + kHeight };
-constexpr float kAlphaMainLayer = 1.0F;
+constexpr float kAlphaMainLayer = 0.5F;
 constexpr float kDrawDepthMainLayer = 0.4F;
 constexpr float kDrawDepthEffect    = 0.5F;
 
-constexpr Vector2 kOffset { 1.0F, 0.2F };
-constexpr float kAmountOfEffectAlpha = 0.02F;
+constexpr Vector2 kOffset { 0.2F, 0.2F };
+constexpr float kAmountOfEffectAlpha = 0.015F;
 constexpr float kEffectAlphaMax = 1.0F;
-constexpr float kEffectAlphaMin = 0.0F;
+constexpr float kEffectAlphaMin = 0.2F;
 
 /*===========================================================================*/
 Wave::Wave()
@@ -124,7 +124,9 @@ void Wave::draw()
             Position,
             trimming,
             kAlphaMainLayer,
-            kDrawDepthMainLayer
+            kDrawDepthMainLayer,
+            { 1.0F, 1.0F }, 0.0F, Vector2::Zero,
+            Common::getInstance()->getStates()->Additive()
         );
 
         // エフェクト描画

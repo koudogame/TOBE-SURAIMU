@@ -211,6 +211,7 @@
     <ClInclude Include="title.h" />
     <ClInclude Include="title_object.h" />
     <ClInclude Include="view_background.h" />
+    <ClInclude Include="view_background_base.h" />
     <ClInclude Include="wall.h" />
     <ClInclude Include="wave_background.h" />
   </ItemGroup>
@@ -270,6 +271,7 @@
     <ClCompile Include="title.cpp" />
     <ClCompile Include="title_object.cpp" />
     <ClCompile Include="view_background.cpp" />
+    <ClCompile Include="view_background_base.cpp" />
     <ClCompile Include="wall.cpp" />
     <ClCompile Include="wave_background.cpp" />
   </ItemGroup>

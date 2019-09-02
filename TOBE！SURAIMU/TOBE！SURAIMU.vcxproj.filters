@@ -290,6 +290,9 @@
     <ClCompile Include="progress.cpp">
       <Filter>Project\Game\Object\UI</Filter>
     </ClCompile>
+    <ClCompile Include="view_background_base.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -473,6 +476,9 @@
     </ClInclude>
     <ClInclude Include="progress.h">
       <Filter>Project\Game\Object\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="view_background_base.h">
+      <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
