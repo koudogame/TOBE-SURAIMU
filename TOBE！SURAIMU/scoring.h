@@ -4,6 +4,7 @@
 
 
 #include "score_number.h"
+#include "timer.h"
 
 class Scoring
 {
@@ -21,16 +22,17 @@ public:
 	//引数...上昇量
 	void addDefaultScore( const double AddScore );
 	//スコアリング開始
-	inline void start() { scoring_flag_ = true; }
-	inline void stop() { scoring_flag_ = false; }
+	inline void start() { scoring_flag_ = true; timeRestart(); }
+	inline void stop() { scoring_flag_ = false; timeStop(); }
 	inline bool isStart() { return scoring_flag_; }
+	//タイマー操作
+	inline void timeRestart(){combo_timer_.restart();}
+	inline void timeStop(){combo_timer_.stop();}
 
 	//外部公開関数
 public:
 	//移動コンボ増加
 	void addCombo();
-	//移動コンボリセット
-	void resetCombo();
 	//テクニック加点
 	void addTechnique();
 	//テクニックコンボのリセット
@@ -80,6 +82,7 @@ private:
 	double all_height_;								//減衰までの上昇値
 
 	std::list<std::shared_ptr<ScoreNumber>> addition_list_;			//加点リスト
+	Timer<Seconds> combo_timer_;
 
 private:
 	//描画加点の生成

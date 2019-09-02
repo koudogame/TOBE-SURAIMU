@@ -159,7 +159,6 @@ void Player::update()
 	if (move_power - kGravity < 0 && flag_.test(Flag::kJump))
 	{
 		flag_.reset(Flag::kStarCollision);
-		score_.resetCombo();
 	}
 
 	movement_ += (Vector2(std::cos(base_angle_), -std::sin(base_angle_)) * move_power);
@@ -446,7 +445,6 @@ void Player::inputmove()
 	{
 		bottom_input_ = kBottomOn;
 		score_.addDown();
-		score_.resetCombo();
 		flag_.reset(Flag::kStarCollision);
 	}
 	else

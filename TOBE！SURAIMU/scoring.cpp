@@ -18,6 +18,7 @@ const float kScoreHeight = 50.0F;
 const Vector2 kBasePosition = Vector2( -25.0F , 20.0F );
 const Vector2 kTotalPosition = Vector2( 190.0F , 32.0F );
 const RECT kBaseTrim = { 0 , 0 , 300 , 256 };
+const int kComboResetTime = 3;
 
 Scoring::Scoring()
 {}
@@ -69,6 +70,9 @@ void Scoring::update()
 
 	if( delete_flag_ )
 		addition_list_.pop_back();
+
+	if (kComboResetTime - combo_timer_.getCount() == 0)
+		combo_ = 0;
 }
 
 //描画
@@ -167,6 +171,7 @@ void Scoring::addCombo()
 	if( scoring_flag_ )
 	{
 		combo_++;
+		combo_timer_.start();
 		score_ += static_cast< unsigned long long >( combo_ ) * static_cast< unsigned long long >( kComboScore )* static_cast< unsigned long long >( level_ );
 		createNumber( combo_ * kComboScore * level_ , add_num_texture_[ kScore ] );
 	}
@@ -174,13 +179,6 @@ void Scoring::addCombo()
 	if( combo_ > max_combo_ )
 		max_combo_ = combo_;
 }
-
-//移動コンボのリセット
-void Scoring::resetCombo()
-{
-	combo_ = 0;
-}
-
 //テクニック点加算
 void Scoring::addTechnique()
 {
