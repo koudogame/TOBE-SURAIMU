@@ -3,8 +3,10 @@
 
 #include "textureLoder.h"
 #include "task_manager.h"
-#include "view_background.h"
-#include "wave_background.h"
+#include "view_mist.h"
+#include "view_star_mini.h"
+#include "view_star_big.h"
+#include "view_wave.h"
 
 
 
@@ -34,10 +36,12 @@ namespace
     };
 }
 
-constexpr Vector2 kViewPositionInit { 190.0F, -600.0F };
-constexpr float kThresholdCreateViewY = -600.0F;
+constexpr Vector2 kViewPositionInit { 190.0F, -900.0F };
 constexpr float kViewOffsetY = 600.0F;
+constexpr float kThresholdCreateViewY = -300.0F;
 constexpr Vector2 kWavePositionInit { 0.0F, -1200.0F };
+
+constexpr float kViewDeathLine = 1000.0F;
 
 
 /*===========================================================================*/
@@ -52,7 +56,9 @@ Background::~Background()
 }
 
 
+// override
 /*===========================================================================*/
+// 初期化処理
 bool Background::init()
 {
     static ::Loader load_texture;   /*サイズの大きい画像を読み込んでおく*/
@@ -63,24 +69,42 @@ bool Background::init()
     task_manager->registerTask( this, TaskDraw::kBackground );
 
 
-    // 背景を下まで追加
-    View* view = nullptr;
-    Vector2 view_position = kViewPositionInit;
-    while( view_position.y < getWindowHeight<float>() )
+    // 背景を画面いっぱいになるまで生成する( 下から生成 )
+    ViewMist     *mist      = nullptr;
+    ViewStarMini *mini_star = nullptr;
+    ViewStarBig  *big_star  = nullptr;
+
+    Vector2 create_position = kViewPositionInit;
+    create_position.y = getWindowHeight<float>() - kViewOffsetY;
+    for( ; create_position.y >= -kViewOffsetY; create_position.y -= kViewOffsetY )
     {
-        view = new View();
-        if( view->init( 
-            view_position, 
-            BackObjectBase::Color::kPurple) == false )
+        // 霧
+        mist = new ViewMist();
+        if( mist->init( create_position, 
+                        BackObjectBase::Color::kPurple ) == false ) 
         {
             return false;
         }
+        mist_list_.push_back( mist );
 
-        view_list_.push_back( view );
+        // 小さい星
+        mini_star = new ViewStarMini();
+        if( mini_star->init( create_position,
+                             BackObjectBase::Color::kPurple ) == false )
+        {
+            return false;
+        }
+        mini_star_list_.push_back( mini_star );
 
-        view_position.y += kViewOffsetY;
+        // 大きい星
+        big_star = new ViewStarBig();
+        if( big_star->init( create_position,
+                            BackObjectBase::Color::kPurple ) == false )
+        {
+            return false;
+        }
+        big_star_list_.push_back( big_star );
     }
-    last_view_ = *view_list_.begin();
 
 
     // その他のメンバ初期化
@@ -89,142 +113,83 @@ bool Background::init()
 
     return true;
 }
-
+// 終了処理
 void Background::destroy()
 {
-    // リストのオブジェクトの開放処理ラムダ
-    auto releaseForList = []( auto& List )
+    // リストのオブジェクトを開放する処理
+    auto destroyList = []( auto *List )
     {
-        for( auto& elem : List )
+        for( auto& object : *List )
         {
-            elem->destroy();
-            delete elem;
+            object->destroy();
+            delete object;
         }
-
-        List.clear();
+        List->clear();
     };
 
-    // 背景の開放
-    releaseForList( view_free_list_ );
-    releaseForList( view_list_ );
+    destroyList( &mist_list_ );
+    destroyList( &mist_free_ );
 
-    // 波の開放
-    releaseForList( wave_free_list_ );
-    releaseForList( wave_list_ );
+    destroyList( &mini_star_list_ );
+    destroyList( &mini_star_free_ );
 
+    destroyList( &big_star_list_ );
+    destroyList( &big_star_free_ );
 
+    destroyList( &wave_list_ );
+    destroyList( &wave_free_ );
 
     // タスク解除
     TaskManager::getInstance()->unregisterObject( this );
 }
-
+// 更新処理
 void Background::update()
 {
-    // リストのオブジェクト更新ラムダ
-    auto updateForList = []( auto& List, auto& FreeList )
-    {
-        for( auto itr = List.begin(), end = List.end();
-            itr != end; )
-        {
-            // オブジェクトの更新
-            (*itr)->update();
 
-            // オブジェクトが死んでいたら、フリーリストに移動
-            if( (*itr)->isAlive() == false )
-            {
-                FreeList.push_back(*itr);
-                itr = List.erase( itr );
-            }
-            else
-            {
-                ++itr;
-            }
-        }
-    };
+    // 背景の更新
+    if( updateView(&mist_list_, &mist_free_) == false )           { return; } 
+    if( updateView(&mini_star_list_, &mini_star_free_) == false ) { return; }
+    if( updateView(&big_star_list_, &big_star_free_) == false )   { return; }
 
 
-    updateForList( view_list_, view_free_list_ );
-    updateForList( wave_list_, wave_free_list_ );
-
-
-    // 背景が切れないよう追加していく
-    // 最後に追加した背景を基準に追加
-    const Vector2& last_position = last_view_->getPosition();
-    if( last_position.y > kThresholdCreateViewY )
-    {
-        View *view = nullptr;
-
-        if( view_free_list_.size() > 0U )
-        {
-            view = view_free_list_.back();
-            view_free_list_.pop_back();
-        }
-        else
-        {
-            view = new View();
-        }
-
-        Vector2 view_position{
-            last_position.x,
-            last_position.y - kViewOffsetY
-        };
-        if( view->init( view_position, color_ ) )
-        {
-            view_list_.push_back( view );
-            last_view_ = view;
-        }
-
-
-#if 1
-        Wave *wave = nullptr;
-        if( wave_free_list_.size() > 0U )
-        {
-            wave = wave_free_list_.back();
-            wave_free_list_.pop_back();
-        }
-        else
-        {
-            wave = new Wave();
-        }
-
-        if( wave->init( kWavePositionInit, color_ ) )
-        {
-            wave_list_.push_back( wave );
-        }
-#endif
-    }
+    // 波の更新
+    //if( updateWave() == false ) { return; }
 }
-
+// 描画処理
 void Background::draw()
 {
-    // リストのオブジェクト描画ラムダ
-    auto DrawForList = []( auto& List )
+    // 描画用ラムダ
+    auto drawObject = []( auto& List )
     {
-        for( auto& elem : List )
+        for( auto& object : List )
         {
-            elem->draw();
+            object->draw();
         }
     };
 
-
-    DrawForList( view_list_ );
-    DrawForList( wave_list_ );
+    drawObject( mist_list_ );
+    drawObject( mini_star_list_ );
+    drawObject( big_star_list_ );
+    drawObject( wave_list_ );
 }
 
 
 /*===========================================================================*/
 void Background::setMove( const float Offset ) 
 {
-    auto moveForList = [=]( auto& List )
+    // 移動用ラムダ
+    auto moveObject = [=]( auto& List )
     {
-        for( auto& elem : List )
+        for( auto& object : List )
         {
-            elem->setMove( Offset );
+            object->setMove( Offset );
         }
     };
 
-    moveForList( view_list_ );
-    moveForList( wave_list_ );
+    moveObject( mist_list_ );
+    moveObject( mini_star_list_ );
+    moveObject( big_star_list_ );
+    moveObject( wave_list_ );
 }
 
 void Background::changeColor()
@@ -236,10 +201,8 @@ void Background::changeColor()
 
 void Background::reset()
 {
-    color_ = BackObjectBase::Color::kPurple;
-    
-    // リストのオブジェクトに色をセットするラムダ式
-    auto setColorForList = [this]( auto& List )
+    // カラーセット用ラムダ
+    auto setColorObject = [this]( auto& List )
     {
         for( auto& elem : List )
         {
@@ -247,6 +210,56 @@ void Background::reset()
         }
     };
 
-    setColorForList( view_list_ );
-    setColorForList( wave_list_ );
+    color_ = BackObjectBase::Color::kPurple;
+
+    setColorObject( mist_list_ );
+    setColorObject( mini_star_list_ );
+    setColorObject( big_star_list_ );
+    setColorObject( wave_list_ );
+}
+
+// リスト関係
+/*==========================================================================*/
+// リストのオブジェクトを更新、必要があれば削除、追加を行う
+template <typename T>
+bool Background::updateView( std::vector<T*> *List, std::vector<T*> *Free )
+{
+    // リストのオブジェクトに更新をかける
+    for( auto& object : *List )
+    {
+        object->update();
+    }
+
+    // 先頭のオブジェクトは、画面外の可能性があるので判定
+    T* top_object = *List->begin();
+    if( top_object->getPosition().y > kViewDeathLine )
+    {
+        List->erase( List->begin() );
+        Free->push_back( top_object );
+    }
+
+    // 最後のオブジェクトが、オフセット分進んだら新しく生成
+    Vector2 last_position = List->back()->getPosition();
+    if( last_position.y > kThresholdCreateViewY )
+    {
+        T* object = nullptr;
+
+        if( Free->size() > 0 )
+        {
+            object = Free->back();
+            Free->pop_back();
+        }
+        else
+        {
+            object = new T();
+        }
+
+
+        if( object->init(kViewPositionInit, color_) == false ) {return false;}
+
+        List->push_back( object );
+    }
+
+
+    return true;
 }

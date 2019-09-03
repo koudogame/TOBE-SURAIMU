@@ -2,12 +2,12 @@
 
 #include "back_object_base.h"
 
-class Wave 
+class ViewWave 
     : public BackObjectBase
 {
 public:
-    Wave();
-    ~Wave();
+    ViewWave();
+    ~ViewWave();
 
     bool init( const Vector2& Position, const Color Color ) override;
     void destroy() override;
@@ -20,7 +20,7 @@ public:
     void setColor( const Color Color ) override;
 
 private:
-    void (Wave::*effect_)() = nullptr;
+    void (ViewWave::*effect_)() = nullptr;
     void effectFadeIn();
     void effectFadeOut();
 
