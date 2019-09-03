@@ -65,6 +65,8 @@ bool Background::init()
 {
     static ::Loader load_texture;   /*サイズの大きい画像を読み込んでおく*/
 
+    destroy();
+
     // タスク登録
     TaskManager* task_manager = TaskManager::getInstance();
     task_manager->registerTask( this, TaskUpdate::kBackground );
@@ -77,8 +79,8 @@ bool Background::init()
     ViewStarBig  *big_star  = nullptr;
 
     Vector2 create_position = kViewPositionInit;
-    create_position.y = getWindowHeight<float>() - kViewOffsetY;
-    for( ; create_position.y >= -kViewOffsetY; create_position.y -= kViewOffsetY )
+    create_position.y = kViewDeathLine - kViewOffsetY;
+    for( ; create_position.y >= kViewPositionInit.y; create_position.y -= kViewOffsetY )
     {
         // 霧
         mist = new ViewMist();
@@ -149,13 +151,13 @@ void Background::update()
 {
 
     // 背景の更新
-    if( updateView(&mist_list_, &mist_free_) == false )           { return; } 
-    if( updateView(&mini_star_list_, &mini_star_free_) == false ) { return; }
-    if( updateView(&big_star_list_, &big_star_free_) == false )   { return; }
+    updateView( &mist_list_, &mist_free_ );
+    updateView( &mini_star_list_, &mini_star_free_ );
+    updateView( &big_star_list_, &big_star_free_ );
 
 
     // 波の更新
-    //if( updateWave() == false ) { return; }
+    //updateWave();
 }
 // 描画処理
 void Background::draw()
@@ -203,21 +205,27 @@ void Background::changeColor()
 
 void Background::reset()
 {
-    // カラーセット用ラムダ
-    auto setColorObject = [this]( auto& List )
-    {
-        for( auto& elem : List )
-        {
-            elem->setColor( color_ );
-        }
-    };
+    // 下に入力してゲームオーバーになった後に、もう一度やり直すと下に背景がないので虚無になる
+    // 後、初期化時にかなり下までオブジェクトを生成すると、なぜか重なる
 
-    color_ = BackObjectBase::Color::kPurple;
+    //// カラーセット用ラムダ
+    //auto setColorObject = [this]( auto& List )
+    //{
+    //    for( auto& elem : List )
+    //    {
+    //        elem->setColor( color_ );
+    //    }
+    //};
 
-    setColorObject( mist_list_ );
-    setColorObject( mini_star_list_ );
-    setColorObject( big_star_list_ );
-    setColorObject( wave_list_ );
+    //color_ = BackObjectBase::Color::kPurple;
+
+    //setColorObject( mist_list_ );
+    //setColorObject( mini_star_list_ );
+    //setColorObject( big_star_list_ );
+    //setColorObject( wave_list_ );
+
+
+    init();
 }
 
 // リスト関係

@@ -71,5 +71,5 @@ void ViewMist::update()
 // •`‰æˆ—
 void ViewMist::draw()
 {
-    ViewBase::drawSeamless( kTrimming[color_], kDrawDepth );   
+    ViewBase::draw( kTrimming[color_], kDrawDepth );   
 }

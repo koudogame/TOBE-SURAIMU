@@ -79,6 +79,7 @@ bool Progress::init( const float StageHeight,
 
     last_distance_player_wall_ = wall_last_position_y_ - player_last_position_y_;
 
+    scroll_speed_ = 0.0F;
 
     // タスクを登録
     TaskManager* const kTaskManager = TaskManager::getInstance();
@@ -183,6 +184,12 @@ void Progress::setMove( const float Dist )
 }
 
 /*===========================================================================*/
+void Progress::start()
+{
+    scroll_speed_ = kScrollSpeed;
+}
+
+/*===========================================================================*/
 void Progress::changeStage()
 {
     // オフセット開始準備
@@ -227,7 +234,7 @@ float Progress::getPlayerDelta()
     float dist_p_w = curr_wall_y - curr_player_y;
 
     float delta = dist_p_w - last_distance_player_wall_ - wall_->getSpeed();
-    delta += kScrollSpeed;
+    delta += scroll_speed_;
 
     player_last_position_y_ = curr_player_y;
     wall_last_position_y_ = curr_wall_y;

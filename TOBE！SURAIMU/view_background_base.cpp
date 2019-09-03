@@ -7,17 +7,20 @@
 
 /*===========================================================================*/
 // •`‰æ( ƒV[ƒ€ƒŒƒX )
-void ViewBase::drawSeamless( const RECT& Trimming,
-                             const float Depth, 
-                             const float Alpha )
+void ViewBase::draw( const RECT& Trimming,
+                     const float Depth, 
+                     const float Alpha )
 {
-    Sprite::getInstance()->reserveDraw(
-        texture_,
-        position_,
-        Trimming,
-        Alpha,
-        Depth
-    );
+    if( position_.y < getWindowHeight<float>() )
+    {
+        Sprite::getInstance()->reserveDraw(
+            texture_,
+            position_,
+            Trimming,
+            Alpha,
+            Depth
+        );
+    }
 }
 
 

@@ -23,9 +23,9 @@ public:
 
     const Vector2& getPosition() const { return position_; }
 
-    void drawSeamless( const RECT& Trimming, 
-                       const float DrawDepth,
-                       const float Alpha = 1.0F );
+    void draw( const RECT& Trimming, 
+               const float DrawDepth,
+               const float Alpha = 1.0F );
 
 protected:
     void scroll( const float Offset );

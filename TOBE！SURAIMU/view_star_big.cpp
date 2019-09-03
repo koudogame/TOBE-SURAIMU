@@ -72,5 +72,5 @@ void ViewStarBig::update()
 // •`‰æˆ—
 void ViewStarBig::draw()
 {
-    ViewBase::drawSeamless( kTrimming[color_], kDrawDepth );
+    ViewBase::draw( kTrimming[color_], kDrawDepth );
 }

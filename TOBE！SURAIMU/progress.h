@@ -26,6 +26,7 @@ public:
     void setMove( const float Distance ) override;
 
 /*=================================================================*/
+    void start();
     void changeStage();
 
 private:
@@ -46,6 +47,7 @@ private:
     float   player_last_position_y_ = 0.0F;
     float   wall_last_position_y_ = 0.0F;
     float   last_distance_player_wall_ = 0.0F;
+    float   scroll_speed_ = 0.0F;
 
 
     FailWall *wall_ = nullptr;

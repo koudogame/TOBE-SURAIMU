@@ -71,5 +71,5 @@ void ViewStarMini::update()
 // •`‰æˆ—
 void ViewStarMini::draw()
 {
-    ViewBase::drawSeamless( kTrimming[color_], kDrawDepth );
+    ViewBase::draw( kTrimming[color_], kDrawDepth );
 }
