@@ -160,6 +160,7 @@
     <ClInclude Include="battle.h" />
     <ClInclude Include="bonus_icon.h" />
     <ClInclude Include="demo.h" />
+    <ClInclude Include="dinput.h" />
     <ClInclude Include="fail_wall.h" />
     <ClInclude Include="progress.h" />
     <ClInclude Include="ranking_manager.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="container.cpp" />
     <ClCompile Include="csvLoader.cpp" />
     <ClCompile Include="demo.cpp" />
+    <ClCompile Include="Dinput.cpp" />
     <ClCompile Include="direct3d.cpp" />
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="endless.cpp" />

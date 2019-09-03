@@ -293,6 +293,9 @@
     <ClCompile Include="view_background_base.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
+    <ClCompile Include="Dinput.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -480,6 +483,7 @@
     <ClInclude Include="view_background_base.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
+    <ClInclude Include="dinput.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
