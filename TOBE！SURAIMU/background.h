@@ -36,14 +36,10 @@ private:
     template <typename T>
     bool updateView( std::vector<T*> *List, std::vector<T*> *FreeList );
 
+    bool isCreateWave() const;
     bool updateWave();
-#if 0
-    std::list<View*> view_list_;
-    std::list<View*> view_free_list_;
-    std::list<Wave*> wave_list_;
-    std::list<Wave*> wave_free_list_;
-    View* last_view_ = nullptr;
-#endif
+
+
     std::vector<ViewMist*>     mist_list_;
     std::vector<ViewMist*>     mist_free_;
     std::vector<ViewStarMini*> mini_star_list_;

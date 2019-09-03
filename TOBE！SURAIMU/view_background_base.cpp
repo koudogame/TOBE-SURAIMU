@@ -29,10 +29,4 @@ void ViewBase::draw( const RECT& Trimming,
 void ViewBase::scroll( const float Offset )
 {
     position_.y += Offset;
-
-    // ‰æ–ÊŠO‚Ös‚Á‚½‚çAŒ©‚¦‚È‚¢”ÍˆÍ‚Å–ß‚·
-    if( position_.y > getWindowHeight<float>() )
-    {
-        position_.y = getWindowHeight<float>();
-    }
 }

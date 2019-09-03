@@ -45,6 +45,9 @@ constexpr Vector2 kWavePositionInit { 0.0F, -1200.0F };
 
 constexpr float kViewDeathLine = 1000.0F;
 
+constexpr int kWaveMaxNum = 4;
+constexpr int kWaveCreateDenominator = 5;
+
 
 /*===========================================================================*/
 Background::Background()
@@ -157,7 +160,7 @@ void Background::update()
 
 
     // 波の更新
-    //updateWave();
+    updateWave();
 }
 // 描画処理
 void Background::draw()
@@ -228,9 +231,9 @@ void Background::reset()
     init();
 }
 
-// リスト関係
+// 背景( 波以外 )
 /*==========================================================================*/
-// リストのオブジェクトを更新、必要があれば削除、追加を行う
+// リストのオブジェクトを更新、必要があれば削除、追加を行う *波以外専用*
 template <typename T>
 bool Background::updateView( std::vector<T*> *List, std::vector<T*> *Free )
 {
@@ -268,6 +271,66 @@ bool Background::updateView( std::vector<T*> *List, std::vector<T*> *Free )
         if( object->init(kViewPositionInit, color_) == false ) {return false;}
 
         List->push_back( object );
+    }
+
+
+    return true;
+}
+
+// 背景( 波 )
+/*==========================================================================*/
+// 波の生成を行うか判定
+bool Background::isCreateWave() const
+{
+    return 
+        wave_list_.size() < kWaveMaxNum &&              // アクティブな波が一定の値より少ない場合
+        !(rand() % kWaveCreateDenominator) &&           // 一定の確率で
+        (wave_list_.size() == 0 ||                      // アクティブな波がないか
+        wave_list_.back()->getPosition().y > 0.0F) &&   // 直近の波が、画面内に収まってたら
+        true
+        ;
+}
+// リストのオブジェクトを更新、必要があれば削除、追加を行う 
+bool Background::updateWave()
+{
+    // リストのオブジェクトに更新をかける
+    for( auto& wave : wave_list_ )
+    {
+        wave->update();
+    }
+
+
+    // 先頭のオブジェクトは、画面外の可能性があるので判定する
+    if( wave_list_.size() > 0 )
+    {
+        ViewWave *top_wave = *wave_list_.begin();
+        Vector2 last_position = top_wave->getPosition();
+        if (last_position.y > kViewDeathLine)
+        {
+            wave_list_.erase(wave_list_.begin());
+            wave_free_.push_back(top_wave);
+        }
+    }
+
+
+    // 波の生成処理
+    if( isCreateWave() )
+    {
+        ViewWave *wave = nullptr;
+
+        if( wave_free_.size() > 0 )
+        {
+            wave = wave_free_.back();
+            wave_free_.pop_back();
+        }
+        else
+        {
+            wave = new ViewWave();
+        }
+
+        if( wave->init( kWavePositionInit, color_ ) == false ) { return false; }
+
+        wave_list_.push_back( wave );
     }
 
 

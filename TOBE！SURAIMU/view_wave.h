@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include "back_object_base.h"
+#include "view_background_base.h"
 
 class ViewWave 
-    : public BackObjectBase
+    : public ViewBase
 {
 public:
     ViewWave();
@@ -27,7 +27,6 @@ private:
     void effectFadeIn();
     void effectFadeOut();
 
-    Vector2 position_;
     Vector2 offset_;
     int pattern_id_ = 0;
     float effect_alpha_ = 0.0F;
