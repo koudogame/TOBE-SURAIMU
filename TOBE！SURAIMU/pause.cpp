@@ -145,6 +145,7 @@ void Pause::reset()
     select_ = kContinue;
     count_started_ = false;
     position_cursor_ = kPositionCursorStart;
+    is_pressed_ = false;
     remaining_count_ = 0L;
     number_scale_ = kNumberScaleDefault;
     number_alpha_ = kNumberAlphaDefault;
@@ -158,20 +159,29 @@ int Pause::waitInput()
     KeyTracker key = Key::getInstance()->getTracker();
     PadTracker pad = Pad::getInstance()->getTracker();
 
-    // 決定
-    if( pad.a == PadTracker::PRESSED || key.pressed.Space )
-    {
-        SOUND->stop(SoundId::kDicision);
-        SOUND->play(SoundId::kDicision, false);
 
-        switch (select_)
+    if( is_pressed_ == false && pad.a == PadTracker::PRESSED || key.pressed.Space )
+    {
+        is_pressed_ = true;
+    }
+    // 決定
+    else if( pad.a == PadTracker::RELEASED || key.released.Space )
+    {
+        if( is_pressed_ )
         {
-        case kContinue:
-            update_ = &Pause::toContinue; break;
-        case kRestart:
-            update_ = &Pause::toRestart;  break;
-        case kTitle:
-            update_ = &Pause::toTitle;    break;
+            SOUND->stop(SoundId::kDicision);
+            SOUND->play(SoundId::kDicision, false);
+
+            switch (select_)
+            {
+            case kContinue:
+                update_ = &Pause::toContinue; break;
+            case kRestart:
+                update_ = &Pause::toRestart;  break;
+            case kTitle:
+                update_ = &Pause::toTitle;    break;
+            }
+            is_pressed_ = false;
         }
     }
     // 再度ポーズボタンの押下

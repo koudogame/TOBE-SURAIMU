@@ -16,6 +16,7 @@
 #include "space.h"
 #include "ai_demo.h"
 #include "wall.h"
+#include "fail_wall.h"
 #include "star_container.h"
 // ‘JˆÚæ
 #include "title.h"
@@ -68,6 +69,7 @@ constexpr StarState kInitStarState[kInitStarNum] =  // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ
 constexpr float kScrollThresholdUp   = getWindowHeight<float>() * 0.10F;
 constexpr float kScrollThresholdDown = getWindowHeight<float>() * 0.90F;
 
+constexpr Vector2 kInitPlayerPosition { 600.0F, 565.0F };
 
 /*===========================================================================*/
 Demo::Demo()
@@ -92,11 +94,15 @@ bool Demo::init()
 
     // Demo—pAI
     ai_ = new AIDemo();
-    if( ai_->init( { 640.0F, 650.0F } ) == false ) { return false; }
+    if( ai_->init( kInitPlayerPosition ) == false ) { return false; }
 
     // •Ç
     wall_ = new Wall();
     if( wall_->init() == false ) { return false; }
+
+    // ‰Š
+    fail_wall_ = new FailWall();
+    if( fail_wall_->init() == false ) { return false; }
 
     // ƒXƒ^[ŠÇ—ƒRƒ“ƒeƒi
     stars_ = new StarContainer();
@@ -118,14 +124,12 @@ bool Demo::init()
         // ƒGƒ‰[
             return false;
         }
-
-        // —‰º‚ğ•t—^
-        star->setFall();
     }
 
 
     // ƒƒ“ƒo‰Šú‰»
     is_end_ = false;
+    update_ = &Demo::start;
     is_fadein_ = true;
     alpha_ = 1.0F;
 
@@ -141,6 +145,13 @@ void Demo::destroy()
     // ¯X‚ÌŠJ•ú
         stars_->destroy();
         safe_delete( stars_ );
+    }
+
+    if( fail_wall_ )
+    {
+    // ‰Š‚ÌŠJ•ú
+        fail_wall_->destroy();
+        safe_delete( fail_wall_ );
     }
 
     if( wall_ )
@@ -165,8 +176,6 @@ void Demo::destroy()
     }
 }
 
-
-// ƒXƒ^[ŠÇ——pƒRƒ“ƒeƒi‚Ìupdate‚ğŒÄ‚ñ‚Å‚¢‚È‚¢(AI‚ª—‰º‚µ‚½‚Æ‚«A’…’n‚Å‚«‚é‚æ‚¤‚ ‚¦‚Ä)
 
 SceneBase* Demo::update()
 {
@@ -198,34 +207,10 @@ SceneBase* Demo::update()
         return isAnyTrue( &button, sizeof( button ) ) ||
                isAnyTrue( &dpad,   sizeof( dpad ) );
     };
+    if (padAnyInput()) { is_end_ = true; }
    
 
-    if( ai_->isAlive() == false ) { is_end_ = true; } 
-    if( padAnyInput() )         { is_end_ = true; }
-
-
-    // ˆê’èŠÔ‚ÌŒo‰ß‚©Aendƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚ÄˆÃ“]‚àI‚í‚Á‚Ä‚¢‚½‚ç
-    auto elapsed = duration_cast<seconds>(Clock::now() - start_time_).count();
-    if( elapsed >= kDemoTimeSc ||
-        (is_end_ && alpha_ >= 1.0F ))
-    {
-    // ƒ^ƒCƒgƒ‹‚Ö
-        return new Title;
-    }
-
-    if( isCreateStar() )
-    {
-    // ƒXƒ^[‚ğ¶¬‚·‚é
-        if( createStar() == false ) { return nullptr; } 
-    }
-    
-    // ƒXƒNƒ[ƒ‹ˆ—
-    scroll();
-
-    // Õ“Ëˆ—
-    Space::getInstance()->collision();
-
-    return this;
+    return (this->*update_)();
 }
 
 void Demo::draw()
@@ -234,9 +219,57 @@ void Demo::draw()
         texture_,
         Vector2::Zero,
         kRangeOfScreen,
-        alpha_,
+        0.0F, //alpha_,
         kDepth
     );
+}
+// ƒXƒ^[ƒg
+SceneBase* Demo::start()
+{
+    if( ai_->Player::isJump() )
+    {
+        update_ = &Demo::play;
+        stars_->setFall();
+        ai_->onStartFlag();
+        fail_wall_->start();
+    }
+
+    // Õ“Ëˆ—
+    Space::getInstance()->collision();
+
+    return this;
+}
+// ƒvƒŒƒC
+SceneBase* Demo::play()
+{
+    if (ai_->isAlive() == false) { is_end_ = true; }
+
+
+    // ˆê’èŠÔ‚ÌŒo‰ß‚©Aendƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚ÄˆÃ“]‚àI‚í‚Á‚Ä‚¢‚½‚ç
+    auto elapsed = duration_cast<seconds>(Clock::now() - start_time_).count();
+    if (elapsed >= kDemoTimeSc ||
+        (is_end_ && alpha_ >= 1.0F))
+    {
+        // ƒ^ƒCƒgƒ‹‚Ö
+        return new Title;
+    }
+
+
+    stars_->update();
+    if (isCreateStar())
+    {
+        // ƒXƒ^[‚ğ¶¬‚·‚é
+        if (createStar() == false) { return nullptr; }
+        stars_->setFall();
+    }
+
+    // ƒXƒNƒ[ƒ‹ˆ—
+    scroll();
+
+    // Õ“Ëˆ—
+    Space::getInstance()->collision();
+
+    return this;
 }
 
 
@@ -326,7 +359,7 @@ void Demo::setStarPattern()
             break;
         }
 
-        pattern_file.insert( 0, L"State/" );    // ƒtƒ@ƒCƒ‹ƒpƒX‚Ö‚ÌŠK‘w’Ç‰Á
+        pattern_file.insert( 0, L"State/" );    // ƒtƒ@ƒCƒ‹ƒpƒX‚ÌŠK‘w’Ç‰Á
         stars_->addPattern( pattern_file );
     }
 }

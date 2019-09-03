@@ -261,10 +261,6 @@ SceneBase* Endless::start()
         if (player_->isJump())
         {
 		    update_ = &Endless::play;
-		    for (auto& star : star_container_->active())
-		    {
-			    star->setFall();
-		    }
 		    clock_->start();
 		    player_->onStartFlag();
             star_container_->setFall();
