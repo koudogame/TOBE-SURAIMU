@@ -22,8 +22,8 @@ public:
 	//引数...上昇量
 	void addDefaultScore( const double AddScore );
 	//スコアリング開始
-	inline void start() { scoring_flag_ = true; timeRestart(); }
-	inline void stop() { scoring_flag_ = false; timeStop(); }
+	inline void start() { scoring_flag_ = true; }
+	inline void stop() { scoring_flag_ = false; }
 	inline bool isStart() { return scoring_flag_; }
 	//タイマー操作
 	inline void timeRestart(){combo_timer_.restart();}

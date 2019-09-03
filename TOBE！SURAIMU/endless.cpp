@@ -283,7 +283,7 @@ SceneBase* Endless::play()
     {
 		SOUND->stop( SoundId::kDicision );
 		SOUND->play( SoundId::kDicision , false );
-		player_->getScore()->stop();
+		player_->getScore()->timeStop();
         clock_->stop();
         pause_->reset();
         TaskManager::getInstance()->pause();
@@ -331,13 +331,13 @@ SceneBase* Endless::pause()
     case Pause::kContinue :
         kTaskManager->restart();
         clock_->restart();
-		player_->getScore()->start();
+		player_->getScore()->timeRestart();
         update_ = is_pause_ ? &Endless::start : &Endless::play;
         is_pause_ = false;
         break;
 
     case Pause::kRestart  :
-		player_->getScore()->start();
+		player_->getScore()->timeRestart();
         kTaskManager->restart();
         Background::getInstance()->reset();
         return new Endless();
