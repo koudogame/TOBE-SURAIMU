@@ -287,16 +287,16 @@
     <ClCompile Include="view_background_base.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
-    <ClCompile Include="view_mist.cpp">
-      <Filter>Project</Filter>
+    <ClCompile Include="view_wave.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
     <ClCompile Include="view_star_mini.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
     <ClCompile Include="view_star_big.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
-    <ClCompile Include="view_wave.cpp">
+    <ClCompile Include="view_mist.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
   </ItemGroup>
@@ -486,8 +486,10 @@
     <ClInclude Include="view_star_mini.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
-    <ClInclude Include="view_star_big.h" />
     <ClInclude Include="view_wave.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="view_star_big.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,6 @@
 
+// ”Âê
+
 #include "view_mist.h"
 
 #include "textureLoder.h"

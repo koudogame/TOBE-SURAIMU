@@ -60,6 +60,7 @@ bool Progress::init( const float StageHeight,
     // 引数をメンバにセット
     stage_height_ = StageHeight;
     player_       = PPlayer;
+    wall_ = PFailWall;
 
     // テクスチャ読み込み
     texture_ = TextureLoder::getInstance()->load( L"Texture/progress.png" );
@@ -72,9 +73,11 @@ bool Progress::init( const float StageHeight,
 
     player_base_position_ = kPlayerBasePosition;
     player_displacement_ = -player_->getPosition().y;
-    player_last_coordinate_y_ = player_->getPosition().y;
+    player_last_position_y_ = player_->getPosition().y;
 
-    wall_ = PFailWall;
+    wall_last_position_y_ = wall_->getPosition().y;
+
+    last_distance_player_wall_ = wall_last_position_y_ - player_last_position_y_;
 
 
     // タスクを登録
@@ -108,15 +111,8 @@ void Progress::update()
 
 
     // プレイヤーの位置更新
-    Vector2 player_position = player_->getPosition();
-    if( player_->isJump() )
-    {
-        float p_delta = player_last_coordinate_y_ - player_position.y;
-        p_delta += 2.0F;
-        player_displacement_ += p_delta;
-    }
-
-    player_last_coordinate_y_ = player_position.y;
+    float player_delta = getPlayerDelta();
+    player_displacement_ += player_delta;
 }
 
 void Progress::draw()
@@ -216,4 +212,26 @@ void Progress::easingOffset()
         player_base_position_ = kPlayerBasePosition;
         player_displacement_ -= stage_height_;
     }
+}
+
+
+
+// 下方向への移動が"-"
+// 上方向への移動が"+"
+/*===========================================================================*/
+float Progress::getPlayerDelta()
+{
+    float curr_player_y = player_->getPosition().y;
+    float curr_wall_y = wall_->getPosition().y;
+
+    float dist_p_w = curr_wall_y - curr_player_y;
+
+    float delta = dist_p_w - last_distance_player_wall_ - wall_->getSpeed();
+    delta += kScrollSpeed;
+
+    player_last_position_y_ = curr_player_y;
+    wall_last_position_y_ = curr_wall_y;
+    last_distance_player_wall_ = dist_p_w;
+
+    return delta;
 }

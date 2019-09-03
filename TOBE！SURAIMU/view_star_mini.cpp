@@ -1,4 +1,6 @@
 
+// ”Âê
+
 #include "view_star_mini.h"
 
 #include "textureLoder.h"

@@ -1,4 +1,6 @@
 
+// ”Âê
+
 #include "background.h"
 
 #include "textureLoder.h"

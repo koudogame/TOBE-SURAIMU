@@ -1,4 +1,6 @@
 
+// ”Âê
+
 #include "view_wave.h"
 
 #include "textureLoder.h"

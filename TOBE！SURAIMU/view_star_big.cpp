@@ -1,4 +1,6 @@
 
+// ”Âê
+
 #include "view_star_big.h"
 
 #include "textureLoder.h"

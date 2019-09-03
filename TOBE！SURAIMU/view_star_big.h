@@ -1,4 +1,8 @@
 
+// ”Âê
+
+#pragma once
+
 #include "view_background_base.h"
 
 class ViewStarBig

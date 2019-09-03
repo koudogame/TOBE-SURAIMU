@@ -1,4 +1,6 @@
 
+// ”Âê
+
 #include "view_background_base.h"
 
 #include "sprite.h"
