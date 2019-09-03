@@ -1,5 +1,7 @@
 
-#include "wave_background.h"
+// 板場
+
+#include "view_wave.h"
 
 #include "textureLoder.h"
 #include "sprite.h"
@@ -55,19 +57,19 @@ constexpr float kEffectAlphaMax = 1.0F;
 constexpr float kEffectAlphaMin = 0.2F;
 
 /*===========================================================================*/
-Wave::Wave()
+ViewWave::ViewWave()
 {
 
 }
 
-Wave::~Wave()
+ViewWave::~ViewWave()
 {
 
 }
 
 
 /*===========================================================================*/
-bool Wave::init( const Vector2& Position, const Color Color )
+bool ViewWave::init( const Vector2& Position, const Color Color )
 {
 
     destroy();
@@ -77,7 +79,7 @@ bool Wave::init( const Vector2& Position, const Color Color )
     if( texture_ == nullptr ) { return false; }
 
     // その他メンバの初期化
-    effect_ = &Wave::effectFadeOut;
+    effect_ = &ViewWave::effectFadeOut;
     position_ = Position;
     offset_ = kOffset;
     if( rand() % 2 ) { offset_.x *= -1.0F; }    // 2分の1の確率で左方向にする
@@ -87,7 +89,7 @@ bool Wave::init( const Vector2& Position, const Color Color )
     return true;
 }
 
-void Wave::destroy()
+void ViewWave::destroy()
 {
     // テクスチャ開放
     if( texture_ != nullptr )
@@ -96,14 +98,14 @@ void Wave::destroy()
     }
 }
 
-void Wave::update()
+void ViewWave::update()
 {
     position_ += offset_;
 
     (this->*effect_)();
 }
 
-void Wave::draw()
+void ViewWave::draw()
 {
     Sprite* sprite = Sprite::getInstance();
 
@@ -169,7 +171,7 @@ void Wave::draw()
 }
 
 /*===========================================================================*/
-void Wave::setColor( const Color Color )
+void ViewWave::setColor( const Color Color )
 {
     if( texture_ )
     {
@@ -181,24 +183,24 @@ void Wave::setColor( const Color Color )
 }
 
 /*===========================================================================*/
-void Wave::effectFadeIn()
+void ViewWave::effectFadeIn()
 {
     effect_alpha_ += kAmountOfEffectAlpha;
 
     if( effect_alpha_ >= kEffectAlphaMax )
     {
         effect_alpha_ = kEffectAlphaMax;
-        effect_ = &Wave::effectFadeOut;
+        effect_ = &ViewWave::effectFadeOut;
     }
 }
 
-void Wave::effectFadeOut()
+void ViewWave::effectFadeOut()
 {
     effect_alpha_ -= kAmountOfEffectAlpha;
 
     if( effect_alpha_ <= kEffectAlphaMin )
     {
         effect_alpha_ = kEffectAlphaMin;
-        effect_ = &Wave::effectFadeIn;
+        effect_ = &ViewWave::effectFadeIn;
     }
 }

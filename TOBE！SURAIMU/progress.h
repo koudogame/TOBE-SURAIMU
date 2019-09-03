@@ -26,10 +26,12 @@ public:
     void setMove( const float Distance ) override;
 
 /*=================================================================*/
+    void start();
     void changeStage();
 
 private:
     void easingOffset();
+    float getPlayerDelta();
 
     ID3D11ShaderResourceView *texture_ = nullptr;
     float scale_ = 0.0F;
@@ -42,7 +44,11 @@ private:
     Player  *player_ = nullptr;
     Vector2 player_base_position_;
     float   player_displacement_ = 0.0F;
-    float   player_last_coordinate_y_ = 0.0F;
+    float   player_last_position_y_ = 0.0F;
+    float   wall_last_position_y_ = 0.0F;
+    float   last_distance_player_wall_ = 0.0F;
+    float   scroll_speed_ = 0.0F;
+
 
     FailWall *wall_ = nullptr;
 };

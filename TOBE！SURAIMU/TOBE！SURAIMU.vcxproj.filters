@@ -281,16 +281,22 @@
     <ClCompile Include="background.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
-    <ClCompile Include="view_background.cpp">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClCompile>
-    <ClCompile Include="wave_background.cpp">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClCompile>
     <ClCompile Include="progress.cpp">
       <Filter>Project\Game\Object\UI</Filter>
     </ClCompile>
     <ClCompile Include="view_background_base.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="view_wave.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="view_star_mini.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="view_star_big.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="view_mist.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
     <ClCompile Include="Dinput.cpp">
@@ -465,22 +471,28 @@
     <ClInclude Include="background.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
-    <ClInclude Include="view_background.h">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClInclude>
     <ClInclude Include="back_object_base.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
     <ClInclude Include="object_base.h">
       <Filter>Project\Game\Object</Filter>
     </ClInclude>
-    <ClInclude Include="wave_background.h">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClInclude>
     <ClInclude Include="progress.h">
       <Filter>Project\Game\Object\UI</Filter>
     </ClInclude>
     <ClInclude Include="view_background_base.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="view_mist.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="view_star_mini.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="view_wave.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="view_star_big.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
     <ClInclude Include="dinput.h" />
