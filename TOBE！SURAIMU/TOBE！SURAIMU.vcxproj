@@ -163,6 +163,9 @@
     <ClInclude Include="dinput.h" />
     <ClInclude Include="fail_wall.h" />
     <ClInclude Include="progress.h" />
+    <ClInclude Include="progress_fail_wall.h" />
+    <ClInclude Include="progress_player.h" />
+    <ClInclude Include="progress_stage.h" />
     <ClInclude Include="ranking_manager.h" />
     <ClInclude Include="sercher.h" />
     <ClInclude Include="Sound.h" />
@@ -243,6 +246,9 @@
     <ClCompile Include="freeFallParticle_container.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="progress.cpp" />
+    <ClCompile Include="progress_fail_wall.cpp" />
+    <ClCompile Include="progress_player.cpp" />
+    <ClCompile Include="progress_stage.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="ranking_in_endless.cpp" />
     <ClCompile Include="ranking_manager.cpp" />

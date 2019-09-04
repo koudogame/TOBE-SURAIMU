@@ -132,6 +132,9 @@
     <Filter Include="Project\Game\Others\Text">
       <UniqueIdentifier>{b0f22c7b-e10c-473f-818c-e0a4a1125dd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Object\UI\Progress">
+      <UniqueIdentifier>{d7f45e5a-af2a-4b0d-b1b4-7daee73bbb74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -278,9 +281,6 @@
     <ClCompile Include="background.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
-    <ClCompile Include="progress.cpp">
-      <Filter>Project\Game\Object\UI</Filter>
-    </ClCompile>
     <ClCompile Include="view_background_base.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
@@ -301,6 +301,18 @@
     </ClCompile>
     <ClCompile Include="ai_demo.cpp">
       <Filter>Project\Game\Object\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="progress.cpp">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClCompile>
+    <ClCompile Include="progress_player.cpp">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClCompile>
+    <ClCompile Include="progress_fail_wall.cpp">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClCompile>
+    <ClCompile Include="progress_stage.cpp">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -474,9 +486,6 @@
     <ClInclude Include="object_base.h">
       <Filter>Project\Game\Object</Filter>
     </ClInclude>
-    <ClInclude Include="progress.h">
-      <Filter>Project\Game\Object\UI</Filter>
-    </ClInclude>
     <ClInclude Include="view_background_base.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
@@ -495,6 +504,18 @@
     <ClInclude Include="dinput.h" />
     <ClInclude Include="ai_demo.h">
       <Filter>Project\Game\Object\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="progress.h">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClInclude>
+    <ClInclude Include="progress_player.h">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClInclude>
+    <ClInclude Include="progress_fail_wall.h">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClInclude>
+    <ClInclude Include="progress_stage.h">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
