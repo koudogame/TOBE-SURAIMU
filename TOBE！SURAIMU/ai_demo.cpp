@@ -25,9 +25,9 @@ static const Circle kSerchRange
     getWindowHeight<float>() * 0.5F
 };
 
-static constexpr int   kJumpPercentageDenominator = 1;
-static constexpr float kJumpReach = 500.0F;
-static constexpr float kJumpAngle = 3.0F;
+static constexpr int   kJumpPercentageDenominator = 2;
+static constexpr float kJumpReach = 380.0F;
+static constexpr float kJumpAngle = 5.0F;
 
 static constexpr float kSquatAngle = 45.0F;
 
@@ -101,22 +101,16 @@ bool AIDemo::isSquat()
     // ターゲットがあるか
     if( target_ != nullptr )
     {
+        // ターゲットとの角度が一定の範囲内か
         const Vector2& this_position = getPosition();
         const Vector2& tar_position  = target_->getPosition();
+        float direction_angle = toDegrees( revision_angle_ + XM_PI );
+        float between_angle = toDegrees( Calc::angle(tar_position - this_position) );
 
-        // ターゲットとの距離がジャンプできる距離か
-        float distance = Calc::angle( this_position, tar_position );
-        if( distance <= kJumpReach )
+        if( std::abs(direction_angle - between_angle) <= kSquatAngle )
         {
-            // ターゲットとの角度が一定の範囲内か
-            float direction_angle = toDegrees( revision_angle_ + XM_PI );
-            float between_angle = toDegrees( Calc::angle(tar_position - this_position) );
-
-            if( std::abs(direction_angle - between_angle) <= kSquatAngle )
-            {
-                // しゃがむ!
-                return true;
-            }
+            // しゃがむ!
+            return true;
         }
     }
 
@@ -128,25 +122,19 @@ bool AIDemo::isJump()
     // ターゲットがあるか
     if( target_ != nullptr )
     {
+        // 目的との角度が一定の範囲内か
         const Vector2& this_position = getPosition();
         const Vector2& tar_position  = target_->getPosition();
+        float direction_angle = toDegrees( revision_angle_ + XM_PI );
+        float between_angle = toDegrees(Calc::angle(tar_position - this_position) );
 
-        // 目的との距離が一定の範囲内か
-        float distance = Calc::magnitude( this_position, tar_position );
-        if( distance <= kJumpReach )
+        if( std::abs(direction_angle - between_angle) <= kJumpAngle )
         {
-            // 目的との角度が一定の範囲内か
-            float direction_angle = toDegrees( revision_angle_ + XM_PI );
-            float between_angle = toDegrees(Calc::angle(tar_position - this_position) );
-
-            if( std::abs(direction_angle - between_angle) <= kJumpAngle )
+            // 一定の確率で
+            if( !(rand() % kJumpPercentageDenominator) )
             {
-                // 一定の確率で
-                if( !(rand() % kJumpPercentageDenominator) )
-                {
-                    // ジャンプ!
-                    return true;
-                }
+                // ジャンプ!
+                return true;
             }
         }
     }
@@ -157,6 +145,12 @@ bool AIDemo::isJump()
 // 左に移動するか判定
 bool AIDemo::isMoveLeft()
 {
+    // ジャンプ中かつなら
+    if( isJump() )
+    {
+
+    }
+
     return false;
 }
 // 右に移動するか判定
@@ -181,6 +175,12 @@ void AIDemo::setPurposeStar()
     {
         target_ = nullptr;
         return; 
+    }
+
+    // 現在のターゲットが、炎と衝突していたらリセット
+    if( target_ != nullptr && target_->isAlive() == false )
+    {
+        target_ = nullptr;
     }
 
     

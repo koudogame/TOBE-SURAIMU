@@ -403,7 +403,7 @@ bool Endless::checkAndLoadStage()
         climb_ = 0.0F;
         ++stage_;
         Background::getInstance()->changeColor();
-        progress_->changeStage();
+        //progress_->changeStage();
 
         if (stage_ >= kStageNum)
         {
