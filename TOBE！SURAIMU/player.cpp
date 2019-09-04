@@ -27,6 +27,7 @@ const float kGuideWidth = 5.0F;		            //ガイドのテクスチャの幅
 const int kMaxPlayer = 4;			            //最大プレイ人数
 const float kDefGuid = 0.05F;					//ガイドの減少比率
 const float kGuidMin = 0.1F;					//ガイドの最小減少比率値
+const int kDeleteGuidLevel = 2;					//ガイドが消え始めるレベル
 
 constexpr float kParticleInterval = 2.5F;       //パーティクルの生成間隔
 
@@ -290,7 +291,7 @@ void Player::collision(Star * StarObj)
 		direction_id_ = Direction::kFlont;
 		timer = 0;
 		score_.addCombo();
-		if (score_.getLevel() >= 2)
+		if (score_.getLevel() >= kDeleteGuidLevel)
 			guide_alpha_ -= kDefGuid;
 
 		if (owner_ == StarObj)
