@@ -179,10 +179,6 @@ void Result::destroy()
     kLoader->release(texture_numbers_big_);
     kLoader->release(texture_char_);
     kLoader->release(texture_);
-
-
-    // ”wŒi‚ÌƒŠƒZƒbƒg
-    Background::getInstance()->reset();
 }
 
 /*===========================================================================*/
@@ -366,7 +362,12 @@ SceneBase* Result::outToTitle()
 {
     alpha_ -= 0.01F;
 
-    if( alpha_ < 0.0F ) { return new Title(); }
+    if( alpha_ < 0.0F ) 
+    {
+        // ”wŒi‚ÌƒŠƒZƒbƒg
+        Background::getInstance()->reset(); 
+        return new Title(); 
+    }
     else                { return this; }
 }
 // ƒvƒŒƒC‚Ö‘JˆÚ
@@ -381,7 +382,13 @@ SceneBase* Result::outToPlay()
         );
     position_base_.y -= offset;
 
-	if( count_ >= 1.0F ) { SOUND->stop( SoundId::kTitle ); return new Endless(); }
+	if( count_ >= 1.0F ) 
+    {
+        // ”wŒi‚ÌƒŠƒZƒbƒg
+        Background::getInstance()->reset(); 
+        SOUND->stop( SoundId::kTitle );
+        return new Endless();
+    }
     else                 { return this; }
 }
 

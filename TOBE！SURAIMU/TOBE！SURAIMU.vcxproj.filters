@@ -269,9 +269,6 @@
     <ClCompile Include="fail_wall.cpp">
       <Filter>Project\Game\Object\FailWall</Filter>
     </ClCompile>
-    <ClCompile Include="ai_demo.cpp">
-      <Filter>Project\Game\Object\AI</Filter>
-    </ClCompile>
     <ClCompile Include="demo.cpp">
       <Filter>Project\Game\Scene\Demo</Filter>
     </ClCompile>
@@ -301,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="dinput.cpp">
       <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_demo.cpp">
+      <Filter>Project\Game\Object\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -459,9 +459,6 @@
     <ClInclude Include="fail_wall.h">
       <Filter>Project\Game\Object\FailWall</Filter>
     </ClInclude>
-    <ClInclude Include="ai_demo.h">
-      <Filter>Project\Game\Object\AI</Filter>
-    </ClInclude>
     <ClInclude Include="demo.h">
       <Filter>Project\Game\Scene\Demo</Filter>
     </ClInclude>
@@ -496,6 +493,9 @@
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
     <ClInclude Include="dinput.h" />
+    <ClInclude Include="ai_demo.h">
+      <Filter>Project\Game\Object\AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

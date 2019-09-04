@@ -42,6 +42,7 @@ private:
 
     ID3D11ShaderResourceView* texture_ = nullptr;
     Vector2 position_cursor_;
+    bool is_pressed_ = false;
     int select_ = kKeep;
     bool count_started_ = false;
     std::chrono::time_point<std::chrono::high_resolution_clock> count_start_;

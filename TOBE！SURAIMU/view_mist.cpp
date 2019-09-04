@@ -61,6 +61,7 @@ void ViewMist::destroy()
     if( texture_ != nullptr )
     {
         TextureLoder::getInstance()->release( texture_ );
+        texture_ = nullptr;
     }
 }
 // XVˆ—

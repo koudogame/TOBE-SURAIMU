@@ -46,7 +46,7 @@ constexpr Vector2 kWavePositionInit { 0.0F, -1200.0F };
 constexpr float kViewDeathLine = 1000.0F;
 
 constexpr int kWaveMaxNum = 4;
-constexpr int kWaveCreateDenominator = 5;
+constexpr int kWaveCreateDenominator = 500;
 
 
 /*===========================================================================*/
@@ -285,8 +285,8 @@ bool Background::isCreateWave() const
     return 
         wave_list_.size() < kWaveMaxNum &&              // アクティブな波が一定の値より少ない場合
         !(rand() % kWaveCreateDenominator) &&           // 一定の確率で
-        (wave_list_.size() == 0 ||                      // アクティブな波がないか
-        wave_list_.back()->getPosition().y > 0.0F) &&   // 直近の波が、画面内に収まってたら
+        //(wave_list_.size() == 0 ||                      // アクティブな波がないか
+        // wave_list_.back()->getPosition().y > 0.0F) &&   // 直近の波が、画面内に収まってたら
         true
         ;
 }
