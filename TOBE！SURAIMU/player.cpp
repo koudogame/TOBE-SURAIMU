@@ -216,7 +216,7 @@ void Player::draw()
 		draw_angle = -revision_angle_ - XM_PIDIV2;
 	//ƒKƒCƒh‚Ì•`‰æ
 	if (!flag_.test(Flag::kJump) && guide_alpha_ >= kGuidMin)
-		Sprite::getInstance()->reserveDraw(guide_, myshape_.position, { 0,static_cast<int>(kGuideHeight *(1.0F - guide_alpha_)),kGuideWidth,kGuideHeight }, 1.0F, 0.76F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kGuideWidth / 2.0F, kGuideHeight * guide_alpha_), Sprite::getInstance()->chengeMode());
+		Sprite::getInstance()->reserveDraw(guide_, myshape_.position, { 0,static_cast<int>(kGuideHeight * (1.0F - guide_alpha_)),static_cast<int>(kGuideWidth),static_cast<int>(kGuideHeight) }, 1.0F, 0.76F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kGuideWidth / 2.0F, kGuideHeight * guide_alpha_), Sprite::getInstance()->chengeMode());
 	else if (guide_alpha_ < kGuidMin)
 		guide_alpha_ = kGuidMin;
 
