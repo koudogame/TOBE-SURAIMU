@@ -134,7 +134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	/***************************************/
 
-	while (msg.message != WM_QUIT && !(Dinput::getInstance()->getState().rgbButtons[1] & 0x80))
+	while (msg.message != WM_QUIT)
 	{
 		// メッセージ処理
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -155,9 +155,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				t3 = dt % 16L;      // 誤差( オーバー )分を保存
 
 				Key::getInstance()->update();
-				Pad::getInstance()->update();
-				Dinput::getInstance()->update();
+				Pad::getInstance()->update(Dinput::getInstance());
 				SOUND->update();
+
+				auto x = Dinput::getInstance()->getState();
+
+				if (x.rgdwPOV[0] == 0)
+					int y = 0;
 
 				// ゲーム処理
 				Direct3D::getInstance()->clear();

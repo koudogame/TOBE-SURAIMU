@@ -299,7 +299,7 @@
     <ClCompile Include="view_mist.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
-    <ClCompile Include="Dinput.cpp">
+    <ClCompile Include="dinput.cpp">
       <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>

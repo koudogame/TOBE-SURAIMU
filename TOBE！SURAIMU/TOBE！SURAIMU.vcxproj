@@ -229,7 +229,7 @@
     <ClCompile Include="container.cpp" />
     <ClCompile Include="csvLoader.cpp" />
     <ClCompile Include="demo.cpp" />
-    <ClCompile Include="Dinput.cpp" />
+    <ClCompile Include="dinput.cpp" />
     <ClCompile Include="direct3d.cpp" />
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="endless.cpp" />

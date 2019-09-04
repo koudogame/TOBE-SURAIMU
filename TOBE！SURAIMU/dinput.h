@@ -1,7 +1,7 @@
 #pragma once
 class Dinput
 {
-//singleton
+	//singleton
 private:
 	Dinput();
 	Dinput(const Dinput&) = delete;
@@ -14,7 +14,7 @@ public:
 
 public:
 	bool init(const HINSTANCE Hinst, const HWND hWnd);
-	void update();
+	void update(GamePad::State * State);
 	void destroy();
 	bool setDevice(const DIDEVICEINSTANCE * pdidInstance);
 	const DIJOYSTATE& getState() { return state_; }
@@ -26,6 +26,6 @@ private:
 	LPDIRECTINPUTDEVICE8 device_;
 	DIDEVCAPS caps_;
 	DIJOYSTATE state_;
-	DIJOYSTATE old_state_;
+	void setState(GamePad::State* State);
 };
 
