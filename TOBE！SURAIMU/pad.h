@@ -1,4 +1,5 @@
 #pragma once
+#include "dinput.h"
 
 
 class Pad
@@ -6,8 +7,8 @@ class Pad
 private:
 	Pad() = default;
     GamePad pad_;                // ゲームパッドクラス
-    GamePad::State state_[4];    // 入力格納構造体
-    GamePad::ButtonStateTracker tracker_[4]; // パッドトラッカー
+    GamePad::State state_;    // 入力格納構造体
+    GamePad::ButtonStateTracker tracker_; // パッドトラッカー
 
     bool flag_;                  // 振動フラグ
     float second_;               // 振動継続時間
@@ -19,12 +20,13 @@ private:
 
 public:
 	static Pad* getInstance() { static Pad instance; return &instance; }
-    void update();   // 更新処理
+    void update();   // XInput時の更新処理
+    void update( Dinput* const Instance);   // DirectInput時の更新処理
 
     // 入力構造体を返す
-    const GamePad::State& getState(int PlayerNum = 0) { return state_[PlayerNum]; };
+    const GamePad::State& getState(int PlayerNum = 0) { return state_; };
     // トラッカー返却
-    const GamePad::ButtonStateTracker& getTracker(int PlayerNum = 0) { return tracker_[PlayerNum]; }
+    const GamePad::ButtonStateTracker& getTracker(int PlayerNum = 0) { return tracker_; }
 
     // 振動
     void Vibration( float second, float Right, float Left );

@@ -4,6 +4,7 @@
 
 #include "scene_base.h"
 #include "background.h"
+#include "timer.h"
 
 class Game
 {
@@ -21,5 +22,9 @@ public:
 private:
 	std::unique_ptr<SceneBase> scene_;		//stateパターンシーン格納用変数
 	ID3D11ShaderResourceView* texture_;
+
+private:
+	bool gameEnd();
+	Timer<Seconds> time_;
 };
 
