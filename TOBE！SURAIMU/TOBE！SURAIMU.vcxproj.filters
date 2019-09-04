@@ -296,6 +296,9 @@
     <ClCompile Include="view_mist.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
+    <ClCompile Include="Dinput.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
     <ClCompile Include="ai_demo.cpp">
       <Filter>Project\Game\Object\AI</Filter>
     </ClCompile>
@@ -489,6 +492,7 @@
     <ClInclude Include="view_star_big.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
+    <ClInclude Include="dinput.h" />
     <ClInclude Include="ai_demo.h">
       <Filter>Project\Game\Object\AI</Filter>
     </ClInclude>

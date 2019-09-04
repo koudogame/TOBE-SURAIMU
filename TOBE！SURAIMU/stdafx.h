@@ -19,6 +19,7 @@
 #include <fstream>
 #include <Audio.h>
 #include <thread>
+#include <dinput.h>
 
 
 #include <Windows.h>
@@ -30,6 +31,8 @@
 #include <Keyboard.h>
 #include <GamePad.h>
 #include <crtdbg.h>
+
+#pragma comment(lib,"dinput8.lib")
 
 using namespace DirectX;
 using namespace SimpleMath;

@@ -441,7 +441,7 @@ void Player::inputmove()
 		offset_ += temp;
 
 	//‰º“ü—Í
-	if (pad_tracker.dpadDown == pad_tracker.HELD || pad_tracker.leftStickDown == pad_tracker.HELD || key.lastState.Down)
+	if (pad_tracker.a == pad_tracker.HELD  || key.lastState.Space)
 	{
 		bottom_input_ = kBottomOn;
 		score_.addDown();
