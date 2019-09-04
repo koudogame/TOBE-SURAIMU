@@ -135,8 +135,7 @@ void Progress::update()
     player_->update();
     fail_wall_->update();
 
-
-    // スクロール
+    // ステージ変更のスクロール
     if( player_->getPosition().y <= kPlayerEndLine ) 
     {
         scrollInit();

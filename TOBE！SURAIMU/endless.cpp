@@ -393,9 +393,6 @@ bool Endless::checkAndLoadStage()
     // 画面外待機しているスターが無くなったら
     if( itr == end )
     {
-        // スターの生成
-        if( star_container_->createStar() == false ) { return false; }
-        star_container_->setFall();
 
 
 
@@ -403,7 +400,6 @@ bool Endless::checkAndLoadStage()
         climb_ = 0.0F;
         ++stage_;
         Background::getInstance()->changeColor();
-        //progress_->changeStage();
 
         if (stage_ >= kStageNum)
         {
@@ -417,6 +413,12 @@ bool Endless::checkAndLoadStage()
 
         // スターの生成パターン変更
         changePattern(stage_);
+
+
+
+        // スターの生成
+        if( star_container_->createStar() == false ) { return false; }
+        star_container_->setFall();
     }
 
 
