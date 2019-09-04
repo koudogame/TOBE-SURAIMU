@@ -34,6 +34,9 @@ bool Dinput::init(const HINSTANCE Hinst, const HWND hWnd)
 		return false;
 	}
 
+	if (device_ == nullptr)
+		return true;
+
 	if (FAILED(device_->SetDataFormat(&c_dfDIJoystick)))
 	{
 		return false;
@@ -67,7 +70,8 @@ void Dinput::update(GamePad::State * State)
 void Dinput::destroy()
 {
 	input_device_->Release();
-	device_->Release();
+	if (device_ != nullptr)
+		device_->Release();
 }
 
 bool Dinput::setDevice(const DIDEVICEINSTANCE * pdidInstance)

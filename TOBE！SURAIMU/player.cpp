@@ -20,11 +20,13 @@ const int kPlayerSize = 46;		                //テクスチャサイズ
 const int kFlicTime = 18;		                //アニメーション更新時間
 const int kParticleTime = 1;	                //パーティクルの生成クールフレーム
 const int kBottomOn = 3;		                //下入力時の重力倍率
-const int kBottomOff = 1;		                //下入力なしの重力倍率
-const float kDeathLine = 720;	            //死亡ライン
+const int kBottomOff = 1;						//下入力なしの重力倍率
+const float kDeathLine = 720;					//死亡ライン
 const float kGuideHeight = 214.0F;	            //ガイドのテクスチャの高さ
 const float kGuideWidth = 5.0F;		            //ガイドのテクスチャの幅
 const int kMaxPlayer = 4;			            //最大プレイ人数
+const float kDefGuid = 0.05F;					//ガイドの減少比率
+const float kGuidMin = 0.1F;					//ガイドの最小減少比率値
 
 constexpr float kParticleInterval = 2.5F;       //パーティクルの生成間隔
 
@@ -211,12 +213,11 @@ void Player::draw()
 	}
 	else
 		draw_angle = -revision_angle_ - XM_PIDIV2;
-
 	//ガイドの描画
-	if (!flag_.test(Flag::kJump) && guide_alpha_ > 0.0F)
-		Sprite::getInstance()->reserveDraw(guide_, myshape_.position, { 0,0,0,0 }, guide_alpha_, 0.76F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kGuideWidth / 2.0F, kGuideHeight), Sprite::getInstance()->chengeMode());
-	else if (guide_alpha_ <= 0.0F)
-		guide_alpha_ = 0.0F;
+	if (!flag_.test(Flag::kJump) && guide_alpha_ >= kGuidMin)
+		Sprite::getInstance()->reserveDraw(guide_, myshape_.position, { 0,static_cast<int>(kGuideHeight *(1.0F - guide_alpha_)),kGuideWidth,kGuideHeight }, 1.0F, 0.76F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kGuideWidth / 2.0F, kGuideHeight * guide_alpha_), Sprite::getInstance()->chengeMode());
+	else if (guide_alpha_ < kGuidMin)
+		guide_alpha_ = kGuidMin;
 
 
 	slectDirection();
@@ -290,7 +291,7 @@ void Player::collision(Star * StarObj)
 		timer = 0;
 		score_.addCombo();
 		if (score_.getLevel() >= 2)
-			guide_alpha_ -= 0.1F;
+			guide_alpha_ -= kDefGuid;
 
 		if (owner_ == StarObj)
 			score_.addTechnique();
@@ -441,7 +442,7 @@ void Player::inputmove()
 		offset_ += temp;
 
 	//下入力
-	if (pad_tracker.a == pad_tracker.HELD  || key.lastState.Space)
+	if (pad_tracker.a == pad_tracker.HELD || key.lastState.Space)
 	{
 		bottom_input_ = kBottomOn;
 		score_.addDown();

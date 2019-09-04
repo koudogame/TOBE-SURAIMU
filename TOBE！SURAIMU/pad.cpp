@@ -25,7 +25,10 @@ void Pad::update()
 
 void Pad::update( Dinput * const Instance)
 {
-	Instance->update(&state_);
+	if ((*Instance->getDevice()) == nullptr)
+		state_ = pad_.GetState(0);
+	else
+		Instance->update(&state_);
 	tracker_.Update(state_);
 }
 
