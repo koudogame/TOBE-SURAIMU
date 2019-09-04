@@ -17,7 +17,7 @@ public:
 	void update(GamePad::State * State);
 	void destroy();
 	bool setDevice(const DIDEVICEINSTANCE * pdidInstance);
-	const DIJOYSTATE& getState() { return state_; }
+	const DIJOYSTATE2& getState() { return state_; }
 	const LPDIRECTINPUT8* getInputDevice() { return &input_device_; }
 	LPDIRECTINPUTDEVICE8* getDevice() { return &device_; }
 
@@ -25,7 +25,7 @@ private:
 	LPDIRECTINPUT8 input_device_;
 	LPDIRECTINPUTDEVICE8 device_;
 	DIDEVCAPS caps_;
-	DIJOYSTATE state_;
+	DIJOYSTATE2 state_;
 	void setState(GamePad::State* State);
 };
 

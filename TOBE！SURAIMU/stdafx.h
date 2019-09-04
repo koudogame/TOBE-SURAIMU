@@ -33,6 +33,7 @@
 #include <crtdbg.h>
 
 #pragma comment(lib,"dinput8.lib")
+#pragma comment(lib,"dxguid.lib")
 
 using namespace DirectX;
 using namespace SimpleMath;

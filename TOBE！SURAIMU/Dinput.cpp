@@ -28,7 +28,7 @@ bool Dinput::init(const HINSTANCE Hinst, const HWND hWnd)
 	if (FAILED(input_device_->EnumDevices(
 		DI8DEVCLASS_GAMECTRL,
 		EnumJoySticksCallback,
-		nullptr,
+		NULL,
 		DIEDFL_ATTACHEDONLY)))
 	{
 		return false;
@@ -37,7 +37,7 @@ bool Dinput::init(const HINSTANCE Hinst, const HWND hWnd)
 	if (device_ == nullptr)
 		return true;
 
-	if (FAILED(device_->SetDataFormat(&c_dfDIJoystick)))
+	if (FAILED(device_->SetDataFormat(&c_dfDIJoystick2)))
 	{
 		return false;
 	}
