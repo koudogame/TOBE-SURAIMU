@@ -9,6 +9,7 @@
 #include "sound.h"
 #include "dinput.h"
 #include "resource.h"
+#include "timer.h"
 
 //  プロトタイプ宣言
 LRESULT CALLBACK WinProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
@@ -157,11 +158,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				Key::getInstance()->update();
 				Pad::getInstance()->update(Dinput::getInstance());
 				SOUND->update();
-
-				auto x = Dinput::getInstance()->getState();
-
-				if (x.rgdwPOV[0] == 0)
-					int y = 0;
 
 				// ゲーム処理
 				Direct3D::getInstance()->clear();
