@@ -296,9 +296,6 @@
     <ClCompile Include="view_mist.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
-    <ClCompile Include="dinput.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
     <ClCompile Include="ai_demo.cpp">
       <Filter>Project\Game\Object\AI</Filter>
     </ClCompile>
@@ -313,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="progress_stage.cpp">
       <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClCompile>
+    <ClCompile Include="dinput.cpp">
+      <Filter>Project\System\DirectX\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -501,7 +501,6 @@
     <ClInclude Include="view_star_big.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
-    <ClInclude Include="dinput.h" />
     <ClInclude Include="ai_demo.h">
       <Filter>Project\Game\Object\AI</Filter>
     </ClInclude>
@@ -516,6 +515,9 @@
     </ClInclude>
     <ClInclude Include="progress_stage.h">
       <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClInclude>
+    <ClInclude Include="dinput.h">
+      <Filter>Project\System\DirectX\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
