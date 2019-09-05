@@ -3,6 +3,7 @@
 #include "sprite.h"
 #include "Sound.h"
 
+//加点
 const unsigned int kComboScore = 100;
 const unsigned int kDownScore = 1;
 const unsigned int kTechniqueScore = 1000;
@@ -10,15 +11,28 @@ const unsigned int kRotationScore = 100;
 const unsigned int kLengthScore = 100;
 const unsigned int kHeightScore = 10;
 const unsigned int kLevelScore = 5000;
+//サイズ
 const int kNumWidth = 20;
 const int kNumHeight = 32;
 const int kMinNumWidth = 11;
 const int kMinNumHeight = 20;
 const float kScoreHeight = 50.0F;
-const Vector2 kBasePosition = Vector2( -25.0F , 20.0F );
-const Vector2 kTotalPosition = Vector2( 190.0F , 32.0F );
+const float kAddScoreCreateLine = 200.0F;
+//位置
+const Vector2 kBasePosition = Vector2( -33.0F , 20.0F );
+const Vector2 kTotalPosition = Vector2( 180.0F , 32.0F );
+const Vector2 kComboCircleAnker = Vector2(160 / 2.0F,160 / 2.0F);
+const Vector2 kComboSpriteAnker = Vector2(96 / 2.0F,38 / 2.0F + 20.0F);
+//切り取り
 const RECT kBaseTrim = { 0 , 0 , 300 , 256 };
-const int kComboResetTime = 3;
+const RECT kComboCircleTrim = {0,0,160,160};
+const RECT kComboSpriteTrim = { kComboCircleTrim.right,kComboCircleTrim.top,256,38};
+//定数
+const int kComboResetMilliTime = 1500;
+const float kAddComboScale = 0.2F;
+const float kAddComboSpriteScale = 0.1F;
+const float kDefComboScale = 1.0F / (kComboResetMilliTime / 1000.0F) / (60 - (1.0F / kAddComboScale) / (kComboResetMilliTime / 1000.0F));
+const float kComboSpriteMaxScale = 3.0F;
 
 Scoring::Scoring()
 {}
@@ -34,6 +48,7 @@ bool Scoring::init()
 {
 	texture_ = TextureLoder::getInstance()->load( L"Texture/totalscore_left.png" );
 	num_texture_ = TextureLoder::getInstance()->load( L"Texture/result_score.png" );
+	combo_texture_ = TextureLoder::getInstance()->load(L"Texture/combo.png");
 	add_num_texture_[kScore] = TextureLoder::getInstance()->load(L"Texture/Rank_number.png");
 	//add_num_texture_[kCombo] = TextureLoder::getInstance()->load( L"Texture/" );
 	//add_num_texture_[kHeight] = TextureLoder::getInstance()->load( L"Texture/" );
@@ -49,7 +64,9 @@ bool Scoring::init()
 	all_height_ = 0.0F;
 	level_ = 1;
 	scoring_flag_ = false;
-
+	isexp_now_ = false;
+	combo_circle_scale_ = 0.0F;
+	combo_sprite_scale_ = 0.0F;
 	return true;
 }
 
@@ -59,8 +76,7 @@ void Scoring::update()
 	int itr_num = 0;
 	for( const auto& itr : addition_list_ )
 	{
-		//マジックナンバー
-		itr.get()->update( 200.0F + itr_num * kMinNumHeight );
+		itr.get()->update(kAddScoreCreateLine + itr_num * kMinNumHeight );
 
 		if( !itr.get()->isAlive() )
 			delete_flag_ = true;
@@ -71,8 +87,30 @@ void Scoring::update()
 	if( delete_flag_ )
 		addition_list_.pop_back();
 
-	if (kComboResetTime - combo_timer_.getCount() == 0)
+	if (kComboResetMilliTime - combo_timer_.getCount() <= 0)
 		combo_ = 0;
+
+	if (isexp_now_)
+	{
+		if (combo_circle_scale_ < 1.0F)
+		{
+			combo_circle_scale_ += kAddComboScale;
+			combo_sprite_scale_ += kAddComboScale;
+		}
+		else
+			isexp_now_ = false;
+	}
+	else
+	{
+		if (combo_circle_scale_ > 0.0F)
+		{
+			combo_circle_scale_ -= kDefComboScale;
+			if (combo_sprite_scale_ < kComboSpriteMaxScale)
+				combo_sprite_scale_ += kAddComboSpriteScale;
+		}
+		else
+			combo_circle_scale_ = 0.0F;
+	}
 }
 
 //描画
@@ -123,6 +161,12 @@ void Scoring::draw()
 		temp_ /= 10;
 	} while( temp_ > 0ULL );
 
+	//コンボエフェクトの描画
+	if (!player_jump_now_flag_)
+	{
+		Sprite::getInstance()->reserveDraw(combo_texture_, player_position_, kComboCircleTrim, 1.0F, 0.76F, Vector2(combo_circle_scale_, combo_circle_scale_), 0.0F, kComboCircleAnker);
+		Sprite::getInstance()->reserveDraw(combo_texture_, player_position_, kComboSpriteTrim, 1.0F - (combo_sprite_scale_ / kComboSpriteMaxScale), 0.76F, Vector2(combo_sprite_scale_, combo_sprite_scale_), 0.0F, kComboSpriteAnker);
+	}
 
 	//加点の描画
 	for( const auto& itr : addition_list_ )
@@ -135,6 +179,7 @@ void Scoring::destroy()
 	TextureLoder::getInstance()->release( texture_ );
 	TextureLoder::getInstance()->release( num_texture_ );
 	TextureLoder::getInstance()->release( add_num_texture_[kScore] );
+	TextureLoder::getInstance()->release( combo_texture_ );
 	//TextureLoder::getInstance()->release( add_num_texture_[ kCombo ] );
 	//TextureLoder::getInstance()->release( add_num_texture_[ kHeight ] );
 }
@@ -171,9 +216,13 @@ void Scoring::addCombo()
 	if( scoring_flag_ )
 	{
 		combo_++;
+		timeRestart();
 		combo_timer_.start();
 		score_ += static_cast< unsigned long long >( combo_ ) * static_cast< unsigned long long >( kComboScore )* static_cast< unsigned long long >( level_ );
 		createNumber( combo_ * kComboScore * level_ , add_num_texture_[ kScore ] );
+		isexp_now_ = true;
+		combo_circle_scale_ = 0.0F;
+		combo_sprite_scale_ = 0.0F;
 	}
 
 	if( combo_ > max_combo_ )

@@ -231,6 +231,8 @@ void Player::draw()
 
 	Sprite::getInstance()->reserveDraw(texture_, myshape_.position, trim, 1.0F, 0.77F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kPlayerSize / 2.0F, kPlayerSize / 2.0F));
 
+	score_.setPlayerPosition(myshape_.position);
+	score_.setPlayerJampFlag(flag_.test(Flag::kJump));
 	score_.draw();
 }
 
@@ -299,6 +301,8 @@ void Player::collision(Star * StarObj)
 		else
 			score_.resettechnique();
 	}
+	else
+		score_.timeRestart();
 	base_angle_ = revision_angle_;
 	died_flag_ ? owner_ = nullptr : owner_ = StarObj;
 	now_amount_ = 0.0F;
@@ -408,6 +412,8 @@ void Player::inputjump()
 		ground_ = &kGround;
 		prev_jump_moveamount_ = 0.0F;
 		score_.resetRotate();
+		score_.timeStop();
+		score_.timeStop();
 	}
 }
 
@@ -567,10 +573,10 @@ bool Player::diedEffect()
 		s_particle_container_.get()->destroy();
 
 		//死亡時のパーティクル( 衝突時のものを流用( Scale 2.0F ) )を生成
-		g_particle_container_->addParticle(Vector2(myshape_.position.x, getWindowHeight<float>()), XMConvertToRadians(45), NameSpaceParticle::ParticleID::kCyan, 2.0F);
-		g_particle_container_->addParticle(Vector2(myshape_.position.x, getWindowHeight<float>()), XMConvertToRadians(75), NameSpaceParticle::ParticleID::kMagenta, 2.0F);
-		g_particle_container_->addParticle(Vector2(myshape_.position.x, getWindowHeight<float>()), XMConvertToRadians(105), NameSpaceParticle::ParticleID::kWall, 2.0F);
-		g_particle_container_->addParticle(Vector2(myshape_.position.x, getWindowHeight<float>()), XMConvertToRadians(135), NameSpaceParticle::ParticleID::kYellow, 2.0F);
+		g_particle_container_->addParticle(myshape_.position, XMConvertToRadians(45), NameSpaceParticle::ParticleID::kCyan, 2.0F);
+		g_particle_container_->addParticle(myshape_.position, XMConvertToRadians(75), NameSpaceParticle::ParticleID::kMagenta, 2.0F);
+		g_particle_container_->addParticle(myshape_.position, XMConvertToRadians(105), NameSpaceParticle::ParticleID::kWall, 2.0F);
+		g_particle_container_->addParticle(myshape_.position, XMConvertToRadians(135), NameSpaceParticle::ParticleID::kYellow, 2.0F);
 		died_flag_ = true;
 
 		score_.stop();
