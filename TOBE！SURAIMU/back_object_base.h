@@ -5,6 +5,8 @@
 
 #include "object_base.h"
 
+class FailWall;
+
 class BackObjectBase
     : public ObjectBase
 {
@@ -20,15 +22,19 @@ public :
     virtual ~BackObjectBase() = default;
 
     virtual bool init( const Vector2& Position, const Color Colro ) = 0;
-    virtual void draw() override = 0;
 
-    virtual void setMove( const float ) override = 0;
-    virtual bool isAlive() override = 0;
-
+    virtual bool isAlive() override { return is_alive_; }
+    virtual const Vector2& getPosition() const override { return position_; }
+    virtual void setMove( const float Distance ) override { position_.y += Distance; };
     virtual void setColor( const Color Color ) { color_ = Color; }
+    void setFailWall( FailWall* const FailWall ) { fail_wall_ = FailWall; }
 
 
 protected :
+    FailWall *fail_wall_ = nullptr;
+
     ID3D11ShaderResourceView *texture_ = nullptr;
+    Vector2 position_;
     Color color_ = kPurple;
+    bool is_alive_ = false;
 };

@@ -160,7 +160,7 @@ void Progress::setMove( const float Dist )
 
 // public
 /*===========================================================================*/
-// ステージの変更を受け取る
+// スクロール用初期化処理
 void Progress::scrollInit()
 {
     scroll_sin_ = kScrollSinMinDeg;

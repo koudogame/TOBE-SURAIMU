@@ -6,7 +6,7 @@
 #include "object_base.h"
 #include "back_object_base.h"
 
-
+class FailWall;
 class ViewMist;
 class ViewStarMini;
 class ViewStarBig;
@@ -22,10 +22,11 @@ public:
 
     ~Background();
 
-    bool init()    override;
+    bool init();
     void destroy() override;
     void update()  override;
     void draw()    override;
+    void setFailWall( FailWall* const FailWall ) { fail_wall_ = FailWall; }
     void setMove( const float Offset ) override;
     void changeColor();
     void reset();
@@ -39,6 +40,8 @@ private:
     bool isCreateWave() const;
     bool updateWave();
 
+
+    FailWall *fail_wall_ = nullptr;
 
     std::vector<ViewMist*>     mist_list_;
     std::vector<ViewMist*>     mist_free_;

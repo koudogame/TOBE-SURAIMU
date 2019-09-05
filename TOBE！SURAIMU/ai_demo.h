@@ -40,4 +40,6 @@ private:
 
     Sercher *sercher_ = nullptr;
     Star    *target_ = nullptr;
+
+    Vector2 last_position_;
 };

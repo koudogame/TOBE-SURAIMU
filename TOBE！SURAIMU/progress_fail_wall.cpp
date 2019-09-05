@@ -17,6 +17,7 @@
 static constexpr wchar_t kTextureFile[] = L"Texture/progress.png";
 static constexpr RECT    kTrimming = { 70, 0L, 140L, 720L };
 static constexpr float   kDrawDepth = 10.2F;
+static constexpr Vector2 kDrawAdjust { 0.0F, -50.0F };
 
 
 // Ctor, Dtor
@@ -81,7 +82,7 @@ void ProgressFailWall::draw()
 {
     Sprite::getInstance()->reserveDraw(
         texture_,
-        position_,
+        position_ + kDrawAdjust,
         kTrimming,
         1.0F, // alpha
         kDrawDepth

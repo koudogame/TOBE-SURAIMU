@@ -214,7 +214,6 @@
     <ClInclude Include="textureLoder.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="title_object.h" />
-    <ClInclude Include="view_background_base.h" />
     <ClInclude Include="view_mist.h" />
     <ClInclude Include="view_star_big.h" />
     <ClInclude Include="view_star_mini.h" />
@@ -280,7 +279,6 @@
     <ClCompile Include="textureLoder.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="title_object.cpp" />
-    <ClCompile Include="view_background_base.cpp" />
     <ClCompile Include="view_mist.cpp" />
     <ClCompile Include="view_star_big.cpp" />
     <ClCompile Include="view_star_mini.cpp" />

@@ -4,6 +4,10 @@
 #include "view_star_mini.h"
 
 #include "textureLoder.h"
+#include "sprite.h"
+#include "collision.h"
+
+#include "fail_wall.h"
 
 /*===========================================================================*/
 static constexpr wchar_t kTextureFileName[] = { L"Texture/background.png" };
@@ -14,7 +18,7 @@ static constexpr RECT    kTrimming[] =
     { 1800L,    0L, 2700L,  900L }, // red
 };
 static constexpr float kDrawDepth = 0.1F;
-static constexpr float kScrollSpeed = 0.5F;
+static constexpr float kScrollSpeed = 0.25F;
 
 
 static constexpr long kWidth  = 900L;
@@ -51,6 +55,7 @@ bool ViewStarMini::init( const Vector2& Position, const Color Color )
     // ÇªÇÃëºÉÅÉìÉoèâä˙âª
     color_ = Color;
     position_ = Position;
+    is_alive_ = true;
 
     return true;
 }
@@ -66,10 +71,35 @@ void ViewStarMini::destroy()
 // çXêVèàóù
 void ViewStarMini::update()
 {
-    ViewBase::scroll( kScrollSpeed );
+    position_.y += kScrollSpeed;
+
+
+    if (fail_wall_)
+    {
+        if (Collision::getInstance()->collision(this, fail_wall_))
+        {
+            is_alive_ = false;
+        }
+    }
+    else
+    {
+        if (position_.y > getWindowHeight<float>())
+        {
+            is_alive_ = false;
+        }
+    }
 }
 // ï`âÊèàóù
 void ViewStarMini::draw()
 {
-    ViewBase::draw( kTrimming[color_], kDrawDepth );
+    if( position_.y < getWindowHeight<float>() )
+    {
+        Sprite::getInstance()->reserveDraw(
+            texture_,
+            position_,
+            kTrimming[color_],
+            1.0f, // alpha
+            kDrawDepth
+        );
+    }
 }
