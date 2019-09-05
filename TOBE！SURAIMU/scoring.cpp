@@ -17,11 +17,11 @@ const int kNumHeight = 32;
 const int kMinNumWidth = 10;
 const int kMinNumHeight = 14;
 const float kScoreHeight = 50.0F;
-const float kAddScoreCreateLine = 200.0F;
+const float kAddScoreCreateLine = 175.0F;
 const float kIntervalHeight = 2.0F;
 //à íu
-const Vector2 kBasePosition = Vector2(-33.0F, 20.0F);
-const Vector2 kTotalPosition = Vector2(180.0F, 32.0F);
+const Vector2 kBasePosition = Vector2(-23.0F, 20.0F);
+const Vector2 kTotalPosition = Vector2(190.0F, 32.0F);
 const Vector2 kComboCircleAnker = Vector2(160 / 2.0F, 160 / 2.0F);
 const Vector2 kComboSpriteAnker = Vector2(96 / 2.0F, 38 / 2.0F + 20.0F);
 //êÿÇËéÊÇË
