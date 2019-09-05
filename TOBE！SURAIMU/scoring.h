@@ -53,6 +53,8 @@ public:
 	inline unsigned long long getScore() { return score_; }
 	//最大コンボ数の取得
 	inline unsigned int getMaxCombo() { return max_combo_; }
+	//現在のコンボ数を取得
+	inline unsigned int getCombo() { return combo_; }
 	//上った距離の取得
 	inline double getHeight() { return height_; }
 	//プレイヤーの位置を保持
@@ -79,13 +81,7 @@ private:
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
 	ID3D11ShaderResourceView* num_texture_;
 	ID3D11ShaderResourceView* combo_texture_;		//コンボエフェクト用テクスチャ
-	enum
-	{
-		kScore,
-		kCombo,
-		kHeight,
-	};
-	ID3D11ShaderResourceView* add_num_texture_[ 3 ];	//数字のテクスチャ
+	ID3D11ShaderResourceView* add_num_texture_;	//数字のテクスチャ
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
 	unsigned int level_;							//ゲームレベル
 

@@ -12,6 +12,7 @@
 #include "ai_demo.h"
 #include "sercher.h"
 #include "fail_wall.h"
+#include "back_object_base.h"
 
 class Player;
 class Star;
@@ -52,6 +53,9 @@ public:
 	bool collision(Star* S, FailWall* FW);
 	inline bool collision(FailWall* FW, Player* P) { return  collision(P, FW); }
 	inline bool collision(FailWall* FW, Star* S) { return collision(S, FW); }
+	//”wŒi‘ÎŽ€–Sƒ‰ƒCƒ“
+	bool collision(BackObjectBase* Back, FailWall* FW);
+	inline bool collision(FailWall* FW, BackObjectBase* Back) { return collision(Back, FW); }
 
 
 private:

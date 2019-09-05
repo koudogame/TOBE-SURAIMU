@@ -51,6 +51,7 @@ bool Direct3D::init( const HWND hWnd )
         return false;
     }
 #else
+	sc.Windowed = false;
     //  各種インターフェイスを作成
     if( FAILED( D3D11CreateDeviceAndSwapChain(
         NULL,                               //  DXGIアダプター

@@ -94,7 +94,7 @@ void Dinput::setState(GamePad::State * State)
 	State->buttons.menu = state_.rgbButtons[9] & 0x80;
 	State->buttons.view = state_.rgbButtons[8] & 0x80;
 	State->buttons.leftShoulder = state_.rgbButtons[4] & 0x80;
-	State->buttons.rightShoulder = state_.rgbButtons[6] & 0x80;
+	State->buttons.rightShoulder = state_.rgbButtons[5] & 0x80;
 	State->buttons.leftStick = state_.rgbButtons[10] & 0x80;
 	State->buttons.rightStick = state_.rgbButtons[11] & 0x80;
 

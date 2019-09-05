@@ -167,7 +167,7 @@ SceneBase* Ranking::update()
 		addMagnification( &magnification_ );
 	}
 	// 下長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
-	else if( key_state.Down || 
+	else if( key_state.Down ||
              pad_state.IsLeftThumbStickDown() ||
              pad_state.dpad.down )
 	{
