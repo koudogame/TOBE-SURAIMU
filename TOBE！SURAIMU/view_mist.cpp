@@ -4,6 +4,7 @@
 #include "view_mist.h"
 
 #include "textureLoder.h"
+#include "sprite.h"
 
 // ’è”
 /*===========================================================================*/
@@ -67,10 +68,19 @@ void ViewMist::destroy()
 // XVˆ—
 void ViewMist::update()
 {
-    ViewBase::scroll( kScrollSpeed );
+    position_.y += kScrollSpeed;
 }
 // •`‰æˆ—
 void ViewMist::draw()
 {
-    ViewBase::draw( kTrimming[color_], kDrawDepth );   
+    if( position_.y < getWindowHeight<float>() )
+    {
+        Sprite::getInstance()->reserveDraw(
+            texture_,
+            position_,
+            kTrimming[color_],
+            1.0F, // alpha
+            kDrawDepth
+        );
+    }
 }

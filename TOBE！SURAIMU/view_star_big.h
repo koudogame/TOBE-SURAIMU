@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include "view_background_base.h"
+#include "back_object_base.h"
 
 class ViewStarBig
-    : public ViewBase
+    : public BackObjectBase
 {
 public:
     ViewStarBig();

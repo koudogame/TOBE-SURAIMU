@@ -18,6 +18,7 @@
 #include "wall.h"
 #include "fail_wall.h"
 #include "star_container.h"
+#include "progress.h"
 // ‘JˆÚæ
 #include "title.h"
 
@@ -55,7 +56,7 @@ constexpr long long kDemoPlayTimeSc = 30LL; // ƒfƒ‚ƒvƒŒƒCŠÔ@(’PˆÊ : •b)
 constexpr long long kEndTimeSc      = 1LL;  // I—¹AˆÃ“]ŠÔ(’PˆÊ : •b)
 constexpr long long kDemoTimeSc = kStartTimeSc + kDemoPlayTimeSc + kEndTimeSc;  // ƒV[ƒ“‚Ì‡ŒvŠÔ
 const RECT kRangeOfScreen { 0L, 0L, 1280L, 720L };
-constexpr float kDepth = 10.0F;
+constexpr float kDepth = 100.0F;
 constexpr float kAmountOfAlphaForIn  = 0.01F;       // ƒtƒF[ƒhƒCƒ“A@ƒAƒ‹ƒtƒ@’l•Ï‰»—Ê
 constexpr float kAmountOfAlphaForOut = 0.10F;       // ƒtƒF[ƒhƒAƒEƒgAƒAƒ‹ƒtƒ@’l•Ï‰»—Ê
 
@@ -64,12 +65,14 @@ constexpr StarState kInitStarState[kInitStarNum] =  // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ
 {
     { {640.0F, 600.0F}, 90.0F, -3.0F, 0.2F,  80.0F },
     { {816.0F, 297.0F}, 90.0F,  3.0F, 0.2F, 100.0F },
-    { {468.0F, 92.0F}, 90.0F,  3.0F, 0.2F, 100.0F }
+    { {468.0F, 142.0F}, 90.0F,  3.0F, 0.2F, 100.0F }
 };
 constexpr float kScrollThresholdUp   = getWindowHeight<float>() * 0.10F;
 constexpr float kScrollThresholdDown = getWindowHeight<float>() * 0.90F;
 
 constexpr Vector2 kInitPlayerPosition { 600.0F, 565.0F };
+
+constexpr float kStageHeight = 7200.0F;
 
 /*===========================================================================*/
 Demo::Demo()
@@ -108,6 +111,10 @@ bool Demo::init()
     stars_ = new StarContainer();
     setStarPattern();
 
+    // is“x
+    progress_ = new Progress();
+    if( progress_->init(kStageHeight, ai_, fail_wall_) == false ) { return false; } 
+
     for( int i = 0; i < kInitStarNum; ++i )
     {
     // ‰ŠúƒXƒ^[‚Ì’Ç‰Á
@@ -140,6 +147,13 @@ bool Demo::init()
 
 void Demo::destroy()
 {
+    if( progress_ )
+    {
+    // is“x‚ÌŠJ•ú
+        progress_->destroy();
+        safe_delete( progress_ );
+    }
+
     if( stars_ )
     {
     // ¯X‚ÌŠJ•ú

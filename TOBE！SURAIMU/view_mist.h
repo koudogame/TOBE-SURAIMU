@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include "view_background_base.h"
+#include "back_object_base.h"
 
 class ViewMist 
-    : public ViewBase
+    : public BackObjectBase
 {
 public:
     ViewMist();

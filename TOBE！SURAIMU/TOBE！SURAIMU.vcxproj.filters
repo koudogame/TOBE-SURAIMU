@@ -281,9 +281,6 @@
     <ClCompile Include="background.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
-    <ClCompile Include="view_background_base.cpp">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClCompile>
     <ClCompile Include="view_wave.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
@@ -485,9 +482,6 @@
     </ClInclude>
     <ClInclude Include="object_base.h">
       <Filter>Project\Game\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="view_background_base.h">
-      <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
     <ClInclude Include="view_mist.h">
       <Filter>Project\Game\Object\Background</Filter>

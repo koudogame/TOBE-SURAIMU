@@ -55,11 +55,7 @@ bool AIDemo::init( const Vector2& Position, const int No )
 
 
     // 検索範囲初期化
-    if( sercher_ == nullptr )
-    {
-        sercher_ = new Sercher();
-    }
-
+    if( sercher_ == nullptr ) { sercher_ = new Sercher(); }
     if( sercher_->init(kSerchRange.position, kSerchRange.radius, ObjectID::kStar) == false )
     {
         return false;
@@ -68,6 +64,7 @@ bool AIDemo::init( const Vector2& Position, const int No )
 
     // その他のメンバ初期化
     target_      = nullptr;
+    last_position_ = getPosition();
 
 
     return true;
@@ -90,7 +87,7 @@ void AIDemo::update()
     setPurposeStar();
 
 
-
+    last_position_ = getPosition();
     Player::update();
 }
 
@@ -124,7 +121,7 @@ bool AIDemo::isJump()
     // ターゲットがあるか
     if( target_ != nullptr )
     {
-        // 目的との角度が一定の範囲内か
+        // 目的との角度が一定の範囲内かつ上側か
         const Vector2& this_position = getPosition();
         const Vector2& tar_position  = target_->getPosition();
         float direction_angle = toDegrees( revision_angle_ + XM_PI );
@@ -210,12 +207,7 @@ bool AIDemo::isMoveDown()
 // 目的となるスターを設定する
 void AIDemo::setPurposeStar()
 {
-    // 範囲内にスターが無かったら終了
-    if( sercher_->getList().size() <= 0 ) 
-    {
-        target_ = nullptr;
-        return; 
-    }
+    
 
     // 現在のターゲットが、炎と衝突していたらリセット
     if( target_ != nullptr && target_->isAlive() == false )
@@ -223,28 +215,35 @@ void AIDemo::setPurposeStar()
         target_ = nullptr;
     }
 
+    // 範囲内にスターが無かったら終了
+    if( sercher_->getList().size() <= 0 ) 
+    {
+        target_ = nullptr;
+        return; 
+    }
     
-    // 条件に応じて目的のスターを設定する
-    Star* target = target_;
+    // 条件に応じてターゲットを設定する
     if( !Player::isJump() )
     {
-        // 接地
-        target = getTargetForStaying();
+        // 接地中
+        target_ = getTargetForStaying();
     }
     else
     {
-        // 空中
+        // 上昇中
+        if( getPosition().y < last_position_.y )
+        {
+            target_ = getTargetForJumping();
+        }
+        // 下降中
+        else
+        {
+            target_ = getTargetForFalling();
+        }
     }
-
-
-    // ターゲットを設定
-    target_ = target;
 }
 // ターゲットの取得( 接地中 )
 // 範囲内にスターがある前提で処理を行う
-//
-// 範囲内のスターで、最も距離のあるものをターゲットとする
-// 現在の座標より下にあるものは、ターゲットとしない
 Star* AIDemo::getTargetForStaying()
 {
     // 条件式ラムダ
@@ -298,4 +297,14 @@ Star* AIDemo::getTargetForStaying()
     }
 
     return reinterpret_cast<Star*>(target);
+}
+// ターゲットの取得( ジャンプ(上昇中) )
+Star* AIDemo::getTargetForJumping() const
+{
+    return target_;
+}
+// ターゲットの取得( 落下中 )
+Star* AIDemo::getTargetForFalling() const
+{
+    return target_;
 }

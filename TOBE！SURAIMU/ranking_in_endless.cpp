@@ -16,7 +16,9 @@
 constexpr float kWindowWidth  = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
 
-constexpr long kNumberWidth               = 11L;                        // 数字横幅
+constexpr long kNumberWidth               = 10L;                        // 数字横幅
+constexpr long kNumberHeight              = 14L;                        // 数字横幅
+constexpr float kNumberInterval           = 1.0F;                       // 数字間隔
 constexpr long kCharacterWidth            = 12L;                        // 文字横幅
 constexpr long kTextHeight                = 16L;                        // テキスト縦幅
 constexpr long kPlayerRankWidth           = 20L;                        // プレイヤーランク横幅
@@ -69,7 +71,7 @@ bool RankingInEndless::init()
     texture_bar_                 = kLoader->load(L"Texture/mini_ranking_bar.png");
     if( texture_bar_             == nullptr ) { return false; }
 
-    texture_number_              = kLoader->load(L"Texture/Rank_Number.png");
+    texture_number_              = kLoader->load(L"Texture/ranking_Number.png");
     if( texture_number_          == nullptr ) { return false; }
 
     texture_number_forplayer_    = kLoader->load(L"Texture/play_rank_2.png");
@@ -232,7 +234,7 @@ void RankingInEndless::drawData(
     else
     {
         Text::drawNumber( Data.rank,
-            texture_number_, Position, kNumberWidth, kTextHeight, 1U, Alpha, 0.0F, kTextDepth );
+            texture_number_, Position, kNumberWidth, kNumberHeight, 1U, Alpha, kNumberInterval, kTextDepth );
     }
 
     // 名前
@@ -243,7 +245,7 @@ void RankingInEndless::drawData(
     // スコア
     Position.x = kDrawPositionXScore;
     Text::drawNumber( Data.score,
-        texture_number_, Position, kNumberWidth, kTextHeight, kScoreDigits, Alpha, 0.0F, kTextDepth );
+        texture_number_, Position, kNumberWidth, kNumberHeight, kScoreDigits, Alpha, kNumberInterval, kTextDepth );
 
     // 下線
     Position.x = kBarPositionX;
