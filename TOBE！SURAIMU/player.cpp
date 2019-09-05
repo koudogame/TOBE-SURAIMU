@@ -41,6 +41,13 @@ constexpr float kReboundBasePower = 1.0F;		                //プレイヤーの反発力
 constexpr float kReboundDecay = 0.05F;			                //プレイヤーの反発力の減衰量
 constexpr float kMaxChangeAngle = XMConvertToRadians(70);		//左右の最大変角度
 
+
+const float kMaxAccDia[] = {
+	1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,
+	1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,
+	1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F
+};
+
 //コンストラクタ
 Player::Player()
 {
@@ -152,7 +159,7 @@ void Player::update()
 
 	//ジャンプ量を増やす
 	if (flag_.test(Flag::kJump))
-		now_amount_ += kAddVolume;
+		now_amount_ += kAddVolume * kMaxAccDia[score_.getCombo() >= (sizeof(kMaxAccDia) / sizeof(float)) ? (sizeof(kMaxAccDia) / sizeof(float)) - 1 : score_.getCombo()];
 
 	if (now_amount_ >= 1.0F)
 		now_amount_ = 1.0F;
@@ -545,7 +552,10 @@ void Player::addFreeFallParticle()
 		{
 			Vector2 create_position = myshape_.position - nomal * static_cast<float>(i) * kParticleInterval;
 			//ジャンプ時のパーティクル生成
-			f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayer, 20.0F, false, XMConvertToDegrees(angle));
+			if (score_.getCombo() > 0)
+				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerNowCombo, 20.0F, false, XMConvertToDegrees(angle));
+			else
+				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerNonCombo, 20.0F, false, XMConvertToDegrees(angle));
 		}
 	}
 	else

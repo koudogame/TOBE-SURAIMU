@@ -12,8 +12,8 @@
 
 /*===========================================================================*/
 constexpr float kLimitYUp   = getWindowHeight<float>() * 0.00F;
-constexpr float kLimitYDown = getWindowHeight<float>() * 1.50F;
-const Line kInitPosition { 250.0F, kLimitYDown, 1030.0F, kLimitYDown };
+constexpr float kLimitYDown = getWindowHeight<float>() * 100.0F;
+const Line kInitPosition { 250.0F, getWindowHeight<float>() * 1.5F, 1030.0F, getWindowHeight<float>() * 1.5F };
 constexpr float kStartSpeed = -0.1F;
 constexpr float kMagnificationSpeed = 1.5F;
 constexpr float kScrollSpeedTable[] = 

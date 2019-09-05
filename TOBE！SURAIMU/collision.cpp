@@ -342,6 +342,13 @@ bool Collision::collision(Star * S, FailWall * FW)
 	return true;
 }
 
+bool Collision::collision(BackObjectBase * Back, FailWall* FW)
+{
+	if (FW->getShape()->start.y < Back->getPosition().y)
+		return true;
+	return false;
+}
+
 
 //ŠO•”ŒöŠJŠÖ” End
 //----------------------------------------------------------------------------------------
