@@ -44,8 +44,8 @@ constexpr float kMaxChangeAngle = XMConvertToRadians(70);		//左右の最大変角度
 
 const float kMaxAccDia[] = {
 	1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,
-	1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,
-	1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F
+	1.1F,1.1F,1.1F,1.2F,1.2F,1.3F,1.3F,1.4F,1.4F,1.5F,
+	1.5F,1.6F,1.6F,1.6F,1.7F,1.7F,1.7F,1.8F,1.9F,2.0F
 };
 
 //コンストラクタ
@@ -552,10 +552,13 @@ void Player::addFreeFallParticle()
 		{
 			Vector2 create_position = myshape_.position - nomal * static_cast<float>(i) * kParticleInterval;
 			//ジャンプ時のパーティクル生成
-			if (score_.getCombo() > 0)
-				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerNowCombo, 20.0F, false, XMConvertToDegrees(angle));
+			unsigned int now_combo = score_.getCombo();
+			if (now_combo < 10)
+				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerLowCombo, 20.0F, false, XMConvertToDegrees(angle));
+			else if(now_combo < 20)
+				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerMiddleCombo, 20.0F, false, XMConvertToDegrees(angle));
 			else
-				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerNonCombo, 20.0F, false, XMConvertToDegrees(angle));
+				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerHiCombo, 20.0F, false, XMConvertToDegrees(angle));
 		}
 	}
 	else
