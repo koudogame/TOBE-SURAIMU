@@ -55,6 +55,10 @@ public:
 	inline unsigned int getMaxCombo() { return max_combo_; }
 	//上った距離の取得
 	inline double getHeight() { return height_; }
+	//プレイヤーの位置を保持
+	inline void setPlayerPosition(const Vector2& Posit) { player_position_ = Posit; }
+	//プレイヤーのジャンプフラグを格納
+	inline void setPlayerJampFlag(const bool Jump) { player_jump_now_flag_ = Jump; }
 
 
 	//メンバ変数
@@ -67,8 +71,14 @@ private:
 	unsigned int technique_combo_;					//テクニックコンボ
 	float rotation_;	                            //回転量
 	bool scoring_flag_;					            //スコアリング有効フラグ
+	float combo_circle_scale_;						//コンボ円用拡縮値
+	float combo_sprite_scale_;						//コンボ文字用拡縮値
+	Vector2 player_position_;						//プレイヤーのposition
+	bool player_jump_now_flag_;						//プレイヤーがジャンプ中かのフラグ
+	bool isexp_now_;								//拡大中かのフラグ
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
 	ID3D11ShaderResourceView* num_texture_;
+	ID3D11ShaderResourceView* combo_texture_;		//コンボエフェクト用テクスチャ
 	enum
 	{
 		kScore,
@@ -82,7 +92,7 @@ private:
 	double all_height_;								//減衰までの上昇値
 
 	std::list<std::shared_ptr<ScoreNumber>> addition_list_;			//加点リスト
-	Timer<Seconds> combo_timer_;
+	Timer<Milliseconds> combo_timer_;
 
 private:
 	//描画加点の生成

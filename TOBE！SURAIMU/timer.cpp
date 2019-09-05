@@ -22,6 +22,7 @@ template <typename T>
 void Timer<T>::start()
 {
 	start_ = Clock::now();
+	count_ = 0LL;
 }
 
 /*===========================================================================*/
