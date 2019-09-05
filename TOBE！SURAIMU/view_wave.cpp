@@ -84,7 +84,6 @@ bool ViewWave::init( const Vector2& Position, const Color Color )
     // ‚»‚Ì‘¼ƒƒ“ƒo‚Ì‰Šú‰»
     effect_ = &ViewWave::effectFadeOut;
     position_ = Position;
-    color_ = Color;
     offset_ = kOffset;
     if( rand() % 2 ) { offset_.x *= -1.0F; }    // 2•ª‚Ì1‚ÌŠm—¦‚Å¶•ûŒü‚É‚·‚é
     pattern_id_ = rand() % kPatternNum;
