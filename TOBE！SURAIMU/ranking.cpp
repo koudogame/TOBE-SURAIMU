@@ -284,7 +284,7 @@ void Ranking::draw()
 
 
     // ƒtƒŒ[ƒ€‚Ì•`‰æ
-	kSprite->reserveDraw( texture_ , kPosition[ kFrame ] , kTrimming[ kFrame ] , 1.0F , kFrameDepth );
+	kSprite->reserveDraw( texture_, kPosition[kFrame], kTrimming[kFrame], 1.0F, kFrameDepth );
 }
 
 

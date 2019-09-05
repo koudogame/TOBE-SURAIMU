@@ -27,9 +27,11 @@ static const Circle kSerchRange
 
 static constexpr int   kJumpPercentageDenominator = 2;
 static constexpr float kJumpReach = 380.0F;
-static constexpr float kJumpAngle = 5.0F;
+static constexpr float kJumpAngle = 10.0F;
 
 static constexpr float kSquatAngle = 45.0F;
+
+static constexpr float kJumpingMoveRange = 150.0F;
 
 
 // Ctor, Dtor
@@ -127,8 +129,12 @@ bool AIDemo::isJump()
         const Vector2& tar_position  = target_->getPosition();
         float direction_angle = toDegrees( revision_angle_ + XM_PI );
         float between_angle = toDegrees(Calc::angle(tar_position - this_position) );
+        float delta_angle = direction_angle - between_angle;
 
-        if( std::abs(direction_angle - between_angle) <= kJumpAngle )
+        if( this_position.x < tar_position.x ?
+                              (delta_angle >= 0.0F && delta_angle <= kJumpAngle) :
+                              (delta_angle <= 0.0F && delta_angle >= -kJumpAngle)
+          )
         {
             // 一定の確率で
             if( !(rand() % kJumpPercentageDenominator) )
@@ -145,17 +151,51 @@ bool AIDemo::isJump()
 // 左に移動するか判定
 bool AIDemo::isMoveLeft()
 {
-    // ジャンプ中かつなら
-    if( isJump() )
-    {
-
-    }
+    // ジャンプ中なら
+   if( Player::isJump() )
+   {
+       // ターゲットがあれば
+       if( target_ != nullptr )
+       {
+           const Vector2& tar_posi = target_->getPosition();
+           const Vector2& this_posi= this->getPosition();
+           // ターゲットが自分よりも左に位置していたら
+           if( tar_posi.x + target_->getSize() < this_posi.x )
+           {
+               // ターゲットとの距離が移動可能距離内なら
+               if( Calc::magnitude( tar_posi, this_posi ) <= kJumpingMoveRange )
+               {
+                   return true;
+               }
+           }
+       }
+   }
 
     return false;
 }
 // 右に移動するか判定
 bool AIDemo::isMoveRight()
 {
+    // ジャンプ中なら
+    if( Player::isJump() )
+    {
+        // ターゲットがあるか
+        if( target_ != nullptr )
+        {
+            const Vector2& tar_posi = target_->getPosition();
+            const Vector2& this_posi= this->getPosition();
+            // ターゲットが自分よりも右に位置していたら
+            if( tar_posi.x - target_->getSize() > this_posi.x )
+            {
+                // ターゲットとの距離が移動可能範囲内なら
+                if( Calc::magnitude( tar_posi, this_posi ) <= kJumpingMoveRange )
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
     return false;
 }
 // 下に移動するか判定
@@ -185,8 +225,8 @@ void AIDemo::setPurposeStar()
 
     
     // 条件に応じて目的のスターを設定する
-    Star* target = nullptr;
-    if( !isJump() )
+    Star* target = target_;
+    if( !Player::isJump() )
     {
         // 接地
         target = getTargetForStaying();
@@ -213,6 +253,10 @@ Star* AIDemo::getTargetForStaying()
         const Vector2& this_position = getPosition();
         const Vector2& test_position = TestTarget->getPosition();
 
+        // オーナーは不採用
+        ObjectBase* const owner = this->getOwner();
+        if( TestTarget == owner ) { return false; }
+
         // ジャンプの範囲外なら、不採用
         float dist_test = 
             std::pow(this_position.x - test_position.x, 2.0F) +
@@ -220,9 +264,8 @@ Star* AIDemo::getTargetForStaying()
         if( dist_test > std::pow( kJumpReach, 2.0F ) )  { return false; }
 
         // 現在の座標以下にあるものは、不採用
-        ObjectBase* const owner = this->getOwner();
-        if( owner != nullptr &&
-            test_position.y >= owner->getPosition().y ) { return false; }
+        if( (owner != nullptr) &&
+            (test_position.y >= owner->getPosition().y)){ return false; }
 
 
 

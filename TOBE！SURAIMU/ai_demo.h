@@ -15,6 +15,7 @@ class Star;
 // ‰æ–Ê“à‚É‚ ‚éƒXƒ^[‚Ö”ò‚ÑˆÚ‚é
 class AIDemo
     : public AIBase
+
 {
 public:
     AIDemo();

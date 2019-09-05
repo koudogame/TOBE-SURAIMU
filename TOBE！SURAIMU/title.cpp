@@ -270,13 +270,6 @@ SceneBase * Title::selectScene()
 
 	input();
 
-
-    if (key_.pressed.Enter)
-    {
-        scene_ = &Title::DemoScene;
-        return this;
-    }
-
 	if (key_.released.Space ||
 		pad_.a == pad_.RELEASED)
 	{

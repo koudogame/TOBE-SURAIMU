@@ -64,7 +64,7 @@ constexpr StarState kInitStarState[kInitStarNum] =  // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ
 {
     { {640.0F, 600.0F}, 90.0F, -3.0F, 0.2F,  80.0F },
     { {816.0F, 297.0F}, 90.0F,  3.0F, 0.2F, 100.0F },
-    { {468.0F, 142.0F}, 90.0F,  3.0F, 0.2F, 100.0F }
+    { {468.0F, 92.0F}, 90.0F,  3.0F, 0.2F, 100.0F }
 };
 constexpr float kScrollThresholdUp   = getWindowHeight<float>() * 0.10F;
 constexpr float kScrollThresholdDown = getWindowHeight<float>() * 0.90F;
@@ -219,7 +219,7 @@ void Demo::draw()
         texture_,
         Vector2::Zero,
         kRangeOfScreen,
-        0.0F, //alpha_,
+        alpha_,
         kDepth
     );
 }
@@ -352,7 +352,7 @@ void Demo::setStarPattern()
     for( int i = 0;; ++i )
     {
     // ƒtƒ@ƒCƒ‹‚É•Û‘¶‚³‚ê‚Ä‚¢‚éƒpƒ^[ƒ“ƒtƒ@ƒCƒ‹–¼‚ğ’Ç‰Á‚µ‚Ä‚¢‚­
-        pattern_file = file.getString( 0, i );
+        pattern_file = file.getString( i, 0 );
         if( wcscmp(pattern_file.c_str(), L"") == 0 )
         {
         // ƒtƒ@ƒCƒ‹I’[
