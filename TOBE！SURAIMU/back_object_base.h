@@ -5,6 +5,8 @@
 
 #include "object_base.h"
 
+class FailWall;
+
 class BackObjectBase
     : public ObjectBase
 {
@@ -25,9 +27,12 @@ public :
     virtual const Vector2& getPosition() const override { return position_; }
     virtual void setMove( const float Distance ) override { position_.y += Distance; };
     virtual void setColor( const Color Color ) { color_ = Color; }
+    void setFailWall( FailWall* const FailWall ) { fail_wall_ = FailWall; }
 
 
 protected :
+    FailWall *fail_wall_ = nullptr;
+
     ID3D11ShaderResourceView *texture_ = nullptr;
     Vector2 position_;
     Color color_ = kPurple;

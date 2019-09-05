@@ -143,6 +143,7 @@ bool Endless::init()
 	// •Ç‰Šú‰»
 	if (wall_->init() == false) { return false; }
     if( fail_wall_->init() == false ) { return false; }
+    Background::getInstance()->setFailWall( fail_wall_ );
 
     // is“x‰Šú‰»
     if( progress_->init( 7200.0F, player_, fail_wall_ ) == false )
@@ -183,6 +184,7 @@ void Endless::destroy()
     progress_->destroy();              safe_delete(progress_);
 
     fail_wall_->destroy();             safe_delete(fail_wall_);
+    Background::getInstance()->setFailWall( nullptr );
 
 	wall_->destroy();                  safe_delete(wall_);
 

@@ -116,6 +116,7 @@ bool Background::init()
 
     // その他のメンバ初期化
     color_ = BackObjectBase::Color::kPurple;
+    fail_wall_ = nullptr;
 
 
     return true;
@@ -240,39 +241,43 @@ bool Background::updateView( std::vector<T*> *List, std::vector<T*> *Free )
     // リストのオブジェクトに更新をかける
     for( auto& object : *List )
     {
+        object->setFailWall( fail_wall_ );
         object->update();
     }
 
-    // 先頭のオブジェクトは、画面外の可能性があるので判定
+    // 先頭のオブジェクトは、死んでいる可能性があるので判定
     T* top_object = *List->begin();
-    if( top_object->getPosition().y > kViewDeathLine )
+    if( top_object->isAlive() == false )
     {
         List->erase( List->begin() );
         Free->push_back( top_object );
     }
 
     // 最後のオブジェクトが、オフセット分進んだら新しく生成
-    Vector2 last_position = List->back()->getPosition();
-    if( last_position.y > kThresholdCreateViewY )
+    if( List->size() > 0 )
     {
-        T* object = nullptr;
-
-        if( Free->size() > 0 )
+        Vector2 last_position = List->back()->getPosition();
+        if( last_position.y > kThresholdCreateViewY )
         {
-            object = Free->back();
-            Free->pop_back();
+            T* object = nullptr;
+
+            if( Free->size() > 0 )
+            {
+                object = Free->back();
+                Free->pop_back();
+            }
+            else
+            {
+                object = new T();
+            }
+
+
+            if( object->init( kViewPositionInit, color_ ) == false ) {return false;}
+
+            List->push_back( object );
         }
-        else
-        {
-            object = new T();
-        }
-
-
-        if( object->init(kViewPositionInit, color_) == false ) {return false;}
-
-        List->push_back( object );
     }
-
+    
 
     return true;
 }
@@ -296,16 +301,16 @@ bool Background::updateWave()
     // リストのオブジェクトに更新をかける
     for( auto& wave : wave_list_ )
     {
+        wave->setFailWall( fail_wall_ );
         wave->update();
     }
 
 
-    // 先頭のオブジェクトは、画面外の可能性があるので判定する
+    // 先頭のオブジェクトは、死んでいる可能性があるので判定する
     if( wave_list_.size() > 0 )
     {
         ViewWave *top_wave = *wave_list_.begin();
-        Vector2 last_position = top_wave->getPosition();
-        if (last_position.y > kViewDeathLine)
+        if( top_wave->isAlive() == false )
         {
             wave_list_.erase(wave_list_.begin());
             wave_free_.push_back(top_wave);

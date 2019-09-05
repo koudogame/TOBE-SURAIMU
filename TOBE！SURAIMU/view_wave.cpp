@@ -5,6 +5,9 @@
 
 #include "textureLoder.h"
 #include "sprite.h"
+#include "collision.h"
+
+#include "fail_wall.h"
 
 /*
     2つのレイヤーからなる。
@@ -81,10 +84,12 @@ bool ViewWave::init( const Vector2& Position, const Color Color )
     // その他メンバの初期化
     effect_ = &ViewWave::effectFadeOut;
     position_ = Position;
+    color_ = Color;
     offset_ = kOffset;
     if( rand() % 2 ) { offset_.x *= -1.0F; }    // 2分の1の確率で左方向にする
     pattern_id_ = rand() % kPatternNum;
     effect_alpha_ = 1.0F;
+    is_alive_ = true;
 
     return true;
 }
@@ -101,6 +106,22 @@ void ViewWave::destroy()
 void ViewWave::update()
 {
     position_ += offset_;
+    
+
+    if (fail_wall_)
+    {
+        if (Collision::getInstance()->collision(this, fail_wall_))
+        {
+            is_alive_ = false;
+        }
+    }
+    else
+    {
+        if (position_.y > getWindowHeight<float>())
+        {
+            is_alive_ = false;
+        }
+    }
 
     (this->*effect_)();
 }

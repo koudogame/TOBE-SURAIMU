@@ -12,6 +12,7 @@
 #include "key.h"
 #include "pad.h"
 // オブジェクト
+#include "background.h"
 #include "task_manager.h"
 #include "space.h"
 #include "ai_demo.h"
@@ -106,6 +107,7 @@ bool Demo::init()
     // 炎
     fail_wall_ = new FailWall();
     if( fail_wall_->init() == false ) { return false; }
+    Background::getInstance()->setFailWall( fail_wall_ );
 
     // スター管理コンテナ
     stars_ = new StarContainer();
@@ -166,6 +168,8 @@ void Demo::destroy()
     // 炎の開放
         fail_wall_->destroy();
         safe_delete( fail_wall_ );
+
+        Background::getInstance()->setFailWall( nullptr );
     }
 
     if( wall_ )

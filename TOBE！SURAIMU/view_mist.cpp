@@ -5,6 +5,9 @@
 
 #include "textureLoder.h"
 #include "sprite.h"
+#include "collision.h"
+
+#include "fail_wall.h"
 
 // ’è”
 /*===========================================================================*/
@@ -52,6 +55,8 @@ bool ViewMist::init( const Vector2& Position, const Color Color )
     // ‚»‚Ì‘¼ƒƒ“ƒo‰Šú‰»
     color_ = Color;
     position_ = Position;
+    is_alive_ = true;
+
 
     return true;
 }
@@ -69,6 +74,22 @@ void ViewMist::destroy()
 void ViewMist::update()
 {
     position_.y += kScrollSpeed;
+
+
+    if( fail_wall_ )
+    {
+        if( Collision::getInstance()->collision( this, fail_wall_ ) )
+        {
+            is_alive_ = false;
+        }
+    }
+    else
+    {
+        if( position_.y > getWindowHeight<float>() )
+        {
+            is_alive_ = false;
+        }
+    }
 }
 // •`‰æˆ—
 void ViewMist::draw()
