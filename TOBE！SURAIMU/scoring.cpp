@@ -9,8 +9,8 @@ const unsigned int kDownScore = 1;
 const unsigned int kTechniqueScore = 1000;
 const unsigned int kRotationScore = 100;
 const unsigned int kLengthScore = 100;
-const unsigned int kHeightScore = 10;
-const unsigned int kLevelScore = 5000;
+const unsigned int kHeightScore = 100;
+const unsigned int kLevelScore = 50000;
 //サイズ
 const int kNumWidth = 20;
 const int kNumHeight = 32;
@@ -29,11 +29,13 @@ const RECT kBaseTrim = { 0 , 0 , 300 , 256 };
 const RECT kComboCircleTrim = { 0,0,160,160 };
 const RECT kComboSpriteTrim = { kComboCircleTrim.right,kComboCircleTrim.top,256,38 };
 //定数
-const int kComboResetMilliTime = 1500;
+const int kComboResetMilliTime = 2000;
 const float kAddComboScale = 0.2F;
-const float kAddComboSpriteScale = 0.025F;
+const float kAddComboSpriteScale = 0.05F;
 const float kDefComboScale = 1.0F / (kComboResetMilliTime / 1000.0F) / (60 - (1.0F / kAddComboScale) / (kComboResetMilliTime / 1000.0F));
 const float kComboSpriteMaxScale = 2.5F;
+const float kComboAlphaDefThre = 1.0F;
+const float kComnboSpriteAlphaDefVol = 1.0F / ((kComboSpriteMaxScale - kComboAlphaDefThre) / kAddComboSpriteScale);
 
 Scoring::Scoring()
 {}
@@ -43,7 +45,6 @@ Scoring::~Scoring()
 
 //=====================================================
 //外部公開関数( 必ず実行 )
-
 //初期化
 bool Scoring::init()
 {
@@ -66,6 +67,7 @@ bool Scoring::init()
 	isexp_now_ = false;
 	combo_circle_scale_ = 0.0F;
 	combo_sprite_scale_ = 0.0F;
+	combo_alpha_ = 1.0F;
 	return true;
 }
 
@@ -110,8 +112,12 @@ void Scoring::update()
 			if (combo_circle_scale_ > 0.0F)
 			{
 				combo_circle_scale_ -= kDefComboScale;
-				if (combo_sprite_scale_ < kComboSpriteMaxScale&&combo_sprite_scale_ > 0.0F)
+				if (combo_sprite_scale_ < kComboSpriteMaxScale && combo_sprite_scale_ > 0.0F)
+				{
 					combo_sprite_scale_ += kAddComboSpriteScale;
+					if (combo_sprite_scale_ > kComboAlphaDefThre)
+						combo_alpha_ -= kComnboSpriteAlphaDefVol;
+				}
 			}
 			else
 				combo_circle_scale_ = 0.0F;
@@ -175,7 +181,7 @@ void Scoring::draw()
 	if (!player_jump_now_flag_)
 	{
 		Sprite::getInstance()->reserveDraw(combo_texture_, player_position_, kComboCircleTrim, 0.6F, 0.76F, Vector2(combo_circle_scale_, combo_circle_scale_), 0.0F, kComboCircleAnker);
-		Sprite::getInstance()->reserveDraw(combo_texture_, player_position_, kComboSpriteTrim, 1.0F - (combo_sprite_scale_ / kComboSpriteMaxScale), 0.76F, Vector2(combo_sprite_scale_, combo_sprite_scale_), 0.0F, kComboSpriteAnker);
+		Sprite::getInstance()->reserveDraw(combo_texture_, player_position_, kComboSpriteTrim, combo_alpha_, 0.76F, Vector2(combo_sprite_scale_, combo_sprite_scale_), 0.0F, kComboSpriteAnker);
 	}
 
 	//加点の描画
@@ -231,6 +237,7 @@ void Scoring::addCombo()
 		isexp_now_ = true;
 		combo_circle_scale_ = 0.0F;
 		combo_sprite_scale_ = 0.0F;
+		combo_alpha_ = 1.0F;
 	}
 
 	if (combo_ > max_combo_)

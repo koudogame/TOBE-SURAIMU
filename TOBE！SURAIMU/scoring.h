@@ -75,13 +75,14 @@ private:
 	bool scoring_flag_;					            //スコアリング有効フラグ
 	float combo_circle_scale_;						//コンボ円用拡縮値
 	float combo_sprite_scale_;						//コンボ文字用拡縮値
+	float combo_alpha_;
 	Vector2 player_position_;						//プレイヤーのposition
 	bool player_jump_now_flag_;						//プレイヤーがジャンプ中かのフラグ
 	bool isexp_now_;								//拡大中かのフラグ
 	ID3D11ShaderResourceView* texture_;	            //テクスチャ
 	ID3D11ShaderResourceView* num_texture_;
 	ID3D11ShaderResourceView* combo_texture_;		//コンボエフェクト用テクスチャ
-	ID3D11ShaderResourceView* add_num_texture_;	//数字のテクスチャ
+	ID3D11ShaderResourceView* add_num_texture_;		//数字のテクスチャ
 	float spin_combo_pitch_;						//回転コンボのピッチ( コンボがかさむごとに高くなる )
 	unsigned int level_;							//ゲームレベル
 
