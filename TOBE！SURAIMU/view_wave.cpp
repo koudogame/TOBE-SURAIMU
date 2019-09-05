@@ -84,6 +84,7 @@ bool ViewWave::init( const Vector2& Position, const Color Color )
     // その他メンバの初期化
     effect_ = &ViewWave::effectFadeOut;
     position_ = Position;
+    color_ = Color;
     offset_ = kOffset;
     if( rand() % 2 ) { offset_.x *= -1.0F; }    // 2分の1の確率で左方向にする
     pattern_id_ = rand() % kPatternNum;
@@ -133,9 +134,6 @@ void ViewWave::draw()
     // パターン変更
     trimming.top += pattern_id_ * kHeight;
     trimming.bottom = trimming.top + kHeight;
-    // カラー変更
-    trimming.left += color_ * getWidth<long>();
-    trimming.right = trimming.left + getWidth<long>();
 
 
     auto draw = [sprite, trimming, this]( const Vector2& Position )

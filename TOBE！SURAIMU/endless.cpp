@@ -402,6 +402,7 @@ bool Endless::checkAndLoadStage()
         climb_ = 0.0F;
         ++stage_;
         Background::getInstance()->changeColor();
+        fail_wall_->speedUp();
 
         if (stage_ >= kStageNum)
         {
@@ -410,7 +411,6 @@ bool Endless::checkAndLoadStage()
 
             // 周回を知らせる
             player_->addLevel();
-            fail_wall_->levelUp();
         }
 
         // スターの生成パターン変更

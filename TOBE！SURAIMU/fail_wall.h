@@ -20,7 +20,7 @@ public:
     void draw()    override;
 
     void start();
-    void levelUp();
+    void speedUp();
     void setMove( float Displacement ) override;
 
 

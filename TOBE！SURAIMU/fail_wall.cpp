@@ -13,9 +13,9 @@
 /*===========================================================================*/
 constexpr float kLimitYUp   = getWindowHeight<float>() * 0.00F;
 constexpr float kLimitYDown = getWindowHeight<float>() * 100.0F;
-const Line kInitPosition { 250.0F, getWindowHeight<float>() * 1.5F, 1030.0F, getWindowHeight<float>() * 1.5F };
-constexpr float kStartSpeed = -0.1F;
-constexpr float kMagnificationSpeed = 1.5F;
+const Line kInitPosition { 250.0F, getWindowHeight<float>() * 2.5F, 1030.0F, getWindowHeight<float>() * 2.5F };
+constexpr float kStartSpeed = -0.2F;
+constexpr float kMagnificationSpeed = 2.0F;
 constexpr float kScrollSpeedTable[] = 
 {
     0.0F,
@@ -185,7 +185,7 @@ void FailWall::start()
     speed_ = kStartSpeed;
 }
 
-void FailWall::levelUp()
+void FailWall::speedUp()
 {
     speed_ *= kMagnificationSpeed;
 }
