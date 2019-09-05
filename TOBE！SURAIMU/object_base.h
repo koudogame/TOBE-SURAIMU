@@ -43,8 +43,9 @@ namespace NameSpaceParticle
 		kYellow ,
 		kMagenta ,
 		kWall,
-		kPlayerNonCombo,
-		kPlayerNowCombo,
+		kPlayerLowCombo,
+		kPlayerMiddleCombo,
+		kPlayerHiCombo,
 		kNonParticle,
 	};
 }
