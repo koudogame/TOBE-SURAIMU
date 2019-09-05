@@ -22,6 +22,9 @@ public:
     void draw() override;
 
 private:
+    void sort( const int Mode );
+
+
     bool created_ = false;
     ID3D11ShaderResourceView* texture_numbers_ = nullptr;
     ID3D11ShaderResourceView* texture_characters_ = nullptr;
@@ -30,10 +33,10 @@ private:
 
     float magnification_ = 1.0F;
     float offset_ = 0.0F;
-
-	bool sound_flag_;
+    int sort_mode_ = 0;
 
 	//ƒTƒEƒ“ƒh
+	bool sound_flag_;
 	std::unique_ptr<SoundEffectInstance> bgm_;
 	std::unique_ptr<SoundEffectInstance> select_se_;
 	std::unique_ptr<SoundEffectInstance> dicision_se_;
