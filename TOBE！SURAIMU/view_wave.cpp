@@ -134,9 +134,6 @@ void ViewWave::draw()
     // パターン変更
     trimming.top += pattern_id_ * kHeight;
     trimming.bottom = trimming.top + kHeight;
-    // カラー変更
-    trimming.left += color_ * getWidth<long>();
-    trimming.right = trimming.left + getWidth<long>();
 
 
     auto draw = [sprite, trimming, this]( const Vector2& Position )

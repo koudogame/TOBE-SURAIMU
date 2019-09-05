@@ -104,7 +104,7 @@ void ProgressPlayer::draw()
 
 
 
-    Sprite::getInstance()->reserveDraw(
+    /*Sprite::getInstance()->reserveDraw(
         texture_,
         { position_.x, start_line_ },
         kTrimming,
@@ -123,7 +123,7 @@ void ProgressPlayer::draw()
         { 1.0F, 1.0F },
         0.0F,
         kAnkerPoint
-    );
+    );*/
 }
 
 
