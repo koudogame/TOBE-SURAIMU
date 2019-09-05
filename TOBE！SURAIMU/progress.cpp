@@ -27,12 +27,12 @@ static constexpr float kScrollSinChange = 3.0F;
 // プレイヤー用
 static constexpr float   kPlayerStartLine    = 670.0F;
 static constexpr float   kPlayerEndLine      = 50.0F;
-static constexpr Vector2 kPlayerInitPosition { 285.0F, kPlayerStartLine };
+static constexpr Vector2 kPlayerInitPosition { 295.0F, kPlayerStartLine };
 static constexpr float   kPlayerMotionRange  = kPlayerStartLine - kPlayerEndLine;
 // 炎用
-static constexpr Vector2 kFailWallInitPosition { 250.0F, 720.0F };
+static constexpr Vector2 kFailWallInitPosition { 260.0F, 720.0F };
 // ステージ用
-static constexpr Vector2 kStageInitPosition { 250.0F, -1440.0F };
+static constexpr Vector2 kStageInitPosition { 260.0F, -1440.0F };
 static constexpr float   kStageMotionrange   = 720.0F;
 
 

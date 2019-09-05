@@ -12,6 +12,7 @@
 static constexpr wchar_t kTextureFile[] = L"Texture/progress.png";
 static constexpr RECT    kTrimming = { 0L, 0L, 70L, 2160L };
 static constexpr float   kDrawDepth = 10.0F;
+static constexpr float   kOneStageHeight = 720.0F;
 
 
 // Ctor, Dtor
@@ -61,7 +62,10 @@ void ProgressStage::destroy()
 // XVˆ—
 void ProgressStage::update()
 {
-
+    if( position_.y > getWindowHeight<float>() )
+    {
+        position_.y -= kOneStageHeight * 3.0F;
+    }
 }
 
 /*===========================================================================*/
@@ -75,4 +79,19 @@ void ProgressStage::draw()
         1.0F, // alpha
         kDrawDepth
     );
+
+    // ã‚ª‹ó”’‚È‚ç˜A‚Ë‚Ä•`‰æ
+    if( position_.y > 0.0F )
+    {
+        Vector2 draw_position = position_;
+                draw_position.y -= kOneStageHeight * 3.0F;
+
+        Sprite::getInstance()->reserveDraw(
+            texture_,
+            draw_position,
+            kTrimming,
+            1.0F, // alpha
+            kDrawDepth
+        );
+    }
 }

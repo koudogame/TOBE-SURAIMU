@@ -221,7 +221,7 @@ void Endless::draw()
         pause_->draw();
     }
 
-	if( player_->guide() > 0.0F )
+	if( false )// player_->guide() > 0.0F )
 	{
 		if (player_->isJump())
 		{
