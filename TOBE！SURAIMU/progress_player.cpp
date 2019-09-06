@@ -85,11 +85,11 @@ void ProgressPlayer::update()
 
 /*===========================================================================*/
 // •`‰æˆ—
-void ProgressPlayer::draw()
+void ProgressPlayer::draw( const Vector2& Offset )
 {
     Sprite::getInstance()->reserveDraw(
         texture_,
-        position_,
+        position_ + Offset,
         kTrimming,
         1.0F,           // alpha
         kDrawDepth,

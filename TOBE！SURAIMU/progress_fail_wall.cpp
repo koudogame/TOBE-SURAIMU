@@ -78,11 +78,11 @@ void ProgressFailWall::update()
 
 /*===========================================================================*/
 // •`‰æˆ—
-void ProgressFailWall::draw()
+void ProgressFailWall::draw( const Vector2& Offset )
 {
     Sprite::getInstance()->reserveDraw(
         texture_,
-        position_ + kDrawAdjust,
+        position_ + Offset + kDrawAdjust,
         kTrimming,
         1.0F, // alpha
         kDrawDepth

@@ -24,7 +24,7 @@ public:
                const float Magnification );
     void destroy();
     void update();
-    void draw();
+    void draw( const Vector2& Offset );
 
     void setMove( const float Distance );
 

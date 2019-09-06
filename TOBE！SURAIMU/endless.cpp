@@ -56,11 +56,11 @@ constexpr unsigned kHeight = 0U;                                // ƒŒƒxƒ‹ƒe[ƒuƒ
 constexpr unsigned kThresholdUp = 1U;                           // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : è‡’l( ƒXƒNƒ[ƒ‹ª )
 constexpr unsigned kThresholdDown = 2U;                         // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : è‡’l( ƒXƒNƒ[ƒ‹« )
 constexpr float kLevelTable[][3] = {                            // ƒŒƒxƒ‹ƒe[ƒuƒ‹
-    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   7500.0f, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {  10000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F }
+    {   3000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {   3000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {   3000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {   7500.0f, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {  10000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F }
 };
 
 
@@ -403,6 +403,7 @@ bool Endless::checkAndLoadStage()
         ++stage_;
         Background::getInstance()->changeColor();
         fail_wall_->speedUp();
+        progress_->changeStage();
 
         if (stage_ >= kStageNum)
         {

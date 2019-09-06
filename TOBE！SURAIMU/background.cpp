@@ -43,7 +43,7 @@ constexpr float kViewOffsetY = 600.0F;
 constexpr float kThresholdCreateViewY = -300.0F;
 constexpr Vector2 kWavePositionInit { 0.0F, -1200.0F };
 
-constexpr float kViewDeathLine = 1000.0F;
+constexpr float kCreateLine = 1000.0F;
 
 constexpr int kWaveMaxNum = 4;
 constexpr int kWaveCreateDenominator = 500;
@@ -82,7 +82,7 @@ bool Background::init()
     ViewStarBig  *big_star  = nullptr;
 
     Vector2 create_position = kViewPositionInit;
-    create_position.y = kViewDeathLine - kViewOffsetY;
+    create_position.y = kCreateLine;
     for( ; create_position.y >= kViewPositionInit.y; create_position.y -= kViewOffsetY )
     {
         // –¶

@@ -70,11 +70,11 @@ void ProgressStage::update()
 
 /*===========================================================================*/
 // •`‰æˆ—
-void ProgressStage::draw()
+void ProgressStage::draw( const Vector2& Offset )
 {
     Sprite::getInstance()->reserveDraw(
         texture_,
-        position_,
+        position_ + Offset,
         kTrimming,
         1.0F, // alpha
         kDrawDepth
@@ -93,5 +93,22 @@ void ProgressStage::draw()
             1.0F, // alpha
             kDrawDepth
         );
+    }
+
+
+    // ‰º‚ª‹ó”’( ƒQ[ƒ€ŠJn’¼Œã‚É‰º‚Ö—‰º‚µ‚½ê‡‚Ì‚İ )
+    if( position_.y + (kOneStageHeight * 3.0F) < getWindowHeight<float>() )
+    {
+        Vector2 draw_position = position_;
+                draw_position.x -= 1.0F;
+                draw_position.y += kOneStageHeight * 3.0F - 1.0F;
+        Sprite::getInstance()->reserveDraw(
+            texture_,
+            draw_position,
+            {210L, 0L, 280L, 700L },
+            1.0F,
+            kDrawDepth
+        );
+
     }
 }
