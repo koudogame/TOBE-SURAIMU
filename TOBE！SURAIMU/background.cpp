@@ -14,6 +14,8 @@
 
 
 // テクスチャサイズが大きい画像を初期化時、同時に読み込んでおく
+// *このクラスはテクスチャの開放を行っていない。TextureLoderクラスのデストラクタにて
+//  自動で開放されることを前提に処理を行っている
 /*===========================================================================*/
 const wchar_t* const kTextureFileName[]
 {
@@ -209,26 +211,6 @@ void Background::changeColor()
 
 void Background::reset()
 {
-    // 下に入力してゲームオーバーになった後に、もう一度やり直すと下に背景がないので虚無になる
-    // 後、初期化時にかなり下までオブジェクトを生成すると、なぜか重なる
-
-    //// カラーセット用ラムダ
-    //auto setColorObject = [this]( auto& List )
-    //{
-    //    for( auto& elem : List )
-    //    {
-    //        elem->setColor( color_ );
-    //    }
-    //};
-
-    //color_ = BackObjectBase::Color::kPurple;
-
-    //setColorObject( mist_list_ );
-    //setColorObject( mini_star_list_ );
-    //setColorObject( big_star_list_ );
-    //setColorObject( wave_list_ );
-
-
     init();
 }
 
@@ -287,13 +269,34 @@ bool Background::updateView( std::vector<T*> *List, std::vector<T*> *Free )
 // 波の生成を行うか判定
 bool Background::isCreateWave() const
 {
-    return 
-        wave_list_.size() < kWaveMaxNum &&              // アクティブな波が一定の値より少ない場合
-        !(rand() % kWaveCreateDenominator) &&           // 一定の確率で
-        //(wave_list_.size() == 0 ||                      // アクティブな波がないか
-        // wave_list_.back()->getPosition().y > 0.0F) &&   // 直近の波が、画面内に収まってたら
-        true
-        ;
+    // アクティブな波としてカウントする範囲
+    static const float kJudgeRangeTop = -1200;
+    static const float kJudgeRangeBottom = 0.0F;
+    int wave_sum = 0;
+    for( auto& wave : wave_list_ )
+    {
+        if( wave->getPosition().y >= kJudgeRangeTop &&
+            wave->getPosition().y <= kJudgeRangeBottom )
+        {
+            ++wave_sum;
+        }
+    }
+
+
+    // アクティブな波が一つもなかったら生成
+    if( wave_sum == 0 ) { return true; }
+
+    // アクティブな波が一定の値より少ない場合
+    // 一定の確率で生成
+    if( wave_sum < kWaveMaxNum &&
+        !(rand() % kWaveCreateDenominator)
+       )
+    {
+        return true;
+    }
+
+
+    return false;
 }
 // リストのオブジェクトを更新、必要があれば削除、追加を行う 
 bool Background::updateWave()
