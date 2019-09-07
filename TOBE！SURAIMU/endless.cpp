@@ -40,6 +40,7 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
 // ˆ—‚ÉŠÖŒW
+constexpr wchar_t kStartStageFile[] = L"State/start_pattern.csv";
 constexpr float kWindowWidth  = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
 enum { kAButton, kStick };
@@ -48,9 +49,13 @@ const RECT kTrimming[] = {
     { 256L, 0L, 512L, 128L },
     {   0L, 0L, 256L, 128L }
 };
-
 constexpr float kDispTimeMSPF = 500.0F / 16.0F;                 // “ïˆÕ“xã¸AƒXƒNƒ[ƒ‹‚É‚©‚¯‚éŠÔ( ƒ~ƒŠ•b/ƒtƒŒ[ƒ€ )
+
+
 // “ïˆÕ“x‚ÉŠÖŒW
+constexpr int      kStartStageID = 0;
+constexpr int      kStageIDMin = 1;
+constexpr int      kStageIDMax = 4;
 constexpr int      kStageNum = 3;                               // ƒXƒe[ƒW”
 constexpr unsigned kHeight = 0U;                                // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : ƒXƒe[ƒW‚Ì’·‚³( ‚‚³ )
 constexpr unsigned kThresholdUp = 1U;                           // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : è‡’l( ƒXƒNƒ[ƒ‹ª )
@@ -66,16 +71,6 @@ constexpr float kLevelTable[][3] = {                            // ƒŒƒxƒ‹ƒe[ƒuƒ
 
 
 constexpr Vector2 kPlayerPosition { 600.0F, 565.0F };
-
-constexpr Vector2 kInitStarPosi[]   = {                         // ‰ŠúƒXƒ^[ˆÊ’u
-    {640.0F, 600.0F},
-    {816.0F, 297.0F},
-	{465.0F, 142.0F},
-};
-constexpr float kInitStarAngle[]    = { 90.0F, 90.0F,90.0F, };  // ‰ŠúƒXƒ^[Šp“x
-constexpr float kInitStarSpin[]		= { -3.0F, 3.0F,3.0F };     // ‰ŠúƒXƒ^[‰ñ“]‘¬“x
-constexpr float kInitStarSpinRate[] = { 0.2F, 0.2F,0.2F };      // ‰ŠúƒXƒ^[‰ñ“]Š„‡
-constexpr float kInitStarSize[]     = { 80.0F, 100.0F, 100.0F}; // ‰ŠúƒXƒ^[‘å‚«‚³
 
 
 /*===========================================================================*/
@@ -119,20 +114,9 @@ bool Endless::init()
     // ƒ‰ƒ“ƒLƒ“ƒO‰Šú‰»
     if( ranking_->init() == false ) { return false; }
 
-	// ‰ŠúƒXƒ^[‚Ì¶¬
-	for (int i = 0; i < 3; ++i)
-	{
-		if (star_container_->addStar(
-			kInitStarPosi[i],
-			kInitStarAngle[i],
-			kInitStarSpin[i],
-			kInitStarSpinRate[i],
-			kInitStarSize[i]
-		) == nullptr)
-		{
-			return false;
-		}
-	}
+	// ƒXƒ^[¶¬
+    if( star_container_->createStar( kStartStageFile ) == false ) { return false; }
+    
 
 	// ƒvƒŒƒCƒ„[‰Šú‰»
 	if (dynamic_cast<Player*>(player_)->init(kPlayerPosition, 0) == false)
@@ -161,8 +145,6 @@ bool Endless::init()
     offset_ = 0.0F;
     offset_one_frame_ = 0.0F;
 	climb_ = 0.0F;
-    changePattern( stage_ );    // ƒXƒ^[¶¬ƒpƒ^[ƒ“İ’è
-    if( star_container_->createStar() == false ) { return false; }
 
 	clock_->start();
 
@@ -395,28 +377,26 @@ bool Endless::checkAndLoadStage()
     // ‰æ–ÊŠO‘Ò‹@‚µ‚Ä‚¢‚éƒXƒ^[‚ª–³‚­‚È‚Á‚½‚ç
     if( itr == end )
     {
-
-
-
-        // ƒpƒ^[ƒ“•Ï‰»
+        // ƒpƒ^[ƒ“•Ï‰»‚ğ’m‚ç‚¹‚é
         climb_ = 0.0F;
-        ++stage_;
         Background::getInstance()->changeColor();
         fail_wall_->speedUp();
-        progress_->changeStage();
+        if( stage_ != kStartStageID )
+        {
+            progress_->changeStage();
+        }
 
-        if (stage_ >= kStageNum)
+        ++stage_;
+        if (stage_ >= kStageIDMax)
         {
             ++round_counter_;
-            stage_ = 0;
+            stage_ = kStageIDMin;
 
             // ü‰ñ‚ğ’m‚ç‚¹‚é
             player_->addLevel();
         }
-
         // ƒXƒ^[‚Ì¶¬ƒpƒ^[ƒ“•ÏX
         changePattern(stage_);
-
 
 
         // ƒXƒ^[‚Ì¶¬

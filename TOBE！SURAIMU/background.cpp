@@ -270,13 +270,11 @@ bool Background::updateView( std::vector<T*> *List, std::vector<T*> *Free )
 bool Background::isCreateWave() const
 {
     // アクティブな波としてカウントする範囲
-    static const float kJudgeRangeTop = -1200;
     static const float kJudgeRangeBottom = 0.0F;
     int wave_sum = 0;
     for( auto& wave : wave_list_ )
     {
-        if( wave->getPosition().y >= kJudgeRangeTop &&
-            wave->getPosition().y <= kJudgeRangeBottom )
+        if( wave->getPosition().y <= kJudgeRangeBottom )
         {
             ++wave_sum;
         }

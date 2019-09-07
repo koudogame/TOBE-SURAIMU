@@ -72,7 +72,11 @@ void ProgressStage::update()
 // 描画処理
 void ProgressStage::draw( const Vector2& Offset )
 {
-    Sprite::getInstance()->reserveDraw(
+    Sprite* const kSprite = Sprite::getInstance();
+
+    Vector2 draw_position = position_ + Offset;
+
+    kSprite->reserveDraw(
         texture_,
         position_ + Offset,
         kTrimming,
@@ -83,10 +87,9 @@ void ProgressStage::draw( const Vector2& Offset )
     // 上が空白なら連ねて描画
     if( position_.y > 0.0F )
     {
-        Vector2 draw_position = position_;
-                draw_position.y -= kOneStageHeight * 3.0F;
+        draw_position.y -= kOneStageHeight * 3.0F;
 
-        Sprite::getInstance()->reserveDraw(
+        kSprite->reserveDraw(
             texture_,
             draw_position,
             kTrimming,
@@ -94,15 +97,12 @@ void ProgressStage::draw( const Vector2& Offset )
             kDrawDepth
         );
     }
-
-
     // 下が空白( ゲーム開始直後に下へ落下した場合のみ )
-    if( position_.y + (kOneStageHeight * 3.0F) < getWindowHeight<float>() )
+    else if( position_.y + (kOneStageHeight * 3.0F) < getWindowHeight<float>() )
     {
-        Vector2 draw_position = position_;
-                draw_position.x -= 1.0F;
-                draw_position.y += kOneStageHeight * 3.0F - 1.0F;
-        Sprite::getInstance()->reserveDraw(
+        draw_position.x -= 1.0F;
+        draw_position.y += kOneStageHeight * 3.0F;
+        kSprite->reserveDraw(
             texture_,
             draw_position,
             {210L, 0L, 280L, 700L },
