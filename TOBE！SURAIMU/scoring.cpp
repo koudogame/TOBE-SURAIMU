@@ -236,7 +236,7 @@ void Scoring::addCombo()
 		combo_++;
 		timeRestart();
 		combo_timer_.start();
-		score_ += static_cast<unsigned long long>(combo_) * static_cast<unsigned long long>(kComboScore)* static_cast<unsigned long long>(level_);
+		score_ += static_cast<unsigned long long>(combo_&kTopBit ? 0 : combo_) * static_cast<unsigned long long>(kComboScore)* static_cast<unsigned long long>(level_);
 		createNumber(combo_ * kComboScore * level_, add_num_texture_);
 		if (combo_ != 0)
 		{
