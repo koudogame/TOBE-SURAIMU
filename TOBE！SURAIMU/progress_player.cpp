@@ -58,7 +58,7 @@ bool ProgressPlayer::init( Player* const Player,
     magnification_ = Magnification;
 
     // ‚»‚Ì‘¼ƒƒ“ƒo‚Ì‰Šú‰»
-    last_position_y_ = player_->getPosition().x - 720.0F;
+    last_position_y_ = player_->getPosition().x - 1350.0F;
 
     return true;
 }
@@ -97,33 +97,6 @@ void ProgressPlayer::draw( const Vector2& Offset )
         0.0F,           // rotate
         kAnkerPoint
     );
-
-
-
-
-
-
-
-    /*Sprite::getInstance()->reserveDraw(
-        texture_,
-        { position_.x, start_line_ },
-        kTrimming,
-        1.0F,
-        kDrawDepth-0.1,
-        {1.0F, 1.0F},
-        0.0F,
-        kAnkerPoint
-    );
-    Sprite::getInstance()->reserveDraw(
-        texture_,
-        { position_.x, end_line_ },
-        kTrimming,
-        1.0F,
-        kDrawDepth-0.1,
-        { 1.0F, 1.0F },
-        0.0F,
-        kAnkerPoint
-    );*/
 }
 
 

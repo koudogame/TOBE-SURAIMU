@@ -25,9 +25,9 @@ static constexpr float kScrollSpeed = 0.5F;
 static constexpr long kWidth  = 900L;
 static constexpr long kHeight = 900L;
 template <typename T>
-constexpr T getWidth() { return static_cast<T>(ViewStarBig::kWidth); }
+constexpr T getWidth() { return static_cast<T>(kWidth); }
 template <typename T>
-constexpr T getHeight() { return static_cast<T>(ViewStarBig::kHeight); }
+constexpr T getHeight() { return static_cast<T>(kHeight); }
 
 /*===========================================================================*/
 ViewStarBig::ViewStarBig()
@@ -94,7 +94,7 @@ void ViewStarBig::update()
 // ï`âÊèàóù
 void ViewStarBig::draw()
 {
-    if( position_.y < getWindowHeight<float>() )
+    if( (position_.y < getWindowHeight<float>()) )
     {
         Sprite::getInstance()->reserveDraw(
             texture_,

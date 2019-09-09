@@ -45,7 +45,7 @@ constexpr float kViewOffsetY = 600.0F;
 constexpr float kThresholdCreateViewY = -300.0F;
 constexpr Vector2 kWavePositionInit { 0.0F, -1200.0F };
 
-constexpr float kCreateLine = 1000.0F;
+constexpr float kDeathLine = 10000.0F;
 
 constexpr int kWaveMaxNum = 4;
 constexpr int kWaveCreateDenominator = 500;
@@ -84,7 +84,7 @@ bool Background::init()
     ViewStarBig  *big_star  = nullptr;
 
     Vector2 create_position = kViewPositionInit;
-    create_position.y = kCreateLine;
+    create_position.y = kDeathLine;
     for( ; create_position.y >= kViewPositionInit.y; create_position.y -= kViewOffsetY )
     {
         // 霧
@@ -229,7 +229,7 @@ bool Background::updateView( std::vector<T*> *List, std::vector<T*> *Free )
 
     // 先頭のオブジェクトは、死んでいる可能性があるので判定
     T* top_object = *List->begin();
-    if( top_object->isAlive() == false )
+    if( top_object->getPosition().y >= kDeathLine )
     {
         List->erase( List->begin() );
         Free->push_back( top_object );

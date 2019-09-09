@@ -20,10 +20,11 @@ public:
     void draw()    override;
 
     void start();
+    void upStart();
     void speedUp();
     void setMove( float Displacement ) override;
 
-
+    bool isUp() const;
     ObjectID getID() const override { return ObjectID::kFailWall; }
     const Vector2& getPosition() const override;
     Line* getShape() { return shape_; }

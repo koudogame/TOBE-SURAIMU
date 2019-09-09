@@ -57,6 +57,7 @@ constexpr int      kStartStageID = 0;
 constexpr int      kStageIDMin = 1;
 constexpr int      kStageIDMax = 4;
 constexpr int      kStageNum = 3;                               // ステージ数
+constexpr float    kFailWallUpStartLine = 3000.0F;              // 炎が上昇を開始する位置( この距離分プレイヤーが上昇したら、炎の上昇スタート )
 constexpr unsigned kHeight = 0U;                                // レベルテーブル : ステージの長さ( 高さ )
 constexpr unsigned kThresholdUp = 1U;                           // レベルテーブル : 閾値( スクロール↑ )
 constexpr unsigned kThresholdDown = 2U;                         // レベルテーブル : 閾値( スクロール↓ )
@@ -145,6 +146,8 @@ bool Endless::init()
     offset_ = 0.0F;
     offset_one_frame_ = 0.0F;
 	climb_ = 0.0F;
+    player_last_position_y_ = player_->getPosition().y;
+    player_displacement_y_sum_ = 0.0F;
 
 	clock_->start();
 
@@ -282,6 +285,18 @@ SceneBase* Endless::play()
 		return new Result(ranking_->getRank(), *player_->getScore());
         //return new Endless();
 	}
+    else if( fail_wall_->isUp() == false )
+    {
+        // プレイヤーが一定の量上へ進んだら炎の上昇をスタートする
+        const Vector2& p_position = player_->getPosition();
+        player_displacement_y_sum_ += player_last_position_y_ - p_position.y;
+
+        if( player_displacement_y_sum_ >= kFailWallUpStartLine )
+        {
+            fail_wall_->upStart();
+        }
+        player_last_position_y_ = p_position.y;
+    }
 
 	//コンテナのアップデート
 	star_container_->update();
@@ -351,7 +366,8 @@ void Endless::scroll()
     }
 
 
-    // 各オブジェクトのスクロール
+    // 各オブジェクトのスクロール処理
+    player_displacement_y_sum_ += over;
     TaskManager::getInstance()->allSetOver( over );
 
     if( over > 0.0F ) 
@@ -379,11 +395,11 @@ bool Endless::checkAndLoadStage()
     {
         // パターン変化を知らせる
         climb_ = 0.0F;
-        Background::getInstance()->changeColor();
         fail_wall_->speedUp();
         if( stage_ != kStartStageID )
         {
             progress_->changeStage();
+        Background::getInstance()->changeColor();
         }
 
         ++stage_;

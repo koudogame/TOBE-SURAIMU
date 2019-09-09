@@ -112,6 +112,7 @@ void FailWall::update()
     {
         // 上限を超えたら戻す
         shape_->start.y = kLimitYUp;
+        shape_->end.y   = kLimitYUp;
     }
 
     // 炎のスケーリング
@@ -186,15 +187,14 @@ void FailWall::start()
     speed_ = kInitSpeed;
 }
 
+void FailWall::upStart()
+{
+    speed_ = kStartSpeed;
+}
 void FailWall::speedUp()
 {
-    // 最初のスピードアップ時に、初期スピードを設定する
-    if( speed_ == kInitSpeed )
-    {
-        speed_ = kStartSpeed;
-    }
-    // 後は、スピードに倍率をかけていく
-    else
+    // 上昇が開始していたら、倍率をかける
+    if( speed_ <= kStartSpeed )
     {
         speed_ *= kMagnificationSpeed;
     }
@@ -225,6 +225,10 @@ void FailWall::setMove( float Disp )
 
 
 /*===========================================================================*/
+bool FailWall::isUp() const
+{
+    return speed_ <= kStartSpeed;
+}
 const Vector2& FailWall::getPosition() const 
 {
     return shape_->start;
