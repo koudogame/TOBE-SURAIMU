@@ -40,6 +40,7 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
 // 処理に関係
+constexpr wchar_t kStartStageFile[] = L"State/start_pattern.csv";
 constexpr float kWindowWidth  = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
 enum { kAButton, kStick };
@@ -48,34 +49,28 @@ const RECT kTrimming[] = {
     { 256L, 0L, 512L, 128L },
     {   0L, 0L, 256L, 128L }
 };
-
 constexpr float kDispTimeMSPF = 500.0F / 16.0F;                 // 難易度上昇時、スクロールにかける時間( ミリ秒/フレーム )
+
+
 // 難易度に関係
+constexpr int      kStartStageID = 0;
+constexpr int      kStageIDMin = 1;
+constexpr int      kStageIDMax = 4;
 constexpr int      kStageNum = 3;                               // ステージ数
 constexpr unsigned kHeight = 0U;                                // レベルテーブル : ステージの長さ( 高さ )
 constexpr unsigned kThresholdUp = 1U;                           // レベルテーブル : 閾値( スクロール↑ )
 constexpr unsigned kThresholdDown = 2U;                         // レベルテーブル : 閾値( スクロール↓ )
 constexpr float kLevelTable[][3] = {                            // レベルテーブル
-    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   7500.0f, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {  10000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F }
+    {   3000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {   3000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {   3000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {   7500.0f, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {  10000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F }
 };
 
 
 
 constexpr Vector2 kPlayerPosition { 600.0F, 565.0F };
-
-constexpr Vector2 kInitStarPosi[]   = {                         // 初期スター位置
-    {640.0F, 600.0F},
-    {816.0F, 297.0F},
-	{465.0F, 142.0F},
-};
-constexpr float kInitStarAngle[]    = { 90.0F, 90.0F,90.0F, };  // 初期スター角度
-constexpr float kInitStarSpin[]		= { -3.0F, 3.0F,3.0F };     // 初期スター回転速度
-constexpr float kInitStarSpinRate[] = { 0.2F, 0.2F,0.2F };      // 初期スター回転割合
-constexpr float kInitStarSize[]     = { 80.0F, 100.0F, 100.0F}; // 初期スター大きさ
 
 
 /*===========================================================================*/
@@ -119,20 +114,9 @@ bool Endless::init()
     // ランキング初期化
     if( ranking_->init() == false ) { return false; }
 
-	// 初期スターの生成
-	for (int i = 0; i < 3; ++i)
-	{
-		if (star_container_->addStar(
-			kInitStarPosi[i],
-			kInitStarAngle[i],
-			kInitStarSpin[i],
-			kInitStarSpinRate[i],
-			kInitStarSize[i]
-		) == nullptr)
-		{
-			return false;
-		}
-	}
+	// スター生成
+    if( star_container_->createStar( kStartStageFile ) == false ) { return false; }
+    
 
 	// プレイヤー初期化
 	if (dynamic_cast<Player*>(player_)->init(kPlayerPosition, 0) == false)
@@ -161,8 +145,6 @@ bool Endless::init()
     offset_ = 0.0F;
     offset_one_frame_ = 0.0F;
 	climb_ = 0.0F;
-    changePattern( stage_ );    // スター生成パターン設定
-    if( star_container_->createStar() == false ) { return false; }
 
 	clock_->start();
 
@@ -395,27 +377,26 @@ bool Endless::checkAndLoadStage()
     // 画面外待機しているスターが無くなったら
     if( itr == end )
     {
-
-
-
-        // パターン変化
+        // パターン変化を知らせる
         climb_ = 0.0F;
-        ++stage_;
         Background::getInstance()->changeColor();
         fail_wall_->speedUp();
+        if( stage_ != kStartStageID )
+        {
+            progress_->changeStage();
+        }
 
-        if (stage_ >= kStageNum)
+        ++stage_;
+        if (stage_ >= kStageIDMax)
         {
             ++round_counter_;
-            stage_ = 0;
+            stage_ = kStageIDMin;
 
             // 周回を知らせる
             player_->addLevel();
         }
-
         // スターの生成パターン変更
         changePattern(stage_);
-
 
 
         // スターの生成

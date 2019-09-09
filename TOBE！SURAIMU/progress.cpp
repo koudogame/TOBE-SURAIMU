@@ -135,20 +135,34 @@ void Progress::update()
     player_->update();
     fail_wall_->update();
 
-    // ステージ変更のスクロール
-    if( player_->getPosition().y <= kPlayerEndLine ) 
-    {
-        scrollInit();
-    }
+    // ステージ変更時のスクロール処理
     if( isScroll() ) { scroll(); }
+
+    // ステージ変更以外のスクロール処理
+    else if( player_->getPosition().y > kPlayerStartLine )
+    {
+        // スタート位置より下に行ったら
+        float over = player_->getPosition().y - kPlayerStartLine;
+        offset_ = -over;
+    }
+    else if( player_->getPosition().y < kPlayerEndLine )
+    {
+        // ゴール位置より上に行ったら
+        float over = player_->getPosition().y - kPlayerEndLine;
+        offset_ = -over;
+    }
+    else
+    {
+        offset_ = 0.0F;
+    }
 }
 /*===========================================================================*/
 // 描画処理
 void Progress::draw()
 {
-    stage_->draw();
-    player_->draw();
-    fail_wall_->draw();
+    stage_->draw( {0.0F, offset_} );
+    player_->draw( {0.0F, offset_} );
+    fail_wall_->draw( {0.0F, offset_} );
 }
 /*===========================================================================*/
 // 移動
@@ -161,7 +175,7 @@ void Progress::setMove( const float Dist )
 // public
 /*===========================================================================*/
 // スクロール用初期化処理
-void Progress::scrollInit()
+void Progress::changeStage()
 {
     scroll_sin_ = kScrollSinMinDeg;
     player_scroll_count_ = last_player_scroll_count_ = 0.0F;

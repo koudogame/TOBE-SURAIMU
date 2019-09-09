@@ -90,9 +90,6 @@
     <Filter Include="Project\Game\Object\AI">
       <UniqueIdentifier>{3b985f52-44b6-4497-b39f-4575806744cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Object\FailWall">
-      <UniqueIdentifier>{2d412ce3-062b-49a0-b261-e5fe6c4967fd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Scene\Demo">
       <UniqueIdentifier>{03c701d8-5d1b-4862-81e4-22e99968f370}</UniqueIdentifier>
     </Filter>
@@ -134,6 +131,9 @@
     </Filter>
     <Filter Include="Project\Game\Object\UI\Progress">
       <UniqueIdentifier>{d7f45e5a-af2a-4b0d-b1b4-7daee73bbb74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Object\FailWall">
+      <UniqueIdentifier>{2d412ce3-062b-49a0-b261-e5fe6c4967fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

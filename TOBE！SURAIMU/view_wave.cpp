@@ -108,6 +108,7 @@ void ViewWave::update()
     position_ += offset_;
     
 
+    // 炎が存在していたら、炎との衝突で終了判定
     if (fail_wall_)
     {
         if (Collision::getInstance()->collision(this, fail_wall_))
@@ -115,6 +116,7 @@ void ViewWave::update()
             is_alive_ = false;
         }
     }
+    // 炎が存在していない場合、画面外で終了判定
     else
     {
         if (position_.y > getWindowHeight<float>())

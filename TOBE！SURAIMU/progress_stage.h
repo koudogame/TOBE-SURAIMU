@@ -12,7 +12,7 @@ public:
     bool init( const Vector2& Position );
     void destroy();
     void update();
-    void draw();
+    void draw( const Vector2& Offset );
 
     const Vector2& getPosition() const { return position_; }
     void           setPosition( const Vector2& Destination ) { position_ = Destination; }

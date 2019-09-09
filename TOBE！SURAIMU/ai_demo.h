@@ -32,14 +32,17 @@ private:
     bool isMoveRight() override;
     bool isMoveDown()  override;
 
+    void setTarget();
 
-    void setPurposeStar();
-        Star* getTargetForStaying();
-        Star* getTargetForJumping() const;
-        Star* getTargetForFalling() const;
+    bool (AIDemo::*getJudgeFunc())(ObjectBase* const);
+        bool judgeForStaying( ObjectBase* const );
+        bool judgeForJumping( ObjectBase* const );
+        bool judgeForFalling( ObjectBase* const );
+
 
     Sercher *sercher_ = nullptr;
     Star    *target_ = nullptr;
 
     Vector2 last_position_;
+    bool is_jumping_ = false;
 };
