@@ -10,12 +10,11 @@ const float kBandMinScale = 0.0F;
 const float kBandMaxScale = 1.5F;
 const float kBandWidth = 100.0F;
 const float kBandHeight = 300.0F;
-//¶¬–{”
-const int kCreateBandNum = 5;
 
 //’è”
-const float kChangeAlphaVol = kBandMaxAlpha / 100.0F;
-const float kChangeScaleVol = kBandMaxScale / 100.0F;
+const float kChangeAlphaVol = (kBandMaxAlpha - kBandMinAlpha) / 100.0F;
+const float kChangeScaleVol = (kBandMaxScale - kBandMinScale) / 100.0F;
+const float kCreateIntervalScale = 0.3F;
 
 
 Band::Band()
@@ -32,31 +31,26 @@ bool Band::init(int ColorID, int SizeID)
 	texture_ = TextureLoder::getInstance()->load(L"Texture/band.png");
 	color_id_ = ColorID;
 	size_id_ = SizeID;
-	for (int i = 0; i < kCreateBandNum; ++i)
-	{
-		band_inf_.push_back(BandInf((rand_() % static_cast<int>(kBandMaxAlpha * 10)) / 10.0F, (rand_() % static_cast<int>(kBandMaxScale * 10)) / 10.0F, rand_() % 2 ? -1 : 1, rand_() % 2 ? -1 : 1));
-	}
+	band_inf_.push_back(BandInf(kBandMaxAlpha,kBandMinScale));
+
 	return true;
 }
 
 void Band::update()
 {
-	for (auto& itr : band_inf_)
+	for (auto itr = band_inf_.begin();itr != band_inf_.end();)
 	{
-		itr.scale += itr.signal_scale * kChangeScaleVol;
-		if (itr.signal_scale > 0)
-			itr.alpha -= kChangeAlphaVol;
+		itr->scale += kChangeScaleVol;
+		itr->alpha -= kChangeAlphaVol;
+
+		if (itr->scale > kBandMaxScale)
+			itr = band_inf_.erase(itr);
 		else
-			itr.alpha = 0;
-
-		if (itr.scale > kBandMaxScale || itr.scale < kBandMinScale)
-		{
-			itr.signal_scale *= -1;
-			if (itr.signal_scale > 0)
-				itr.alpha = 1.0F;
-		}
-
+			++itr;
 	}
+
+	if (band_inf_.back().scale > kCreateIntervalScale)
+		band_inf_.push_back(BandInf(kBandMaxAlpha, kBandMinScale));
 }
 
 void Band::draw(const Vector2& DrawPosition)
@@ -68,11 +62,16 @@ void Band::draw(const Vector2& DrawPosition)
 		trim.top = kBandHeight * color_id_;
 		trim.right = trim.left + kBandWidth;
 		trim.bottom = trim.top + kBandHeight;
-		Sprite::getInstance()->reserveDraw(texture_, DrawPosition, trim, itr.alpha, 0.69F, Vector2(1.0F, itr.scale), 0.0F, Vector2(kBandWidth / 2.0F, kBandHeight));
+		Sprite::getInstance()->reserveDraw(texture_, DrawPosition, trim, itr.alpha, 0.69F, Vector2(1.0F, itr.scale), 0.0F, Vector2(kBandWidth / 2.0F, kBandHeight), Common::getInstance()->getStates()->Additive());
 	}
 }
 
 void Band::destroy()
 {
 	TextureLoder::getInstance()->release(texture_);
+}
+
+float Band::getHeight()
+{
+	return kBandHeight;
 }

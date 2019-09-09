@@ -2,22 +2,8 @@
 #include "textureLoder.h"
 #include "sprite.h"
 
-TitleObject::TitleObject()
-{}
-
-
-TitleObject::~TitleObject()
-{}
-
-//‰Šú‰»
-bool TitleObject::init( TitleStatus* TitleObjectStatus )
-{
-	status_ = TitleObjectStatus;
-	return true;
-}
-
 //•`‰æ
-void TitleObject::draw()
+void TitleStatus::draw()
 {
-	Sprite::getInstance()->reserveDraw( status_->texture , status_->position , status_->trim , status_->alpha , status_->depth );
+	Sprite::getInstance()->reserveDraw( texture , position , trim , alpha , depth );
 }

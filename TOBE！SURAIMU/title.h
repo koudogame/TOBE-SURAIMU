@@ -41,10 +41,6 @@ private:
 		kRogo,
 		kCusur,
 		kPlayer,
-		kStar1,
-		kStar2,
-		kStar3,
-		kStar4,
 		kWallRight,
 		kWallLeft,
 		kBlack,
@@ -59,7 +55,7 @@ private:
 
 	Menu select_menu_;									                //メニュー変数
 	TitleStatus object_status_[ObjectNum::kObjectNum];	                //オブジェクト情報
-	std::unique_ptr<TitleObject> object_[ObjectNum::kObjectNum];		//タイトルオブジェクト
+	std::vector <std::unique_ptr<TitleStatus>> star_obj_;								//タイトル用星のオブジェクト
 	ID3D11ShaderResourceView* overlay_texture_;		                    //加算テクスチャ
 	float volume_;				                                        //音量
 	SceneBase* (Title::* scene_)() = nullptr;		                    //更新処理の関数ポインタ

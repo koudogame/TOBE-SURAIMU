@@ -10,9 +10,10 @@ public:
 	void update();
 	void draw(const Vector2& DrawPosition);
 	void destroy();
+	float getHeight();
 
 private:
-	std::random_device rand_;
+	std::unique_ptr<std::mt19937> rand_;
 	ID3D11ShaderResourceView* texture_;
 	int color_id_;
 	int size_id_;
@@ -21,14 +22,10 @@ private:
 	{
 		float alpha;
 		float scale;
-		int signal_alpha;
-		int signal_scale;
-		BandInf(float Alpha, float Scale,int SignalAlpha,int SignalScale)
+		BandInf(float Alpha, float Scale)
 		{
 			alpha = Alpha;
 			scale = Scale;
-			signal_alpha = SignalAlpha;
-			signal_scale = SignalScale;
 		}
 	};
 	std::vector<BandInf> band_inf_;

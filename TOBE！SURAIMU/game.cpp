@@ -11,6 +11,7 @@
 //-----------------------
 //Å‰‚ÌƒV[ƒ“
 #include "title.h"
+#include "endless.h"
 //#include "play.h"
 
 //”wŒiˆ——˜—p’è”
@@ -49,7 +50,7 @@ bool Game::init()
 
 	texture_ = TextureLoder::getInstance()->load(L"Texture/shadow1.png");
 
-	scene_ = std::make_unique<Title>();
+	scene_ = std::make_unique<Endless>();
 
 	if (scene_.get()->init() == false)
 		return false;
