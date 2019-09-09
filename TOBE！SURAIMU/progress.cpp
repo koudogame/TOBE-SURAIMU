@@ -25,8 +25,8 @@ static constexpr float kScrollSinMinDeg = 0.0F;
 static constexpr float kScrollSinMaxDeg = 90.0F;
 static constexpr float kScrollSinChange = 3.0F;
 // プレイヤー用
-static constexpr float   kPlayerStartLine    = 670.0F;
-static constexpr float   kPlayerEndLine      = 50.0F;
+static constexpr float   kPlayerStartLine    = 617.0F;
+static constexpr float   kPlayerEndLine      = 107.0F;
 static constexpr Vector2 kPlayerInitPosition { 295.0F, kPlayerStartLine };
 static constexpr float   kPlayerMotionRange  = kPlayerStartLine - kPlayerEndLine;
 // 炎用

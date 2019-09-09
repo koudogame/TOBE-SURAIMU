@@ -24,9 +24,9 @@ static constexpr float kScrollSpeed = 1.0F;
 static constexpr long kWidth  = 900L;
 static constexpr long kHeight = 900L;
 template <typename T>
-constexpr T getWidth()  { return static_cast<T>(ViewMist::kWidth); }
+constexpr T getWidth()  { return static_cast<T>(kWidth); }
 template <typename T>
-constexpr T getHeight() { return static_cast<T>(ViewMist::kHeight); }
+constexpr T getHeight() { return static_cast<T>(kHeight); }
 
 /*===========================================================================*/
 ViewMist::ViewMist()
@@ -94,7 +94,7 @@ void ViewMist::update()
 // ï`âÊèàóù
 void ViewMist::draw()
 {
-    if( position_.y < getWindowHeight<float>() )
+    if( (position_.y < getWindowHeight<float>()) )
     {
         Sprite::getInstance()->reserveDraw(
             texture_,

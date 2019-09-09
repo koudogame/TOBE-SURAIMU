@@ -63,6 +63,8 @@ private:
     float offset_ = 0.0F;;
     float offset_one_frame_ = 0.0F;
     float climb_ = 0.0F;
+    float player_last_position_y_ = 0.0F;
+    float player_displacement_y_sum_ = 0.0F;
 
 	ID3D11ShaderResourceView* description_;
 };
