@@ -22,7 +22,7 @@ public:
 	//引数...上昇量
 	void addDefaultScore( const double AddScore );
 	//スコアリング開始
-	inline void start() { scoring_flag_ = true; }
+	inline void start() { scoring_flag_ = true; combo_timer_.start(); }
 	inline void stop() { scoring_flag_ = false; }
 	inline bool isStart() { return scoring_flag_; }
 	//タイマー操作
@@ -54,7 +54,7 @@ public:
 	//最大コンボ数の取得
 	inline unsigned int getMaxCombo() { return max_combo_; }
 	//現在のコンボ数を取得
-	inline unsigned int getCombo() { return combo_; }
+	unsigned int getCombo();
 	//上った距離の取得
 	inline double getHeight() { return height_; }
 	//プレイヤーの位置を保持

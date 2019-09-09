@@ -30,12 +30,16 @@ const RECT kComboCircleTrim = { 0,0,160,160 };
 const RECT kComboSpriteTrim = { kComboCircleTrim.right,kComboCircleTrim.top,256,38 };
 //定数
 const int kComboResetMilliTime = 2000;
-const float kAddComboScale = 0.2F;
+const float kAddComboScale = 0.08F;
 const float kAddComboSpriteScale = 0.05F;
-const float kDefComboScale = 1.0F / (kComboResetMilliTime / 1000.0F) / (60 - (1.0F / kAddComboScale) / (kComboResetMilliTime / 1000.0F));
+const float kComboEndScale = 0.2F;
+const float kDefComboScale = (1.0F - kComboEndScale) / (kComboResetMilliTime / 1000.0F) / (60 - (1.0F / kAddComboScale) / (kComboResetMilliTime / 1000.0F));
 const float kComboSpriteMaxScale = 2.5F;
 const float kComboAlphaDefThre = 1.0F;
 const float kComnboSpriteAlphaDefVol = 1.0F / ((kComboSpriteMaxScale - kComboAlphaDefThre) / kAddComboSpriteScale);
+
+//intの最上位ビットON
+unsigned int kTopBit = 0x80000000;
 
 Scoring::Scoring()
 {}
@@ -88,9 +92,9 @@ void Scoring::update()
 	if (delete_flag_)
 		addition_list_.pop_back();
 
-	if (kComboResetMilliTime - combo_timer_.getCount() <= 0)
+	if (kComboResetMilliTime - combo_timer_.getCount() <= 0 && scoring_flag_)
 	{
-		combo_ = 0;
+		combo_ = -1;
 		combo_circle_scale_ = 0.0F;
 		combo_sprite_scale_ = 0.0F;
 	}
@@ -109,7 +113,7 @@ void Scoring::update()
 	{
 		if (!player_jump_now_flag_)
 		{
-			if (combo_circle_scale_ > 0.0F)
+			if (combo_circle_scale_ > kComboEndScale)
 			{
 				combo_circle_scale_ -= kDefComboScale;
 				if (combo_sprite_scale_ < kComboSpriteMaxScale && combo_sprite_scale_ > 0.0F)
@@ -166,7 +170,7 @@ void Scoring::draw()
 	//コンボの描画
 	draw_position.x = kTotalPosition.x;
 	draw_position.y += kScoreHeight;
-	temp_ = combo_;
+	temp_ = combo_ & kTopBit ? 0 : combo_;
 	do
 	{
 		trim.left = kNumWidth * (temp_ % 10);
@@ -234,14 +238,17 @@ void Scoring::addCombo()
 		combo_timer_.start();
 		score_ += static_cast<unsigned long long>(combo_) * static_cast<unsigned long long>(kComboScore)* static_cast<unsigned long long>(level_);
 		createNumber(combo_ * kComboScore * level_, add_num_texture_);
-		isexp_now_ = true;
-		combo_circle_scale_ = 0.0F;
-		combo_sprite_scale_ = 0.0F;
-		combo_alpha_ = 1.0F;
+		if (combo_ != 0)
+		{
+			isexp_now_ = true;
+			combo_circle_scale_ = 0.0F;
+			combo_sprite_scale_ = 0.0F;
+			combo_alpha_ = 1.0F;
+		}
 	}
 
-	if (combo_ > max_combo_)
-		max_combo_ = combo_;
+	if (combo_&kTopBit ? 0 : combo_ > max_combo_)
+		max_combo_ = combo_ & kTopBit ? 0 : combo_;
 }
 //テクニック点加算
 void Scoring::addTechnique()
@@ -313,6 +320,11 @@ void Scoring::addLevel()
 
 	score_ += static_cast<unsigned long long>(kLevelScore) * static_cast<unsigned long long>(level_);
 	createNumber(kLevelScore * level_, add_num_texture_);
+}
+
+unsigned int Scoring::getCombo()
+{
+	return combo_ & kTopBit ? 0 : combo_;
 }
 
 void Scoring::createNumber(unsigned int Num, ID3D11ShaderResourceView* Handle)

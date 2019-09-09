@@ -26,8 +26,8 @@ const float kGuideHeight = 214.0F;	            //ガイドのテクスチャの高さ
 const float kGuideWidth = 5.0F;		            //ガイドのテクスチャの幅
 const int kMaxPlayer = 4;			            //最大プレイ人数
 const float kDefGuid = 0.05F;					//ガイドの減少比率
-const float kGuidMin = 0.1F;					//ガイドの最小減少比率値
-const int kDeleteGuidLevel = 2;					//ガイドが消え始めるレベル
+const float kGuidMin = 0.3F;					//ガイドの最小減少比率値
+const int kDeleteGuidLevel = 1;					//ガイドが消え始めるレベル
 
 constexpr float kParticleInterval = 2.5F;       //パーティクルの生成間隔
 

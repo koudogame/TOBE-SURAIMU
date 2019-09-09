@@ -28,6 +28,9 @@ const Vector3 kStarInformation[3] = {	//星の切り取り情報( x,y,size )
 	Vector3(150.0F,0.0F,226.0F),
 	Vector3(150.0F + 226.0F,0.0F,300.F)
 };
+const float kBandWidth = 100.0F;
+const float kBandHeight = 300.0F;
+const float kBandInterval = 0.0F;
 
 const float kStarColorThreshold[2] =		//色変更の閾値
 {
@@ -86,6 +89,7 @@ bool Star::init(const Vector2 & Position, const float Angle, const float Spin, c
 	alive_flag_ = true;
 
 	setAngle();
+	band_.init(id_, (size_ - kStarMin) / kStarDifference);
 
 	return true;
 }
@@ -97,6 +101,7 @@ void Star::destroy()
 
 	s_particle_container_.get()->destroy();
 	TaskManager::getInstance()->unregisterObject(this);
+	band_.destroy();
 	TextureLoder::getInstance()->release(texture_);
 	TextureLoder::getInstance()->release(overlay_texture_);
 }
@@ -104,11 +109,14 @@ void Star::destroy()
 //更新
 void Star::update()
 {
+	/*if (position_.y > -size_ && position_.y < getWindowHeight<float>() + size_)
+		addFreeFallParticle();*/
 	s_particle_container_.get()->update();
 
 	position_.y += fall_;
 	angle_[0] += spin_;
 	setAngle();
+	band_.update();
 
 	Space::getInstance()->registration(this, position_, size_);
 }
@@ -119,7 +127,7 @@ void Star::draw()
 	if (position_.y < -size_)
 		return;
 
-	//切り取り範囲
+	//星の描画
 	RECT trim;
 	trim.left = static_cast<long>(kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].x);
 	trim.top = static_cast<long>(kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].y) +
@@ -129,6 +137,9 @@ void Star::draw()
 
 	Sprite::getInstance()->reserveDraw(overlay_texture_, position_, trim, 1.0F, 0.7F, Vector2(1.0F, 1.0F), -(XMConvertToRadians(angle_[0]) - XM_PIDIV2), Vector2(kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F, kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F), Sprite::getInstance()->chengeMode());
 	Sprite::getInstance()->reserveDraw(texture_, position_, trim, 1.0F, 0.75F, Vector2(1.0F, 1.0F), -(XMConvertToRadians(angle_[0]) - XM_PIDIV2), Vector2(kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F, kStarInformation[(static_cast<int>(size_) - kStarMin) / kStarDifference].z / 2.0F));
+
+	//軌跡の描画
+	band_.draw(position_);
 }
 
 //生存確認

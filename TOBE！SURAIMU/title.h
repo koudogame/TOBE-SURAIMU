@@ -3,6 +3,7 @@
 #include "scene_base.h"
 #include "title_object.h"
 #include "timer.h"
+#include "csvLoader.h"
 
 //-----------------------------------------------------------------------------
 // タイトル
@@ -43,6 +44,7 @@ private:
 		kStar1,
 		kStar2,
 		kStar3,
+		kStar4,
 		kWallRight,
 		kWallLeft,
 		kBlack,
@@ -62,6 +64,7 @@ private:
 	float volume_;				                                        //音量
 	SceneBase* (Title::* scene_)() = nullptr;		                    //更新処理の関数ポインタ
 	Timer<Seconds> timer_;
+	CsvLoader first_stage_;
 
 	//内部利用関数
 private:

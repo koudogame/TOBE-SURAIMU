@@ -20,6 +20,7 @@
 #include <Audio.h>
 #include <thread>
 #include <dinput.h>
+#include <random>
 
 
 #include <Windows.h>

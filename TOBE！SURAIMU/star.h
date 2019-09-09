@@ -5,6 +5,7 @@
 #include "object_base.h"
 #include "shape.h"
 #include "freeFallParticle_container.h"
+#include "band.h"
 
 const int kStarLineNum = 5;		//星を形成する線分の数
 
@@ -81,5 +82,6 @@ private:
 
     ID3D11ShaderResourceView* texture_;         //星のテクスチャ
 	ID3D11ShaderResourceView* overlay_texture_;	//星の加算合成テクスチャ
+	Band band_;
 };
 
