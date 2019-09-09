@@ -15,6 +15,7 @@ const float kBandHeight = 300.0F;
 const float kChangeAlphaVol = (kBandMaxAlpha - kBandMinAlpha) / 100.0F;
 const float kChangeScaleVol = (kBandMaxScale - kBandMinScale) / 100.0F;
 const float kCreateIntervalScale = 0.3F;
+const int kWarmUp = 100;
 
 
 Band::Band()
@@ -32,6 +33,9 @@ bool Band::init(int ColorID, int SizeID)
 	color_id_ = ColorID;
 	size_id_ = SizeID;
 	band_inf_.push_back(BandInf(kBandMaxAlpha,kBandMinScale));
+
+	for (int i = 0; i < kWarmUp; ++i)
+		this->update();
 
 	return true;
 }

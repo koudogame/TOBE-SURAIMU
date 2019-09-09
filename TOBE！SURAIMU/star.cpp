@@ -125,7 +125,8 @@ void Star::update()
 void Star::draw()
 {
 	if (position_.y < -size_ ||
-		position_.y > getWindowHeight<float>() + size_ + band_.getHeight())
+		position_.y > getWindowHeight<float>() + size_ + band_.getHeight() ||
+		static_cast<int>(size_) == 0)
 		return;
 
 	//¯‚Ì•`‰æ

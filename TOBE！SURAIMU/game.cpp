@@ -50,7 +50,7 @@ bool Game::init()
 
 	texture_ = TextureLoder::getInstance()->load(L"Texture/shadow1.png");
 
-	scene_ = std::make_unique<Endless>();
+	scene_ = std::make_unique<Title>();
 
 	if (scene_.get()->init() == false)
 		return false;

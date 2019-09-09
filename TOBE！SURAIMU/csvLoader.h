@@ -24,5 +24,6 @@ public:
 private:
 	wchar_t comma_;
 	std::vector < std::vector < std::wstring >> container_;
+	std::vector<std::wstring> last_data_;
 };
 
