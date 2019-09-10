@@ -162,7 +162,7 @@ void Progress::draw()
 {
     stage_->draw( {0.0F, offset_} );
     player_->draw( {0.0F, offset_} );
-    fail_wall_->draw( {0.0F, offset_} );
+    //fail_wall_->draw( {0.0F, offset_} );
 }
 /*===========================================================================*/
 // 移動
@@ -177,6 +177,7 @@ void Progress::setMove( const float Dist )
 // スクロール用初期化処理
 void Progress::changeStage()
 {
+    stage_->changeStage();
     scroll_sin_ = kScrollSinMinDeg;
     player_scroll_count_ = last_player_scroll_count_ = 0.0F;
     stage_scroll_count_  = last_stage_scroll_count_  = 0.0F;

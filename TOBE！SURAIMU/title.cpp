@@ -200,7 +200,7 @@ void Title::draw()
 void Title::input()
 {
 	//ì¸óÕÇ™Ç†Ç¡ÇΩÇÁÉJÅ[É\ÉãîΩì]
-	if (key_.pressed.Down || pad_.dpadDown == pad_.PRESSED || pad_.leftStickDown == pad_.PRESSED)
+	if (key_.pressed.Down || pad_.dpadDown == pad_.PRESSED || pad_.leftStickRight == pad_.PRESSED)
 	{
 		if (select_menu_ == Menu::kPlay)
 		{
@@ -217,7 +217,7 @@ void Title::input()
 		}
 		timer_.start();
 	}
-	else if (key_.pressed.Up || pad_.dpadUp == pad_.PRESSED || pad_.leftStickUp == pad_.PRESSED)
+	else if (key_.pressed.Up || pad_.dpadUp == pad_.PRESSED || pad_.leftStickLeft == pad_.PRESSED)
 	{
 		if (select_menu_ == Menu::kRanking)
 		{

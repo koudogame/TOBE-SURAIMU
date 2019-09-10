@@ -12,7 +12,22 @@
 
 /*===========================================================================*/
 constexpr float kLimitYUp   = getWindowHeight<float>() * 0.00F;
-constexpr float kLimitYDown = getWindowHeight<float>() * 100.0F;
+constexpr float kLimitYDown = getWindowHeight<float>() * 10.0F;
+constexpr int   kSpeedLimitIndex = 11;
+constexpr float kSpeedTable[kSpeedLimitIndex] =
+{
+    0.0F,
+    2.0F,
+    -0.2F,
+    -0.5F,
+    -1.0F,
+    -1.2F,
+    -1.5F,
+    -2.5F,
+    -2.6F,
+    -2.8F,
+    -3.0F,
+};
 const Line kInitPosition { 250.0F, 750.0F, 1030.0F, 750.0F };
 constexpr float kInitSpeed = 2.0F;
 constexpr float kStartSpeed = -0.2F;
@@ -77,7 +92,7 @@ bool FailWall::init()
 
     // メンバ初期化
     frame_counter_ = 0;
-    speed_ = 0.0F;
+    speed_index_ = 0;
     scaling_ = kAmountOfScaling;
     scale_y_.resize( kScaleSaveNum );
     for( auto& scale : scale_y_ )
@@ -106,8 +121,8 @@ void FailWall::destroy()
 void FailWall::update()
 {
     // 上へスクロール
-    shape_->start.y += speed_;
-    shape_->end.y += speed_; 
+    shape_->start.y += kSpeedTable[speed_index_];
+    shape_->end.y += kSpeedTable[speed_index_];
     if (shape_->start.y < kLimitYUp)
     {
         // 上限を超えたら戻す
@@ -184,19 +199,23 @@ void FailWall::draw()
 /*===========================================================================*/
 void FailWall::start()
 {
-    speed_ = kInitSpeed;
+    speed_index_ = 1;
 }
 
 void FailWall::upStart()
 {
-    speed_ = kStartSpeed;
+    ++speed_index_;
 }
 void FailWall::speedUp()
 {
     // 上昇が開始していたら、倍率をかける
-    if( speed_ <= kStartSpeed )
+    if( isUp() )
     {
-        speed_ *= kMagnificationSpeed;
+        // 限界を超えないよう制御
+        if( ++speed_index_ >= kSpeedLimitIndex )
+        {
+            --speed_index_;
+        }
     }
 }
 
@@ -227,7 +246,7 @@ void FailWall::setMove( float Disp )
 /*===========================================================================*/
 bool FailWall::isUp() const
 {
-    return speed_ <= kStartSpeed;
+    return speed_index_ > 1;
 }
 const Vector2& FailWall::getPosition() const 
 {

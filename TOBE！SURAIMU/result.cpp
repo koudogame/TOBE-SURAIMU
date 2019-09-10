@@ -79,8 +79,8 @@ constexpr Vector2 kPositionFromBase[] {
 enum { kSelectSetName, kSelectOneMore, kSelectTitle, };
 constexpr Vector2 kPositionCursorFromBase[] = {
     {515.0F, 287.0F}, // set name
-    {515.0F, 352.0F}, // one more
-    {515.0F, 417.0F}, // title
+    {445.0F, 385.0F}, // one more
+    {610.0F, 385.0F}, // title
 };
 
 enum { kName,  kScore, kHeight, kCombo };
@@ -544,8 +544,8 @@ SceneBase* Result::selectNext()
 	}
 	// ëIë
 	else if( key_tracker.pressed.Up ||
-			 pad_tracker.leftStickUp == PadTracker::PRESSED ||
-             pad_tracker.dpadUp      == PadTracker::PRESSED )
+			 pad_tracker.leftStickLeft == PadTracker::PRESSED ||
+             pad_tracker.dpadLeft      == PadTracker::PRESSED )
 	{
 		// è„å¿Çí¥Ç¶Ç»Ç¢ÇÊÇ§êßå‰
 		if( ( rank_ <= kRegisteredNum && select_ > kSelectSetName ) || // ÉâÉìÉNÉCÉìéû
@@ -564,8 +564,8 @@ SceneBase* Result::selectNext()
 		}
 	}
 	else if( key_tracker.pressed.Down ||
-			 pad_tracker.leftStickDown == PadTracker::PRESSED ||
-             pad_tracker.dpadDown )
+			 pad_tracker.leftStickRight == PadTracker::PRESSED ||
+             pad_tracker.dpadRight )
 	{
 		// â∫å¿Çí¥Ç¶Ç»Ç¢ÇÊÇ§êßå‰
 		if( select_ < kSelectTitle )

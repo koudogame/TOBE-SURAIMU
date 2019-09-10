@@ -11,6 +11,7 @@
 /*===========================================================================*/
 static constexpr wchar_t kTextureFile[] = L"Texture/progress.png";
 static constexpr RECT    kTrimming = { 0L, 0L, 70L, 2160L };
+static constexpr RECT    kTrimmingStageOneTail = { 210L, 0L, 280L, 700L };
 static constexpr float   kDrawDepth = 10.0F;
 static constexpr float   kOneStageHeight = 720.0F;
 
@@ -60,8 +61,18 @@ void ProgressStage::destroy()
 
 /*===========================================================================*/
 // 更新処理
+#include "key.h"
 void ProgressStage::update()
 {
+    if( Key::getInstance()->getState().Up )
+    {
+        position_.y += 5.0F;
+    }
+    if( Key::getInstance()->getState().Down )
+    {
+        position_.y -= 5.0F;
+    }
+
     if( position_.y > getWindowHeight<float>() )
     {
         position_.y -= kOneStageHeight * 3.0F;
@@ -78,14 +89,14 @@ void ProgressStage::draw( const Vector2& Offset )
 
     kSprite->reserveDraw(
         texture_,
-        position_ + Offset,
+        draw_position,
         kTrimming,
         1.0F, // alpha
         kDrawDepth
     );
 
     // 上が空白なら連ねて描画
-    if( position_.y > 0.0F )
+    if( draw_position.y > 0.0F )
     {
         draw_position.y -= kOneStageHeight * 3.0F;
 
@@ -97,18 +108,33 @@ void ProgressStage::draw( const Vector2& Offset )
             kDrawDepth
         );
     }
-    // 下が空白( ゲーム開始直後に下へ落下した場合のみ )
-    else if( position_.y + (kOneStageHeight * 3.0F) < getWindowHeight<float>() )
+    // 下が空白
+    else if( draw_position.y + (kOneStageHeight * 3.0F) < getWindowHeight<float>() )
     {
-        draw_position.x -= 1.0F;
-        draw_position.y += kOneStageHeight * 3.0F;
-        kSprite->reserveDraw(
-            texture_,
-            draw_position,
-            {210L, 0L, 280L, 700L },
-            1.0F,
-            kDrawDepth
-        );
+        // 周回していたら、ステージ3を描画
+        if( is_rounded_ )
+        {
+            draw_position.y += kOneStageHeight * 3.0F;
+            kSprite->reserveDraw(
+                texture_,
+                draw_position,
+                kTrimming,
+                1.0F,
+                kDrawDepth
+            );
+        }
+        // 周回していなかったら、ステージ1を伸ばしたやつ描画
+        else
+        {
+            draw_position.y += kOneStageHeight * 3.0F;
+            kSprite->reserveDraw(
+                texture_,
+                draw_position,
+                kTrimmingStageOneTail,
+                1.0F,
+                kDrawDepth
+            );
+        }
 
     }
 }

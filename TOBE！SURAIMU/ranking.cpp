@@ -134,8 +134,8 @@ SceneBase* Ranking::update()
 
 	// 上新規入力時、1列分上へスクロール
 	if( key_tracker.pressed.Up ||
-		pad_tracker.leftStickUp == PadTracker::PRESSED ||
-        pad_tracker.dpadUp      == PadTracker::PRESSED )
+		pad_tracker.leftStickLeft == PadTracker::PRESSED ||
+        pad_tracker.dpadLeft      == PadTracker::PRESSED )
 	{
 		magnification_ = 1.0F;
 		addOffset( &offset_ , -kLineHeight );
@@ -147,8 +147,8 @@ SceneBase* Ranking::update()
 	}
 	// 下新規入力時、1列分下へスクロール
 	else if( key_tracker.pressed.Down ||
-			 pad_tracker.leftStickDown == PadTracker::PRESSED ||
-             pad_tracker.dpadDown      == PadTracker::PRESSED )
+			 pad_tracker.leftStickRight == PadTracker::PRESSED ||
+             pad_tracker.dpadRight      == PadTracker::PRESSED )
 	{
 		magnification_ = 1.0F;
 		addOffset( &offset_ , kLineHeight );
@@ -160,16 +160,16 @@ SceneBase* Ranking::update()
 	}
 	// 上長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
 	else if( key_state.Up ||
-             pad_state.IsLeftThumbStickUp() ||
-             pad_state.dpad.up )
+             pad_state.IsLeftThumbStickLeft() ||
+             pad_state.dpad.left )
 	{
 		addOffset( &offset_ , -kOffset * magnification_ );
 		addMagnification( &magnification_ );
 	}
 	// 下長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
 	else if( key_state.Down ||
-             pad_state.IsLeftThumbStickDown() ||
-             pad_state.dpad.down )
+             pad_state.IsLeftThumbStickRight() ||
+             pad_state.dpad.right )
 	{
 		addOffset( &offset_ , kOffset * magnification_ );
 		addMagnification( &magnification_ );

@@ -58,7 +58,7 @@ constexpr int      kStartStageID = 0;
 constexpr int      kStageIDMin = 1;
 constexpr int      kStageIDMax = 4;
 constexpr int      kStageNum = 3;                               // ステージ数
-constexpr float    kFailWallUpStartLine = 3000.0F;              // 炎が上昇を開始する位置( この距離分プレイヤーが上昇したら、炎の上昇スタート )
+constexpr float    kFailWallUpStartLine = 1000.0F;              // 炎が上昇を開始する位置( この距離分プレイヤーが上昇したら、炎の上昇スタート )
 constexpr unsigned kHeight = 0U;                                // レベルテーブル : ステージの長さ( 高さ )
 constexpr unsigned kThresholdUp = 1U;                           // レベルテーブル : 閾値( スクロール↑ )
 constexpr unsigned kThresholdDown = 2U;                         // レベルテーブル : 閾値( スクロール↓ )
@@ -349,11 +349,11 @@ void Endless::scroll()
 
 
     // 各オブジェクトのスクロール処理
-    player_displacement_y_sum_ += over;
     TaskManager::getInstance()->allSetOver( over );
 
     if( over > 0.0F ) 
     {
+        player_displacement_y_sum_ += over;
         climb_ += over;
         player_->addScore( over );  // プレイヤーにスコア反映
     }
