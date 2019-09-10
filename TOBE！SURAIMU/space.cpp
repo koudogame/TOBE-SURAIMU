@@ -135,7 +135,7 @@ int toMorton( const RECT& Range, const Vector2& TopLeft, const Vector2& BottomRi
     {
         level = 0;
 
-        for (int i = kDivideLevel - 1; i > 0; ++i)
+        for (int i = kDivideLevel - 1; i >= 0; --i)
         {
             // Š‘®‹óŠÔ‚ª”»–¾
             if (kXorMorton | (kMask << (i * 2)))

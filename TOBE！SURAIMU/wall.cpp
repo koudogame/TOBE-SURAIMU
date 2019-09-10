@@ -54,7 +54,7 @@ bool Wall::init()
 	if (texture_ == nullptr) { return false; }
 
 	// Œ`
-	myshape_ = new Line[2]();
+	myshape_ = new Line[2];
 
 
     // ‹óŠÔ‚Ö‚Ì“o˜^

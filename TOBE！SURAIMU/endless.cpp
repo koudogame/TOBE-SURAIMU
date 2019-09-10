@@ -43,6 +43,7 @@ using PadTracker = GamePad::ButtonStateTracker;
 constexpr wchar_t kStartStageFile[] = L"State/start_pattern.csv";
 constexpr float kWindowWidth  = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
+constexpr float kStageHeight = 7920.0F;
 enum { kAButton, kStick };
 constexpr Vector2 kPosition = Vector2(kWindowWidth - 272.0F, kWindowHeight - 128.0F);
 const RECT kTrimming[] = {
@@ -131,7 +132,7 @@ bool Endless::init()
     Background::getInstance()->setFailWall( fail_wall_ );
 
     // is“x‰Šú‰»
-    if( progress_->init( 7200.0F, player_, fail_wall_ ) == false )
+    if( progress_->init( kStageHeight, player_, fail_wall_ ) == false )
     {
         return false;
     }
@@ -380,7 +381,7 @@ bool Endless::checkAndLoadStage()
         if( stage_ != kStartStageID )
         {
             progress_->changeStage();
-        Background::getInstance()->changeColor();
+            Background::getInstance()->changeColor();
         }
 
         ++stage_;

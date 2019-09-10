@@ -147,7 +147,7 @@ void Progress::update()
     }
     else if( player_->getPosition().y < kPlayerEndLine )
     {
-        // ゴール位置より上に行ったら
+        //ゴール位置より上に行ったら
         float over = player_->getPosition().y - kPlayerEndLine;
         offset_ = -over;
     }

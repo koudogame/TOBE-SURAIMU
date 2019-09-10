@@ -58,7 +58,7 @@ bool ProgressPlayer::init( Player* const Player,
     magnification_ = Magnification;
 
     // ‚»‚Ì‘¼ƒƒ“ƒo‚Ì‰Šú‰»
-    last_position_y_ = player_->getPosition().x - 1350.0F;
+    last_position_y_ = player_->getPosition().x - 1400.0F;
 
     return true;
 }

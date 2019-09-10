@@ -32,6 +32,8 @@ RankingManager::RankingManager() :
             {
                 break;
             }
+
+            str[8] = '\0';
             ranking_[i].name.assign(str);
         }
 
