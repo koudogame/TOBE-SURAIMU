@@ -155,8 +155,6 @@ bool Endless::init()
 	SOUND->stop( SoundId::kPlay );
 	SOUND->play( SoundId::kPlay , true );
 
-	description_ = TextureLoder::getInstance()->load( L"Texture/a_jump.png" );
-
 	return true;
 }
 /*===========================================================================*/
@@ -205,23 +203,6 @@ void Endless::draw()
     {
         pause_->draw();
     }
-
-	if( false )// player_->guide() > 0.0F )
-	{
-		if (player_->isJump())
-		{
-			Sprite::getInstance()->reserveDraw(
-				description_, kPosition, kTrimming[kStick],
-				1.0F, 99.0F);
-		}
-		else if(!player_->isJump())
-		{
-			Sprite::getInstance()->reserveDraw(
-				description_, kPosition, kTrimming[kAButton],
-				1.0F, 99.0F);
-		}
-
-	}
 }
 
 /*===========================================================================*/
