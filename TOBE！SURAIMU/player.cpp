@@ -410,6 +410,7 @@ void Player::inputjump()
 		SOUND->play(SoundId::kJump, false);
 		flag_.set(Flag::kJump);
 		flag_.set(Flag::kStarCollision);
+		flag_.reset(Flag::kWallCollision);
 		flag_.reset(Flag::kParticle);
 		flag_.reset(Flag::kOnce);
 		direction_id_ = Direction::kFlay;
