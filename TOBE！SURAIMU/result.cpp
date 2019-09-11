@@ -427,6 +427,21 @@ SceneBase* Result::setName()
             ++select_;
             update_ = &Result::selectNext;
         }
+        // バックで一文字戻る
+        else if( name_[index_name_] == '-' )
+        {
+            SOUND->stop(SoundId::kDicision);
+            SOUND->setPitch(SoundId::kDicision, -0.5F);
+            SOUND->stop(SoundId::kSelect);
+            SOUND->play(SoundId::kDicision, false);
+
+            if (index_name_ >= 1U)
+            {
+                name_[index_name_] = '\0';
+                --index_name_;
+                index_char_ = Text::getCharNum(name_[index_name_]);
+            }
+        }
 		// 名前上限で入力終了
         else if( index_name_ + 1U >= kNameMax )
 		{
@@ -441,21 +456,6 @@ SceneBase* Result::setName()
 			index_char_ = kCharNum - 1;
 			name_[ index_name_ ] = kCharTable[ index_char_ ];
 
-		}
-	}
-	// 戻る
-	else if( key_tracker.pressed.Back || pad_tracker.b == PadTracker::PRESSED )
-	{
-		SOUND->stop( SoundId::kDicision );
-		SOUND->setPitch( SoundId::kDicision , -0.5F );
-		SOUND->stop( SoundId::kSelect );
-		SOUND->play( SoundId::kDicision , false );
-
-		if( index_name_ >= 1U )
-		{
-			name_[index_name_] = '\0';
-			--index_name_;
-			index_char_ = Text::getCharNum( name_[ index_name_ ] );
 		}
 	}
 	// 選択
@@ -501,7 +501,7 @@ SceneBase* Result::setName()
 
 		count_frame_ = 0U;
 		// 循環させる
-		if( ++index_char_ >= kCharNum ) { index_char_ = Text::getCharNum('A'); }
+		if( ++index_char_ >= kCharNum ) { index_char_ = Text::getCharNum('0'); }
 		name_[ index_name_ ] = kCharTable[ index_char_ ];
 	}
 

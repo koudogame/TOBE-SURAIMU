@@ -152,8 +152,9 @@ int toMorton( const RECT& Range, const Vector2& TopLeft, const Vector2& BottomRi
 
 
     // ‹óŠÔ‚Ö“o˜^
-    int block = (static_cast<unsigned>(std::pow(kDivideNum, level)) - 1U) /
+    int block = (static_cast<int>(std::pow(kDivideNum, level)) - 1U) /
         (kDivideNum - 1U);
+
     return block += toMorton(Range, TopLeft) >> ((kDivideLevel - level) * 2);
 }
 
