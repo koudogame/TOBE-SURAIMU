@@ -7,7 +7,9 @@
 
 class AIBase;
 class Wall;
+class FailWall;
 class StarContainer;
+class Progress;
 
 class Demo :
     public SceneBase
@@ -27,6 +29,10 @@ public:
 private:
     static bool is_end_;
 
+    SceneBase* start();
+    SceneBase* play();
+    SceneBase* (Demo::*update_)() = nullptr;
+
     void trance(); 
 
     void scroll();
@@ -37,7 +43,9 @@ private:
 
     AIBase* ai_           = nullptr;
     Wall*   wall_         = nullptr;
+    FailWall* fail_wall_  = nullptr;
     StarContainer* stars_ = nullptr;
+    Progress* progress_   = nullptr;
 
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time_;
     bool is_fadein_       = false;

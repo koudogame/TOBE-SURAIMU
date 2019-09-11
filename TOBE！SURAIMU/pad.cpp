@@ -4,11 +4,8 @@
 void Pad::update()
 {
 	// 入力を取得＆トラッカー更新
-	for (int i = 0; i < 4; i++)
-	{
-		state_[i] = pad_.GetState(i);
-		tracker_[i].Update(state_[i]);
-	}
+	state_ = pad_.GetState(0);
+	tracker_.Update(state_);
 
 	// 振動
 	if (flag_)
@@ -26,15 +23,24 @@ void Pad::update()
 	}
 }
 
+void Pad::update( Dinput * const Instance)
+{
+	if ((*Instance->getDevice()) == nullptr)
+		state_ = pad_.GetState(0);
+	else
+		Instance->update(&state_);
+	tracker_.Update(state_);
+}
+
 //**************************************************************************//
 // 処理内容	: 指定された秒数ゲームパッド振動
 // 引数リスト	: 振動継続時間( 秒 )
 // 戻り値			: 無し
-void Pad::Vibration( float Second, float Right, float Left )
+void Pad::Vibration(float Second, float Right, float Left)
 {
-    second_ = Second;
-    vib_right_ = Right;
-    vib_left_ = Left;
+	second_ = Second;
+	vib_right_ = Right;
+	vib_left_ = Left;
 
-    flag_ = true;
+	flag_ = true;
 }

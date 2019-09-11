@@ -75,6 +75,12 @@
     <Filter Include="Project\Game\Object\FailWall">
       <UniqueIdentifier>{2d412ce3-062b-49a0-b261-e5fe6c4967fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Scene\Demo">
+      <UniqueIdentifier>{03c701d8-5d1b-4862-81e4-22e99968f370}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Scene\Result">
+      <UniqueIdentifier>{69320312-d4af-44f1-ab7f-01dd9c64468c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Project\Game\Others">
       <UniqueIdentifier>{583b3209-771a-4518-a699-11345f16cc1f}</UniqueIdentifier>
     </Filter>
@@ -131,6 +137,12 @@
     </Filter>
     <Filter Include="Project\Game\Scene\Result">
       <UniqueIdentifier>{69320312-d4af-44f1-ab7f-01dd9c64468c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Object\UI\Progress">
+      <UniqueIdentifier>{d7f45e5a-af2a-4b0d-b1b4-7daee73bbb74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Object\FailWall">
+      <UniqueIdentifier>{2d412ce3-062b-49a0-b261-e5fe6c4967fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -269,9 +281,6 @@
     <ClCompile Include="fail_wall.cpp">
       <Filter>Project\Game\Object\FailWall</Filter>
     </ClCompile>
-    <ClCompile Include="ai_demo.cpp">
-      <Filter>Project\Game\Object\AI</Filter>
-    </ClCompile>
     <ClCompile Include="demo.cpp">
       <Filter>Project\Game\Scene\Demo</Filter>
     </ClCompile>
@@ -281,14 +290,38 @@
     <ClCompile Include="background.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
-    <ClCompile Include="view_background.cpp">
+    <ClCompile Include="view_wave.cpp">
       <Filter>Project\Game\Object\Background</Filter>
     </ClCompile>
-    <ClCompile Include="wave_background.cpp">
+    <ClCompile Include="view_star_mini.cpp">
       <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="view_star_big.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="view_mist.cpp">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_demo.cpp">
+      <Filter>Project\Game\Object\AI</Filter>
     </ClCompile>
     <ClCompile Include="progress.cpp">
-      <Filter>Project\Game\Object\UI</Filter>
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClCompile>
+    <ClCompile Include="progress_player.cpp">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClCompile>
+    <ClCompile Include="progress_fail_wall.cpp">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClCompile>
+    <ClCompile Include="progress_stage.cpp">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClCompile>
+    <ClCompile Include="dinput.cpp">
+      <Filter>Project\System\DirectX\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="band.cpp">
+      <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -447,9 +480,6 @@
     <ClInclude Include="fail_wall.h">
       <Filter>Project\Game\Object\FailWall</Filter>
     </ClInclude>
-    <ClInclude Include="ai_demo.h">
-      <Filter>Project\Game\Object\AI</Filter>
-    </ClInclude>
     <ClInclude Include="demo.h">
       <Filter>Project\Game\Scene\Demo</Filter>
     </ClInclude>
@@ -459,21 +489,43 @@
     <ClInclude Include="background.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
-    <ClInclude Include="view_background.h">
-      <Filter>Project\Game\Object\Background</Filter>
-    </ClInclude>
     <ClInclude Include="back_object_base.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
     <ClInclude Include="object_base.h">
       <Filter>Project\Game\Object</Filter>
     </ClInclude>
-    <ClInclude Include="wave_background.h">
+    <ClInclude Include="view_mist.h">
       <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
-    <ClInclude Include="progress.h">
-      <Filter>Project\Game\Object\UI</Filter>
+    <ClInclude Include="view_star_mini.h">
+      <Filter>Project\Game\Object\Background</Filter>
     </ClInclude>
+    <ClInclude Include="view_wave.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="view_star_big.h">
+      <Filter>Project\Game\Object\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_demo.h">
+      <Filter>Project\Game\Object\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="progress.h">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClInclude>
+    <ClInclude Include="progress_player.h">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClInclude>
+    <ClInclude Include="progress_fail_wall.h">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClInclude>
+    <ClInclude Include="progress_stage.h">
+      <Filter>Project\Game\Object\UI\Progress</Filter>
+    </ClInclude>
+    <ClInclude Include="dinput.h">
+      <Filter>Project\System\DirectX\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="band.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

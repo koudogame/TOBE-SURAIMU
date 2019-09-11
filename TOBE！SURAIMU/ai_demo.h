@@ -1,17 +1,21 @@
 
-// 板場　温樹
+// 板場
 
 #pragma once
 
 #include "ai_base.h"
 
 class Sercher;
+class Star;
 
-// デモ用プレイ(第1号)
-//
-// 画面内にある星に飛び移る
-class AIDemo :
-    public AIBase
+//-----------------------------------------------------------------------------
+// デモプレイ用CPU
+//-----------------------------------------------------------------------------
+// --説明--
+// 画面内にあるスターへ飛び移る
+class AIDemo
+    : public AIBase
+
 {
 public:
     AIDemo();
@@ -24,13 +28,21 @@ public:
 private:
     bool isSquat() override;
     bool isJump()  override;
+    bool isMoveLeft()  override;
+    bool isMoveRight() override;
+    bool isMoveDown()  override;
 
-    void setPurpose();
+    void setTarget();
 
-    bool checkPurposeForUp( ObjectBase* const Target );
-    bool checkPurposeForDown( ObjectBase* const Target );
-    bool checkPurposeForGround( ObjectBase* const Target );
+    bool (AIDemo::*getJudgeFunc())(ObjectBase* const);
+        bool judgeForStaying( ObjectBase* const );
+        bool judgeForJumping( ObjectBase* const );
+        bool judgeForFalling( ObjectBase* const );
 
-    Sercher    *sercher_ = nullptr;
-    ObjectBase *purpose_ = nullptr;
+
+    Sercher *sercher_ = nullptr;
+    Star    *target_ = nullptr;
+
+    Vector2 last_position_;
+    bool is_jumping_ = false;
 };

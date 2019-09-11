@@ -12,11 +12,14 @@
 #include "key.h"
 #include "pad.h"
 // ƒIƒuƒWƒFƒNƒg
+#include "background.h"
 #include "task_manager.h"
 #include "space.h"
 #include "ai_demo.h"
 #include "wall.h"
+#include "fail_wall.h"
 #include "star_container.h"
+#include "progress.h"
 // ‘JˆÚæ
 #include "title.h"
 
@@ -54,7 +57,7 @@ constexpr long long kDemoPlayTimeSc = 30LL; // ƒfƒ‚ƒvƒŒƒCŠÔ@(’PˆÊ : •b)
 constexpr long long kEndTimeSc      = 1LL;  // I—¹AˆÃ“]ŠÔ(’PˆÊ : •b)
 constexpr long long kDemoTimeSc = kStartTimeSc + kDemoPlayTimeSc + kEndTimeSc;  // ƒV[ƒ“‚Ì‡ŒvŠÔ
 const RECT kRangeOfScreen { 0L, 0L, 1280L, 720L };
-constexpr float kDepth = 10.0F;
+constexpr float kDepth = 100.0F;
 constexpr float kAmountOfAlphaForIn  = 0.01F;       // ƒtƒF[ƒhƒCƒ“A@ƒAƒ‹ƒtƒ@’l•Ï‰»—Ê
 constexpr float kAmountOfAlphaForOut = 0.10F;       // ƒtƒF[ƒhƒAƒEƒgAƒAƒ‹ƒtƒ@’l•Ï‰»—Ê
 
@@ -68,6 +71,9 @@ constexpr StarState kInitStarState[kInitStarNum] =  // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ
 constexpr float kScrollThresholdUp   = getWindowHeight<float>() * 0.10F;
 constexpr float kScrollThresholdDown = getWindowHeight<float>() * 0.90F;
 
+constexpr Vector2 kInitPlayerPosition { 600.0F, 565.0F };
+
+constexpr float kStageHeight = 7200.0F;
 
 /*===========================================================================*/
 Demo::Demo()
@@ -92,15 +98,24 @@ bool Demo::init()
 
     // Demo—pAI
     ai_ = new AIDemo();
-    if( ai_->init( { 640.0F, 650.0F } ) == false ) { return false; }
+    if( ai_->init( kInitPlayerPosition ) == false ) { return false; }
 
     // •Ç
     wall_ = new Wall();
     if( wall_->init() == false ) { return false; }
 
+    // ‰Š
+    fail_wall_ = new FailWall();
+    if( fail_wall_->init() == false ) { return false; }
+    Background::getInstance()->setFailWall( fail_wall_ );
+
     // ƒXƒ^[ŠÇ—ƒRƒ“ƒeƒi
     stars_ = new StarContainer();
     setStarPattern();
+
+    // is“x
+    progress_ = new Progress();
+    if( progress_->init(kStageHeight, ai_, fail_wall_) == false ) { return false; } 
 
     for( int i = 0; i < kInitStarNum; ++i )
     {
@@ -118,14 +133,12 @@ bool Demo::init()
         // ƒGƒ‰[
             return false;
         }
-
-        // —‰º‚ğ•t—^
-        star->setFall();
     }
 
 
     // ƒƒ“ƒo‰Šú‰»
     is_end_ = false;
+    update_ = &Demo::start;
     is_fadein_ = true;
     alpha_ = 1.0F;
 
@@ -136,11 +149,27 @@ bool Demo::init()
 
 void Demo::destroy()
 {
+    if( progress_ )
+    {
+    // is“x‚ÌŠJ•ú
+        progress_->destroy();
+        safe_delete( progress_ );
+    }
+
     if( stars_ )
     {
     // ¯X‚ÌŠJ•ú
         stars_->destroy();
         safe_delete( stars_ );
+    }
+
+    if( fail_wall_ )
+    {
+    // ‰Š‚ÌŠJ•ú
+        fail_wall_->destroy();
+        safe_delete( fail_wall_ );
+
+        Background::getInstance()->setFailWall( nullptr );
     }
 
     if( wall_ )
@@ -165,8 +194,6 @@ void Demo::destroy()
     }
 }
 
-
-// ƒXƒ^[ŠÇ——pƒRƒ“ƒeƒi‚Ìupdate‚ğŒÄ‚ñ‚Å‚¢‚È‚¢(AI‚ª—‰º‚µ‚½‚Æ‚«A’…’n‚Å‚«‚é‚æ‚¤‚ ‚¦‚Ä)
 
 SceneBase* Demo::update()
 {
@@ -198,34 +225,10 @@ SceneBase* Demo::update()
         return isAnyTrue( &button, sizeof( button ) ) ||
                isAnyTrue( &dpad,   sizeof( dpad ) );
     };
+    if (padAnyInput()) { is_end_ = true; }
    
 
-    if( ai_->isAlive() == false ) { is_end_ = true; } 
-    if( padAnyInput() )         { is_end_ = true; }
-
-
-    // ˆê’èŠÔ‚ÌŒo‰ß‚©Aendƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚ÄˆÃ“]‚àI‚í‚Á‚Ä‚¢‚½‚ç
-    auto elapsed = duration_cast<seconds>(Clock::now() - start_time_).count();
-    if( elapsed >= kDemoTimeSc ||
-        (is_end_ && alpha_ >= 1.0F ))
-    {
-    // ƒ^ƒCƒgƒ‹‚Ö
-        return new Title;
-    }
-
-    if( isCreateStar() )
-    {
-    // ƒXƒ^[‚ğ¶¬‚·‚é
-        if( createStar() == false ) { return nullptr; } 
-    }
-    
-    // ƒXƒNƒ[ƒ‹ˆ—
-    scroll();
-
-    // Õ“Ëˆ—
-    Space::getInstance()->collision();
-
-    return this;
+    return (this->*update_)();
 }
 
 void Demo::draw()
@@ -237,6 +240,54 @@ void Demo::draw()
         alpha_,
         kDepth
     );
+}
+// ƒXƒ^[ƒg
+SceneBase* Demo::start()
+{
+    if( ai_->Player::isJump() )
+    {
+        update_ = &Demo::play;
+        stars_->setFall();
+        ai_->onStartFlag();
+        fail_wall_->start();
+    }
+
+    // Õ“Ëˆ—
+    Space::getInstance()->collision();
+
+    return this;
+}
+// ƒvƒŒƒC
+SceneBase* Demo::play()
+{
+    if (ai_->isAlive() == false) { is_end_ = true; }
+
+
+    // ˆê’èŠÔ‚ÌŒo‰ß‚©Aendƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚ÄˆÃ“]‚àI‚í‚Á‚Ä‚¢‚½‚ç
+    auto elapsed = duration_cast<seconds>(Clock::now() - start_time_).count();
+    if (elapsed >= kDemoTimeSc ||
+        (is_end_ && alpha_ >= 1.0F))
+    {
+        // ƒ^ƒCƒgƒ‹‚Ö
+        return new Title;
+    }
+
+
+    stars_->update();
+    if (isCreateStar())
+    {
+        // ƒXƒ^[‚ğ¶¬‚·‚é
+        if (createStar() == false) { return nullptr; }
+        stars_->setFall();
+    }
+
+    // ƒXƒNƒ[ƒ‹ˆ—
+    scroll();
+
+    // Õ“Ëˆ—
+    Space::getInstance()->collision();
+
+    return this;
 }
 
 
@@ -319,14 +370,14 @@ void Demo::setStarPattern()
     for( int i = 0;; ++i )
     {
     // ƒtƒ@ƒCƒ‹‚É•Û‘¶‚³‚ê‚Ä‚¢‚éƒpƒ^[ƒ“ƒtƒ@ƒCƒ‹–¼‚ğ’Ç‰Á‚µ‚Ä‚¢‚­
-        pattern_file = file.getString( 0, i );
+        pattern_file = file.getString( i, 0 );
         if( wcscmp(pattern_file.c_str(), L"") == 0 )
         {
         // ƒtƒ@ƒCƒ‹I’[
             break;
         }
 
-        pattern_file.insert( 0, L"State/" );    // ƒtƒ@ƒCƒ‹ƒpƒX‚Ö‚ÌŠK‘w’Ç‰Á
+        pattern_file.insert( 0, L"State/" );    // ƒtƒ@ƒCƒ‹ƒpƒX‚ÌŠK‘w’Ç‰Á
         stars_->addPattern( pattern_file );
     }
 }

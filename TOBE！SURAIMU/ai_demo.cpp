@@ -1,245 +1,359 @@
 
-// 板場　温樹
+// 板場
 
 #include "ai_demo.h"
 
 #include "release.h"
+#include "shape.h"
 #include "calc.h"
 #include "sercher.h"
+#include "star.h"
 
 
 
 /*===========================================================================*/
-constexpr float kToRadians = XM_PI / 180.0F;
-float toRadians( float Degrees ) { return Degrees * kToRadians; }
+static constexpr float kToDegrees = 180.0F / XM_PI;
+constexpr float toDegrees( const float Radians ) { return Radians * kToDegrees; }
+static constexpr float kToRadians = XM_PI / 180.0F;
+constexpr float toRadians( const float Degrees ) { return Degrees * kToRadians; }
 
-constexpr float kToDegrees = 180.0F / XM_PI;
-float toDegrees( float Radians ) { return Radians * kToDegrees; }
+// 定数
+/*===========================================================================*/
+static const Circle kSerchRange 
+{
+    { getWindowWidth<float>() * 0.5F, getWindowHeight<float>() * 0.5F },
+    getWindowHeight<float>() * 0.5F
+};
 
-constexpr float kWindowWidth  = getWindowWidth<float>();
-constexpr float kWindowHeight = getWindowHeight<float>();
+static constexpr int   kJumpPercentageDenominator = 1;
+static constexpr float kJumpReach = 380.0F;
+static constexpr float kJumpAngleMin = 5.0F;
+static constexpr float kJumpAngleMax = 15.0F;
 
-constexpr float kJumpRange = 400.0F;
-constexpr float kJumpAngleErrorRange  = 4.0F;   // ジャンプする角度の誤差
+static constexpr float kSquatAngle = 45.0F;
 
-constexpr float kSquatAngleErrorRange = 10.0F;  // しゃがむ角度の誤差
+static constexpr float kJumpingMoveRange = 200.0F;
 
 
+// Ctor, Dtor
 /*===========================================================================*/
 AIDemo::AIDemo()
 {
 
 }
-
 AIDemo::~AIDemo()
 {
-    destroy();
+
 }
 
 
+// override( public )
 /*===========================================================================*/
+// 初期化処理
 bool AIDemo::init( const Vector2& Position, const int No )
 {
     if( Player::init( Position, No ) == false ) { return false; }
 
-    // 検索範囲の設定
-    sercher_ = new Sercher();
-    if( sercher_->init
-        (
-            {kWindowWidth / 2.0F, kWindowHeight / 2.0F},
-            kWindowHeight / 2.0F,
-            ObjectID::kStar
-        ) == false )
+
+    // 検索範囲初期化
+    if( sercher_ == nullptr ) { sercher_ = new Sercher(); }
+    if( sercher_->init(kSerchRange.position, kSerchRange.radius, ObjectID::kStar) == false )
     {
         return false;
     }
 
-    // メンバ初期化
-    purpose_ = nullptr;
+
+    // その他のメンバ初期化
+    target_      = nullptr;
+    last_position_ = getPosition();
+    is_jumping_ = false;
+
 
     return true;
 }
-
+// 終了処理
 void AIDemo::destroy()
 {
-    if( sercher_ )
+    if( sercher_ != nullptr )
     {
-    // 検索範囲オブジェクト開放
         sercher_->destroy();
         safe_delete( sercher_ );
     }
+   
 
     Player::destroy();
 }
-
+// 更新処理
 void AIDemo::update()
 {
-    Player::update();   // 基底更新
-
-    setPurpose();       // 目的の設定
+    setTarget();
 
 
-    if( flag_.test(kJump) == false )
+    last_position_ = getPosition();
+    Player::update();
+
+    if( Player::isJump() == false && is_jumping_ == true )
     {
-    // 接地中
-        if( direction_id_ != Direction::kSquat )
-        {
-        // しゃがみでない状態なら正面を向く
-            direction_id_ = Direction::kFlont;
-        }
+        is_jumping_ = false;
+        target_ = nullptr;
     }
 }
 
 
-// 行動判定関数
+// override( private )
 /*===========================================================================*/
-// しゃがみ
+// しゃがむか判定
 bool AIDemo::isSquat()
 {
-    if( purpose_ )
+    // ターゲットがあるか
+    if( target_ != nullptr )
     {
-    // 目的がある
-        float flont_angle = toDegrees(revision_angle_ + XM_PI);
-        float jump_angle  = toDegrees(Calc::angle(purpose_->getPosition() - getPosition()));
+        // ターゲットとの角度が一定の範囲内か
+        const Vector2& this_position = getPosition();
+        const Vector2& tar_position  = target_->getPosition();
+        float direction_angle = toDegrees( revision_angle_ + XM_PI );
+        float between_angle = toDegrees( Calc::angle(tar_position - this_position) );
 
-        // 目的との角度が一定の範囲内ならtrue
-        return std::abs(flont_angle - jump_angle) <= kSquatAngleErrorRange;
+        if( std::abs(direction_angle - between_angle) <= kSquatAngle )
+        {
+            // しゃがむ!
+            return true;
+        }
     }
-    // 目的がない
+
+    return false;
+}
+// ジャンプするか判定
+bool AIDemo::isJump()
+{
+    // ターゲットがあるか
+    if( target_ != nullptr )
+    {
+        // 目的との角度が一定の範囲内
+        const Vector2& this_position = getPosition();
+        const Vector2& tar_position  = target_->getPosition();
+        float direction_angle = toDegrees( revision_angle_ + XM_PI );
+        float between_angle = toDegrees(Calc::angle(tar_position - this_position) );
+        float delta_angle = direction_angle - between_angle;
+
+        if( this_position.x < tar_position.x ?
+                              (delta_angle >= kJumpAngleMin && delta_angle <= kJumpAngleMax) :
+                              (delta_angle <= -kJumpAngleMin && delta_angle >= -kJumpAngleMax)
+          )
+        {
+            // 一定の確率で
+            if( !(rand() % kJumpPercentageDenominator) )
+            {
+                // ジャンプ!
+                is_jumping_ = true;
+                return true;
+            }
+        }
+    }
+
+
+    return false;
+}
+// 左に移動するか判定
+bool AIDemo::isMoveLeft()
+{
+    // ジャンプ中なら
+   if( Player::isJump() )
+   {
+       // ターゲットがあれば
+       if( target_ != nullptr )
+       {
+           const Vector2& tar_posi = target_->getPosition();
+           const Vector2& this_posi= this->getPosition();
+           // ターゲットが自分よりも左に位置していたら
+           if( tar_posi.x + target_->getSize() < this_posi.x )
+           {
+               // ターゲットとの距離が移動可能距離内なら
+               if( Calc::magnitude( tar_posi, this_posi ) <= kJumpingMoveRange )
+               {
+                   return true;
+               }
+           }
+       }
+   }
+
+    return false;
+}
+// 右に移動するか判定
+bool AIDemo::isMoveRight()
+{
+    // ジャンプ中なら
+    if( Player::isJump() )
+    {
+        // ターゲットがあるか
+        if( target_ != nullptr )
+        {
+            const Vector2& tar_posi = target_->getPosition();
+            const Vector2& this_posi= this->getPosition();
+            // ターゲットが自分よりも右に位置していたら
+            if( tar_posi.x - target_->getSize() > this_posi.x )
+            {
+                // ターゲットとの距離が移動可能範囲内なら
+                if( Calc::magnitude( tar_posi, this_posi ) <= kJumpingMoveRange )
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+// 下に移動するか判定
+bool AIDemo::isMoveDown()
+{
     return false;
 }
 
-// ジャンプ
-bool AIDemo::isJump()
-{
-    if( purpose_ == nullptr ) { return false; }
 
-
-    bool jump = true;
-
-    float flont_angle = toDegrees( revision_angle_ + XM_PI );
-    float jump_angle = toDegrees(Calc::angle(purpose_->getPosition() - getPosition()));
-    if( flont_angle < 0 ) { flont_angle += 360.0F; }
-    if( jump_angle < 0 ) { jump_angle += 360.0F; }
-
-    if( std::abs(flont_angle - jump_angle) > kJumpAngleErrorRange )
-    {
-    // 目的との角度が一定の範囲外
-        jump = false;
-    }
-    // 目的との角度が一定の範囲内ならtrue
-    return jump;
-}
-
-
+// ターゲッティング関係
 /*===========================================================================*/
-void AIDemo::setPurpose()
+// ターゲットとなるスターを設定する
+void AIDemo::setTarget()
 {
-    // 条件の設定
-    bool (AIDemo::*check)( ObjectBase* const ) = nullptr;
+    // 現在のターゲットが、炎と衝突していたらリセット
+    if( target_ != nullptr && target_->isAlive() == false )
+    {
+        target_ = nullptr;
+    }
 
-    if( flag_.test(kJump) == false )
+    // 範囲内にスターが無かったら終了
+    if( sercher_->getList().size() <= 0 ) 
+    {
+        target_ = nullptr;
+        return; 
+    }
+    
+
+    auto judge = getJudgeFunc();
+    for( auto& star : sercher_->getList() )
+    {
+        if( (this->*judge)( star ) )
+        {
+            target_ = reinterpret_cast<Star*>(star);
+        }
+    }
+}
+// ターゲット設定の条件式を取
+bool(AIDemo::*AIDemo::getJudgeFunc())(ObjectBase* const)
+{
+    // 条件に応じてターゲットを設定する
+    if( !Player::isJump() )
     {
         // 接地中
-        check = &AIDemo::checkPurposeForGround;
+        return &AIDemo::judgeForStaying;
     }
     else
     {
-        float angle = toDegrees( revision_angle_ + XM_PI );
-        if( angle < 0 ) { angle += 360.0F; }
-
         // 上昇中
-        if( angle >= 0.0F && angle <= 180.0F )
+        if( getPosition().y < last_position_.y )
         {
-            check = &AIDemo::checkPurposeForUp;
+            return &AIDemo::judgeForJumping;
         }
         // 下降中
         else
         {
-            check = &AIDemo::checkPurposeForDown;
-        }
-    }
-
-
-    // 目的の設定
-    if( (this->*check)(purpose_) == false ) { purpose_ = nullptr; }
-    for( auto star : sercher_->getList() )
-    {
-        if( (this->*check)(star) )
-        {
-            purpose_ = star;
+            return &AIDemo::judgeForFalling;
         }
     }
 }
-
-
-// 引数のスターが目的にふさわしいか判定する
-/*===========================================================================*/
-// 上昇中の条件
-bool AIDemo::checkPurposeForUp( ObjectBase* const Target )
+// 着地中のターゲット条件式
+bool AIDemo::judgeForStaying( ObjectBase* const Target )
 {
-    if( Target == nullptr ) { return false; }
+#if true
+    const Vector2& this_posi = getPosition();
+    const Vector2& targ_posi = Target->getPosition();
 
-
-    // 現在のオーナーは目的としない
-    if( Target == owner_ )  { return false; }
-
-
-    return true;
-}
-// 下降中の条件
-bool AIDemo::checkPurposeForDown( ObjectBase* const Target )
-{
-    using namespace Calc;
-
-    if( Target == nullptr ) { return false; }
-
-
-    // 上にあるスターは無視
-    if( Target->getPosition().y < myshape_.position.y ) { return false; }
-
-
-    // 現目的との比較
-    if( purpose_ != nullptr )
-    {
-        float dist_pur = magnitude(purpose_->getPosition() - getPosition());
-        float dist_tar = magnitude(Target->getPosition() - getPosition());
-
-        // 近いほうを採用
-        if( dist_tar > dist_pur ) { return false; }
-    }
-
-    return true;
-}
-// 接地中の条件
-bool AIDemo::checkPurposeForGround( ObjectBase* const Target )
-{
-    if( Target == nullptr ) { return false; }
-
-
-    // オーナーとの比較
+    // オーナーは不採用
     if( owner_ != nullptr )
     {
-        // オーナーは目的としない
-        if( Target == owner_ ) { return false; }
+        if( Target == this->getOwner() ) { return false; }
 
-        // オーナー以下にあるスターは無視する
-        if( Target->getPosition().y >= owner_->getPosition().y ) { return false; }
+        // オーナーより下にあるものは不採用
+        if( targ_posi.y > owner_->getPosition().y ) { return false; }
     }
 
-    // 現目的との比較
-    if( purpose_ != nullptr )
+
+    auto getDist2 = [this]( const Vector2& U, const Vector2& V )->float
     {
-        // 現目的よりも低いスターは無視
-        if(Target->getPosition().y > purpose_->getPosition().y) {return false;}
+        return std::pow(U.x - V.x, 2.0F) + std::pow(U.y - V.y, 2.0F);
+    };
+
+    // ジャンプで届く範囲外にあるものは不採用
+    float dist_new_targ = getDist2(this_posi, targ_posi);
+    if( dist_new_targ > std::pow(kJumpReach, 2.0F) ) { return false; }
+
+    if( target_ != nullptr )
+    {
+        // 現在のターゲットとの距離よりも遠かったら不採用
+        float dist_now_targ = getDist2(this_posi, target_->getPosition());
+        if( dist_new_targ > dist_now_targ ) { return false; }
     }
 
-    // ジャンプで届く範囲外は無視
-    if (Calc::magnitude(Target->getPosition() - getPosition()) > kJumpRange)
+
+
+   
+    return true;
+
+#else
+    const Vector2& this_position = getPosition();
+    const Vector2& test_position = Check->getPosition();
+
+    // オーナーは不採用
+    ObjectBase* const owner = this->getOwner();
+    if( Check == owner ) { return false; }
+
+    // ジャンプの範囲外なら、不採用
+    float dist_test = 
+        std::pow(this_position.x - test_position.x, 2.0F) +
+        std::pow(this_position.y - test_position.y, 2.0F);
+    if( dist_test > std::pow( kJumpReach, 2.0F ) )  { return false; }
+
+    // 現在の座標以下にあるものは、不採用
+    if( (owner != nullptr) &&
+        (test_position.y >= owner->getPosition().y) ){ return false; }
+
+
+
+    // 現在のターゲットが無かったら、採用
+    if( target_ == nullptr )                        { return true; }
+
+    // 現在のターゲットと同じだったら、採用
+    if( target_ == Check )                          { return true; }
+
+
+    // 距離を比較 *距離のあるほうを採用
+    const Vector2& curr_position = target_->getPosition();
+    float dist_curr = 
+        std::pow(this_position.x - curr_position.x, 2.0F) + 
+        std::pow(this_position.y - curr_position.y, 2.0F);
+    return dist_test > dist_curr;
+#endif
+}
+// 上昇中のターゲット条件式
+bool AIDemo::judgeForJumping( ObjectBase* const Check )
+{
+    return false;
+}
+// ターゲットの取得( 落下中 )
+bool AIDemo::judgeForFalling( ObjectBase* const Check )
+{
+    // 自分よりも上にある上にあるものは不採用
+    if( Check->getPosition().y < getPosition().y ) { return false; }
+
+    // 現在のターゲットと比較して、より遠かったら不採用
+    if( target_ != nullptr &&
+        (Calc::magnitude( Check->getPosition(), getPosition() ) >
+         Calc::magnitude( target_->getPosition(), getPosition() )) )
     {
         return false;
     }
-
+     
 
     return true;
 }

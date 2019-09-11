@@ -7,8 +7,9 @@
 #include "demo.h"
 #include "pad.h"
 #include "sound.h"
-
+#include "dinput.h"
 #include "resource.h"
+#include "timer.h"
 
 //  プロトタイプ宣言
 LRESULT CALLBACK WinProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
@@ -19,6 +20,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//メモリリークのチェック
 	//_CrtSetBreakAlloc(751);
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#else
+	for (int cusur = ShowCursor(false); cusur > -1; ShowCursor(false));
+
 #endif
 
 	//多重起動を防ぐ
@@ -112,6 +116,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if( !SOUND->init() )
 		return 0;
 
+	if (!Dinput::getInstance()->init(hInstance, hWnd))
+		return 0;
+
 	// ウィンドウの表示
 	ShowWindow(hWnd, SW_SHOWNORMAL);
 
@@ -152,7 +159,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				t3 = dt % 16L;      // 誤差( オーバー )分を保存
 
 				Key::getInstance()->update();
-				Pad::getInstance()->update();
+				Pad::getInstance()->update(Dinput::getInstance());
 				SOUND->update();
 
 				// ゲーム処理
@@ -179,6 +186,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CoUninitialize();
 	// インターフェイスの開放
 	game.destroy();
+	Dinput::getInstance()->destroy();
 	Direct3D::getInstance()->destroy();
 
 	return 0;

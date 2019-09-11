@@ -71,9 +71,8 @@ void FreeFallParticle::draw()
 //生存確認
 bool FreeFallParticle::isAlive()
 {
-	//アルファの消滅で死亡または画面外で死亡
-	if ( position_.y - kTextureSize / 2.0F > getWindowHeight<float>()||
-		 life_time_ <= 0.0F)
+	//アルファの消滅で死亡
+	if ( life_time_ <= 0.0F)
 		return false;
 
 	return true;

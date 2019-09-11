@@ -40,42 +40,39 @@ using PadTracker = GamePad::ButtonStateTracker;
 
 /*===========================================================================*/
 // 処理に関係
+constexpr wchar_t kStartStageFile[] = L"State/start_pattern.csv";
 constexpr float kWindowWidth  = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
+constexpr float kStageHeight = 7920.0F;
 enum { kAButton, kStick };
 constexpr Vector2 kPosition = Vector2(kWindowWidth - 272.0F, kWindowHeight - 128.0F);
 const RECT kTrimming[] = {
     { 256L, 0L, 512L, 128L },
     {   0L, 0L, 256L, 128L }
 };
-
 constexpr float kDispTimeMSPF = 500.0F / 16.0F;                 // 難易度上昇時、スクロールにかける時間( ミリ秒/フレーム )
+
+
 // 難易度に関係
+constexpr int      kStartStageID = 0;
+constexpr int      kStageIDMin = 1;
+constexpr int      kStageIDMax = 4;
 constexpr int      kStageNum = 3;                               // ステージ数
+constexpr float    kFailWallUpStartLine = 1000.0F;              // 炎が上昇を開始する位置( この距離分プレイヤーが上昇したら、炎の上昇スタート )
 constexpr unsigned kHeight = 0U;                                // レベルテーブル : ステージの長さ( 高さ )
 constexpr unsigned kThresholdUp = 1U;                           // レベルテーブル : 閾値( スクロール↑ )
 constexpr unsigned kThresholdDown = 2U;                         // レベルテーブル : 閾値( スクロール↓ )
 constexpr float kLevelTable[][3] = {                            // レベルテーブル
-    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   3000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {   7500.0f, kWindowHeight * 0.10F, kWindowHeight * 0.75F },
-    {  10000.0F, kWindowHeight * 0.10F, kWindowHeight * 0.75F }
+    {   3000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {   3000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {   3000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {   7500.0f, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
+    {  10000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F }
 };
 
 
 
 constexpr Vector2 kPlayerPosition { 600.0F, 565.0F };
-
-constexpr Vector2 kInitStarPosi[]   = {                         // 初期スター位置
-    {640.0F, 600.0F},
-    {816.0F, 297.0F},
-	{465.0F, 142.0F},
-};
-constexpr float kInitStarAngle[]    = { 90.0F, 90.0F,90.0F, };  // 初期スター角度
-constexpr float kInitStarSpin[]		= { -3.0F, 3.0F,3.0F };     // 初期スター回転速度
-constexpr float kInitStarSpinRate[] = { 0.2F, 0.2F,0.2F };      // 初期スター回転割合
-constexpr float kInitStarSize[]     = { 80.0F, 100.0F, 100.0F}; // 初期スター大きさ
 
 
 /*===========================================================================*/
@@ -119,20 +116,9 @@ bool Endless::init()
     // ランキング初期化
     if( ranking_->init() == false ) { return false; }
 
-	// 初期スターの生成
-	for (int i = 0; i < 3; ++i)
-	{
-		if (star_container_->addStar(
-			kInitStarPosi[i],
-			kInitStarAngle[i],
-			kInitStarSpin[i],
-			kInitStarSpinRate[i],
-			kInitStarSize[i]
-		) == nullptr)
-		{
-			return false;
-		}
-	}
+	// スター生成
+    if( star_container_->createStar( kStartStageFile ) == false ) { return false; }
+    
 
 	// プレイヤー初期化
 	if (dynamic_cast<Player*>(player_)->init(kPlayerPosition, 0) == false)
@@ -143,9 +129,10 @@ bool Endless::init()
 	// 壁初期化
 	if (wall_->init() == false) { return false; }
     if( fail_wall_->init() == false ) { return false; }
+    Background::getInstance()->setFailWall( fail_wall_ );
 
     // 進行度初期化
-    if( progress_->init( 7200.0F, player_, fail_wall_ ) == false )
+    if( progress_->init( kStageHeight, player_, fail_wall_ ) == false )
     {
         return false;
     }
@@ -160,16 +147,14 @@ bool Endless::init()
     offset_ = 0.0F;
     offset_one_frame_ = 0.0F;
 	climb_ = 0.0F;
-    changePattern( stage_ );    // スター生成パターン設定
-    if( star_container_->createStar() == false ) { return false; }
+    player_last_position_y_ = player_->getPosition().y;
+    player_displacement_y_sum_ = 0.0F;
 
 	clock_->start();
 
 	//サウンドの再生
 	SOUND->stop( SoundId::kPlay );
 	SOUND->play( SoundId::kPlay , true );
-
-	description_ = TextureLoder::getInstance()->load( L"Texture/a_jump.png" );
 
 	return true;
 }
@@ -183,6 +168,7 @@ void Endless::destroy()
     progress_->destroy();              safe_delete(progress_);
 
     fail_wall_->destroy();             safe_delete(fail_wall_);
+    Background::getInstance()->setFailWall( nullptr );
 
 	wall_->destroy();                  safe_delete(wall_);
 
@@ -218,23 +204,6 @@ void Endless::draw()
     {
         pause_->draw();
     }
-
-	if( player_->guide() > 0.0F )
-	{
-		if (player_->isJump())
-		{
-			Sprite::getInstance()->reserveDraw(
-				description_, kPosition, kTrimming[kStick],
-				1.0F, 99.0F);
-		}
-		else if(!player_->isJump())
-		{
-			Sprite::getInstance()->reserveDraw(
-				description_, kPosition, kTrimming[kAButton],
-				1.0F, 99.0F);
-		}
-
-	}
 }
 
 /*===========================================================================*/
@@ -250,6 +219,7 @@ SceneBase* Endless::start()
 		SOUND->stop( SoundId::kDicision );
 		SOUND->play( SoundId::kDicision , false );
         is_pause_ = true;
+		player_->getScore()->stop();
         pause_->reset();
         TaskManager::getInstance()->pause();
         update_ = &Endless::pause;
@@ -260,10 +230,6 @@ SceneBase* Endless::start()
         if (player_->isJump())
         {
 		    update_ = &Endless::play;
-		    for (auto& star : star_container_->active())
-		    {
-			    star->setFall();
-		    }
 		    clock_->start();
 		    player_->onStartFlag();
             star_container_->setFall();
@@ -282,6 +248,7 @@ SceneBase* Endless::play()
     {
 		SOUND->stop( SoundId::kDicision );
 		SOUND->play( SoundId::kDicision , false );
+		player_->getScore()->timeStop();
         clock_->stop();
         pause_->reset();
         TaskManager::getInstance()->pause();
@@ -300,6 +267,18 @@ SceneBase* Endless::play()
 		return new Result(ranking_->getRank(), *player_->getScore());
         //return new Endless();
 	}
+    else if( fail_wall_->isUp() == false )
+    {
+        // プレイヤーが一定の量上へ進んだら炎の上昇をスタートする
+        const Vector2& p_position = player_->getPosition();
+        player_displacement_y_sum_ += player_last_position_y_ - p_position.y;
+
+        if( player_displacement_y_sum_ >= kFailWallUpStartLine )
+        {
+            fail_wall_->upStart();
+        }
+        player_last_position_y_ = p_position.y;
+    }
 
 	//コンテナのアップデート
 	star_container_->update();
@@ -329,11 +308,13 @@ SceneBase* Endless::pause()
     case Pause::kContinue :
         kTaskManager->restart();
         clock_->restart();
+		player_->getScore()->timeRestart();
         update_ = is_pause_ ? &Endless::start : &Endless::play;
         is_pause_ = false;
         break;
 
     case Pause::kRestart  :
+		player_->getScore()->timeRestart();
         kTaskManager->restart();
         Background::getInstance()->reset();
         return new Endless();
@@ -367,11 +348,12 @@ void Endless::scroll()
     }
 
 
-    // 各オブジェクトのスクロール
+    // 各オブジェクトのスクロール処理
     TaskManager::getInstance()->allSetOver( over );
 
     if( over > 0.0F ) 
     {
+        player_displacement_y_sum_ += over;
         climb_ += over;
         player_->addScore( over );  // プレイヤーにスコア反映
     }
@@ -393,30 +375,31 @@ bool Endless::checkAndLoadStage()
     // 画面外待機しているスターが無くなったら
     if( itr == end )
     {
-        // スターの生成
-        if( star_container_->createStar() == false ) { return false; }
-        star_container_->setFall();
-
-
-
-        // パターン変化
+        // パターン変化を知らせる
         climb_ = 0.0F;
-        ++stage_;
-        Background::getInstance()->changeColor();
-        progress_->changeStage();
+        fail_wall_->speedUp();
+        if( stage_ != kStartStageID )
+        {
+            progress_->changeStage();
+            Background::getInstance()->changeColor();
+        }
 
-        if (stage_ >= kStageNum)
+        ++stage_;
+        if (stage_ >= kStageIDMax)
         {
             ++round_counter_;
-            stage_ = 0;
+            stage_ = kStageIDMin;
 
             // 周回を知らせる
             player_->addLevel();
-            fail_wall_->levelUp();
         }
-
         // スターの生成パターン変更
         changePattern(stage_);
+
+
+        // スターの生成
+        if( star_container_->createStar() == false ) { return false; }
+        star_container_->setFall();
     }
 
 

@@ -157,11 +157,16 @@
     <ClInclude Include="ai_demo.h" />
     <ClInclude Include="background.h" />
     <ClInclude Include="back_object_base.h" />
+    <ClInclude Include="band.h" />
     <ClInclude Include="battle.h" />
     <ClInclude Include="bonus_icon.h" />
     <ClInclude Include="demo.h" />
+    <ClInclude Include="dinput.h" />
     <ClInclude Include="fail_wall.h" />
     <ClInclude Include="progress.h" />
+    <ClInclude Include="progress_fail_wall.h" />
+    <ClInclude Include="progress_player.h" />
+    <ClInclude Include="progress_stage.h" />
     <ClInclude Include="ranking_manager.h" />
     <ClInclude Include="sercher.h" />
     <ClInclude Include="Sound.h" />
@@ -210,14 +215,17 @@
     <ClInclude Include="textureLoder.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="title_object.h" />
-    <ClInclude Include="view_background.h" />
+    <ClInclude Include="view_mist.h" />
+    <ClInclude Include="view_star_big.h" />
+    <ClInclude Include="view_star_mini.h" />
     <ClInclude Include="wall.h" />
-    <ClInclude Include="wave_background.h" />
+    <ClInclude Include="view_wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ai_base.cpp" />
     <ClCompile Include="ai_demo.cpp" />
     <ClCompile Include="background.cpp" />
+    <ClCompile Include="band.cpp" />
     <ClCompile Include="battle.cpp" />
     <ClCompile Include="bonus_icon.cpp" />
     <ClCompile Include="collision.cpp" />
@@ -225,6 +233,7 @@
     <ClCompile Include="container.cpp" />
     <ClCompile Include="csvLoader.cpp" />
     <ClCompile Include="demo.cpp" />
+    <ClCompile Include="dinput.cpp" />
     <ClCompile Include="direct3d.cpp" />
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="endless.cpp" />
@@ -238,6 +247,9 @@
     <ClCompile Include="freeFallParticle_container.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="progress.cpp" />
+    <ClCompile Include="progress_fail_wall.cpp" />
+    <ClCompile Include="progress_player.cpp" />
+    <ClCompile Include="progress_stage.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="ranking_in_endless.cpp" />
     <ClCompile Include="ranking_manager.cpp" />
@@ -269,9 +281,11 @@
     <ClCompile Include="textureLoder.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="title_object.cpp" />
-    <ClCompile Include="view_background.cpp" />
+    <ClCompile Include="view_mist.cpp" />
+    <ClCompile Include="view_star_big.cpp" />
+    <ClCompile Include="view_star_mini.cpp" />
     <ClCompile Include="wall.cpp" />
-    <ClCompile Include="wave_background.cpp" />
+    <ClCompile Include="view_wave.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

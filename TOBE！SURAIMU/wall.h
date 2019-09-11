@@ -34,5 +34,5 @@ private:
 
     ID3D11ShaderResourceView* texture_ = nullptr;
     Vector2 position_                  { 0.0F, 0.0F };
-	Line *myshape_;
+	Line *myshape_ = nullptr;
 };

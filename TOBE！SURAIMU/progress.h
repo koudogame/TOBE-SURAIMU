@@ -8,6 +8,10 @@
 
 class Player;
 class FailWall;
+class ProgressStage;
+class ProgressPlayer;
+class ProgressFailWall;
+
 class Progress 
     : public ObjectBase
 {
@@ -18,31 +22,29 @@ public:
     bool init( const float StageHeight,
                Player* const Player,
                FailWall* const FailWall );
+
 // override
 /*=================================================================*/
     void destroy() override;
     void update()  override;
     void draw()    override;
-    void setMove( const float Distance ) override;
-
-/*=================================================================*/
+    void setMove(const float Distance) override;
+    
+    
     void changeStage();
-
 private:
-    void easingOffset();
 
-    ID3D11ShaderResourceView *texture_ = nullptr;
-    float scale_ = 0.0F;
+    ProgressStage    *stage_     = nullptr;
+    ProgressPlayer   *player_    = nullptr;
+    ProgressFailWall *fail_wall_ = nullptr;
 
-    Vector2 stage_position_;
-    float stage_height_ = 0.0F;
-    float offset_ = 0.0F;
-    float offset_sin_ = 0.0F;
 
-    Player  *player_ = nullptr;
-    Vector2 player_base_position_;
-    float   player_displacement_ = 0.0F;
-    float   player_last_coordinate_y_ = 0.0F;
-
-    FailWall *wall_ = nullptr;
+    bool isScroll() const;
+    void scroll();
+    float scroll_sin_               = 0.0F;
+    float player_scroll_count_      = 0.0F;
+    float last_player_scroll_count_ = 0.0F;
+    float stage_scroll_count_       = 0.0F;
+    float last_stage_scroll_count_  = 0.0F;
+    float offset_                   = 0.0F;
 };

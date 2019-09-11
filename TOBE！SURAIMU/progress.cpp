@@ -4,42 +4,39 @@
 #include "progress.h"
 
 #include "task_manager.h"
-#include "textureLoder.h"
-#include "sprite.h"
 #include "player.h"
 #include "fail_wall.h"
+#include "progress_stage.h"
+#include "progress_player.h"
+#include "progress_fail_wall.h"
 
-static constexpr float kToDegrees = 180.0F / XM_PI;
-static constexpr float toDegrees( const float Radians ) { return Radians * kToDegrees; }
+
 static constexpr float kToRadians = XM_PI / 180.0F;
-static constexpr float toRadians( const float Degrees ) { return Degrees * kToRadians; }
-
-static constexpr float kScrollSpeed = 2.0F;
-// Stage
-/*===========================================================================*/
-static constexpr float kTextureStageHeight = 576.0F;
-static constexpr float kStageNum = 3;
-static constexpr float kTextureStageHeightSum = kTextureStageHeight * kStageNum;
-static constexpr Vector2 kStageInitPosition { 250.0F, -1080.0F, };
-static constexpr RECT    kStageTrimming     { 0L,  0L, 83L, 1728L };
-static constexpr float   kStageDrawDepth    = 10.0F;
-static constexpr float   kBasePositionY     = kStageInitPosition.y + (kTextureStageHeight * 3);
-static constexpr float kOffsetSinMin =  0.0F;
-static constexpr float kOffsetSinMax = 90.0F;
-static constexpr int   kOffsetFrameNum = 32;
-static constexpr float kChangeOfSin = (kOffsetSinMax - kOffsetSinMin) / kOffsetFrameNum;
-// Player
-/*===========================================================================*/
-static constexpr float   kTexturePlayerHeight = 83.0F;
-static constexpr Vector2 kPlayerBasePosition  { 250.0F, 613.0F };
-static constexpr RECT    kPlayerTrimming      { 140L, 0L, 210L, 70L };
-static constexpr float   kPlayerDrawDepth     = 11.0F; 
-// Wall
-/*===========================================================================*/
-static constexpr RECT  kWallTrimming { 70L, 0L, 140L, 720L };
-static constexpr float kWallDrawDepth = 12.0F;
+static constexpr float toRadians( const float Degrees )
+{
+    return Degrees * kToRadians;
+}
 
 
+// 定数
+/*===========================================================================*/
+// 進行度用
+static constexpr float kScrollSinMinDeg = 0.0F;
+static constexpr float kScrollSinMaxDeg = 90.0F;
+static constexpr float kScrollSinChange = 3.0F;
+// プレイヤー用
+static constexpr float   kPlayerStartLine    = 617.0F;
+static constexpr float   kPlayerEndLine      = 107.0F;
+static constexpr Vector2 kPlayerInitPosition { 295.0F, kPlayerStartLine };
+static constexpr float   kPlayerMotionRange  = kPlayerStartLine - kPlayerEndLine;
+// 炎用
+static constexpr Vector2 kFailWallInitPosition { 260.0F, 720.0F };
+// ステージ用
+static constexpr Vector2 kStageInitPosition { 260.0F, -1440.0F };
+static constexpr float   kStageMotionrange   = 720.0F;
+
+
+// Ctor, Dtor
 /*===========================================================================*/
 Progress::Progress()
 {
@@ -48,172 +45,189 @@ Progress::Progress()
 
 Progress::~Progress()
 {
-    destroy();
+
 }
 
 
+// override
 /*===========================================================================*/
+// 初期化処理
 bool Progress::init( const float StageHeight,
-                     Player* const PPlayer,
-                     FailWall* const PFailWall )
+                     Player* const Player,
+                     FailWall* const FailWall )
 {
-    // 引数をメンバにセット
-    stage_height_ = StageHeight;
-    player_       = PPlayer;
-
-    // テクスチャ読み込み
-    texture_ = TextureLoder::getInstance()->load( L"Texture/progress.png" );
-    if( texture_ == nullptr ) { return false; }
-
-    // その他メンバ
-    scale_ = kTextureStageHeight / stage_height_;
-    stage_position_ = kStageInitPosition;
-    offset_ = 0.0F;
-
-    player_base_position_ = kPlayerBasePosition;
-    player_displacement_ = -player_->getPosition().y;
-    player_last_coordinate_y_ = player_->getPosition().y;
-
-    wall_ = PFailWall;
-
-
-    // タスクを登録
+    // タスクの登録
     TaskManager* const kTaskManager = TaskManager::getInstance();
     kTaskManager->registerTask( this, TaskUpdate::kRanking );
     kTaskManager->registerTask( this, TaskDraw::kObject );
 
+    
+    // ステージ初期化
+    if( stage_ == nullptr ) { stage_ = new ProgressStage(); }
+    if( stage_->init( kStageInitPosition ) == false )
+    {
+        return false;
+    }
+
+    // プレイヤー初期化
+    float scale = kPlayerMotionRange / StageHeight;
+    if( player_ == nullptr ) { player_ = new ProgressPlayer(); }
+    if( player_->init( Player, 
+                       kPlayerInitPosition,
+                       kPlayerStartLine, 
+                       kPlayerEndLine, 
+                       scale ) == false
+       )
+    {
+        return false;
+    }
+
+    // 炎初期化
+    if( fail_wall_ == nullptr ) { fail_wall_ = new ProgressFailWall(); }
+    if( fail_wall_->init( FailWall, Player, player_,
+                          kFailWallInitPosition,
+                          scale ) == false 
+       )
+    {
+        return false;
+    }
+                          
+    
+    // その他メンバの初期化
+    scroll_sin_ = -1.0F;
+
+
     return true;
 }
-
+/*===========================================================================*/
+// 終了処理
 void Progress::destroy()
 {
+    // 炎開放
+    if( fail_wall_ != nullptr )
+    {
+        fail_wall_->destroy();
+        safe_delete( fail_wall_ );
+    }
+
+    // プレイヤー開放
+    if( player_ != nullptr )
+    {
+        player_->destroy();
+        safe_delete( player_ );
+    }
+
+    // ステージ開放
+    if( stage_ != nullptr )
+    {
+        stage_->destroy();
+        safe_delete( stage_ );
+    }
+
     // タスクの登録を解除
     TaskManager::getInstance()->unregisterObject( this );
-
-    // テクスチャ解放
-    if( texture_ != nullptr )
-    {
-        TextureLoder::getInstance()->release(texture_);
-        texture_ = nullptr;
-    }
 }
-
+/*===========================================================================*/
+// 更新処理
 void Progress::update()
 {
-    // ステージのオフセットがあれば行う
-    if( offset_ > 0.0F )
+    stage_->update();
+    player_->update();
+    fail_wall_->update();
+
+    // ステージ変更時のスクロール処理
+    if( isScroll() ) { scroll(); }
+
+    // ステージ変更以外のスクロール処理
+    else if( player_->getPosition().y > kPlayerStartLine )
     {
-        easingOffset();
+        // スタート位置より下に行ったら
+        float over = player_->getPosition().y - kPlayerStartLine;
+        offset_ = -over;
     }
-
-
-    // プレイヤーの位置更新
-    Vector2 player_position = player_->getPosition();
-    if( player_->isJump() )
+    else if( player_->getPosition().y < kPlayerEndLine )
     {
-        float p_delta = player_last_coordinate_y_ - player_position.y;
-        p_delta += 2.0F;
-        player_displacement_ += p_delta;
+        //ゴール位置より上に行ったら
+        float over = player_->getPosition().y - kPlayerEndLine;
+        offset_ = -over;
     }
-
-    player_last_coordinate_y_ = player_position.y;
-}
-
-void Progress::draw()
-{
-    Sprite* const kSprite = Sprite::getInstance();
-
-    // ステージ描画
-    kSprite->reserveDraw(
-        texture_,
-        stage_position_,
-        kStageTrimming,
-        1.0F, // alpha
-        kStageDrawDepth
-    );
-        // 上が空いたら埋める
-    if( stage_position_.y > 0 )
-    {
-        Vector2 draw_position = stage_position_;
-        draw_position.y -= kTextureStageHeightSum;
-        kSprite->reserveDraw(
-            texture_,
-            draw_position,
-            kStageTrimming,
-            1.0F, // alpha
-            kStageDrawDepth
-        );
-    }
-
-    // プレイヤー描画
-    Vector2 player_draw_position = player_base_position_;
-    //                        変位の大きさ最大　　　　 プレイヤーのステージ上の位置の割合
-    player_draw_position.y -= kTextureStageHeight * (player_displacement_ / stage_height_);
-    kSprite->reserveDraw(
-        texture_,
-        player_draw_position,
-        kPlayerTrimming,
-        1.0F, // alpha
-        kPlayerDrawDepth
-    );
-
-    // 壁描画( プレイヤーとの距離から描画位置を算出 )
-    Vector2 wall_draw_position = player_draw_position;
-    wall_draw_position.y += kTexturePlayerHeight * 0.5F;
-    float dist = wall_->getPosition().y - player_->getPosition().y;
-    wall_draw_position.y += dist * scale_;
-
-    if( wall_draw_position.y < getWindowHeight<float>() )
-    {
-        kSprite->reserveDraw(
-            texture_,
-            wall_draw_position,
-            kWallTrimming,
-            1.0F, // alpha
-            kWallDrawDepth
-        );
-    }
-}
-
-
-/*===========================================================================*/
-void Progress::setMove( const float Dist )
-{
-    // スクロール( プレイヤーの移動 )
-    if( player_->isJump() )
-    {
-        player_displacement_ += Dist;
-    }
-}
-
-/*===========================================================================*/
-void Progress::changeStage()
-{
-    // オフセット開始準備
-    offset_ = kTextureStageHeight;
-    offset_sin_ = kOffsetSinMin;
-}
-
-
-/*===========================================================================*/
-void Progress::easingOffset()
-{
-    float last_displacement = offset_ * std::sin(toRadians(offset_sin_));
-
-    // サインカーブ用変数の更新
-    offset_sin_ += kChangeOfSin;
-    if( offset_sin_ > kOffsetSinMax ) { offset_sin_ = kOffsetSinMax; }
-
-    // ポジションの変更( 前回との差分のみ )
-    float displacement = offset_ * std::sin(toRadians(offset_sin_)) - last_displacement;
-    stage_position_.y += displacement;
-    player_base_position_.y += displacement;
-
-    // 上限まで変位したら
-    if( offset_sin_ >= kOffsetSinMax ) 
+    else
     {
         offset_ = 0.0F;
-        player_base_position_ = kPlayerBasePosition;
-        player_displacement_ -= stage_height_;
     }
+}
+/*===========================================================================*/
+// 描画処理
+void Progress::draw()
+{
+    stage_->draw( {0.0F, offset_} );
+    player_->draw( {0.0F, offset_} );
+    //fail_wall_->draw( {0.0F, offset_} );
+}
+/*===========================================================================*/
+// 移動
+void Progress::setMove( const float Dist )
+{
+    player_->setMove( Dist );
+}
+
+
+// public
+/*===========================================================================*/
+// スクロール用初期化処理
+void Progress::changeStage()
+{
+    stage_->changeStage();
+    scroll_sin_ = kScrollSinMinDeg;
+    player_scroll_count_ = last_player_scroll_count_ = 0.0F;
+    stage_scroll_count_  = last_stage_scroll_count_  = 0.0F;
+}
+
+
+// スクロール関係
+/*===========================================================================*/
+// スクロールが必要か
+bool Progress::isScroll() const 
+{
+    // スクロール中かどうか
+    return 
+        scroll_sin_ >= kScrollSinMinDeg &&
+        scroll_sin_ <= kScrollSinMaxDeg;
+}
+// スクロール処理
+void Progress::scroll()
+{
+    // サインカーブ用のサイン値を更新
+    scroll_sin_ += kScrollSinChange;
+    if( scroll_sin_ > kScrollSinMaxDeg ) { scroll_sin_ = kScrollSinMaxDeg; }
+
+
+    float percentage = std::sin( toRadians(scroll_sin_) );
+
+
+    // プレイヤー
+    Vector2 player_move;
+            player_move.x = 0.0F;
+            player_move.y = (kPlayerMotionRange * percentage) - last_player_scroll_count_;
+    if( (player_move.y + last_player_scroll_count_) > kPlayerMotionRange )
+    {   // 必要以上に移動しないよう制御
+        player_move.y = kPlayerMotionRange - last_player_scroll_count_;
+    }
+    player_->move( player_move );
+    player_scroll_count_ += player_move.y;
+
+    // ステージ
+    float stage_move  = (kStageMotionrange * percentage) - last_stage_scroll_count_;
+    const Vector2& stage_posi = stage_->getPosition();
+    stage_->setPosition( {stage_posi.x, stage_posi.y + stage_move} );
+    stage_scroll_count_ += stage_move;
+
+
+    // 終了処理
+    last_player_scroll_count_ = player_scroll_count_;
+    last_stage_scroll_count_  = stage_scroll_count_;
+
+
+    // スクロール終了
+    if( scroll_sin_ >= kScrollSinMaxDeg ) { scroll_sin_ = -1.0F; }
 }

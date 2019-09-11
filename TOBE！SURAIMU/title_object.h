@@ -10,23 +10,7 @@ struct TitleStatus
 	RECT trim;
 	float alpha = 1.0F;
 	float depth = 1.0F;
-};
-
-//class
-class TitleObject
-{
-public:
-	TitleObject();
-	~TitleObject();
-
-	//Œp³ŠÖ”
-public:
-	//‰Šú‰»
-	bool init( TitleStatus* TitleObjectStatus );
 	//•`‰æ
 	void draw();
-
-private:
-	TitleStatus* status_;		//î•ñŠi”[—p•Ï”
 };
 

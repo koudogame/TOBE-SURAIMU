@@ -30,6 +30,7 @@ const Vector2 kObjectposition[] =
 	Vector2(640.0F - 226.F / 2.0F , 600.0F - 226.F / 2.0F - getWindowHeight<float>()),
 	Vector2(816.0F - 300.0F / 2.0F , 297.0F - 300.0F / 2.0F - getWindowHeight<float>()),
 	Vector2(465.0F - 300.0F / 2.0F , 142.0F - 300.0F / 2.0F - getWindowHeight<float>()),
+	Vector2(465.0F - 300.0F / 2.0F , 142.0F - 300.0F / 2.0F - getWindowHeight<float>()),
 	Vector2(getWindowWidth<float>(), 0.0F),
 	Vector2(-kWallWidth , 0.0F)
 };
@@ -41,12 +42,26 @@ const RECT kObjectTrim[] =
 	{150,0,150 + 226,226},
 	{150 + 226,0,150 + 226 + 300,300},
 	{150 + 226,0,150 + 226 + 300,300},
+	{150 + 226,0,150 + 226 + 300,300},
 	{0,0,static_cast<long>(kWallWidth),static_cast<long>(kWallHeight)},
 	{0,0,static_cast<long>(kWallWidth),static_cast<long>(kWallHeight)},
 	{ 0,0,getWindowWidth<int>(),getWindowHeight<int>() },
 };
 
-
+const Vector3 kStarInformation[3] = {	//星の切り取り情報( x,y,size )
+	Vector3(0.0F,0.0F,150.0F),
+	Vector3(150.0F,0.0F,226.0F),
+	Vector3(150.0F + 226.0F,0.0F,300.F)
+};
+const int kStarMin = 60;			//最小サイズ
+const int kStarDifference = 20;		//星のサイズの差分
+const float kStarColorThreshold[2] =		//色変更の閾値
+{
+	0.5F,
+	0.8F
+};
+const int kBackParticleSize = 46;
+const int kCreateStarNum = 8;
 /*===========================================================================*/
 Title::Title()
 {
@@ -61,8 +76,7 @@ Title::~Title()
 // 初期化処理
 bool Title::init()
 {
-	for (int i = 0; i < ObjectNum::kObjectNum; i++)
-		object_[i] = std::make_unique<TitleObject>();
+	first_stage_.load(L"State/start_pattern.csv");
 
 	scene_ = &Title::selectScene;
 
@@ -78,19 +92,20 @@ bool Title::init()
 	object_status_[ObjectNum::kCusur].depth = 30.0F;
 
 	//初期の星１
-	object_status_[ObjectNum::kStar1].texture = TextureLoder::getInstance()->load(L"Texture/star.png");
-	object_status_[ObjectNum::kStar1].position = kObjectposition[ObjectNum::kStar1];
-	object_status_[ObjectNum::kStar1].trim = kObjectTrim[ObjectNum::kStar1];
-
-	//初期の星2
-	object_status_[ObjectNum::kStar2].texture = TextureLoder::getInstance()->load(L"Texture/star.png");
-	object_status_[ObjectNum::kStar2].position = kObjectposition[ObjectNum::kStar2];
-	object_status_[ObjectNum::kStar2].trim = kObjectTrim[ObjectNum::kStar2];
-
-	//初期の星3
-	object_status_[ObjectNum::kStar3].texture = TextureLoder::getInstance()->load(L"Texture/star.png");
-	object_status_[ObjectNum::kStar3].position = kObjectposition[ObjectNum::kStar3];
-	object_status_[ObjectNum::kStar3].trim = kObjectTrim[ObjectNum::kStar3];
+	for (int i = 0; i < kCreateStarNum; ++i)
+	{
+		star_obj_.push_back(TitleStatus());
+		star_obj_.back().texture = TextureLoder::getInstance()->load(L"Texture/star.png");
+		star_obj_.back().position.x = first_stage_.getNumber(0, i + 1);
+		star_obj_.back().position.y = first_stage_.getNumber(1, i + 1) - getWindowHeight<float>() * 2.0F;
+		Vector3 inf = kStarInformation[(static_cast<int>(first_stage_.getNumber(5, 1)) - kStarMin) / kStarDifference];
+		float rate = first_stage_.getNumber_f(4, i + 1);
+		int id = rate < kStarColorThreshold[0] ? 0 : (rate < kStarColorThreshold[1] ? 1 : 2);
+		star_obj_.back().trim.left = inf.x;
+		star_obj_.back().trim.top = inf.y + id * inf.z;
+		star_obj_.back().trim.right = star_obj_.back().trim.left + inf.z;
+		star_obj_.back().trim.bottom = star_obj_.back().trim.top + inf.z;
+	}
 
 	//プレイヤー
 	object_status_[ObjectNum::kPlayer].texture = TextureLoder::getInstance()->load(L"Texture/character.png");
@@ -115,9 +130,6 @@ bool Title::init()
 	object_status_[ObjectNum::kBlack].depth = 100.0F;
 
 	overlay_texture_ = TextureLoder::getInstance()->load(L"Texture/star1.png");
-
-	for (int i = 0; i < ObjectNum::kObjectNum; i++)
-		object_[i].get()->init(&object_status_[i]);
 
 	volume_ = 1.0F;
 
@@ -148,17 +160,23 @@ SceneBase* Title::update()
 // 描画処理
 void Title::draw()
 {
-	for (int i = ObjectNum::kStar1; i <= ObjectNum::kStar3; i++)
+	for (auto& itr : star_obj_)
 	{
-		Sprite::getInstance()->reserveDraw(overlay_texture_, object_status_[i].position, object_status_[i].trim, 1.0F, 13.0F, { 1.0F, 1.0F }, 0.0F, Vector2::Zero, Sprite::getInstance()->chengeMode());
+		Vector2 anker = Vector2((itr.trim.right - itr.trim.left) / 2.0F, (itr.trim.bottom - itr.trim.top) / 2.0F);
+		Sprite::getInstance()->reserveDraw(overlay_texture_, itr.position, itr.trim, 1.0F, 13.0F, { 1.0F, 1.0F }, 0.0F, anker, Sprite::getInstance()->chengeMode());
+		Sprite::getInstance()->reserveDraw(itr.texture, itr.position, itr.trim, 1.0F, 14.0F, { 1.0F, 1.0F }, 0.0F, anker);
 	}
 
-	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kStar1].texture, object_status_[ObjectNum::kStar1].position, object_status_[ObjectNum::kStar1].trim, 1.0F, 14.0F);
-	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kStar2].texture, object_status_[ObjectNum::kStar2].position, object_status_[ObjectNum::kStar2].trim, 1.0F, 14.0F);
-	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kStar3].texture, object_status_[ObjectNum::kStar3].position, object_status_[ObjectNum::kStar3].trim, 1.0F, 14.0F);
+	//パーティクル用切り取り位置
+	RECT trim;
+	trim.left = kBackParticleSize * 2;
+	trim.top = 0;
+	trim.right = trim.left + kBackParticleSize;
+	trim.bottom = trim.top + kBackParticleSize;
+	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kPlayer].texture, object_status_[ObjectNum::kPlayer].position, trim, 1.0F, object_status_[ObjectNum::kPlayer].depth - 0.1F);
 
 	for (int i = 0; i <= ObjectNum::kPlayer; i++)
-		object_[i].get()->draw();
+		object_status_[i].draw();
 
 	for (float y = object_status_[ObjectNum::kWallRight].position.y; y < getWindowHeight<float>(); y += kWallHeight)
 	{
@@ -174,7 +192,7 @@ void Title::draw()
 			30.0F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero, Common::getInstance()->getStates()->NonPremultiplied(), SpriteEffects::SpriteEffects_None);
 	}
 
-	object_[ObjectNum::kBlack].get()->draw();
+	object_status_[ObjectNum::kBlack].draw();
 
 
 }
@@ -182,7 +200,7 @@ void Title::draw()
 void Title::input()
 {
 	//入力があったらカーソル反転
-	if (key_.pressed.Down || pad_.dpadDown == pad_.PRESSED || pad_.leftStickDown == pad_.PRESSED)
+	if (key_.pressed.Down || pad_.dpadDown == pad_.PRESSED || pad_.leftStickRight == pad_.PRESSED)
 	{
 		if (select_menu_ == Menu::kPlay)
 		{
@@ -199,7 +217,7 @@ void Title::input()
 		}
 		timer_.start();
 	}
-	else if (key_.pressed.Up || pad_.dpadUp == pad_.PRESSED || pad_.leftStickUp == pad_.PRESSED)
+	else if (key_.pressed.Up || pad_.dpadUp == pad_.PRESSED || pad_.leftStickLeft == pad_.PRESSED)
 	{
 		if (select_menu_ == Menu::kRanking)
 		{
@@ -226,7 +244,10 @@ SceneBase* Title::playScene()
 	SOUND->setVolume(SoundId::kTitle, volume_);
 	SOUND->play(SoundId::kScene, false);
 
-	for (int i = 0; i <= ObjectNum::kStar3; i++)
+	for (auto& itr : star_obj_)
+		itr.position.y += kFall;
+
+	for (int i = 0; i <= ObjectNum::kPlayer; ++i)
 		object_status_[i].position.y += kFall;
 
 	float now_time_ = object_status_[ObjectNum::kRogo].position.y / getWindowHeight<float>();

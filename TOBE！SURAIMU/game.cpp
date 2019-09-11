@@ -5,10 +5,13 @@
 #include "textureLoder.h"
 #include "ranking_manager.h"
 #include "collision.h"
+#include "timer.h"
+#include "pad.h"
 
 //-----------------------
 //最初のシーン
 #include "title.h"
+#include "endless.h"
 //#include "play.h"
 
 //背景処理利用定数
@@ -27,6 +30,8 @@ constexpr RECT kTrimmingBackObject[]  = {
 	{ 0L, 1200L, 4096L, 2400L},
 	{ 0L, 2400L, 4096L, 3600L},
 };
+
+const int kEndTime = 3;
 
 //コンストラクタ
 Game::Game()
@@ -63,7 +68,7 @@ bool Game::update()
 
 	SceneBase* temp = scene_->update();
 
-	if( temp == nullptr )
+	if( gameEnd() || temp == nullptr )
 	{
 		return false;
 	}
@@ -98,4 +103,17 @@ void Game::destroy()
 {
 	Background::getInstance()->destroy();
 	scene_->destroy();
+}
+
+bool Game::gameEnd()
+{
+	auto state = Pad::getInstance()->getTracker();
+	if (state.view == state.PRESSED)
+		time_.start();
+	if (state.view == state.HELD)
+	{
+		if ((kEndTime - time_.getCount()) == 0)
+			return true;
+	}
+	return false;
 }

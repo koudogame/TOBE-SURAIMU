@@ -20,13 +20,15 @@ public:
     void draw()    override;
 
     void start();
-    void levelUp();
+    void upStart();
+    void speedUp();
     void setMove( float Displacement ) override;
 
-
+    bool isUp() const;
     ObjectID getID() const override { return ObjectID::kFailWall; }
     const Vector2& getPosition() const override;
     Line* getShape() { return shape_; }
+    float getSpeed() const;
 
 
 
@@ -38,7 +40,7 @@ private:
     Line* shape_ = nullptr;
 
     int frame_counter_ = 0;
-    float speed_ = 0.0F;
+    int speed_index_ = 0;
     float scaling_ = 0.0F;
     std::deque<float> scale_y_;
 };

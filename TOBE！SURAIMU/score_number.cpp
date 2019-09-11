@@ -2,12 +2,13 @@
 #include "textureLoder.h"
 #include "sprite.h"
 
-const int kNumWidth = 11;
-const int kNumHeight = 15;
+const int kNumWidth = 10;
+const int kNumHeight = 14;
 const float kSpeed = 6.0F;
-const float kLimitLine = 240.0F;
+const float kLimitLine = 273.0F;
 const float kDffAlpha = 0.005F;
 const int kPulseLeft = 302;
+const float kInterval = 1.0F;
 
 ScoreNumber::ScoreNumber()
 {
@@ -55,7 +56,7 @@ void ScoreNumber::draw()
 		trim.right = trim.left + kNumWidth;
 		trim.bottom = trim.top + kNumHeight;
 		Sprite::getInstance()->reserveDraw( texture_ , draw_position , trim , alpha_ , 30.0F);
-		draw_position.x -= kNumWidth;
+		draw_position.x -= kNumWidth + kInterval;
 	}
 
 	//+‚Ì•`‰æ

@@ -12,9 +12,25 @@
 
 /*===========================================================================*/
 constexpr float kLimitYUp   = getWindowHeight<float>() * 0.00F;
-constexpr float kLimitYDown = getWindowHeight<float>() * 1.50F;
-const Line kInitPosition { 250.0F, kLimitYDown, 1030.0F, kLimitYDown };
-constexpr float kStartSpeed = -0.1F;
+constexpr float kLimitYDown = getWindowHeight<float>() * 10.0F;
+constexpr int   kSpeedLimitIndex = 11;
+constexpr float kSpeedTable[kSpeedLimitIndex] =
+{
+    0.0F,
+    2.0F,
+    -0.2F,
+    -0.5F,
+    -1.0F,
+    -1.2F,
+    -1.5F,
+    -2.5F,
+    -2.6F,
+    -2.8F,
+    -3.0F,
+};
+const Line kInitPosition { 250.0F, 750.0F, 1030.0F, 750.0F };
+constexpr float kInitSpeed = 2.0F;
+constexpr float kStartSpeed = -0.2F;
 constexpr float kMagnificationSpeed = 1.5F;
 constexpr float kScrollSpeedTable[] = 
 {
@@ -76,7 +92,7 @@ bool FailWall::init()
 
     // メンバ初期化
     frame_counter_ = 0;
-    speed_ = 0.0F;
+    speed_index_ = 0;
     scaling_ = kAmountOfScaling;
     scale_y_.resize( kScaleSaveNum );
     for( auto& scale : scale_y_ )
@@ -105,12 +121,13 @@ void FailWall::destroy()
 void FailWall::update()
 {
     // 上へスクロール
-    shape_->start.y += speed_;
-    shape_->end.y += speed_; 
+    shape_->start.y += kSpeedTable[speed_index_];
+    shape_->end.y += kSpeedTable[speed_index_];
     if (shape_->start.y < kLimitYUp)
     {
         // 上限を超えたら戻す
         shape_->start.y = kLimitYUp;
+        shape_->end.y   = kLimitYUp;
     }
 
     // 炎のスケーリング
@@ -182,18 +199,30 @@ void FailWall::draw()
 /*===========================================================================*/
 void FailWall::start()
 {
-    speed_ = kStartSpeed;
+    speed_index_ = 1;
 }
 
-void FailWall::levelUp()
+void FailWall::upStart()
 {
-    speed_ *= kMagnificationSpeed;
+    ++speed_index_;
+}
+void FailWall::speedUp()
+{
+    // 上昇が開始していたら、倍率をかける
+    if( isUp() )
+    {
+        // 限界を超えないよう制御
+        if( ++speed_index_ >= kSpeedLimitIndex )
+        {
+            --speed_index_;
+        }
+    }
 }
 
 void FailWall::setMove( float Disp )
 {
     // 上への移動は倍率をかける
-    if( Disp < 0 ) { Disp *= 0.75F; }
+    //if( Disp < 0 ) { Disp *= 0.75F; }
 
     // 移動
     shape_->start.y += Disp;
@@ -215,8 +244,12 @@ void FailWall::setMove( float Disp )
 
 
 /*===========================================================================*/
+bool FailWall::isUp() const
+{
+    return speed_index_ > 1;
+}
 const Vector2& FailWall::getPosition() const 
 {
     return shape_->start;
 }
-
+ 

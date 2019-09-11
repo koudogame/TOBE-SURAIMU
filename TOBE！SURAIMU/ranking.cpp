@@ -26,8 +26,8 @@ void addOffset(float* const Val, const float AddVal);
 
 /*===========================================================================*/
 constexpr float kLineHeight       = 20.0F;      // 1行の縦幅
-constexpr float kMagnification    = 0.1F;       // スクロール倍率
-constexpr float kMagnificationMax = 2.0F;       // 倍率上限
+constexpr float kMagnification    = 0.05F;      // スクロール倍率
+constexpr float kMagnificationMax = 3.0F;       // 倍率上限
 constexpr float kOffset           = 5.0F;       // 描画オフセット
 constexpr float kOffsetMin        = -200.0F;    // オフセット下限
 constexpr float kOffsetMax        = 1800.0F;    // オフセット上限
@@ -102,6 +102,7 @@ bool Ranking::init()
     // メンバ初期化
     magnification_ = 1.0F;
     offset_ = 0.0F;
+    sort_mode_ = kScore;
 
 	sound_flag_ = false;
 
@@ -133,8 +134,8 @@ SceneBase* Ranking::update()
 
 	// 上新規入力時、1列分上へスクロール
 	if( key_tracker.pressed.Up ||
-		pad_tracker.leftStickUp == PadTracker::PRESSED ||
-        pad_tracker.dpadUp      == PadTracker::PRESSED )
+		pad_tracker.leftStickLeft == PadTracker::PRESSED ||
+        pad_tracker.dpadLeft      == PadTracker::PRESSED )
 	{
 		magnification_ = 1.0F;
 		addOffset( &offset_ , -kLineHeight );
@@ -146,8 +147,8 @@ SceneBase* Ranking::update()
 	}
 	// 下新規入力時、1列分下へスクロール
 	else if( key_tracker.pressed.Down ||
-			 pad_tracker.leftStickDown == PadTracker::PRESSED ||
-             pad_tracker.dpadDown      == PadTracker::PRESSED )
+			 pad_tracker.leftStickRight == PadTracker::PRESSED ||
+             pad_tracker.dpadRight      == PadTracker::PRESSED )
 	{
 		magnification_ = 1.0F;
 		addOffset( &offset_ , kLineHeight );
@@ -159,20 +160,38 @@ SceneBase* Ranking::update()
 	}
 	// 上長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
 	else if( key_state.Up ||
-             pad_state.IsLeftThumbStickUp() ||
-             pad_state.dpad.up )
+             pad_state.IsLeftThumbStickLeft() ||
+             pad_state.dpad.left )
 	{
 		addOffset( &offset_ , -kOffset * magnification_ );
 		addMagnification( &magnification_ );
 	}
 	// 下長押しでスクロール( 押している間スクロールスクロール倍率を上げる )
-	else if( key_state.Down || 
-             pad_state.IsLeftThumbStickDown() ||
-             pad_state.dpad.down )
+	else if( key_state.Down ||
+             pad_state.IsLeftThumbStickRight() ||
+             pad_state.dpad.right )
 	{
 		addOffset( &offset_ , kOffset * magnification_ );
 		addMagnification( &magnification_ );
 	}
+    // LeftかLでソートの条件を一つ前に
+    else if( key_tracker.pressed.Left || pad_tracker.leftShoulder == PadTracker::PRESSED )
+    {
+        // スクロールを初期化
+        offset_ = 0.0F;
+
+        if( --sort_mode_ < kScore ) { sort_mode_ = kCombo; }
+        sort( sort_mode_ );
+    }
+    // RightかRでソートの条件を一つ後に
+    else if( key_tracker.pressed.Right || pad_tracker.rightShoulder == PadTracker::PRESSED )
+    {
+        // スクロールを初期化
+        offset_ = 0.0F;
+
+        if( ++sort_mode_ > kCombo ) { sort_mode_ = kScore; }
+        sort( sort_mode_ );
+    }
 	// Spaceかaボタンが離されたら決定
 	else if( key_tracker.released.Space || pad_tracker.a == PadTracker::RELEASED )
 	{
@@ -220,8 +239,10 @@ void Ranking::draw()
     // ランキングの描画
     Vector2 position = kPositionBase;
     position.y -= offset_;
+    int rank = 0;
     for( auto data : data_ )
     {
+        ++rank;
         if( position.y < kPosition[kField].y ) { position.y += kLineHeight; continue;}
         if( position.y > kFieldMax )           { break; }
 
@@ -233,8 +254,8 @@ void Ranking::draw()
 
         // ランク
         position.x = kCoordinateX[kRank] + kNumWidth *
-                            ( data.rank > 99U ? 3.0F : (data.rank > 9U ? 2.5F :  2.0F) );
-        Text::drawNumber( data.rank, texture_numbers_, position,
+                            ( rank > 99U ? 3.0F : (rank > 9U ? 2.5F :  2.0F) );
+        Text::drawNumber( rank, texture_numbers_, position,
                           kNumWidth, kNumHeight, 1U, 1.0F, 0.0F, kTextDepth );
 
         // 名前
@@ -263,9 +284,35 @@ void Ranking::draw()
 
 
     // フレームの描画
-	kSprite->reserveDraw( texture_ , kPosition[ kFrame ] , kTrimming[ kFrame ] , 1.0F , kFrameDepth );
+	kSprite->reserveDraw( texture_, kPosition[kFrame], kTrimming[kFrame], 1.0F, kFrameDepth );
 }
 
+
+/*===========================================================================*/
+// ソート
+void Ranking::sort( const int Mode )
+{
+    data_.sort(
+        Mode == kScore ?
+        [](const RankingManager::Data& a, const RankingManager::Data& b)->bool
+        {
+            if( a.score == b.score ) { return a.height > b.height; }
+            else                     { return a.score  > b.score; }
+        } :
+        Mode == kHeight ?
+        [](const RankingManager::Data& a, const RankingManager::Data& b)->bool
+        {
+            if( a.height == b.height ) { return a.score > b.score; }
+            else                       { return a.height > b.height; }
+        } :
+        /* Mode == kCombo */
+        [](const RankingManager::Data& a, const RankingManager::Data& b)->bool
+        {
+            if( a.combo == b.combo ) { return a.score > b.score; }
+            else                     { return a.combo > b.combo; }
+        }
+    );
+}
 
 /*===========================================================================*/
 // 倍率の加算( 上限を超えないよう定数を加算 )
@@ -282,3 +329,4 @@ void addOffset( float* const Val, const float Add )
 	if( *Val > kOffsetMax ) { *Val = kOffsetMax;}
     else if( *Val < kOffsetMin )  { *Val = kOffsetMin; }
 }
+

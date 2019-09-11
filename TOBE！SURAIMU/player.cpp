@@ -20,11 +20,14 @@ const int kPlayerSize = 46;		                //テクスチャサイズ
 const int kFlicTime = 18;		                //アニメーション更新時間
 const int kParticleTime = 1;	                //パーティクルの生成クールフレーム
 const int kBottomOn = 3;		                //下入力時の重力倍率
-const int kBottomOff = 1;		                //下入力なしの重力倍率
-const float kDeathLine = 720;	            //死亡ライン
+const int kBottomOff = 1;						//下入力なしの重力倍率
+const float kDeathLine = 720;					//死亡ライン
 const float kGuideHeight = 214.0F;	            //ガイドのテクスチャの高さ
 const float kGuideWidth = 5.0F;		            //ガイドのテクスチャの幅
 const int kMaxPlayer = 4;			            //最大プレイ人数
+const float kDefGuid = 0.05F;					//ガイドの減少比率
+const float kGuidMin = 0.3F;					//ガイドの最小減少比率値
+const int kDeleteGuidLevel = 2;					//ガイドが消え始めるレベル
 
 constexpr float kParticleInterval = 2.5F;       //パーティクルの生成間隔
 
@@ -37,6 +40,13 @@ constexpr float kMaxOffset = 5.0F;
 constexpr float kReboundBasePower = 1.0F;		                //プレイヤーの反発力
 constexpr float kReboundDecay = 0.05F;			                //プレイヤーの反発力の減衰量
 constexpr float kMaxChangeAngle = XMConvertToRadians(70);		//左右の最大変角度
+
+
+const float kMaxAccDia[] = {
+	1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,
+	1.1F,1.1F,1.1F,1.2F,1.2F,1.3F,1.3F,1.4F,1.4F,1.5F,
+	1.5F,1.6F,1.6F,1.6F,1.7F,1.7F,1.7F,1.8F,1.9F,2.0F
+};
 
 //コンストラクタ
 Player::Player()
@@ -149,7 +159,7 @@ void Player::update()
 
 	//ジャンプ量を増やす
 	if (flag_.test(Flag::kJump))
-		now_amount_ += kAddVolume;
+		now_amount_ += kAddVolume * kMaxAccDia[score_.getCombo() >= (sizeof(kMaxAccDia) / sizeof(float)) ? (sizeof(kMaxAccDia) / sizeof(float)) - 1 : score_.getCombo()];
 
 	if (now_amount_ >= 1.0F)
 		now_amount_ = 1.0F;
@@ -159,7 +169,6 @@ void Player::update()
 	if (move_power - kGravity < 0 && flag_.test(Flag::kJump))
 	{
 		flag_.reset(Flag::kStarCollision);
-		score_.resetCombo();
 	}
 
 	movement_ += (Vector2(std::cos(base_angle_), -std::sin(base_angle_)) * move_power);
@@ -212,12 +221,11 @@ void Player::draw()
 	}
 	else
 		draw_angle = -revision_angle_ - XM_PIDIV2;
-
 	//ガイドの描画
-	if (!flag_.test(Flag::kJump) && guide_alpha_ > 0.0F)
-		Sprite::getInstance()->reserveDraw(guide_, myshape_.position, { 0,0,0,0 }, guide_alpha_, 0.76F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kGuideWidth / 2.0F, kGuideHeight), Sprite::getInstance()->chengeMode());
-	else if (guide_alpha_ <= 0.0F)
-		guide_alpha_ = 0.0F;
+	if (!flag_.test(Flag::kJump) && guide_alpha_ >= kGuidMin)
+		Sprite::getInstance()->reserveDraw(guide_, myshape_.position, { 0,static_cast<int>(kGuideHeight * (1.0F - guide_alpha_)),static_cast<int>(kGuideWidth),static_cast<int>(kGuideHeight) }, 1.0F, 0.76F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kGuideWidth / 2.0F, kGuideHeight * guide_alpha_), Sprite::getInstance()->chengeMode());
+	else if (guide_alpha_ < kGuidMin)
+		guide_alpha_ = kGuidMin;
 
 
 	slectDirection();
@@ -230,6 +238,8 @@ void Player::draw()
 
 	Sprite::getInstance()->reserveDraw(texture_, myshape_.position, trim, 1.0F, 0.77F, Vector2(1.0F, 1.0F), draw_angle, Vector2(kPlayerSize / 2.0F, kPlayerSize / 2.0F));
 
+	score_.setPlayerPosition(myshape_.position);
+	score_.setPlayerJampFlag(flag_.test(Flag::kJump));
 	score_.draw();
 }
 
@@ -290,14 +300,16 @@ void Player::collision(Star * StarObj)
 		direction_id_ = Direction::kFlont;
 		timer = 0;
 		score_.addCombo();
-		if (score_.getLevel() >= 2)
-			guide_alpha_ -= 0.1F;
+		if (score_.getLevel() >= kDeleteGuidLevel)
+			guide_alpha_ -= kDefGuid;
 
 		if (owner_ == StarObj)
 			score_.addTechnique();
 		else
 			score_.resettechnique();
 	}
+	else
+		score_.timeRestart();
 	base_angle_ = revision_angle_;
 	died_flag_ ? owner_ = nullptr : owner_ = StarObj;
 	now_amount_ = 0.0F;
@@ -398,6 +410,7 @@ void Player::inputjump()
 		SOUND->play(SoundId::kJump, false);
 		flag_.set(Flag::kJump);
 		flag_.set(Flag::kStarCollision);
+		flag_.reset(Flag::kWallCollision);
 		flag_.reset(Flag::kParticle);
 		flag_.reset(Flag::kOnce);
 		direction_id_ = Direction::kFlay;
@@ -407,6 +420,8 @@ void Player::inputjump()
 		ground_ = &kGround;
 		prev_jump_moveamount_ = 0.0F;
 		score_.resetRotate();
+		score_.timeStop();
+		score_.timeStop();
 	}
 }
 
@@ -442,11 +457,10 @@ void Player::inputmove()
 		offset_ += temp;
 
 	//下入力
-	if (pad_tracker.dpadDown == pad_tracker.HELD || pad_tracker.leftStickDown == pad_tracker.HELD || key.lastState.Down)
+	if (pad_tracker.a == pad_tracker.HELD || key.lastState.Space)
 	{
 		bottom_input_ = kBottomOn;
 		score_.addDown();
-		score_.resetCombo();
 		flag_.reset(Flag::kStarCollision);
 	}
 	else
@@ -539,7 +553,13 @@ void Player::addFreeFallParticle()
 		{
 			Vector2 create_position = myshape_.position - nomal * static_cast<float>(i) * kParticleInterval;
 			//ジャンプ時のパーティクル生成
-			f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayer, 20.0F, false, XMConvertToDegrees(angle));
+			unsigned int now_combo = score_.getCombo();
+			if (now_combo < 10)
+				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerLowCombo, 20.0F, false, XMConvertToDegrees(angle));
+			else if(now_combo < 20)
+				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerMiddleCombo, 20.0F, false, XMConvertToDegrees(angle));
+			else
+				f_particle_container_.get()->addParticle(create_position, NameSpaceParticle::ParticleID::kPlayerHiCombo, 20.0F, false, XMConvertToDegrees(angle));
 		}
 	}
 	else
@@ -567,10 +587,10 @@ bool Player::diedEffect()
 		s_particle_container_.get()->destroy();
 
 		//死亡時のパーティクル( 衝突時のものを流用( Scale 2.0F ) )を生成
-		g_particle_container_->addParticle(Vector2(myshape_.position.x, getWindowHeight<float>()), XMConvertToRadians(45), NameSpaceParticle::ParticleID::kCyan, 2.0F);
-		g_particle_container_->addParticle(Vector2(myshape_.position.x, getWindowHeight<float>()), XMConvertToRadians(75), NameSpaceParticle::ParticleID::kMagenta, 2.0F);
-		g_particle_container_->addParticle(Vector2(myshape_.position.x, getWindowHeight<float>()), XMConvertToRadians(105), NameSpaceParticle::ParticleID::kWall, 2.0F);
-		g_particle_container_->addParticle(Vector2(myshape_.position.x, getWindowHeight<float>()), XMConvertToRadians(135), NameSpaceParticle::ParticleID::kYellow, 2.0F);
+		g_particle_container_->addParticle(myshape_.position, XMConvertToRadians(45), NameSpaceParticle::ParticleID::kCyan, 2.0F);
+		g_particle_container_->addParticle(myshape_.position, XMConvertToRadians(75), NameSpaceParticle::ParticleID::kMagenta, 2.0F);
+		g_particle_container_->addParticle(myshape_.position, XMConvertToRadians(105), NameSpaceParticle::ParticleID::kWall, 2.0F);
+		g_particle_container_->addParticle(myshape_.position, XMConvertToRadians(135), NameSpaceParticle::ParticleID::kYellow, 2.0F);
 		died_flag_ = true;
 
 		score_.stop();

@@ -34,8 +34,8 @@ constexpr unsigned kComboDigits             = 2U;       // コンボ桁数
 constexpr unsigned kFrameWait               = 10U;      // 長押し時、待機フレーム数
 constexpr long kBigNumbersWidth             = 20L;      // 大数字横幅
 constexpr long kBigNumbersHeight            = 32L;      // 大数字縦幅
-constexpr long kMiniNumbersWidth            = 11U;      // 小数字横幅
-constexpr long kMiniNumbersHeight           = 15L;      // 小数字縦幅
+constexpr long kMiniNumbersWidth            = 10U;      // 小数字横幅
+constexpr long kMiniNumbersHeight           = 14L;      // 小数字縦幅
 constexpr long kNumbersWidth                = 20L;      // 数字横幅
 constexpr long kNumbersHeight               = 32L;      // 数字縦幅
 constexpr long kMiniCharacterWidth          = 12L;      // 小文字横幅
@@ -79,13 +79,13 @@ constexpr Vector2 kPositionFromBase[] {
 enum { kSelectSetName, kSelectOneMore, kSelectTitle, };
 constexpr Vector2 kPositionCursorFromBase[] = {
     {515.0F, 287.0F}, // set name
-    {515.0F, 352.0F}, // one more
-    {515.0F, 417.0F}, // title
+    {445.0F, 385.0F}, // one more
+    {610.0F, 385.0F}, // title
 };
 
 enum { kName,  kScore, kHeight, kCombo };
 constexpr float kDrawPositionX[] = {
-       472.0F, 690.0F, 790.0F,  842.0F
+       472.0F, 689.0F, 788.0F,  842.0F
 };
 
 
@@ -126,7 +126,7 @@ bool Result::init()
     texture_numbers_             = kLoader->load(L"Texture/result_score.png");
     if( texture_numbers_         == nullptr )   { return false; }
 
-    texture_numbers_mini_        = kLoader->load(L"Texture/Rank_number.png");
+    texture_numbers_mini_        = kLoader->load(L"Texture/ranking_number.png");
     if( texture_numbers_mini_    == nullptr )   { return false; }
 
 
@@ -179,10 +179,6 @@ void Result::destroy()
     kLoader->release(texture_numbers_big_);
     kLoader->release(texture_char_);
     kLoader->release(texture_);
-
-
-    // 背景のリセット
-    Background::getInstance()->reset();
 }
 
 /*===========================================================================*/
@@ -366,7 +362,12 @@ SceneBase* Result::outToTitle()
 {
     alpha_ -= 0.01F;
 
-    if( alpha_ < 0.0F ) { return new Title(); }
+    if( alpha_ < 0.0F ) 
+    {
+        // 背景のリセット
+        Background::getInstance()->reset(); 
+        return new Title(); 
+    }
     else                { return this; }
 }
 // プレイへ遷移
@@ -381,7 +382,13 @@ SceneBase* Result::outToPlay()
         );
     position_base_.y -= offset;
 
-	if( count_ >= 1.0F ) { SOUND->stop( SoundId::kTitle ); return new Endless(); }
+	if( count_ >= 1.0F ) 
+    {
+        // 背景のリセット
+        Background::getInstance()->reset(); 
+        SOUND->stop( SoundId::kTitle );
+        return new Endless();
+    }
     else                 { return this; }
 }
 
@@ -537,8 +544,8 @@ SceneBase* Result::selectNext()
 	}
 	// 選択
 	else if( key_tracker.pressed.Up ||
-			 pad_tracker.leftStickUp == PadTracker::PRESSED ||
-             pad_tracker.dpadUp      == PadTracker::PRESSED )
+			 pad_tracker.leftStickLeft == PadTracker::PRESSED ||
+             pad_tracker.dpadLeft      == PadTracker::PRESSED )
 	{
 		// 上限を超えないよう制御
 		if( ( rank_ <= kRegisteredNum && select_ > kSelectSetName ) || // ランクイン時
@@ -557,8 +564,8 @@ SceneBase* Result::selectNext()
 		}
 	}
 	else if( key_tracker.pressed.Down ||
-			 pad_tracker.leftStickDown == PadTracker::PRESSED ||
-             pad_tracker.dpadDown )
+			 pad_tracker.leftStickRight == PadTracker::PRESSED ||
+             pad_tracker.dpadRight )
 	{
 		// 下限を超えないよう制御
 		if( select_ < kSelectTitle )
@@ -592,7 +599,7 @@ void Result::drawRankingElem( Vector2 Position,
     Text::drawNumber( Rank,
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        1U, alpha_, 0.0F, kRankingDepth );
+        1U, alpha_, 1.0F, kRankingDepth );
 
     // 名前
     Position.x = kDrawPositionX[kName];
@@ -606,20 +613,20 @@ void Result::drawRankingElem( Vector2 Position,
     Text::drawNumber( Score,
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        kScoreDigits, alpha_, 0.0F, kRankingDepth );
+        kScoreDigits, alpha_, 1.0F, kRankingDepth );
 
     // 距離
     Position.x = kDrawPositionX[kHeight];
     Text::drawNumber( static_cast<ULL>(Height),
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        kHeightDigits, alpha_, 0.0F, kRankingDepth );
+        kHeightDigits, alpha_, 1.0F, kRankingDepth );
 
     // 最大コンボ
     Position.x = kDrawPositionX[kCombo];
     Text::drawNumber( Combo,
         texture_numbers_mini_,
         Position, kMiniNumbersWidth, kMiniNumbersHeight,
-        kComboDigits, alpha_, 0.0F, kRankingDepth );
+        kComboDigits, alpha_, 1.0F, kRankingDepth );
 
 }
