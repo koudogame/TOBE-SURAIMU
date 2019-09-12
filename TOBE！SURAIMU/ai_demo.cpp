@@ -25,8 +25,8 @@ static const Circle kSerchRange
     getWindowHeight<float>() * 0.5F
 };
 
-static constexpr int   kJumpPercentageDenominator = 1;
-static constexpr float kJumpReach = 380.0F;
+static constexpr int   kJumpPercentageDenominator = 2;
+static constexpr float kJumpReach = 400.0F;
 static constexpr float kJumpAngleMin = 5.0F;
 static constexpr float kJumpAngleMax = 15.0F;
 
@@ -136,6 +136,7 @@ bool AIDemo::isJump()
         float between_angle = toDegrees(Calc::angle(tar_position - this_position) );
         float delta_angle = direction_angle - between_angle;
 
+        // 常に中央に向かって飛ぶよう状況を分岐
         if( this_position.x < tar_position.x ?
                               (delta_angle >= kJumpAngleMin && delta_angle <= kJumpAngleMax) :
                               (delta_angle <= -kJumpAngleMin && delta_angle >= -kJumpAngleMax)
@@ -265,7 +266,6 @@ bool(AIDemo::*AIDemo::getJudgeFunc())(ObjectBase* const)
 // 着地中のターゲット条件式
 bool AIDemo::judgeForStaying( ObjectBase* const Target )
 {
-#if true
     const Vector2& this_posi = getPosition();
     const Vector2& targ_posi = Target->getPosition();
 
@@ -290,50 +290,17 @@ bool AIDemo::judgeForStaying( ObjectBase* const Target )
 
     if( target_ != nullptr )
     {
-        // 現在のターゲットとの距離よりも遠かったら不採用
-        float dist_now_targ = getDist2(this_posi, target_->getPosition());
-        if( dist_new_targ > dist_now_targ ) { return false; }
+        // 現在のターゲットよりも低いものは不採用
+        if( targ_posi.y > target_->getPosition().y )
+        {
+            return false;
+        }
     }
 
 
 
    
     return true;
-
-#else
-    const Vector2& this_position = getPosition();
-    const Vector2& test_position = Check->getPosition();
-
-    // オーナーは不採用
-    ObjectBase* const owner = this->getOwner();
-    if( Check == owner ) { return false; }
-
-    // ジャンプの範囲外なら、不採用
-    float dist_test = 
-        std::pow(this_position.x - test_position.x, 2.0F) +
-        std::pow(this_position.y - test_position.y, 2.0F);
-    if( dist_test > std::pow( kJumpReach, 2.0F ) )  { return false; }
-
-    // 現在の座標以下にあるものは、不採用
-    if( (owner != nullptr) &&
-        (test_position.y >= owner->getPosition().y) ){ return false; }
-
-
-
-    // 現在のターゲットが無かったら、採用
-    if( target_ == nullptr )                        { return true; }
-
-    // 現在のターゲットと同じだったら、採用
-    if( target_ == Check )                          { return true; }
-
-
-    // 距離を比較 *距離のあるほうを採用
-    const Vector2& curr_position = target_->getPosition();
-    float dist_curr = 
-        std::pow(this_position.x - curr_position.x, 2.0F) + 
-        std::pow(this_position.y - curr_position.y, 2.0F);
-    return dist_test > dist_curr;
-#endif
 }
 // 上昇中のターゲット条件式
 bool AIDemo::judgeForJumping( ObjectBase* const Check )

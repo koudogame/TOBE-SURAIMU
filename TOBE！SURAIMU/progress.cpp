@@ -162,7 +162,7 @@ void Progress::draw()
 {
     stage_->draw( {0.0F, offset_} );
     player_->draw( {0.0F, offset_} );
-    //fail_wall_->draw( {0.0F, offset_} );
+    fail_wall_->draw( {0.0F, offset_} );
 }
 /*===========================================================================*/
 // ˆÚ“®

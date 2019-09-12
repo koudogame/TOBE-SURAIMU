@@ -367,7 +367,7 @@ void Demo::setStarPattern()
 
     std::wstring pattern_file;
     CsvLoader file( L"State/pattern_list.csv" );
-    for( int i = 0;; ++i )
+    for( int i = 1;; ++i )
     {
     // ファイルに保存されているパターンファイル名を追加していく
         pattern_file = file.getString( i, 0 );
