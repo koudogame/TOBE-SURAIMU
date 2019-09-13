@@ -203,10 +203,10 @@ SceneBase* Ranking::update()
 	}
 	else if((key_tracker.released.Up ||
 			 key_tracker.released.Down ||
-			 pad_tracker.leftStickUp   == PadTracker::RELEASED ||
-			 pad_tracker.leftStickDown == PadTracker::RELEASED ||
-             pad_tracker.dpadUp        == PadTracker::RELEASED ||
-             pad_tracker.dpadDown      == PadTracker::RELEASED) && !sound_flag_ )
+			 pad_tracker.leftStickLeft   == PadTracker::RELEASED ||
+			 pad_tracker.leftStickRight == PadTracker::RELEASED ||
+             pad_tracker.dpadLeft        == PadTracker::RELEASED ||
+             pad_tracker.dpadRight      == PadTracker::RELEASED) && !sound_flag_ )
 	{
 		SOUND->stop( SoundId::kSelect );
 		SOUND->play( SoundId::kSelect , false );

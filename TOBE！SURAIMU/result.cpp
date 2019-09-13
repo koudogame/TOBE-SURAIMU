@@ -306,7 +306,7 @@ void Result::draw()
         kSprite->reserveDraw( texture_,
                        position_base_ + kPositionFromBase[kPosRankInRank],
                        kTrimming[ kTrimRank ], alpha_ < alpha_rankin_ ? alpha_ : alpha_rankin_, 1.0F );
-
+                       
         // –¼‘O
         Text::drawString( name_,
                           texture_char_,
