@@ -159,7 +159,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				t3 = dt % 16L;      // 誤差( オーバー )分を保存
 
 				Key::getInstance()->update();
-				Pad::getInstance()->update(Dinput::getInstance());
+				Pad::getInstance()->update();
 				SOUND->update();
 
 				// ゲーム処理
