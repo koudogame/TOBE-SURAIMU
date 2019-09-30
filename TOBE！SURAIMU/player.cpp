@@ -37,6 +37,7 @@ constexpr float kAddVolume = 0.005F;                            //プレイヤー増加
 constexpr float kGravity = 8.0F;                                //プレイヤー重力
 constexpr float kSpeed = 0.5F;                                  //プレイヤー速さ
 constexpr float kMaxOffset = 5.0F;
+constexpr float kMove = 0.25F;									//プレイヤーの横方向の移動量
 constexpr float kReboundBasePower = 1.0F;		                //プレイヤーの反発力
 constexpr float kReboundDecay = 0.05F;			                //プレイヤーの反発力の減衰量
 constexpr float kMaxChangeAngle = XMConvertToRadians(70);		//左右の最大変角度
@@ -439,18 +440,26 @@ void Player::inputmove()
 	//右入力
 	if (pad_tracker.dpadRight == pad_tracker.HELD || pad_tracker.leftStickRight == pad_tracker.HELD || key.lastState.Right)
 	{
+#if 0
 		if (std::cos(angle - XM_PIDIV2) > 0)
 			temp = Vector2(std::cos(angle - XM_PIDIV2), -std::sin(angle - XM_PIDIV2))*kSpeed;
 		else
 			temp = -Vector2(std::cos(angle - XM_PIDIV2), -std::sin(angle - XM_PIDIV2))*kSpeed;
+#else
+		temp = Vector2(kMove, 0.0F);
+#endif
 	}
 	//左入力
 	else if (pad_tracker.dpadLeft == pad_tracker.HELD || pad_tracker.leftStickLeft == pad_tracker.HELD || key.lastState.Left)
 	{
+#if 0
 		if (std::cos(angle + XM_PIDIV2) < 0)
 			temp = Vector2(std::cos(angle + XM_PIDIV2), -std::sin(angle + XM_PIDIV2))*kSpeed;
 		else
 			temp = -Vector2(std::cos(angle + XM_PIDIV2), -std::sin(angle + XM_PIDIV2))*kSpeed;
+#else
+		temp = Vector2(-kMove, 0.0F);
+#endif
 	}
 
 	if (Vector2(offset_ + temp).Length() < kMaxOffset)
