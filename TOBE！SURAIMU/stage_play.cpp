@@ -4,6 +4,7 @@
 #include "stage_play.h"
 
 #include "release.h"
+#include "textureLoder.h"
 
 #include "stage.h"
 
@@ -19,7 +20,7 @@ static constexpr float kMovableRangeBottom = getWindowHeight<float>() * 0.85F;
 /*===========================================================================*/
 StagePlay::StagePlay( const std::wstring& StageDataName )
 {
-    stage_data_name_ = L"State/stage_test.csv";
+    stage_data_name_ = StageDataName;
 }
 
 StagePlay::~StagePlay()
@@ -72,5 +73,5 @@ SceneBase* StagePlay::update()
 // オブジェクトの描画は、基本的にSpriteクラスが行う
 void StagePlay::draw()
 {
-    
+    stage_->draw();
 }

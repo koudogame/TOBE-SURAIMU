@@ -544,6 +544,9 @@
     <ClInclude Include="stage.h">
       <Filter>Project\Game\Scene\StageMode</Filter>
     </ClInclude>
+    <ClInclude Include="stage_name.h">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

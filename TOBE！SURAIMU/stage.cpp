@@ -3,7 +3,9 @@
 
 #include "stage.h"
 
+#include "textureLoder.h"
 #include "task_manager.h"
+#include "sprite.h"
 #include "space.h"
 
 #include "stage_data.h"
@@ -16,6 +18,17 @@
 
 // 定数
 /*===========================================================================*/
+// テクスチャ
+static constexpr wchar_t kClearTextureFileName[] = L"Texture/clear.png";
+static const RECT        kClearTextureTrimming
+{
+    0L,
+    160L,
+    620L,
+    450L
+};
+static constexpr Vector2 kClearPosition { 330.0F, 205.0F };
+// 他
 static constexpr int kGamePad = 0; // ゲームパッドID
 static constexpr float kScrollLineTop    = getWindowHeight<float>() * 0.3F;
 static constexpr float kScrollLineBottom = getWindowHeight<float>() * 0.85F;
@@ -40,6 +53,14 @@ Stage::~Stage()
 // オブジェクトに関して、既にインスタンスを確保している場合は初期化処理のみを行っている
 bool Stage::init( const std::wstring& DataFileName )
 {
+    // テクスチャ読み込み
+    if( texture_ == nullptr )
+    {
+        texture_ = TextureLoder::getInstance()->load( kClearTextureFileName );
+        if( texture_ == nullptr ) { return false; }
+    }
+
+
     // ステージデータの読み込み
     if (data_ == nullptr) { data_ = new StageData(); }
     if (data_->load(DataFileName) == false) { return false; }
@@ -101,6 +122,13 @@ void Stage::destroy()
     {
         safe_delete(data_);
     }
+
+    // テクスチャ開放
+    if( texture_ != nullptr )
+    {
+        TextureLoder::getInstance()->release( texture_ );
+    }
+
 }
 /*===========================================================================*/
 // 更新処理
@@ -114,7 +142,15 @@ bool Stage::update()
 // オブジェクトの描画は、基本的にSpriteクラスが行う
 void Stage::draw()
 {
-
+    // ゴールフェーズにのみクリアテクスチャを描画する
+    if( phase_ == &Stage::phaseGoal )
+    {
+        Sprite::getInstance()->reserveDraw(
+            texture_,
+            kClearPosition,
+            kClearTextureTrimming
+        );
+    }
 }
 
 
@@ -175,7 +211,7 @@ bool Stage::phasePlay()
 // 処理が終了したら、更新終了
 bool Stage::phaseGoal()
 {
-    return false;
+    return true;
 }
 
 
@@ -213,5 +249,5 @@ bool Stage::isGoaled() const
 {
     float position = player_->getPosition().y + scroll_count_;
 
-    return position < data_->goal_line;
+     return position < data_->goal_line;
 }

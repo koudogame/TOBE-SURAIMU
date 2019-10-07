@@ -195,6 +195,7 @@
     <ClInclude Include="space.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="stage.h" />
+    <ClInclude Include="stage_name.h" />
     <ClInclude Include="stage_data.h" />
     <ClInclude Include="stage_play.h" />
     <ClInclude Include="stage_result.h" />

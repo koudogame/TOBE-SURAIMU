@@ -10,7 +10,6 @@ class StarContainer;
 class Wall;
 class FailWall;
 
-
 class Stage
 {
 public:
@@ -54,6 +53,7 @@ protected:
 
     bool (Stage::*phase_)() = nullptr;  // 現在のフェーズ
 
+    ID3D11ShaderResourceView *texture_ = nullptr; // テクスチャハンドル
     StageData     *data_   = nullptr;   // ステージデータ
 
     Player        *player_ = nullptr;   // プレイヤー

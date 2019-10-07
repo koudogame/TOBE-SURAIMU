@@ -6,8 +6,11 @@
 #include "textureLoder.h"
 #include "sprite.h"
 #include "pad.h"
+#include "stage_name.h"
 
 #include "title.h"
+
+#include "stage_play.h"
 
 // 定数
 /*===========================================================================*/
@@ -82,7 +85,11 @@ SceneBase* StageSelect::update()
     if( std::abs(rest_offset_.x) <= kCanSelectRestOffset &&
         std::abs(rest_offset_.y) <= kCanSelectRestOffset)
     {
-        selectStage( kInputState );
+        // ステージの選択
+        if( selectStage( kInputState ) )
+        {
+            return new StagePlay( kStageFileName[selecting_stage_] );
+        }
     }
 
     return this;
@@ -121,7 +128,7 @@ bool StageSelect::selectStage( const GamePad::State& InputState )
         rest_offset_ += kOffsetDown;
     }
     // 選択中のステージに決定
-    else if( InputState.buttons.b )
+    else if( InputState.buttons.a )
     {
         return true;
     }
