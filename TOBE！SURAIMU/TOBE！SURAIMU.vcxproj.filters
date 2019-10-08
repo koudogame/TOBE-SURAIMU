@@ -323,6 +323,9 @@
     <ClCompile Include="stage_play.cpp">
       <Filter>Project\Game\Scene\StageMode</Filter>
     </ClCompile>
+    <ClCompile Include="stage.cpp">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">
@@ -536,6 +539,12 @@
       <Filter>Project\Game\Scene\StageMode</Filter>
     </ClInclude>
     <ClInclude Include="stage_data.h">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClInclude>
+    <ClInclude Include="stage.h">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClInclude>
+    <ClInclude Include="stage_name.h">
       <Filter>Project\Game\Scene\StageMode</Filter>
     </ClInclude>
   </ItemGroup>
