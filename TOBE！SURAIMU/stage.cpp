@@ -211,13 +211,19 @@ bool Stage::phasePlay()
 // 処理が終了したら、更新終了
 bool Stage::phaseGoal()
 {
+    // 炎以外のオブジェクトをスクロール
+    player_->setMove( 17.0F );
+    wall_->setMove( 17.0F );
+    stars_->setMove( 17.0F );
+
     return true;
 }
 
 
 /*===========================================================================*/
 // スクロール処理
-void Stage::scroll()
+// return : スクロール分
+float Stage::scroll()
 {
     // プレイヤーの座標
     const Vector2& player_position = player_->getPosition();
@@ -225,19 +231,23 @@ void Stage::scroll()
 
     // スクロール範囲に入った分の値を求める
     float over = 0.0F;
-    if( player_position.y < kScrollLineTop )
+    if( player_position.y < kScrollLineTop )            // 上へオーバー
     {
         over = player_position.y - kScrollLineTop;
     }
-    else if( player_position.y > kScrollLineBottom )
+    else if( player_position.y > kScrollLineBottom )    // 下へオーバー
     {
         over = player_position.y - kScrollLineBottom;
     }
-    scroll_count_ += over;
+    if( player_->isJump() ) 
+        scroll_count_ -= over;
 
 
     // タスクマネージャーに登録している全オブジェクトに移動処理を実行させる
     TaskManager::getInstance()->allSetOver( -over );
+
+
+    return -over;
 }
 
 
@@ -247,7 +257,8 @@ void Stage::scroll()
 // return false : ゴールいていない
 bool Stage::isGoaled() const
 {
-    float position = player_->getPosition().y + scroll_count_;
+    float distance = data_->start_line + scroll_count_ -
+                     player_->getPosition().y;
 
-     return position < data_->goal_line;
+    return distance >= data_->height;
 }

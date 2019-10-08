@@ -46,7 +46,7 @@ protected:
     virtual bool phasePlay();
     virtual bool phaseGoal();
 
-    virtual void scroll();
+    virtual float scroll();
 
     virtual bool isGoaled() const;
 
@@ -61,5 +61,5 @@ protected:
     Wall          *wall_   = nullptr;   // 壁
     FailWall      *fire_   = nullptr;   // 炎
 
-    float scroll_count_ = 0.0F;         // スクロール値のカウント
+    float scroll_count_ = 0.0F;
 };

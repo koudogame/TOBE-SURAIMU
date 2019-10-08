@@ -86,7 +86,7 @@ SceneBase* StageSelect::update()
         std::abs(rest_offset_.y) <= kCanSelectRestOffset)
     {
         // ステージの選択
-        if( selectStage( kInputState ) )
+        if( selectStage() )
         {
             return new StagePlay( kStageFileName[selecting_stage_] );
         }
@@ -112,23 +112,26 @@ void StageSelect::draw()
 // 戻り値 [ true : ステージの決定　false : ステージの選択継続 ]
 // 上入力で上方向にオフセット、ステージID減算
 // 下入力で下方向にオフセット、ステージID加算
-bool StageSelect::selectStage( const GamePad::State& InputState )
+bool StageSelect::selectStage()
 {
+    const GamePad::State& kInputState = Pad::getInstance()->getState();
+    const GamePad::ButtonStateTracker& kInputTracker = Pad::getInstance()->getTracker();
+
     // 選択中のステージを変更
-    if( InputState.dpad.up &&
+    if( kInputState.dpad.up &&
         selecting_stage_ > kStageIDMin )
     {
         --selecting_stage_;
         rest_offset_ += kOffsetUp;
     }
-    else if( InputState.dpad.down &&
+    else if( kInputState.dpad.down &&
         selecting_stage_ < kStageIDMax )
     {
         ++selecting_stage_;
         rest_offset_ += kOffsetDown;
     }
     // 選択中のステージに決定
-    else if( InputState.buttons.a )
+    else if( kInputTracker.a == GamePad::ButtonStateTracker::RELEASED )
     {
         return true;
     }

@@ -21,7 +21,7 @@ public:
     void draw() override;
 
 private:
-    bool selectStage( const GamePad::State& );
+    bool selectStage();
     void offsetting();
 
 
