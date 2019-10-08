@@ -24,8 +24,17 @@
     <Filter Include="Project\Game">
       <UniqueIdentifier>{5866395f-2a8a-483f-990f-4aa1ddc1014d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Scene">
+      <UniqueIdentifier>{6cda7968-8104-473d-bc1e-7c45ea93d7b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Scene\Title">
+      <UniqueIdentifier>{656fe80d-9a73-4a4b-97ad-4eb84e97b625}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Project\Game\Object">
       <UniqueIdentifier>{10e175df-893e-4c40-afa3-5bcf3c5263fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Scene\Game">
+      <UniqueIdentifier>{6aee0cd5-190f-4049-b852-646871b1283e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\Star">
       <UniqueIdentifier>{6077d559-fc44-4455-8c90-88003bb4b2ca}</UniqueIdentifier>
@@ -38,6 +47,9 @@
     </Filter>
     <Filter Include="Project\Game\Object\Particle">
       <UniqueIdentifier>{41c1f148-516b-425b-911d-cad1ad677457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Scene\Endless">
+      <UniqueIdentifier>{c8a74af1-e0c3-4137-bdbe-0db01a778c18}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\Particle\Nomal">
       <UniqueIdentifier>{d46929fe-6c78-433d-9067-c07968918c32}</UniqueIdentifier>
@@ -60,8 +72,14 @@
     <Filter Include="Project\Game\Object\TitleObj">
       <UniqueIdentifier>{ba692143-526d-47e7-b53a-83a69d9f2881}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Game\Scene\Ranking">
+      <UniqueIdentifier>{dc5a65bf-c0f7-4f4d-bfa6-97881e2e6b1c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Project\Game\Object\UI\Pause">
       <UniqueIdentifier>{ca5e6288-5a78-4c62-8ef1-db59f28d734c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Scene\Battle">
+      <UniqueIdentifier>{c8faea38-69f3-4933-9bb6-74102db013c5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\Sercher">
       <UniqueIdentifier>{b1dbc8ed-691d-4992-8e8f-c503742b8b2e}</UniqueIdentifier>
@@ -71,9 +89,6 @@
     </Filter>
     <Filter Include="Project\Game\Object\AI">
       <UniqueIdentifier>{3b985f52-44b6-4497-b39f-4575806744cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Object\FailWall">
-      <UniqueIdentifier>{2d412ce3-062b-49a0-b261-e5fe6c4967fd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Scene\Demo">
       <UniqueIdentifier>{03c701d8-5d1b-4862-81e4-22e99968f370}</UniqueIdentifier>
@@ -114,35 +129,14 @@
     <Filter Include="Project\Game\Others\Text">
       <UniqueIdentifier>{b0f22c7b-e10c-473f-818c-e0a4a1125dd7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Game\Scene">
-      <UniqueIdentifier>{6cda7968-8104-473d-bc1e-7c45ea93d7b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Scene\Title">
-      <UniqueIdentifier>{656fe80d-9a73-4a4b-97ad-4eb84e97b625}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Scene\Game">
-      <UniqueIdentifier>{6aee0cd5-190f-4049-b852-646871b1283e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Scene\Endless">
-      <UniqueIdentifier>{c8a74af1-e0c3-4137-bdbe-0db01a778c18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Scene\Ranking">
-      <UniqueIdentifier>{dc5a65bf-c0f7-4f4d-bfa6-97881e2e6b1c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Scene\Battle">
-      <UniqueIdentifier>{c8faea38-69f3-4933-9bb6-74102db013c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Scene\Demo">
-      <UniqueIdentifier>{03c701d8-5d1b-4862-81e4-22e99968f370}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Game\Scene\Result">
-      <UniqueIdentifier>{69320312-d4af-44f1-ab7f-01dd9c64468c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Game\Object\UI\Progress">
       <UniqueIdentifier>{d7f45e5a-af2a-4b0d-b1b4-7daee73bbb74}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Game\Object\FailWall">
       <UniqueIdentifier>{2d412ce3-062b-49a0-b261-e5fe6c4967fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game\Scene\StageMode">
+      <UniqueIdentifier>{ffa0e868-3c0c-4895-b655-086a255e9dfb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -322,6 +316,12 @@
     </ClCompile>
     <ClCompile Include="band.cpp">
       <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_select.cpp">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_play.cpp">
+      <Filter>Project\Game\Scene\StageMode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -526,6 +526,18 @@
       <Filter>Project\System\DirectX\Input</Filter>
     </ClInclude>
     <ClInclude Include="band.h" />
+    <ClInclude Include="stage_select.h">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClInclude>
+    <ClInclude Include="stage_play.h">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClInclude>
+    <ClInclude Include="stage_result.h">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClInclude>
+    <ClInclude Include="stage_data.h">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
