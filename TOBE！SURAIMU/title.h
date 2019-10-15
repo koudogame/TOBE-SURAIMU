@@ -56,7 +56,6 @@ private:
 	Menu select_menu_;									                //メニュー変数
 	TitleStatus object_status_[ObjectNum::kObjectNum];	                //オブジェクト情報
 	std::vector <TitleStatus> star_obj_;								//タイトル用星のオブジェクト
-	ID3D11ShaderResourceView* overlay_texture_;		                    //加算テクスチャ
 	float volume_;				                                        //音量
 	SceneBase* (Title::* scene_)() = nullptr;		                    //更新処理の関数ポインタ
 	Timer<Seconds> timer_;

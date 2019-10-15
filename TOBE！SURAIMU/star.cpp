@@ -53,7 +53,7 @@ Star::~Star()
 {}
 
 //初期化
-bool Star::init(const Vector2 & Position, const float Angle, const float Spin, const float Rate, const float Size, , const int Shape)
+bool Star::init(const Vector2 & Position, const float Angle, const float Spin, const float Rate, const float Size, const int Shape)
 {
 	//タスクへの登録
 	TaskManager::getInstance()->registerTask(this, TaskUpdate::kStar);
@@ -62,8 +62,12 @@ bool Star::init(const Vector2 & Position, const float Angle, const float Spin, c
 	Space::getInstance()->registration(this, Position, Size);
 
 	//テクスチャの読み込み
-	texture_ = TextureLoder::getInstance()->load(L"Texture/star.png");
-	overlay_texture_ = TextureLoder::getInstance()->load(L"Texture/star1.png");
+	std::wstring star_name, star_back_name;
+	star_name = star_back_name = L"Texture/Star/" + std::to_wstring(Shape);
+	star_name += L"f.png";
+	star_back_name += L"b.png";
+	texture_ = TextureLoder::getInstance()->load(star_name);
+	overlay_texture_ = TextureLoder::getInstance()->load(star_back_name);
 
 	if (texture_ == nullptr || overlay_texture_ == nullptr)
 		return false;

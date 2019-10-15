@@ -94,8 +94,14 @@ bool Title::init()
 	//‰Šú‚Ì¯‚P
 	for (int i = 0; i < kCreateStarNum; ++i)
 	{
+		std::wstring star_name, star_back_name;
+		star_name = star_back_name = L"Texture/Star/" + std::to_wstring(first_stage_.getNumber(6, i + 1));
+		star_name += L"f.png";
+		star_back_name += L"b.png";
+
 		star_obj_.push_back(TitleStatus());
-		star_obj_.back().texture = TextureLoder::getInstance()->load(L"Texture/star.png");
+		star_obj_.back().texture = TextureLoder::getInstance()->load(star_name);
+		star_obj_.back().overlay_texture = TextureLoder::getInstance()->load(star_name);
 		star_obj_.back().position.x = first_stage_.getNumber(0, i + 1);
 		star_obj_.back().position.y = first_stage_.getNumber(1, i + 1) - getWindowHeight<float>() * 2.0F;
 		Vector3 inf = kStarInformation[(static_cast<int>(first_stage_.getNumber(5, 1)) - kStarMin) / kStarDifference];
@@ -129,8 +135,6 @@ bool Title::init()
 	object_status_[ObjectNum::kBlack].alpha = 0.0F;
 	object_status_[ObjectNum::kBlack].depth = 100.0F;
 
-	overlay_texture_ = TextureLoder::getInstance()->load(L"Texture/star1.png");
-
 	volume_ = 1.0F;
 
 	//ƒTƒEƒ“ƒh‚Ì¶¬
@@ -144,9 +148,10 @@ bool Title::init()
 void Title::destroy()
 {
 	for (int i = 0; i < ObjectNum::kObjectNum; i++)
+	{
 		TextureLoder::getInstance()->release(object_status_[i].texture);
-
-	TextureLoder::getInstance()->release(overlay_texture_);
+		TextureLoder::getInstance()->release(object_status_[i].overlay_texture);
+	}
 }
 
 /*===========================================================================*/
@@ -163,7 +168,7 @@ void Title::draw()
 	for (auto& itr : star_obj_)
 	{
 		Vector2 anker = Vector2((itr.trim.right - itr.trim.left) / 2.0F, (itr.trim.bottom - itr.trim.top) / 2.0F);
-		Sprite::getInstance()->reserveDraw(overlay_texture_, itr.position, itr.trim, 1.0F, 13.0F, { 1.0F, 1.0F }, 0.0F, anker, Sprite::getInstance()->chengeMode());
+		Sprite::getInstance()->reserveDraw(itr.overlay_texture, itr.position, itr.trim, 1.0F, 13.0F, { 1.0F, 1.0F }, 0.0F, anker, Sprite::getInstance()->chengeMode());
 		Sprite::getInstance()->reserveDraw(itr.texture, itr.position, itr.trim, 1.0F, 14.0F, { 1.0F, 1.0F }, 0.0F, anker);
 	}
 
