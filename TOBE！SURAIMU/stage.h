@@ -61,5 +61,5 @@ protected:
     Wall          *wall_   = nullptr;   // •Ç
     FailWall      *fire_   = nullptr;   // ‰Š
 
-    float scroll_count_ = 0.0F;
+    float player_start_line_ = 0.0F;
 };

@@ -267,6 +267,7 @@
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="stage_play.cpp" />
+    <ClCompile Include="stage_result.cpp" />
     <ClCompile Include="stage_select.cpp" />
     <ClCompile Include="stay_particle.cpp" />
     <ClCompile Include="stay_particle_container.cpp" />

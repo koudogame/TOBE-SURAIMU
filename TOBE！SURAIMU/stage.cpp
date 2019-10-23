@@ -15,6 +15,9 @@
 #include "fail_wall.h"
 
 
+// TODO : テクスチャを使用してラインが正しく動いているか確認する
+
+
 
 // 定数
 /*===========================================================================*/
@@ -84,7 +87,7 @@ bool Stage::init( const std::wstring& DataFileName )
 
     // メンバ変数の初期化
     phase_ = &Stage::phaseStart;
-    scroll_count_ = 0.0F;
+    player_start_line_ = player_->getPosition().y;
 
     return true;
 }
@@ -239,8 +242,8 @@ float Stage::scroll()
     {
         over = player_position.y - kScrollLineBottom;
     }
-    if( player_->isJump() ) 
-        scroll_count_ -= over;
+    player_start_line_ += 2.0F;     // 常にスターと一緒に落ちていく
+    player_start_line_ -= over;
 
 
     // タスクマネージャーに登録している全オブジェクトに移動処理を実行させる
@@ -257,8 +260,7 @@ float Stage::scroll()
 // return false : ゴールいていない
 bool Stage::isGoaled() const
 {
-    float distance = data_->start_line + scroll_count_ -
-                     player_->getPosition().y;
+    float distance = player_start_line_ - player_->getPosition().y;
 
     return distance >= data_->height;
 }

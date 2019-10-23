@@ -101,7 +101,8 @@ bool StarContainer::createStar(const std::wstring FileCSV)
         // 星をリストに追加
         addStar(
          // 座標      初角度  回転速 回転率　　　大きさ
-            position, angle, spin, spin_rate, size);
+            position, angle, spin, spin_rate, size
+        );
         ++count;
     }
     return true;

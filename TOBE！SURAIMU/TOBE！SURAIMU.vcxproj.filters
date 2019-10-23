@@ -326,6 +326,9 @@
     <ClCompile Include="stage.cpp">
       <Filter>Project\Game\Scene\StageMode</Filter>
     </ClCompile>
+    <ClCompile Include="stage_result.cpp">
+      <Filter>Project\Game\Scene\StageMode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="texture.h">

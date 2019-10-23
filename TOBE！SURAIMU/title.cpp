@@ -12,6 +12,7 @@
 #include "Sound.h"
 
 #include "demo.h"
+#include "stage_select.h"
 
 using namespace std::chrono;
 
@@ -261,7 +262,7 @@ SceneBase* Title::playScene()
 		SOUND->stop(SoundId::kScene);
 		SOUND->stop(SoundId::kTitle);
 		SOUND->setVolume(SoundId::kTitle, 1.0F);
-		return new Endless;
+		return new StageSelect();
 	}
 	return this;
 }
