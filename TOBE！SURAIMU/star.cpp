@@ -10,10 +10,10 @@
 #include "fail_wall.h"
 
 //定数
+const float kStarVertexLengthDeff = 0.388F;
 const int kStarMin = 60;			//最小サイズ
 const int kStarDifference = 20;		//星のサイズの差分
 const float kMinSpin = 2.0F;		//最低回転量
-const int kStarWhileAngle = 72;		//頂点間の角度
 const float kDeathLine = 1200.0F;	//星の死亡ライン
 const float kMaxSpin[3] =			//最大回転量
 {
@@ -53,7 +53,7 @@ Star::~Star()
 {}
 
 //初期化
-bool Star::init(const Vector2 & Position, const float Angle, const float Spin, const float Rate, const float Size)
+bool Star::init(const Vector2 & Position, const float Angle, const float Spin, const float Rate, const float Size, const int Shape)
 {
 	//タスクへの登録
 	TaskManager::getInstance()->registerTask(this, TaskUpdate::kStar);
@@ -62,8 +62,12 @@ bool Star::init(const Vector2 & Position, const float Angle, const float Spin, c
 	Space::getInstance()->registration(this, Position, Size);
 
 	//テクスチャの読み込み
-	texture_ = TextureLoder::getInstance()->load(L"Texture/star.png");
-	overlay_texture_ = TextureLoder::getInstance()->load(L"Texture/star1.png");
+	std::wstring star_name, star_back_name;
+	star_name = star_back_name = L"Texture/Star/" + std::to_wstring(Shape);
+	star_name += L"f.png";
+	star_back_name += L"b.png";
+	texture_ = TextureLoder::getInstance()->load(star_name);
+	overlay_texture_ = TextureLoder::getInstance()->load(star_back_name);
 
 	if (texture_ == nullptr || overlay_texture_ == nullptr)
 		return false;
@@ -72,10 +76,17 @@ bool Star::init(const Vector2 & Position, const float Angle, const float Spin, c
 	s_particle_container_ = std::make_unique<FreeFallParticleContainer>();
 
 	position_ = Position;
-	angle_[0] = Angle;
 	spin_ = Spin;
 	rate_ = Rate;
 	size_ = Size;
+
+	shape_num_ = Shape;
+
+	myshape_.resize(shape_num_ * 2);
+	angle_.resize(shape_num_ * 2);
+
+	if (shape_num_ != 0)
+		angle_[0] = Angle;
 
 	if (Rate < kStarColorThreshold[0])
 		id_ = NameSpaceParticle::ParticleID::kCyan;
@@ -85,7 +96,6 @@ bool Star::init(const Vector2 & Position, const float Angle, const float Spin, c
 		id_ = NameSpaceParticle::ParticleID::kMagenta;
 
 	particle_time_ = 0;
-	create_point_ = 0;
 	alive_flag_ = true;
 
 	setAngle();
@@ -109,12 +119,11 @@ void Star::destroy()
 //更新
 void Star::update()
 {
-	/*if (position_.y > -size_ && position_.y < getWindowHeight<float>() + size_)
-		addFreeFallParticle();*/
 	s_particle_container_.get()->update();
 
 	position_.y += fall_;
-	angle_[0] += spin_;
+	if (shape_num_ != 0)
+		angle_[0] += spin_;
 	setAngle();
 	band_.update();
 
@@ -228,17 +237,10 @@ void Star::addFreeFallParticle()
 		if (fall_ >= 1.0F)
 		{
 			Vector2 create_position = position_ + Vector2(std::cos(XMConvertToRadians(spining_angle_)), -std::sin(XMConvertToRadians(spining_angle_))) * (size_ / 5 * 2.0F);
-			spining_angle_ += std::copysign(74.5F, spin_);
+			spining_angle_ += std::copysign(360.0F / shape_num_ + 2.5F, spin_);
 			//1フレームに1つの頂点から生成
 			s_particle_container_.get()->addParticle(create_position, id_, 100);
 			particle_time_ = 0;
-			if (create_point_ >= kStarLineNum)
-				create_point_ = 0;
-
-			if (create_point_ > 5)
-			{
-				create_point_ = 0;
-			}
 		}
 	}
 }
@@ -252,14 +254,21 @@ float Star::getRotateDia()
 void Star::setAngle()
 {
 	//他の角度の指定
-	for (int i = 0; i < kStarLineNum; i++)
-		angle_[i] = angle_[0] + kStarWhileAngle * (i * 2);
+	for (int i = 1; i < angle_.size(); i++)
+		angle_[i] = angle_[i - 1] - (360.0F / angle_.size());
 
-	for (int i = 0; i < kStarLineNum; i++)
+	std::vector<Vector2> point(angle_.size());
+	//頂点
+	for (int i = 0; i < angle_.size(); ++i)
 	{
-		//線分の始点設定
-		myshape_[i].end = position_ + Vector2(std::cos(XMConvertToRadians(angle_[i])), -std::sin(XMConvertToRadians(angle_[i]))) * size_;
-		//線分の終点設定
-		myshape_[i].start = position_ + Vector2(std::cos(XMConvertToRadians(angle_[i < kStarLineNum - 1 ? i + 1 : 0])), -std::sin(XMConvertToRadians(angle_[i < kStarLineNum - 1 ? i + 1 : 0]))) * size_;
+		float size = (i % 2 == 0) ? size_ : (size_ * kStarVertexLengthDeff);
+		point[i] = position_ + Vector2(std::cos(XMConvertToRadians(angle_[i])), -std::sin(XMConvertToRadians(angle_[i])))
+			* size;
 	}
+
+	//始点と終点の設定
+	for (int i = 1; i < point.size(); ++i)
+		myshape_[i].start = myshape_[i - 1].end = point[i];
+
+	myshape_[myshape_.size() - 1].end = myshape_[0].start = point[0];
 }

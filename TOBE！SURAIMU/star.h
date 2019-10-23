@@ -7,8 +7,6 @@
 #include "freeFallParticle_container.h"
 #include "band.h"
 
-const int kStarLineNum = 5;		//星を形成する線分の数
-
 class Star :
 	public ObjectBase
 {
@@ -19,8 +17,8 @@ public:
 public:
 	//継承関数
 	//初期化
-	//引数...初期座標 : 初期角度 : 回転の速さ : 回転倍率 : 大きさ
-	bool init( const Vector2& Position , const float Angle , const float Spin , const float Rate , const float Size );
+	//引数...初期座標 : 初期角度 : 回転の速さ : 回転倍率 : 大きさ : 形式
+	bool init( const Vector2& Position , const float Angle , const float Spin , const float Rate , const float Size ,const int Shape = 5);
 	//破棄
 	void destroy() override;
 	//更新
@@ -42,7 +40,7 @@ public:
     inline const Vector2& getPosition() const override { return position_; }
 	//形の取得
 	//引数...取得線分
-	inline Line* getShape( const int GetNum ) { return &myshape_[ GetNum ]; }
+	inline std::vector<Line>* getShape() { return &myshape_; }
 	//プレイヤーの座標補正前の状態を取得
 	inline void setPlayeroldPosition(const Vector2& OldPosit) { old_player_position_ = OldPosit; }
 	//判定後の処理( プレイヤー )
@@ -65,19 +63,19 @@ private:
 private:
 	//メンバ変数
     Vector2 position_;                  //座標
-	float angle_[ kStarLineNum ];		//角度
 	float fall_;		    //落下の速さ
 	float spin_;		    //回転速度
 	float size_;	        //大きさ
 	float rate_;	        //回転倍率
+	int shape_num_;			//とんがりの数
 	float spining_angle_;
-	Line myshape_[ kStarLineNum ];		//自分の形
+	std::vector<Line> myshape_;		//自分の形
+	std::vector<float> angle_;		//角度
 	bool alive_flag_;
 	Vector2 old_player_position_;
 
 	std::unique_ptr<FreeFallParticleContainer> s_particle_container_;		//落下パーティクルコンテナ
 	int particle_time_;	//パーティクルの生成時間管理
-	int create_point_;	//パーティクルの生成位置
 	NameSpaceParticle::ParticleID id_;	//パーティクルID
 
     ID3D11ShaderResourceView* texture_;         //星のテクスチャ
