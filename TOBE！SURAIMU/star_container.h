@@ -26,7 +26,8 @@ public:
 		const float Angle,
 		const float SpinSpeed,
 		const float SpinRate,
-		const float Size
+		const float Size,
+        const int   Vertices
 	);
     void update() override;
 
