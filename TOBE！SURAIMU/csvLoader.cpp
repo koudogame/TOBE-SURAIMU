@@ -1,5 +1,6 @@
 #include "csvLoader.h"
 
+const int kDataNum = 7;
 
 CsvLoader::CsvLoader()
 {
@@ -10,6 +11,7 @@ CsvLoader::CsvLoader()
 	last_data_.push_back(L"0");
 	last_data_.push_back(L"0");
 	last_data_.push_back(L"0");
+	last_data_.push_back(L"5");
 }
 
 
@@ -22,6 +24,7 @@ CsvLoader::CsvLoader(std::wstring FileName)
 	last_data_.push_back(L"0");
 	last_data_.push_back(L"0");
 	last_data_.push_back(L"0");
+	last_data_.push_back(L"5");
 	load( FileName );
 }
 
@@ -64,6 +67,9 @@ bool CsvLoader::load( std::wstring FileName)
 	}
 
 	container_.pop_back();
+
+ 	if (container_.back().size() < kDataNum)
+		return true;
 
 	if (_wtoi(container_.back().at(1).c_str()) < -6000)
 		container_.push_back(last_data_);
