@@ -12,7 +12,7 @@ class Pause;
 class RankingInEndless;
 class Progress;
 
-class StarContainer;
+class Stage;
 class Player;
 class Wall;
 class FailWall;
@@ -33,30 +33,27 @@ public:
     void draw() override;
 
 private:
-// 関数と関数用の変数
-    bool created_ = false;
-
+// 関数
     SceneBase* start();
     SceneBase* play();
     SceneBase* pause();
     SceneBase* (Endless::* update_)() = nullptr;
-
-    void scroll();
-    bool checkAndLoadStage();
-    void changePattern( const int PatternNo );
-
+    void decideStagePattern();
+    bool loadNextStage();
 
 // オブジェクト
     Timer<Milliseconds>* clock_     = nullptr;
     Pause* pause_                   = nullptr;
     RankingInEndless* ranking_      = nullptr;
-    StarContainer* star_container_  = nullptr;
+    std::list<Stage*> stack_stages_;
     Player* player_                 = nullptr;
     Wall* wall_                     = nullptr;
     FailWall* fail_wall_            = nullptr;
     Progress* progress_             = nullptr;
 
-    int stage_ = 0;
+    bool created_ = false;
+    int load_stage_idx_;
+    std::wstring stage_list_[3];
     int round_counter_   = 0;
     bool is_pause_ = false;
     float scroll_threshold_ = 0.0F;

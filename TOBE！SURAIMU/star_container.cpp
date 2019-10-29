@@ -76,7 +76,7 @@ bool StarContainer::createStar()
     return createStar(pattern_[rand() % pattern_.size()]);
 }
 // 指定したファイルから星の生成情報を読み込んで生成する
-bool StarContainer::createStar(const std::wstring FileCSV)
+bool StarContainer::createStar(const std::wstring FileCSV, const float Offset)
 {
     CsvLoader file(FileCSV);
 
@@ -99,7 +99,7 @@ bool StarContainer::createStar(const std::wstring FileCSV)
         spin_rate      = file.getNumber_f(4, count);
         size           = file.getNumber_f(5, count);
         vertices       = file.getNumber  (6, count);
-        position.y     -= 720.0F;   // 画面外へ
+        position.y    += Offset;
 
         // 星をリストに追加
         addStar(

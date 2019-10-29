@@ -21,17 +21,6 @@
 
 // 定数
 /*===========================================================================*/
-// テクスチャ
-static constexpr wchar_t kClearTextureFileName[] = L"Texture/clear.png";
-static const RECT        kClearTextureTrimming
-{
-    0L,
-    160L,
-    620L,
-    450L
-};
-static constexpr Vector2 kClearPosition { 330.0F, 205.0F };
-// 他
 static constexpr int kGamePad = 0; // ゲームパッドID
 static constexpr float kScrollLineTop    = getWindowHeight<float>() * 0.3F;
 static constexpr float kScrollLineBottom = getWindowHeight<float>() * 0.85F;
@@ -54,40 +43,38 @@ Stage::~Stage()
 /*===========================================================================*/
 // 初期化関数
 // オブジェクトに関して、既にインスタンスを確保している場合は初期化処理のみを行っている
-bool Stage::init( const std::wstring& DataFileName )
+bool Stage::init( const std::wstring& DataFileName, Player* const pPlayer, const float StartLine )
 {
-    // テクスチャ読み込み
-    if( texture_ == nullptr )
-    {
-        texture_ = TextureLoder::getInstance()->load( kClearTextureFileName );
-        if( texture_ == nullptr ) { return false; }
-    }
-
-
     // ステージデータの読み込み
     if (data_ == nullptr) { data_ = new StageData(); }
     if (data_->load(DataFileName) == false) { return false; }
 
-    // プレイヤー初期化
-    if (player_ == nullptr) { player_ = new Player(); }
-    if (player_->init(data_->player_position, kGamePad) == false) { return false; }
+    // スターコンテナ初期化
+    if (stars_ == nullptr) { stars_ = new StarContainer(); }
+    float offset = data_->start_line - StartLine;
+    if (stars_->createStar(data_->star_pattern_file_name, offset) == false) { return false; }
+
+    // メンバ変数の初期化
+    phase_ = &Stage::phaseStart;
+    player_ = pPlayer;
+    start_line_ = StartLine;
+
+    return true;
+}
+// 初期化処理
+bool Stage::init( const StageData& Data, Player* const pPlayer )
+{
+    if( data_ == nullptr ) { data_ = new StageData(); }
+    *data_ = Data;
 
     // スターコンテナ初期化
     if (stars_ == nullptr) { stars_ = new StarContainer(); }
     if (stars_->createStar(data_->star_pattern_file_name) == false) { return false; }
 
-    // 壁初期化
-    if (wall_ == nullptr) { wall_ = new Wall(); }
-    if (wall_->init() == false) { return false; }
-
-    // 炎初期化
-    if (fire_ == nullptr) { fire_ = new FailWall(); }
-    if (fire_->init() == false) { return false; }
-
-
     // メンバ変数の初期化
     phase_ = &Stage::phaseStart;
-    player_start_line_ = player_->getPosition().y;
+    player_ = pPlayer;
+    start_line_ = data_->start_line;
 
     return true;
 }
@@ -96,29 +83,11 @@ bool Stage::init( const std::wstring& DataFileName )
 // init関数でインスタンスの取得を行った順に開放していく
 void Stage::destroy()
 {
-    // 炎開放
-    if (fire_ != nullptr)
-    {
-        fire_->destroy();
-        safe_delete(fire_);
-    }
-    // 壁開放
-    if (wall_ != nullptr)
-    {
-        wall_->destroy();
-        safe_delete(wall_);
-    }
     // スターコンテナ開放
     if (stars_ != nullptr)
     {
         stars_->destroy();
         safe_delete(stars_);
-    }
-    // プレイヤー開放
-    if (player_ != nullptr)
-    {
-        player_->destroy();
-        safe_delete(player_);
     }
     // ステージデータ開放
     if (data_ != nullptr)
@@ -126,12 +95,8 @@ void Stage::destroy()
         safe_delete(data_);
     }
 
-    // テクスチャ開放
-    if( texture_ != nullptr )
-    {
-        TextureLoder::getInstance()->release( texture_ );
-    }
-
+    // プレイヤーとの依存関係を断つ
+    player_ = nullptr;
 }
 /*===========================================================================*/
 // 更新処理
@@ -145,35 +110,37 @@ bool Stage::update()
 // オブジェクトの描画は、基本的にSpriteクラスが行う
 void Stage::draw()
 {
-    // ゴールフェーズにのみクリアテクスチャを描画する
-    if( phase_ == &Stage::phaseGoal )
-    {
-        Sprite::getInstance()->reserveDraw(
-            texture_,
-            kClearPosition,
-            kClearTextureTrimming
-        );
-    }
+
+}
+/*===========================================================================*/
+// スタート
+void Stage::start()
+{
+    phase_ = &Stage::phasePlay;
+
+    stars_->setFall();
+}
+/*===========================================================================*/
+// 進行度返却
+float Stage::getProgress() const
+{
+    float displacement = start_line_ - player_->getPosition().y;
+
+    return displacement / data_->height;
+}
+/*===========================================================================*/
+// ゴールラインの取得
+float Stage::getGoalLine() const 
+{
+    return start_line_ + data_->height;
 }
 
 
 // フェーズ
 /*===========================================================================*/
 // スタート
-// プレイヤーがジャンプしたら、フェーズをphasePlayへ
 bool Stage::phaseStart()
 {
-    // プレイヤーのジャンプを確認
-    if( player_->isJump() )
-    {
-        phase_ = &Stage::phasePlay;
-
-        player_->onStartFlag();
-        stars_->setFall();
-        fire_->start();
-    }
-
-
     // 衝突処理
     Space::getInstance()->collision();
 
@@ -181,16 +148,20 @@ bool Stage::phaseStart()
 }
 /*===========================================================================*/
 // プレイ
-// プレイヤーがゴールしたら、フェーズをphaseGoalへ
+// プレイヤーがゴールしたら更新終了
 // プレイヤーが死亡したら更新終了
 bool Stage::phasePlay()
 {
+    // ゴールを確認
+    if( isGoaled() )
+    {
+        return false;
+    }
     // プレイヤーの死亡を確認
     if( player_->isAlive() == false )
     {
         return false;
     }
-
 
     // スターコンテナの更新
     stars_->update();
@@ -202,26 +173,8 @@ bool Stage::phasePlay()
     Space::getInstance()->collision();
 
 
-
-    // ゴール
-    if( isGoaled() ) 
-        phase_ = &Stage::phaseGoal;
-
     return true;
 }
-/*===========================================================================*/
-// ゴール
-// 処理が終了したら、更新終了
-bool Stage::phaseGoal()
-{
-    // 炎以外のオブジェクトをスクロール
-    player_->setMove( 17.0F );
-    wall_->setMove( 17.0F );
-    stars_->setMove( 17.0F );
-
-    return true;
-}
-
 
 /*===========================================================================*/
 // スクロール処理
@@ -242,8 +195,8 @@ float Stage::scroll()
     {
         over = player_position.y - kScrollLineBottom;
     }
-    player_start_line_ += 2.0F;     // 常にスターと一緒に落ちていく
-    player_start_line_ -= over;
+    start_line_ += 2.0F;    // 常にスターと一緒に落ちていく
+    start_line_ -= over;    // スクロール
 
 
     // タスクマネージャーに登録している全オブジェクトに移動処理を実行させる
@@ -260,7 +213,7 @@ float Stage::scroll()
 // return false : ゴールいていない
 bool Stage::isGoaled() const
 {
-    float distance = player_start_line_ - player_->getPosition().y;
+    float distance = start_line_ - player_->getPosition().y;
 
     return distance >= data_->height;
 }

@@ -267,7 +267,7 @@ SceneBase* Title::playScene()
 		SOUND->stop(SoundId::kScene);
 		SOUND->stop(SoundId::kTitle);
 		SOUND->setVolume(SoundId::kTitle, 1.0F);
-		return new StageSelect();
+		return new Endless();
 	}
 	return this;
 }

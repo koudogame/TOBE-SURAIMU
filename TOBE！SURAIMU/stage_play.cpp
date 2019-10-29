@@ -34,7 +34,7 @@ bool StagePlay::init()
 {
     //ステージ初期化
     if( stage_ == nullptr ) { stage_ = new Stage(); }
-    if( stage_->init(stage_data_name_) == false ) { return false; }
+//    if( stage_->init(stage_data_name_) == false ) { return false; }
 
 
     return true;

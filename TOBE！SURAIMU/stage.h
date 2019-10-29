@@ -16,50 +16,73 @@ public:
     Stage();
     virtual ~Stage();
 
-    // 初期化関数
-    // 
-    // 引数 : ステージデータ (フォーマットは構造体に従う)
-    //
-    // 戻り値 : 終了状況[ true : 正常終了　false : エラー ]
-    virtual bool init( const std::wstring& StageDataFile );
-    // 終了処理
-    // 
-    // 引数 : 無し
-    //
-    // 戻り値 : 無し
+    /* 初期化処理
+        
+        param StageDataFile : ステージデータファイル名
+        param pPlayer       : 生成したプレイヤーのアドレス( ステージでの値変更はない )
+        param Border        : ステージの境界線( 実際のスタートライン )
+
+        return true  : 正常終了
+        return false : エラー
+    */
+    virtual bool init( 
+        const std::wstring& StageDataFile,
+        Player* const pPlayer,
+        const float StartLine
+    );
+    /* 初期化処理    スタートラインは読み込むデータ通り
+        
+        param Data    : 生成するステージのデータ
+        param pPlayer : 生成したプレイヤーのアドレス( ステージでの値変更はない )
+    */
+    virtual bool init(
+        const StageData& Data,
+        Player* const pPlayer
+    );
+    /* 終了処理
+    */
     virtual void destroy();
-    // 更新処理
-    //
-    // 引数 : 無し
-    //
-    // 戻り値 : 更新継続の可否[ true : 更新継続　false : 更新終了 ]
+    /* 更新処理
+
+        return true  : 更新継続
+        return false : 更新終了( ゴールした )
+    */
     virtual bool update();
-    // 描画処理
-    //
-    // 引数 : 無し
-    //
-    // 戻り値 : 無し
+    /* 描画処理
+    */
     virtual void draw();
+    /* スタートする
+    */
+    virtual void start();
+    /* ステージデータの取得
+
+        return : ステージデータのconst参照
+    */
+    const StageData& getStageData() const { return *data_; }
+    /* 進行度の取得
+
+        param PlayerPositionLine : プレイヤーの現在位置
+
+        return : ステージ全体を100%としてみた時の、プレイヤーの現在位置の割合
+    */
+    float getProgress() const;
+    /* スタートラインの取得
+    */
+    float getStartLine() const { return start_line_; }
+    /* ゴールラインの取得
+    */
+    float getGoalLine() const;
 
 protected:
     virtual bool phaseStart();
     virtual bool phasePlay();
-    virtual bool phaseGoal();
-
     virtual float scroll();
-
     virtual bool isGoaled() const;
 
 
     bool (Stage::*phase_)() = nullptr;  // 現在のフェーズ
-
-    ID3D11ShaderResourceView *texture_ = nullptr; // テクスチャハンドル
     StageData     *data_   = nullptr;   // ステージデータ
-
-    Player        *player_ = nullptr;   // プレイヤー
     StarContainer *stars_  = nullptr;   // スターコンテナ
-    Wall          *wall_   = nullptr;   // 壁
-    FailWall      *fire_   = nullptr;   // 炎
-
-    float player_start_line_ = 0.0F;
+    Player  *player_ = nullptr;         // プレイヤー
+    float start_line_ = 0.0F;           // ステージのスタートライン(スクロールに合わせて動く)
 };
