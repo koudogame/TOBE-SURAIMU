@@ -59,10 +59,8 @@ void StagePlay::destroy()
 // XVˆ—
 SceneBase* StagePlay::update()
 {
-    if( stage_->update() == false )
-    {
-        return nullptr;
-    }
+    
+    stage_->update();
 
     return this;
 }

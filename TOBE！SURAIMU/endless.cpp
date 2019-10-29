@@ -76,6 +76,8 @@ constexpr float kLevelTable[][3] = {                            // ƒŒƒxƒ‹ƒe[ƒuƒ
     {   7500.0f, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
     {  10000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F }
 };
+constexpr float kScrollLineTop    = kWindowHeight * 0.3F;
+constexpr float kScrollLineBottom = kWindowHeight * 0.85F;
 
 
 /*===========================================================================*/
@@ -284,10 +286,24 @@ SceneBase* Endless::play()
         player_last_position_y_ = p_position.y;
     }
 
-    if( stack_stages_.front()->getProgress() >= 90.0F )
+    scroll();
+
+    if( stack_stages_.front()->getGoalLine() >= -150.0F )
     {
         if( loadNextStage() == false )
             return nullptr;
+    }
+
+    for( auto& stage : stack_stages_ )
+    {
+        stage->update();
+    }
+
+    if( stack_stages_.back()->getGoalLine() >= fail_wall_->getPosition().y )
+    {
+        stack_stages_.back()->destroy();
+        delete stack_stages_.back();
+        stack_stages_.pop_back();
     }
 
 
@@ -333,6 +349,30 @@ SceneBase* Endless::pause()
 }
 
 /*===========================================================================*/
+// ƒXƒNƒ[ƒ‹ˆ—
+void Endless::scroll()
+{
+    // ƒvƒŒƒCƒ„[‚ÌÀ•W
+    const Vector2& player_position = player_->getPosition();
+
+
+    // ƒXƒNƒ[ƒ‹”ÍˆÍ‚É“ü‚Á‚½•ª‚Ì’l‚ğ‹‚ß‚é
+    float over = 0.0F;
+    if( player_position.y < kScrollLineTop )            // ã‚ÖƒI[ƒo[
+    {
+        over = player_position.y - kScrollLineTop;
+    }
+    else if( player_position.y > kScrollLineBottom )    // ‰º‚ÖƒI[ƒo[
+    {
+        over = player_position.y - kScrollLineBottom;
+    }
+
+
+    // ƒ^ƒXƒNƒ}ƒl[ƒWƒƒ[‚É“o˜^‚µ‚Ä‚¢‚é‘SƒIƒuƒWƒFƒNƒg‚ÉˆÚ“®ˆ—‚ğÀs‚³‚¹‚é
+    TaskManager::getInstance()->allSetOver( -over );
+}
+
+/*===========================================================================*/
 // ƒXƒe[ƒWƒpƒ^[ƒ“‚ÌŒˆ’è
 void Endless::decideStagePattern()
 {
@@ -342,7 +382,7 @@ void Endless::decideStagePattern()
     {
         CsvLoader data( FileName );
 
-        int stage_id = rand() % data.getNumber( 0, 0 );
+        int stage_id = rand() % data.getNumber( 0, 0 ) + 1;
 
         *pWstring = data.getString( 0, stage_id );
     };
@@ -368,6 +408,7 @@ bool Endless::loadNextStage()
     }
 
     // ƒXƒe[ƒW‚ğ’Ç‰Á
+    new_stage->start();
     stack_stages_.push_front( new_stage );
 
     // ƒ[ƒhƒXƒe[ƒW”Ô†‚ª”ÍˆÍŠO‚Ös‚©‚È‚¢‚æ‚¤§Œä

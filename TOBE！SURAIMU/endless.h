@@ -38,6 +38,7 @@ private:
     SceneBase* play();
     SceneBase* pause();
     SceneBase* (Endless::* update_)() = nullptr;
+    void scroll();
     void decideStagePattern();
     bool loadNextStage();
 

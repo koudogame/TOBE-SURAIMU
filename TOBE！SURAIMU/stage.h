@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "object_base.h"
+
 struct StageData;
 
 class Player;
@@ -10,7 +12,8 @@ class StarContainer;
 class Wall;
 class FailWall;
 
-class Stage
+class Stage :
+    public ObjectBase
 {
 public:
     Stage();
@@ -41,16 +44,17 @@ public:
     );
     /* 終了処理
     */
-    virtual void destroy();
+    virtual void destroy() override;
     /* 更新処理
-
-        return true  : 更新継続
-        return false : 更新終了( ゴールした )
     */
-    virtual bool update();
+    virtual void update() override;
     /* 描画処理
     */
-    virtual void draw();
+    virtual void draw() override;
+    /* スクロール
+        スタートラインをスクロールに合わせて移動させる
+    */
+    virtual void setMove( const float Distance ) { start_line_ += Distance; }
     /* スタートする
     */
     virtual void start();
@@ -76,7 +80,6 @@ public:
 protected:
     virtual bool phaseStart();
     virtual bool phasePlay();
-    virtual float scroll();
     virtual bool isGoaled() const;
 
 

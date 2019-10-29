@@ -5,14 +5,10 @@
 
 #include "textureLoder.h"
 #include "task_manager.h"
-#include "sprite.h"
-#include "space.h"
 
 #include "stage_data.h"
 #include "player.h"
 #include "star_container.h"
-#include "wall.h"
-#include "fail_wall.h"
 
 
 // TODO : テクスチャを使用してラインが正しく動いているか確認する
@@ -22,8 +18,7 @@
 // 定数
 /*===========================================================================*/
 static constexpr int kGamePad = 0; // ゲームパッドID
-static constexpr float kScrollLineTop    = getWindowHeight<float>() * 0.3F;
-static constexpr float kScrollLineBottom = getWindowHeight<float>() * 0.85F;
+static constexpr float kFallSpeed = 2.0F;
 
 
 // Ctor, Dtor
@@ -45,13 +40,16 @@ Stage::~Stage()
 // オブジェクトに関して、既にインスタンスを確保している場合は初期化処理のみを行っている
 bool Stage::init( const std::wstring& DataFileName, Player* const pPlayer, const float StartLine )
 {
+    // タスクマネージャーに登録
+    TaskManager::getInstance()->registerTask( this, TaskUpdate::kWall );
+
     // ステージデータの読み込み
     if (data_ == nullptr) { data_ = new StageData(); }
     if (data_->load(DataFileName) == false) { return false; }
 
     // スターコンテナ初期化
     if (stars_ == nullptr) { stars_ = new StarContainer(); }
-    float offset = data_->start_line - StartLine;
+    float offset = StartLine - data_->start_line;
     if (stars_->createStar(data_->star_pattern_file_name, offset) == false) { return false; }
 
     // メンバ変数の初期化
@@ -64,6 +62,9 @@ bool Stage::init( const std::wstring& DataFileName, Player* const pPlayer, const
 // 初期化処理
 bool Stage::init( const StageData& Data, Player* const pPlayer )
 {
+    // タスクマネージャーに登録
+    TaskManager::getInstance()->registerTask( this, TaskUpdate::kWall );
+
     if( data_ == nullptr ) { data_ = new StageData(); }
     *data_ = Data;
 
@@ -97,13 +98,16 @@ void Stage::destroy()
 
     // プレイヤーとの依存関係を断つ
     player_ = nullptr;
+
+    // タスクマネージャーから登録を解除
+    TaskManager::getInstance()->unregisterObject( this );
 }
 /*===========================================================================*/
 // 更新処理
 // 現在のフェーズを実行する
-bool Stage::update()
+void Stage::update()
 {
-    return (this->*phase_)();
+    (this->*phase_)();
 }
 /*===========================================================================*/
 // 描画処理
@@ -132,7 +136,7 @@ float Stage::getProgress() const
 // ゴールラインの取得
 float Stage::getGoalLine() const 
 {
-    return start_line_ + data_->height;
+    return start_line_ - data_->height;
 }
 
 
@@ -141,9 +145,6 @@ float Stage::getGoalLine() const
 // スタート
 bool Stage::phaseStart()
 {
-    // 衝突処理
-    Space::getInstance()->collision();
-
     return true;
 }
 /*===========================================================================*/
@@ -166,46 +167,10 @@ bool Stage::phasePlay()
     // スターコンテナの更新
     stars_->update();
 
-    // スクロール処理
-    scroll();
-
-    // 衝突処理
-    Space::getInstance()->collision();
-
+    start_line_ += kFallSpeed;
 
     return true;
 }
-
-/*===========================================================================*/
-// スクロール処理
-// return : スクロール分
-float Stage::scroll()
-{
-    // プレイヤーの座標
-    const Vector2& player_position = player_->getPosition();
-
-
-    // スクロール範囲に入った分の値を求める
-    float over = 0.0F;
-    if( player_position.y < kScrollLineTop )            // 上へオーバー
-    {
-        over = player_position.y - kScrollLineTop;
-    }
-    else if( player_position.y > kScrollLineBottom )    // 下へオーバー
-    {
-        over = player_position.y - kScrollLineBottom;
-    }
-    start_line_ += 2.0F;    // 常にスターと一緒に落ちていく
-    start_line_ -= over;    // スクロール
-
-
-    // タスクマネージャーに登録している全オブジェクトに移動処理を実行させる
-    TaskManager::getInstance()->allSetOver( -over );
-
-
-    return -over;
-}
-
 
 /*===========================================================================*/
 // ゴール状況を取得する
