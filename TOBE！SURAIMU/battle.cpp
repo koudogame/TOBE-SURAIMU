@@ -75,7 +75,7 @@ bool Battle::init()
     {
         star_container_->addStar(
             star_posi,
-            90.0F, 5.0F, 0.2F, 120.0F )->setFall();
+            90.0F, 5.0F, 0.2F, 120.0F, 5 )->setFall();
     }
 
 

@@ -36,12 +36,14 @@ struct StarState
         const float    Angle,
         const float    Spin,
         const float    SpinRate,
-        const float    Size
+        const float    Size,
+        const int      Vertices
     ) : position  ( Position ),
         angle     ( Angle ),
         spin      ( Spin ),
         spin_rate ( SpinRate ),
-        size      ( Size )
+        size      ( Size ),
+        vertices  ( Vertices )
     {}
 
 
@@ -50,6 +52,7 @@ struct StarState
     float   spin;
     float   spin_rate;
     float   size;
+    int     vertices;
 };
 
 constexpr long long kStartTimeSc    = 2LL;  // ŠJnAˆÃ“]ŠÔ(’PˆÊ : •b)
@@ -64,9 +67,9 @@ constexpr float kAmountOfAlphaForOut = 0.10F;       // ƒtƒF[ƒhƒAƒEƒgAƒAƒ‹ƒtƒ
 constexpr int       kInitStarNum = 3;               // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ^[‚Ì”
 constexpr StarState kInitStarState[kInitStarNum] =  // ƒV[ƒ“ŠJn‚É‘¶İ‚·‚éƒXƒ^[‚Ìî•ñ
 {
-    { {640.0F, 600.0F}, 90.0F, -3.0F, 0.2F,  80.0F },
-    { {816.0F, 297.0F}, 90.0F,  3.0F, 0.2F, 100.0F },
-    { {468.0F, 142.0F}, 90.0F,  3.0F, 0.2F, 100.0F }
+    { {640.0F, 600.0F}, 90.0F, -3.0F, 0.2F,  80.0F, 5 },
+    { {816.0F, 297.0F}, 90.0F,  3.0F, 0.2F, 100.0F, 5 },
+    { {468.0F, 142.0F}, 90.0F,  3.0F, 0.2F, 100.0F, 5 }
 };
 constexpr float kScrollThresholdUp   = getWindowHeight<float>() * 0.10F;
 constexpr float kScrollThresholdDown = getWindowHeight<float>() * 0.90F;
@@ -125,7 +128,8 @@ bool Demo::init()
             kInitStarState[i].angle,
             kInitStarState[i].spin,
             kInitStarState[i].spin_rate,
-            kInitStarState[i].size
+            kInitStarState[i].size,
+            kInitStarState[i].vertices
         );
 
         if( star == nullptr )

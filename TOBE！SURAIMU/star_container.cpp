@@ -19,7 +19,7 @@ StarContainer::~StarContainer()
 // スターの追加
 Star* StarContainer::addStar(
 	const Vector2& Position, const float Angle,
-	const float Spin, const float Rate, const float Size)
+	const float Spin, const float Rate, const float Size, const int Vertices)
 {
 	// フリーなスターを取得
 	Star* star = getFreeObjAndInsert();
@@ -30,7 +30,8 @@ Star* StarContainer::addStar(
 		Angle,
 		Spin,
 		Rate,
-		Size
+		Size,
+        Vertices
 	);
 
  	return star;
@@ -84,6 +85,7 @@ bool StarContainer::createStar(const std::wstring FileCSV)
     float spin;
     float spin_rate;
     float size;
+    int   vertices;
 
     // 情報があるだけ生成
     int count = 1;
@@ -96,12 +98,13 @@ bool StarContainer::createStar(const std::wstring FileCSV)
         spin           = file.getNumber_f(3, count);
         spin_rate      = file.getNumber_f(4, count);
         size           = file.getNumber_f(5, count);
+        vertices       = file.getNumber  (6, count);
         position.y     -= 720.0F;   // 画面外へ
 
         // 星をリストに追加
         addStar(
          // 座標      初角度  回転速 回転率　　　大きさ
-            position, angle, spin, spin_rate, size
+            position, angle, spin, spin_rate, size, vertices
         );
         ++count;
     }
