@@ -32,11 +32,11 @@ public:
     );
     /* 初期化処理    スタートラインは読み込むデータ通り
         
-        param StageDataFile : ステージデータファイル名
-        param pPlayer       : 生成したプレイヤーのアドレス( ステージでの値変更はない )
+        param Data    : 生成するステージのデータ
+        param pPlayer : 生成したプレイヤーのアドレス( ステージでの値変更はない )
     */
     virtual bool init(
-        const std::wstring& StageDataFile,
+        const StageData& Data,
         Player* const pPlayer
     );
     /* 終了処理
@@ -66,6 +66,12 @@ public:
         return : ステージ全体を100%としてみた時の、プレイヤーの現在位置の割合
     */
     float getProgress() const;
+    /* スタートラインの取得
+    */
+    float getStartLine() const { return start_line_; }
+    /* ゴールラインの取得
+    */
+    float getGoalLine() const;
 
 protected:
     virtual bool phaseStart();

@@ -21,6 +21,7 @@
 #include "ranking_in_endless.h"
 #include "progress.h"
 #include "background.h"
+#include "stage_data.h"
 #include "stage.h"
 #include "player.h"
 #include "wall.h"
@@ -41,6 +42,12 @@ using PadTracker = GamePad::ButtonStateTracker;
 /*===========================================================================*/
 // ˆ—‚ÉŠÖŒW
 constexpr wchar_t kStartStageFile[] = L"State/start_pattern.csv";
+const wchar_t* kStageListFile[] =
+{
+    L"State/Stage/Easy/stage_list.csv",
+    L"State/Stage/Normal/stage_list.csv",
+    L"State/Stage/Hard/stage_list.csv",
+};
 constexpr float kWindowWidth  = getWindowWidth<float>();
 constexpr float kWindowHeight = getWindowHeight<float>();
 constexpr float kStageHeight = 7920.0F;
@@ -51,13 +58,13 @@ const RECT kTrimming[] = {
     {   0L, 0L, 256L, 128L }
 };
 constexpr float kDispTimeMSPF = 500.0F / 16.0F;                 // “ïˆÕ“xã¸AƒXƒNƒ[ƒ‹‚É‚©‚¯‚éŠÔ( ƒ~ƒŠ•b/ƒtƒŒ[ƒ€ )
+constexpr int kStageNum = 3;
 
 
 // “ïˆÕ“x‚ÉŠÖŒW
 constexpr int      kStartStageID = 0;
 constexpr int      kStageIDMin = 1;
 constexpr int      kStageIDMax = 4;
-constexpr int      kStageNum = 3;                               // ƒXƒe[ƒW”
 constexpr float    kFailWallUpStartLine = 1000.0F;              // ‰Š‚ªã¸‚ğŠJn‚·‚éˆÊ’u( ‚±‚Ì‹——£•ªƒvƒŒƒCƒ„[‚ªã¸‚µ‚½‚çA‰Š‚Ìã¸ƒXƒ^[ƒg )
 constexpr unsigned kHeight = 0U;                                // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : ƒXƒe[ƒW‚Ì’·‚³( ‚‚³ )
 constexpr unsigned kThresholdUp = 1U;                           // ƒŒƒxƒ‹ƒe[ƒuƒ‹ : è‡’l( ƒXƒNƒ[ƒ‹ª )
@@ -69,10 +76,6 @@ constexpr float kLevelTable[][3] = {                            // ƒŒƒxƒ‹ƒe[ƒuƒ
     {   7500.0f, kWindowHeight * 0.3F, kWindowHeight * 0.85F },
     {  10000.0F, kWindowHeight * 0.3F, kWindowHeight * 0.85F }
 };
-
-
-
-constexpr Vector2 kPlayerPosition { 600.0F, 565.0F };
 
 
 /*===========================================================================*/
@@ -94,21 +97,12 @@ bool Endless::init()
 
 
     clock_          = new Timer<Milliseconds>();
-
     pause_          = new Pause();
-
     ranking_        = new RankingInEndless();
-
-    now_stage_      = new Stage;
-
     player_         = new Player();
-
     wall_           = new Wall();
-
     fail_wall_      = new FailWall();
-
     progress_       = new Progress();
-
 
     // ƒ|[ƒY‰Šú‰»
     if( pause_->init() == false ) { return false; }
@@ -116,16 +110,22 @@ bool Endless::init()
     // ƒ‰ƒ“ƒLƒ“ƒO‰Šú‰»
     if( ranking_->init() == false ) { return false; }
 
+    // ƒXƒe[ƒW‰Šú‰»
+    Stage* stage = new Stage();
+    decideStagePattern();
+    StageData stage_data;
+    if( stage_data.load(stage_list_[0]) == false )
+        return false;
+    if( stage->init( stage_data, player_ ) == false )
+        return false;
+    stack_stages_.push_front( stage );
 
 	// ƒvƒŒƒCƒ„[‰Šú‰»
-	if (dynamic_cast<Player*>(player_)->init(kPlayerPosition, 0) == false)
+    Vector2 player_position = stage_data.player_position;
+	if (dynamic_cast<Player*>(player_)->init(player_position, 0) == false)
 	{
 		return false;
 	}
-
-    // ƒXƒe[ƒW‰Šú‰»
-    if( now_stage_->init( L"State/StageMode/stage_2.csv", player_ ) == false )
-        return false;
 
 
 	// •Ç‰Šú‰»
@@ -142,7 +142,7 @@ bool Endless::init()
 
 	// •Ï”‰Šú‰»
 	update_ = &Endless::start;
-    stage_ = 0;
+    load_stage_idx_ = 1;
     round_counter_ = 0;
     is_pause_ = false;
     scroll_threshold_ = kLevelTable[0U][kThresholdUp];
@@ -180,7 +180,6 @@ void Endless::destroy()
         safe_delete( stage );
     }
     stack_stages_.clear();
-    now_stage_->destroy();             safe_delete( now_stage_ );
     
 	player_->destroy();                safe_delete(player_);
 
@@ -241,6 +240,8 @@ SceneBase* Endless::start()
 		    clock_->start();
 		    player_->onStartFlag();
             fail_wall_->start();
+            for( auto& stage : stack_stages_ )
+                stage->start();
         }
 	}
 
@@ -269,7 +270,6 @@ SceneBase* Endless::play()
 	{
 		SOUND->stop( SoundId::kPlay );
 		return new Result(ranking_->getRank(), *player_->getScore());
-        //return new Endless();
 	}
     else if( fail_wall_->isUp() == false )
     {
@@ -282,6 +282,12 @@ SceneBase* Endless::play()
             fail_wall_->upStart();
         }
         player_last_position_y_ = p_position.y;
+    }
+
+    if( stack_stages_.front()->getProgress() >= 90.0F )
+    {
+        if( loadNextStage() == false )
+            return nullptr;
     }
 
 
@@ -324,4 +330,49 @@ SceneBase* Endless::pause()
 
 
     return this;
+}
+
+/*===========================================================================*/
+// ƒXƒe[ƒWƒpƒ^[ƒ“‚ÌŒˆ’è
+void Endless::decideStagePattern()
+{
+    // ‘æˆêˆø”‚Ìƒtƒ@ƒCƒ‹‚©‚çAƒXƒe[ƒW‚Ìƒtƒ@ƒCƒ‹–¼‚ğ“Ç‚İ‚ñ‚Å
+    // ‘æ“ñˆø”‚É‘I‘ğ‚µ‚½ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚é
+    auto decide = [](const std::wstring& FileName, std::wstring* const pWstring)
+    {
+        CsvLoader data( FileName );
+
+        int stage_id = rand() % data.getNumber( 0, 0 );
+
+        *pWstring = data.getString( 0, stage_id );
+    };
+
+    for( int i = 0; i < kStageNum; ++i )
+        decide( kStageListFile[i], &stage_list_[i] );
+}
+
+/*===========================================================================*/
+// ƒlƒNƒXƒgƒXƒe[ƒW‚Ì“Ç‚İ‚İ
+bool Endless::loadNextStage()
+{
+    // V‹KƒXƒe[ƒW‚Ìì¬&“Ç‚İ‚İ
+    Stage* new_stage = new Stage();
+    if( new_stage->init( 
+            stage_list_[load_stage_idx_], 
+            player_, 
+            stack_stages_.front()->getGoalLine() 
+        ) == false )
+    {
+        delete new_stage;
+        return false;
+    }
+
+    // ƒXƒe[ƒW‚ğ’Ç‰Á
+    stack_stages_.push_front( new_stage );
+
+    // ƒ[ƒhƒXƒe[ƒW”Ô†‚ª”ÍˆÍŠO‚Ös‚©‚È‚¢‚æ‚¤§Œä
+    if( ++load_stage_idx_ >= kStageNum )
+        load_stage_idx_ = 0;
+
+    return true;
 }

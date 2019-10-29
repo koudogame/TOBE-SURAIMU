@@ -17,7 +17,7 @@ constexpr int   kSpeedLimitIndex = 11;
 constexpr float kSpeedTable[kSpeedLimitIndex] =
 {
     0.0F,
-    2.0F,
+    1.0F,
     -0.2F,
     -0.5F,
     -1.0F,

@@ -51,7 +51,8 @@ bool Stage::init( const std::wstring& DataFileName, Player* const pPlayer, const
 
     // スターコンテナ初期化
     if (stars_ == nullptr) { stars_ = new StarContainer(); }
-    if (stars_->createStar(data_->star_pattern_file_name) == false) { return false; }
+    float offset = data_->start_line - StartLine;
+    if (stars_->createStar(data_->star_pattern_file_name, offset) == false) { return false; }
 
     // メンバ変数の初期化
     phase_ = &Stage::phaseStart;
@@ -61,11 +62,10 @@ bool Stage::init( const std::wstring& DataFileName, Player* const pPlayer, const
     return true;
 }
 // 初期化処理
-bool Stage::init( const std::wstring& DataFileName, Player* const pPlayer )
+bool Stage::init( const StageData& Data, Player* const pPlayer )
 {
-    // ステージデータの読み込み
-    if (data_ == nullptr) { data_ = new StageData(); }
-    if (data_->load(DataFileName) == false) { return false; }
+    if( data_ == nullptr ) { data_ = new StageData(); }
+    *data_ = Data;
 
     // スターコンテナ初期化
     if (stars_ == nullptr) { stars_ = new StarContainer(); }
@@ -127,6 +127,12 @@ float Stage::getProgress() const
     float displacement = start_line_ - player_->getPosition().y;
 
     return displacement / data_->height;
+}
+/*===========================================================================*/
+// ゴールラインの取得
+float Stage::getGoalLine() const 
+{
+    return start_line_ + data_->height;
 }
 
 

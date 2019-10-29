@@ -35,7 +35,7 @@ public:
     void setFall();
 
     bool createStar();
-    bool createStar(const std::wstring PatternFileCSV);
+    bool createStar(const std::wstring PatternFileCSV, const float Offset = 0.0F);
     void addPattern(const std::wstring PatternFileCSV) { pattern_.push_back(PatternFileCSV); }
     void resetPattern() { pattern_.clear(); }
 
