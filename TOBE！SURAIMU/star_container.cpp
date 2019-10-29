@@ -99,7 +99,6 @@ bool StarContainer::createStar(const std::wstring FileCSV)
         spin_rate      = file.getNumber_f(4, count);
         size           = file.getNumber_f(5, count);
         vertices       = file.getNumber  (6, count);
-        position.y     -= 720.0F;   // ‰æ–ÊŠO‚Ö
 
         // ¯‚ğƒŠƒXƒg‚É’Ç‰Á
         addStar(

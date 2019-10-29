@@ -21,7 +21,7 @@
 #include "ranking_in_endless.h"
 #include "progress.h"
 #include "background.h"
-#include "star_container.h"
+#include "stage.h"
 #include "player.h"
 #include "wall.h"
 #include "fail_wall.h"
@@ -99,7 +99,7 @@ bool Endless::init()
 
     ranking_        = new RankingInEndless();
 
-    star_container_ = new StarContainer();
+    now_stage_      = new Stage;
 
     player_         = new Player();
 
@@ -116,15 +116,17 @@ bool Endless::init()
     // ランキング初期化
     if( ranking_->init() == false ) { return false; }
 
-	// スター生成
-    if( star_container_->createStar( kStartStageFile ) == false ) { return false; }
-    
 
 	// プレイヤー初期化
 	if (dynamic_cast<Player*>(player_)->init(kPlayerPosition, 0) == false)
 	{
 		return false;
 	}
+
+    // ステージ初期化
+    if( now_stage_->init( L"State/StageMode/stage_2.csv", player_ ) == false )
+        return false;
+
 
 	// 壁初期化
 	if (wall_->init() == false) { return false; }
@@ -172,9 +174,15 @@ void Endless::destroy()
 
 	wall_->destroy();                  safe_delete(wall_);
 
+    for( auto& stage : stack_stages_ )
+    {
+        stage->destroy();
+        safe_delete( stage );
+    }
+    stack_stages_.clear();
+    now_stage_->destroy();             safe_delete( now_stage_ );
+    
 	player_->destroy();                safe_delete(player_);
-
-	star_container_->destroy();        safe_delete(star_container_);
 
     ranking_->destroy();               safe_delete(ranking_);
 
@@ -232,7 +240,6 @@ SceneBase* Endless::start()
 		    update_ = &Endless::play;
 		    clock_->start();
 		    player_->onStartFlag();
-            star_container_->setFall();
             fail_wall_->start();
         }
 	}
@@ -257,9 +264,6 @@ SceneBase* Endless::play()
     }
 
 
-    // スターを生成する
-    checkAndLoadStage();
-
 	// プレイヤーが死んでいたらリザルト画面へ
 	if( player_->isAlive() == false )
 	{
@@ -279,13 +283,6 @@ SceneBase* Endless::play()
         }
         player_last_position_y_ = p_position.y;
     }
-
-	//コンテナのアップデート
-	star_container_->update();
-
-	// 座標調整( スクロール )
-    scroll();
-
 
 
 	ranking_->setScore( player_->getScore()->getScore() );
@@ -327,102 +324,4 @@ SceneBase* Endless::pause()
 
 
     return this;
-}
-
-/*===========================================================================*/
-// 画面スクロール処理
-void Endless::scroll()
-{
-    float over = 0; // プレイアブルエリアからはみ出した距離
-    const Vector2& kPlayerPosi = player_->getPosition();
-
-    // 上限からはみ出している
-    if( kPlayerPosi.y < kLevelTable[stage_][kThresholdUp] )
-    {
-        over = kLevelTable[stage_][kThresholdUp] - kPlayerPosi.y;
-    }
-    // 下限からはみ出している
-    else if( kPlayerPosi.y > kLevelTable[stage_][kThresholdDown] )
-    {
-        over = kLevelTable[stage_][kThresholdDown] - kPlayerPosi.y;
-    }
-
-
-    // 各オブジェクトのスクロール処理
-    TaskManager::getInstance()->allSetOver( over );
-
-    if( over > 0.0F ) 
-    {
-        player_displacement_y_sum_ += over;
-        climb_ += over;
-        player_->addScore( over );  // プレイヤーにスコア反映
-    }
-
-}
-
-
-/*===========================================================================*/
-// スターの生成条件を満たしていたらスターを生成する
-bool Endless::checkAndLoadStage()
-{
-    auto itr = star_container_->active().begin();
-    auto end = star_container_->active().end();
-    for (; itr != end; ++itr)
-    {
-        if ((*itr)->getPosition().y - (*itr)->getSize() < 0.0F) { break; }
-    }
-
-    // 画面外待機しているスターが無くなったら
-    if( itr == end )
-    {
-        // パターン変化を知らせる
-        climb_ = 0.0F;
-        fail_wall_->speedUp();
-        if( stage_ != kStartStageID )
-        {
-            progress_->changeStage();
-            Background::getInstance()->changeColor();
-        }
-
-        ++stage_;
-        if (stage_ >= kStageIDMax)
-        {
-            ++round_counter_;
-            stage_ = kStageIDMin;
-
-            // 周回を知らせる
-            player_->addLevel();
-        }
-        // スターの生成パターン変更
-        changePattern(stage_);
-
-
-        // スターの生成
-        if( star_container_->createStar() == false ) { return false; }
-        star_container_->setFall();
-    }
-
-
-    return true;
-}
-
-/*===========================================================================*/
-// スターの生成パターンを設定する
-void Endless::changePattern( const int Pattern )
-{
-    star_container_->resetPattern();
-
-    std::wstring file_name;
-    CsvLoader file( L"State/pattern_list.csv" );
-    for (int i = 0; ; ++i)
-    {
-        file_name = file.getString(Pattern, i);
-        if (wcscmp(file_name.c_str(), L"") == 0)
-        {
-            break;
-        }
-
-        file_name.insert(0, L"State/");
-        star_container_->addPattern(file_name);
-    }
 }

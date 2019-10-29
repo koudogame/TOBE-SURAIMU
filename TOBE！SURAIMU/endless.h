@@ -12,7 +12,7 @@ class Pause;
 class RankingInEndless;
 class Progress;
 
-class StarContainer;
+class Stage;
 class Player;
 class Wall;
 class FailWall;
@@ -41,16 +41,12 @@ private:
     SceneBase* pause();
     SceneBase* (Endless::* update_)() = nullptr;
 
-    void scroll();
-    bool checkAndLoadStage();
-    void changePattern( const int PatternNo );
-
-
 // オブジェクト
     Timer<Milliseconds>* clock_     = nullptr;
     Pause* pause_                   = nullptr;
     RankingInEndless* ranking_      = nullptr;
-    StarContainer* star_container_  = nullptr;
+    Stage* now_stage_               = nullptr;
+    std::list<Stage*> stack_stages_;
     Player* player_                 = nullptr;
     Wall* wall_                     = nullptr;
     FailWall* fail_wall_            = nullptr;
