@@ -82,7 +82,6 @@ protected:
     virtual bool phasePlay();
     virtual bool isGoaled() const;
 
-
     bool (Stage::*phase_)() = nullptr;  // 現在のフェーズ
     StageData     *data_   = nullptr;   // ステージデータ
     StarContainer *stars_  = nullptr;   // スターコンテナ

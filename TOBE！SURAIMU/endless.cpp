@@ -293,12 +293,6 @@ SceneBase* Endless::play()
         if( loadNextStage() == false )
             return nullptr;
     }
-
-    for( auto& stage : stack_stages_ )
-    {
-        stage->update();
-    }
-
     if( stack_stages_.back()->getGoalLine() >= fail_wall_->getPosition().y )
     {
         stack_stages_.back()->destroy();
