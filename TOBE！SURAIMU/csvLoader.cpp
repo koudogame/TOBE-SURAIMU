@@ -5,26 +5,12 @@ const int kDataNum = 7;
 CsvLoader::CsvLoader()
 {
 	comma_ = L',';
-	last_data_.push_back(L"640");
-	last_data_.push_back(L"-7200");
-	last_data_.push_back(L"0");
-	last_data_.push_back(L"0");
-	last_data_.push_back(L"0");
-	last_data_.push_back(L"0");
-	last_data_.push_back(L"5");
 }
 
 
 CsvLoader::CsvLoader(std::wstring FileName)
 {
 	comma_ = L',';
-	last_data_.push_back(L"640");
-	last_data_.push_back(L"-7200");
-	last_data_.push_back(L"0");
-	last_data_.push_back(L"0");
-	last_data_.push_back(L"0");
-	last_data_.push_back(L"0");
-	last_data_.push_back(L"5");
 	load( FileName );
 }
 
@@ -68,19 +54,7 @@ bool CsvLoader::load( std::wstring FileName)
 
 	container_.pop_back();
 
- 	if (container_.back().size() < kDataNum)
-		return true;
-
-	if (_wtoi(container_.back().at(1).c_str()) < -6000)
-		container_.push_back(last_data_);
-
 	file.close();
-
-
-	std::vector<std::wstring> temp = container_.front();
-	container_.erase(container_.begin());
-	std::sort(container_.begin(), container_.end(), [](std::vector <std::wstring> line1, std::vector<std::wstring> line2)->bool {return _wtoi(line1[1].c_str()) > _wtoi(line2[1].c_str()); });
-	container_.insert(container_.begin(), temp);
 
 	return true;
 }
