@@ -334,7 +334,7 @@ bool Collision::collision(Player * P, FailWall * FW)
 
 bool Collision::collision(Star * S, FailWall * FW)
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < S->getShape()->size(); i++)
 	{
 		Vector2 judge_vector[2] = { FW->getShape()->end - FW->getShape()->start,S->getShape()->at(i).start - FW->getShape()->start };
 		judge_vector[0].Normalize();
