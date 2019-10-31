@@ -17,7 +17,7 @@ constexpr int   kSpeedLimitIndex = 11;
 constexpr float kSpeedTable[kSpeedLimitIndex] =
 {
     0.0F,
-    1.0F,
+    -0.2F,
     -0.2F,
     -0.5F,
     -1.0F,
@@ -121,8 +121,8 @@ void FailWall::destroy()
 void FailWall::update()
 {
     // ã‚ÖƒXƒNƒ[ƒ‹
-    shape_->start.y += kSpeedTable[speed_index_];
-    shape_->end.y += kSpeedTable[speed_index_];
+    shape_->start.y += 2.0F;//kSpeedTable[speed_index_];
+    shape_->end.y = shape_->start.y;
     if (shape_->start.y < kLimitYUp)
     {
         // ãŒÀ‚ğ’´‚¦‚½‚ç–ß‚·

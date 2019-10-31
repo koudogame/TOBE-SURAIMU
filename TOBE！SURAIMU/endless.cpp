@@ -33,7 +33,7 @@
 
 #include "Sound.h"
 
-
+#include "text.h"
 #include "ai_demo.h"
 
 using KeyTracker = Keyboard::KeyboardStateTracker;
@@ -105,6 +105,9 @@ bool Endless::init()
     wall_           = new Wall();
     fail_wall_      = new FailWall();
     progress_       = new Progress();
+
+    string_ = TextureLoder::getInstance()->load( L"Texture/Rank_Name.png" );
+    number_ = TextureLoder::getInstance()->load( L"Texture/ranking_number.png" );
 
     // ƒ|[ƒY‰Šú‰»
     if( pause_->init() == false ) { return false; }
@@ -271,6 +274,7 @@ SceneBase* Endless::play()
 	if( player_->isAlive() == false )
 	{
 		SOUND->stop( SoundId::kPlay );
+        return new Endless;
 		return new Result(ranking_->getRank(), *player_->getScore());
 	}
     else if( fail_wall_->isUp() == false )
@@ -293,17 +297,29 @@ SceneBase* Endless::play()
         if( loadNextStage() == false )
             return nullptr;
     }
-
-    for( auto& stage : stack_stages_ )
-    {
-        stage->update();
-    }
-
     if( stack_stages_.back()->getGoalLine() >= fail_wall_->getPosition().y )
     {
         stack_stages_.back()->destroy();
         delete stack_stages_.back();
         stack_stages_.pop_back();
+    }
+
+
+    Vector2 string{ 1000.0F, 0.0F };
+    Vector2 number{ 1280.0F, 0.0F };
+    for( auto& stage : stack_stages_ )
+    {
+        Text::drawString( "start", string_, string, 12L, 16L );
+        Text::drawNumber( stage->getStartLine(), number_, number, 10L, 14L, 1U, 1.0F, 0.0F, 100.0F );
+
+        string.y += 16.0F;
+        number.y += 16.0F;
+        
+        Text::drawString( "goal", string_, string, 12L, 16L );
+        Text::drawNumber( stage->getGoalLine(), number_, number, 10L, 14L, 1U, 1.0F, 0.0F, 100.0F );
+
+        string.y += 32.0F;
+        number.y += 32.0F;
     }
 
 

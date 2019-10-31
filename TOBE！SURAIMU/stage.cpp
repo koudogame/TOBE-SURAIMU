@@ -3,7 +3,6 @@
 
 #include "stage.h"
 
-#include "textureLoder.h"
 #include "task_manager.h"
 
 #include "stage_data.h"
@@ -40,7 +39,6 @@ Stage::~Stage()
 // オブジェクトに関して、既にインスタンスを確保している場合は初期化処理のみを行っている
 bool Stage::init( const std::wstring& DataFileName, Player* const pPlayer, const float StartLine )
 {
-    // タスクマネージャーに登録
     TaskManager::getInstance()->registerTask( this, TaskUpdate::kWall );
 
     // ステージデータの読み込み
@@ -114,7 +112,6 @@ void Stage::update()
 // オブジェクトの描画は、基本的にSpriteクラスが行う
 void Stage::draw()
 {
-
 }
 /*===========================================================================*/
 // スタート
@@ -153,6 +150,12 @@ bool Stage::phaseStart()
 // プレイヤーが死亡したら更新終了
 bool Stage::phasePlay()
 {
+    // スターコンテナの更新
+    stars_->update();
+
+    start_line_ += kFallSpeed;
+    
+    
     // ゴールを確認
     if( isGoaled() )
     {
@@ -164,10 +167,6 @@ bool Stage::phasePlay()
         return false;
     }
 
-    // スターコンテナの更新
-    stars_->update();
-
-    start_line_ += kFallSpeed;
 
     return true;
 }
