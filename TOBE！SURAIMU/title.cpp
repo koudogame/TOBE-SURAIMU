@@ -77,8 +77,6 @@ Title::~Title()
 // 初期化処理
 bool Title::init()
 {
-	first_stage_.load(L"State/start_pattern.csv");
-
 	scene_ = &Title::selectScene;
 
 	//ロゴ
@@ -91,50 +89,6 @@ bool Title::init()
 	object_status_[ObjectNum::kCusur].position = kObjectposition[ObjectNum::kCusur];
 	object_status_[ObjectNum::kCusur].trim = kObjectTrim[ObjectNum::kCusur];
 	object_status_[ObjectNum::kCusur].depth = 30.0F;
-
-	//初期の星１
-	for (int i = 0; i < kCreateStarNum; ++i)
-	{
-		std::wstring star_name, star_back_name;
-		star_name = star_back_name = L"Texture/Star/" + std::to_wstring(first_stage_.getNumber(6, i + 1));
-		star_name += L"f.png";
-		star_back_name += L"b.png";
-
-		star_obj_.push_back(TitleStatus());
-		star_obj_.back().texture = TextureLoder::getInstance()->load(star_name);
-		star_obj_.back().overlay_texture = TextureLoder::getInstance()->load(star_name);
-		star_obj_.back().position.x = first_stage_.getNumber(0, i + 1);
-		star_obj_.back().position.y = first_stage_.getNumber(1, i + 1) - getWindowHeight<float>() * 2.0F;
-		Vector3 inf = kStarInformation[(static_cast<int>(first_stage_.getNumber(5, 1)) - kStarMin) / kStarDifference];
-		float rate = first_stage_.getNumber_f(4, i + 1);
-		int id = rate < kStarColorThreshold[0] ? 0 : (rate < kStarColorThreshold[1] ? 1 : 2);
-		star_obj_.back().trim.left = inf.x;
-		star_obj_.back().trim.top = inf.y + id * inf.z;
-		star_obj_.back().trim.right = star_obj_.back().trim.left + inf.z;
-		star_obj_.back().trim.bottom = star_obj_.back().trim.top + inf.z;
-	}
-
-	//プレイヤー
-	object_status_[ObjectNum::kPlayer].texture = TextureLoder::getInstance()->load(L"Texture/character.png");
-	object_status_[ObjectNum::kPlayer].position = kObjectposition[ObjectNum::kPlayer];
-	object_status_[ObjectNum::kPlayer].trim = kObjectTrim[ObjectNum::kPlayer];
-	object_status_[ObjectNum::kPlayer].depth = 30.0F;
-
-	//壁( 右 )
-	object_status_[ObjectNum::kWallRight].texture = TextureLoder::getInstance()->load(L"Texture/wall.png");
-	object_status_[ObjectNum::kWallRight].position = kObjectposition[ObjectNum::kWallRight];
-	object_status_[ObjectNum::kWallRight].trim = kObjectTrim[ObjectNum::kWallRight];
-
-	//壁( 左 )
-	object_status_[ObjectNum::kWallLeft].texture = TextureLoder::getInstance()->load(L"Texture/wall.png");
-	object_status_[ObjectNum::kWallLeft].position = kObjectposition[ObjectNum::kWallLeft];
-	object_status_[ObjectNum::kWallLeft].trim = kObjectTrim[ObjectNum::kWallLeft];
-	//黒背景
-	object_status_[ObjectNum::kBlack].texture = TextureLoder::getInstance()->load(L"Texture/black.png");
-	object_status_[ObjectNum::kBlack].position = Vector2::Zero;
-	object_status_[ObjectNum::kBlack].trim = kObjectTrim[ObjectNum::kBlack];
-	object_status_[ObjectNum::kBlack].alpha = 0.0F;
-	object_status_[ObjectNum::kBlack].depth = 100.0F;
 
 	volume_ = 1.0F;
 
@@ -166,41 +120,8 @@ SceneBase* Title::update()
 // 描画処理
 void Title::draw()
 {
-	for (auto& itr : star_obj_)
-	{
-		Vector2 anker = Vector2((itr.trim.right - itr.trim.left) / 2.0F, (itr.trim.bottom - itr.trim.top) / 2.0F);
-		Sprite::getInstance()->reserveDraw(itr.overlay_texture, itr.position, itr.trim, 1.0F, 13.0F, { 1.0F, 1.0F }, 0.0F, anker, Sprite::getInstance()->chengeMode());
-		Sprite::getInstance()->reserveDraw(itr.texture, itr.position, itr.trim, 1.0F, 14.0F, { 1.0F, 1.0F }, 0.0F, anker);
-	}
-
-	//パーティクル用切り取り位置
-	RECT trim;
-	trim.left = kBackParticleSize * 2;
-	trim.top = 0;
-	trim.right = trim.left + kBackParticleSize;
-	trim.bottom = trim.top + kBackParticleSize;
-	Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kPlayer].texture, object_status_[ObjectNum::kPlayer].position, trim, 1.0F, object_status_[ObjectNum::kPlayer].depth - 0.1F);
-
-	for (int i = 0; i <= ObjectNum::kPlayer; i++)
+	for (int i = 0; i < ObjectNum::kObjectNum; i++)
 		object_status_[i].draw();
-
-	for (float y = object_status_[ObjectNum::kWallRight].position.y; y < getWindowHeight<float>(); y += kWallHeight)
-	{
-		Vector2 positright = object_status_[ObjectNum::kWallRight].position;
-		Vector2 positleft = object_status_[ObjectNum::kWallLeft].position;
-
-		positright.y = y;
-		positleft.y = y;
-
-		Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kWallRight].texture, positright, object_status_[ObjectNum::kWallRight].trim, object_status_[ObjectNum::kWallRight].alpha,
-			30.0F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero, Common::getInstance()->getStates()->NonPremultiplied(), SpriteEffects::SpriteEffects_FlipHorizontally);
-		Sprite::getInstance()->reserveDraw(object_status_[ObjectNum::kWallLeft].texture, positleft, object_status_[ObjectNum::kWallLeft].trim, object_status_[ObjectNum::kWallLeft].alpha,
-			30.0F, Vector2(1.0F, 1.0F), 0.0F, Vector2::Zero, Common::getInstance()->getStates()->NonPremultiplied(), SpriteEffects::SpriteEffects_None);
-	}
-
-	object_status_[ObjectNum::kBlack].draw();
-
-
 }
 
 void Title::input()
@@ -248,7 +169,7 @@ SceneBase* Title::playScene()
 	volume_ -= 0.01F;
 	SOUND->setVolume(SoundId::kScene, volume_);
 	SOUND->play(SoundId::kScene, false);
-	for (int i = 0; i < ObjectNum::kBlack; i++)
+	for (int i = 0; i < ObjectNum::kObjectNum; i++)
 		object_status_[i].alpha = volume_;
 
 
@@ -269,7 +190,7 @@ SceneBase * Title::rankingScene()
 	volume_ -= 0.01F;
 	SOUND->setVolume(SoundId::kScene, volume_);
 	SOUND->play(SoundId::kScene, false);
-	for (int i = 0; i < ObjectNum::kBlack; i++)
+	for (int i = 0; i < ObjectNum::kObjectNum; i++)
 		object_status_[i].alpha = volume_;
 
 
@@ -318,8 +239,6 @@ SceneBase * Title::DemoScene()
 	volume_ -= 0.01F;
 	for (int i = 0; i < ObjectNum::kObjectNum; i++)
 		object_status_[i].alpha = volume_;
-	object_status_[ObjectNum::kBlack].alpha = 1.0F - volume_;
-
 
 	if (volume_ < 0)
 	{
