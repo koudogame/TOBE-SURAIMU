@@ -245,29 +245,16 @@ void Title::input()
 SceneBase* Title::playScene()
 {
 	volume_ -= 0.01F;
-	if (volume_ < 0.0F)volume_ = 0.0F;
 	SOUND->setVolume(SoundId::kScene, volume_);
-	SOUND->setVolume(SoundId::kTitle, volume_);
 	SOUND->play(SoundId::kScene, false);
+	for (int i = 0; i < ObjectNum::kBlack; i++)
+		object_status_[i].alpha = volume_;
 
-	for (auto& itr : star_obj_)
-		itr.position.y += kFall;
 
-	for (int i = 0; i <= ObjectNum::kPlayer; ++i)
-		object_status_[i].position.y += kFall;
-
-	float now_time_ = object_status_[ObjectNum::kRogo].position.y / getWindowHeight<float>();
-	if (now_time_ >= 1.0F)
-		now_time_ = 1.0F;
-	object_status_[kWallRight].position.x = getWindowWidth<float>() - Easing::getInstance()->expo(getWindowWidth<float>() / 4.0F + kWallWidth / 2.0F, now_time_, Easing::Mode::In);
-	object_status_[kWallLeft].position.x = -kWallWidth + Easing::getInstance()->expo(320.0F + kWallWidth / 2.0F, now_time_, Easing::Mode::In);
-
-	if (object_status_[kRogo].position.y > getWindowHeight<float>())
+	if (volume_ < 0)
 	{
 		SOUND->stop(SoundId::kScene);
-		SOUND->stop(SoundId::kTitle);
-		SOUND->setVolume(SoundId::kTitle, 1.0F);
-		return new Endless();
+		return new Endless;
 	}
 	return this;
 }
