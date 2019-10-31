@@ -246,7 +246,7 @@ void FailWall::setMove( float Disp )
 /*===========================================================================*/
 bool FailWall::isUp() const
 {
-    return speed_index_ > 1;
+    return speed_index_ > 0;
 }
 const Vector2& FailWall::getPosition() const 
 {
