@@ -401,6 +401,8 @@ bool Endless::loadNextStage()
     new_stage->start();
     stack_stages_.push_front( new_stage );
 
+    fail_wall_->speedUp();
+
     // ロードステージ番号が範囲外へ行かないよう制御
     if( ++load_stage_idx_ >= kStageNum )
         load_stage_idx_ = 0;

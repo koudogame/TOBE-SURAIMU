@@ -90,5 +90,5 @@ protected:
 
 // ƒƒ“ƒo•Ï”
 	std::list<T*> active_list_;
-	std::vector<T*> free_list_;
+	std::list<T*> free_list_;
 };
