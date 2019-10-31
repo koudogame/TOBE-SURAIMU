@@ -104,10 +104,6 @@ bool Endless::init()
     player_         = new Player();
     wall_           = new Wall();
     fail_wall_      = new FailWall();
-    progress_       = new Progress();
-
-    string_ = TextureLoder::getInstance()->load( L"Texture/Rank_Name.png" );
-    number_ = TextureLoder::getInstance()->load( L"Texture/ranking_number.png" );
 
     // ポーズ初期化
     if( pause_->init() == false ) { return false; }
@@ -138,12 +134,6 @@ bool Endless::init()
     if( fail_wall_->init() == false ) { return false; }
     Background::getInstance()->setFailWall( fail_wall_ );
 
-    // 進行度初期化
-    if( progress_->init( kStageHeight, player_, fail_wall_ ) == false )
-    {
-        return false;
-    }
-
 
 	// 変数初期化
 	update_ = &Endless::start;
@@ -171,8 +161,6 @@ void Endless::destroy()
 {
      if( created_ == false ) { return; }
     created_ = false;
-
-    progress_->destroy();              safe_delete(progress_);
 
     fail_wall_->destroy();             safe_delete(fail_wall_);
     Background::getInstance()->setFailWall( nullptr );
@@ -268,13 +256,18 @@ SceneBase* Endless::play()
         update_ = &Endless::pause;
         return this;
     }
+#ifdef _DEBUG
+    if( key.pressed.R )
+    {
+        return new Endless;
+    }
+#endif
 
 
 	// プレイヤーが死んでいたらリザルト画面へ
 	if( player_->isAlive() == false )
 	{
 		SOUND->stop( SoundId::kPlay );
-        return new Endless;
 		return new Result(ranking_->getRank(), *player_->getScore());
 	}
     else if( fail_wall_->isUp() == false )
@@ -303,25 +296,6 @@ SceneBase* Endless::play()
         delete stack_stages_.back();
         stack_stages_.pop_back();
     }
-
-
-    Vector2 string{ 1000.0F, 0.0F };
-    Vector2 number{ 1280.0F, 0.0F };
-    for( auto& stage : stack_stages_ )
-    {
-        Text::drawString( "start", string_, string, 12L, 16L );
-        Text::drawNumber( stage->getStartLine(), number_, number, 10L, 14L, 1U, 1.0F, 0.0F, 100.0F );
-
-        string.y += 16.0F;
-        number.y += 16.0F;
-        
-        Text::drawString( "goal", string_, string, 12L, 16L );
-        Text::drawNumber( stage->getGoalLine(), number_, number, 10L, 14L, 1U, 1.0F, 0.0F, 100.0F );
-
-        string.y += 32.0F;
-        number.y += 32.0F;
-    }
-
 
 	ranking_->setScore( player_->getScore()->getScore() );
 

@@ -50,7 +50,6 @@ private:
     Player* player_                 = nullptr;
     Wall* wall_                     = nullptr;
     FailWall* fail_wall_            = nullptr;
-    Progress* progress_             = nullptr;
 
     bool created_ = false;
     int load_stage_idx_;
@@ -63,7 +62,4 @@ private:
     float climb_ = 0.0F;
     float player_last_position_y_ = 0.0F;
     float player_displacement_y_sum_ = 0.0F;
-
-    ID3D11ShaderResourceView *string_;
-    ID3D11ShaderResourceView *number_;
 };
