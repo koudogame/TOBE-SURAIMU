@@ -244,6 +244,7 @@ void Title::input()
 
 SceneBase* Title::playScene()
 {
+
 	volume_ -= 0.01F;
 	SOUND->setVolume(SoundId::kScene, volume_);
 	SOUND->play(SoundId::kScene, false);
@@ -253,6 +254,10 @@ SceneBase* Title::playScene()
 
 	if (volume_ < 0)
 	{
+
+		SOUND->stop(SoundId::kScene);
+		SOUND->stop(SoundId::kTitle);
+		SOUND->setVolume(SoundId::kTitle, 1.0F);
 		SOUND->stop(SoundId::kScene);
 		return new Endless;
 	}
